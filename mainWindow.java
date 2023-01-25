@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class mainWindow extends updateGUI {
 
-    static JFrame theFrame = new JFrame("FrameDemo");
+    static JFrame theFrame = new JFrame("Main window");
 
     mainWindow() {
         super(null, new GridLayoutApplyer(theFrame, 4));
@@ -20,6 +20,7 @@ public class mainWindow extends updateGUI {
     }
 
     public void addButtons() {
+        theFrame.setTitle("new main menu uno");
         addToButtonList(new JButton("Ingredients"));
         addToButtonList(new JButton("Meals"));
         addToButtonList(new JButton("Drinks"));

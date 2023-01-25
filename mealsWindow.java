@@ -14,6 +14,7 @@ public class mealsWindow extends updateGUI {
 
     @Override
     public void addButtons() {
+        theFrame.setTitle("new main menu fucking tres");
         addToButtonList(new JButton("GO BACK"));
         addToButtonList(new JButton("Meaasdals"));
         addToButtonList(new JButton("Drasdainks"));

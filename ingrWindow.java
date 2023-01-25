@@ -13,6 +13,7 @@ public class ingrWindow extends updateGUI {
     }
 
     public void addButtons() {
+        theFrame.setTitle("new main menu 2");
         addToButtonList(new JButton("GO BACK"));
         addToButtonList(new JButton("Meals"));
         addToButtonList(new JButton("Drinks"));
@@ -45,10 +46,6 @@ public class ingrWindow extends updateGUI {
 
             }
         });
-    }
-
-    public void applyLayout(int numberElements) {
-        theFrame.setLayout(new GridLayout(numberElements / 2, numberElements / 2));
     }
 
 }
