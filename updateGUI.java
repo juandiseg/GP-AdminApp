@@ -1,15 +1,18 @@
-import javax.swing.JFileChooser;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public abstract class updateGUI {
 
     private updateGUI previousWindow;
     static JFrame theFrame;
-    private int numberOfButtons;
+    private ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    private int numberOfButtons = 0;
 
-    updateGUI(JFrame theFrame, int numberOfButtons) {
-        this.theFrame = theFrame;
-        this.numberOfButtons = numberOfButtons;
+    updateGUI(JFrame aFrame, int numberOfButtons) {
+        theFrame = aFrame;
+        if (numberOfButtons >= 0)
+            this.numberOfButtons = numberOfButtons;
     }
 
     public abstract void addButtons();
@@ -21,14 +24,26 @@ public abstract class updateGUI {
     public void returnPreviousWindow() {
         if (previousWindow == null)
             return;
-
         previousWindow.applyLayout(0);
     }
 
     private void refreshFrame() {
-        theFrame.invalidate();
+        // theFrame.getContentPane().removeAll();
         theFrame.validate();
         theFrame.repaint();
+    }
+
+    public ArrayList<JButton> getButtonList() {
+        return buttonList;
+    }
+
+    public boolean addToButtonList(JButton theButton) {
+        try {
+            buttonList.add(theButton);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
