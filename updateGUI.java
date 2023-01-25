@@ -2,25 +2,35 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public abstract class updateGUI {
+public abstract class updateGUI implements iUpdateButtons {
 
     private updateGUI previousWindow;
-    static JFrame theFrame;
+    public static JFrame theFrame;
     private ArrayList<JButton> buttonList;
     private int numberOfButtons = 0;
 
-    public updateGUI(JFrame aFrame, int numberOfButtons) {
-        theFrame = aFrame;
+    public updateGUI(updateGUI prevWindow, int numberOfButtons) {
+        previousWindow = prevWindow;
         buttonList = new ArrayList<JButton>();
         if (numberOfButtons >= 0)
             this.numberOfButtons = numberOfButtons;
     }
 
-    public abstract void addButtons();
+    final public void setFrame(JFrame _theFrame) {
+        theFrame = _theFrame;
+    }
 
-    public abstract void addActionListeners();
+    public void updateToThisMenu() {
+        deleteContents();
+        addButtons();
+        addActionListeners();
+        applyLayout(numberOfButtons);
+        refreshFrame();
+    }
 
-    public abstract void applyLayout(int numberElements);
+    private void deleteContents() {
+        theFrame.getContentPane().removeAll();
+    }
 
     public void returnPreviousWindow() {
         if (previousWindow == null)
@@ -29,7 +39,6 @@ public abstract class updateGUI {
     }
 
     private void refreshFrame() {
-        // theFrame.getContentPane().removeAll();
         theFrame.validate();
         theFrame.repaint();
     }

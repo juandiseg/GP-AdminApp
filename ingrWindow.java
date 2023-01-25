@@ -3,39 +3,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class mainWindow extends updateGUI {
+public class ingrWindow extends updateGUI {
 
-    static JFrame theFrame = new JFrame("FrameDemo");
-
-    mainWindow() {
-        super(null, 4);
-        setFrame(theFrame);
-        theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        theFrame.setSize(600, 600);
-        theFrame.setVisible(true);
-        theFrame.setLocationRelativeTo(null);
-        updateToThisMenu();
-    }
-
-    public static void main(String[] args) {
-        mainWindow hi = new mainWindow();
+    ingrWindow(updateGUI prevWindow, int nmbrButtons) {
+        super(prevWindow, nmbrButtons);
     }
 
     public void addButtons() {
-        addToButtonList(new JButton("Ingredients"));
-        addToButtonList(new JButton("Meals"));
-        addToButtonList(new JButton("Drinks"));
-        addToButtonList(new JButton("Your mum"));
+        addToButtonList(new JButton("Ingasdasdredients"));
+        addToButtonList(new JButton("Measdasdals"));
+        addToButtonList(new JButton("Drasdadasnks"));
+        addToButtonList(new JButton("Your sdasdasmum"));
         for (JButton temp : getButtonList())
             theFrame.add(temp);
     }
 
     public void addActionListeners() {
-        updateGUI temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ingrWindow ingredientesWdw = new ingrWindow(temp, 8);
-                ingredientesWdw.updateToThisMenu();
+
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
