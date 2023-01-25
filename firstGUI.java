@@ -1,5 +1,5 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class firstGUI {
 
@@ -10,9 +10,8 @@ public class firstGUI {
         aFrame.setSize(600, 600);
         aFrame.setVisible(true);
         aFrame.setLocationRelativeTo(null);
-        GridLayout experimentLayout = new GridLayout(0, 2);
-
         addButtons(aFrame);
+        aFrame.setLayout(new GridLayout(2, 2));
     }
 
     private void addButtons(JFrame theFrame) {
@@ -24,7 +23,6 @@ public class firstGUI {
         theFrame.add(theButton2);
         theFrame.add(theButton3);
         theFrame.add(theButton4);
-
     }
 
     public static void main(String[] args) {
