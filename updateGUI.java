@@ -6,11 +6,12 @@ public abstract class updateGUI {
 
     private updateGUI previousWindow;
     static JFrame theFrame;
-    private ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    public ArrayList<JButton> buttonList;
     private int numberOfButtons = 0;
 
-    updateGUI(JFrame aFrame, int numberOfButtons) {
+    public updateGUI(JFrame aFrame, int numberOfButtons) {
         theFrame = aFrame;
+        buttonList = new ArrayList<JButton>();
         if (numberOfButtons >= 0)
             this.numberOfButtons = numberOfButtons;
     }
@@ -37,13 +38,8 @@ public abstract class updateGUI {
         return buttonList;
     }
 
-    public boolean addToButtonList(JButton theButton) {
-        try {
-            buttonList.add(theButton);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public void addToButtonList(JButton theButton) {
+        buttonList.add(theButton);
     }
 
 }

@@ -20,6 +20,7 @@ public class mainWindow extends updateGUI {
     }
 
     public void addButtons() {
+
         addToButtonList(new JButton("Main window button 1"));
         addToButtonList(new JButton("Main window button 2"));
         addToButtonList(new JButton("Main window button 3"));
