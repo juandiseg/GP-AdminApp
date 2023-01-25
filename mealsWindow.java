@@ -1,27 +1,29 @@
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
+
 import javax.swing.JButton;
 
 import iLayouts.GridLayoutApplyer;
 import iLayouts.iLayout;
 
-public class ingrWindow extends updateGUI {
+public class mealsWindow extends updateGUI {
 
-    ingrWindow(updateGUI prevWindow, iLayout layoutApplyer) {
+    mealsWindow(updateGUI prevWindow, iLayout layoutApplyer) {
         super(prevWindow, layoutApplyer);
     }
 
+    @Override
     public void addButtons() {
         addToButtonList(new JButton("GO BACK"));
-        addToButtonList(new JButton("Meals"));
-        addToButtonList(new JButton("Drinks"));
-        addToButtonList(new JButton("No sé"));
-        addToButtonList(new JButton("No sé2"));
+        addToButtonList(new JButton("Meaasdals"));
+        addToButtonList(new JButton("Drasdainks"));
+        addToButtonList(new JButton("No sasdasdé"));
+        addToButtonList(new JButton("No adasdsé2"));
         for (JButton temp : getButtonList())
             theFrame.add(temp);
     }
 
+    @Override
     public void addActionListeners() {
         updateGUI temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
@@ -35,20 +37,6 @@ public class ingrWindow extends updateGUI {
                 mealsWdw.updateToThisMenu();
             }
         });
-        getButtonList().get(2).addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        getButtonList().get(3).addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-    }
-
-    public void applyLayout(int numberElements) {
-        theFrame.setLayout(new GridLayout(numberElements / 2, numberElements / 2));
     }
 
 }

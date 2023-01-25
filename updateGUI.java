@@ -1,19 +1,19 @@
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import iLayouts.*;
 
 public abstract class updateGUI implements iUpdateButtons {
 
-    private updateGUI previousWindow;
     public static JFrame theFrame;
+    private updateGUI previousWindow;
+    private iLayout layoutApplyer;
     private ArrayList<JButton> buttonList;
-    private int numberOfButtons = 0;
 
-    public updateGUI(updateGUI prevWindow, int numberOfButtons) {
-        previousWindow = prevWindow;
+    public updateGUI(updateGUI previousWindow, iLayout layoutApplyer) {
+        this.previousWindow = previousWindow;
+        this.layoutApplyer = layoutApplyer;
         buttonList = new ArrayList<JButton>();
-        if (numberOfButtons >= 0)
-            this.numberOfButtons = numberOfButtons;
     }
 
     final public void setFrame(JFrame _theFrame) {
@@ -24,7 +24,7 @@ public abstract class updateGUI implements iUpdateButtons {
         deleteContents();
         addButtons();
         addActionListeners();
-        applyLayout(numberOfButtons);
+        layoutApplyer.applyLayout();
         refreshFrame();
     }
 
@@ -32,10 +32,11 @@ public abstract class updateGUI implements iUpdateButtons {
         theFrame.getContentPane().removeAll();
     }
 
-    public void returnPreviousWindow() {
+    public void updateToPreviousMenu() {
         if (previousWindow == null)
             return;
-        previousWindow.applyLayout(0);
+        previousWindow.getButtonList().clear();
+        previousWindow.updateToThisMenu();
     }
 
     private void refreshFrame() {
@@ -43,12 +44,12 @@ public abstract class updateGUI implements iUpdateButtons {
         theFrame.repaint();
     }
 
-    public ArrayList<JButton> getButtonList() {
-        return buttonList;
-    }
-
     public void addToButtonList(JButton theButton) {
         buttonList.add(theButton);
+    }
+
+    public ArrayList<JButton> getButtonList() {
+        return buttonList;
     }
 
 }
