@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class mainWindow extends updateGUI {
 
@@ -12,6 +14,7 @@ public class mainWindow extends updateGUI {
         theFrame.setVisible(true);
         theFrame.setLocationRelativeTo(null);
         addButtons();
+        addActionListeners();
         applyLayout(4);
     }
 
@@ -20,19 +23,35 @@ public class mainWindow extends updateGUI {
     }
 
     public void addButtons() {
-
         addToButtonList(new JButton("Main window button 1"));
         addToButtonList(new JButton("Main window button 2"));
         addToButtonList(new JButton("Main window button 3"));
         addToButtonList(new JButton("Main window button 4"));
         for (JButton temp : getButtonList())
             theFrame.add(temp);
-
     }
 
     public void addActionListeners() {
-        System.out.println("abcd");
-
+        getButtonList().get(0).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("hi");
+            }
+        });
+        getButtonList().get(1).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("hi");
+            }
+        });
+        getButtonList().get(2).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("hi");
+            }
+        });
+        getButtonList().get(3).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("hi");
+            }
+        });
     }
 
     public void applyLayout(int numberElements) {

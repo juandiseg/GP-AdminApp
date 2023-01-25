@@ -6,7 +6,7 @@ public abstract class updateGUI {
 
     private updateGUI previousWindow;
     static JFrame theFrame;
-    public ArrayList<JButton> buttonList;
+    private ArrayList<JButton> buttonList;
     private int numberOfButtons = 0;
 
     public updateGUI(JFrame aFrame, int numberOfButtons) {
