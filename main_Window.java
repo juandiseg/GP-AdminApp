@@ -1,24 +1,30 @@
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-import javax.swing.JButton;
+import javax.swing.*;
 
 import iLayouts.GridLayoutApplyer;
-import iLayouts.iLayout;
 
-public class ingrWindow extends updateGUI {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-    ingrWindow(updateGUI prevWindow, iLayout layoutApplyer) {
-        super(prevWindow, layoutApplyer);
+public class mainWindow extends updateGUI {
+
+    static JFrame theFrame = new JFrame("Main window");
+
+    mainWindow() {
+        super(null, new GridLayoutApplyer(theFrame, 4));
+        setFrame(theFrame);
+        theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        theFrame.setSize(600, 600);
+        theFrame.setVisible(true);
+        theFrame.setLocationRelativeTo(null);
+        updateToThisMenu();
     }
 
-    public void addButtons() {
-        theFrame.setTitle("new main menu 2");
-        addToButtonList(new JButton("GO BACK"));
+    public void addComponents() {
+        theFrame.setTitle("new main menu uno");
+        addToButtonList(new JButton("Ingredients"));
         addToButtonList(new JButton("Meals"));
         addToButtonList(new JButton("Drinks"));
-        addToButtonList(new JButton("No sé"));
-        addToButtonList(new JButton("No sé2"));
+        addToButtonList(new JButton("Your mum"));
         for (JButton temp : getButtonList())
             theFrame.add(temp);
     }
@@ -27,13 +33,13 @@ public class ingrWindow extends updateGUI {
         updateGUI temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateToPreviousMenu();
+                ingrWindow ingredientesWdw = new ingrWindow(temp, new GridLayoutApplyer(theFrame, 5));
+                ingredientesWdw.updateToThisMenu();
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mealsWindow mealsWdw = new mealsWindow(temp, new GridLayoutApplyer(theFrame, 5));
-                mealsWdw.updateToThisMenu();
+
             }
         });
         getButtonList().get(2).addActionListener(new ActionListener() {

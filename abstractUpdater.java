@@ -3,14 +3,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import iLayouts.*;
 
-public abstract class updateGUI implements iUpdateButtons {
+public abstract class aFrameUpdater {
 
     public static JFrame theFrame;
-    private updateGUI previousWindow;
+    private aFrameUpdater previousWindow;
     private iLayout layoutApplyer;
     private ArrayList<JButton> buttonList;
 
-    public updateGUI(updateGUI previousWindow, iLayout layoutApplyer) {
+    public aFrameUpdater(aFrameUpdater previousWindow, iLayout layoutApplyer) {
         this.previousWindow = previousWindow;
         this.layoutApplyer = layoutApplyer;
         buttonList = new ArrayList<JButton>();
@@ -22,7 +22,7 @@ public abstract class updateGUI implements iUpdateButtons {
 
     public void updateToThisMenu() {
         deleteContents();
-        addButtons();
+        addComponents();
         addActionListeners();
         layoutApplyer.applyLayout();
         refreshFrame();
@@ -43,6 +43,10 @@ public abstract class updateGUI implements iUpdateButtons {
         theFrame.validate();
         theFrame.repaint();
     }
+
+    public abstract void addComponents();
+
+    public abstract void addActionListeners();
 
     public void addToButtonList(JButton theButton) {
         buttonList.add(theButton);
