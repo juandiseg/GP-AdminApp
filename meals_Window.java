@@ -8,8 +8,8 @@ import iLayouts.iLayout;
 
 public class meals_Window extends abstractUpdater {
 
-    meals_Window(abstractUpdater prevWindow, iLayout layoutApplyer) {
-        super(prevWindow, layoutApplyer);
+    meals_Window(abstractUpdater prevWindow) {
+        super(prevWindow, new GridLayoutApplyer(theFrame, 6));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class meals_Window extends abstractUpdater {
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                meals_Window mealsWdw = new meals_Window(temp, new GridLayoutApplyer(theFrame, 5));
+                meals_Window mealsWdw = new meals_Window(temp);
                 mealsWdw.updateToThisMenu();
             }
         });

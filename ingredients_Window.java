@@ -30,7 +30,7 @@ public class ingredients_Window extends abstractUpdater {
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                meals_Window mealsWdw = new meals_Window(temp, new GridLayoutApplyer(theFrame, 5));
+                meals_Window mealsWdw = new meals_Window(temp);
                 mealsWdw.updateToThisMenu();
             }
         });

@@ -10,7 +10,6 @@ public class managerDB {
 
     public Connection getConnection() {
         try (Connection connection = DriverManager.getConnection(url, "juandi", "Juandi")) {
-            // this.connection = connection;
             System.out.println("Database connected!");
             return connection;
         } catch (SQLException e) {
@@ -18,10 +17,11 @@ public class managerDB {
         }
     }
 
-    public void query1() {
+    public void query() {
         try (Connection connection = DriverManager.getConnection(url, "juandi", "Juandi")) {
+            System.out.println("Database connected!");
             String query = "SELECT * FROM providers";
-            try (Statement stmt = getConnection().createStatement()) {
+            try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int providerID = rs.getInt("provider_id");
@@ -30,10 +30,10 @@ public class managerDB {
                     System.out.println("Prov id: " + providerID + ", name : " + name +
                             ", and email: " + email + ".");
                 }
+                connection.close();
             } catch (Exception e) {
                 System.out.println(e);
             }
-            return;
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }

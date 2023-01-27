@@ -21,7 +21,6 @@ public class main_Window extends abstractUpdater {
     }
 
     public void addComponents() {
-        theManagerDB.query1();
         theFrame.setTitle("new main menu uno.");
         addToButtonList(new JButton("Ingredients"));
         addToButtonList(new JButton("Meals"));
