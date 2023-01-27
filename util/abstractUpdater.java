@@ -1,7 +1,9 @@
+package util;
+
 import java.util.ArrayList;
-import java.sql.Connection;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
 import iLayouts.*;
 
 public abstract class abstractUpdater {
