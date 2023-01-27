@@ -1,6 +1,7 @@
+
 public class driver {
 
     public static void main(String[] args) {
-        mainWindow hi = new mainWindow();
+        main_Window hi = new main_Window();
     }
 }

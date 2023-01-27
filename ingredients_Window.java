@@ -1,14 +1,12 @@
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
 import javax.swing.JButton;
-
 import iLayouts.GridLayoutApplyer;
 import iLayouts.iLayout;
 
-public class ingrWindow extends updateGUI {
+public class ingredients_Window extends abstractUpdater {
 
-    ingrWindow(updateGUI prevWindow, iLayout layoutApplyer) {
+    ingredients_Window(abstractUpdater prevWindow, iLayout layoutApplyer) {
         super(prevWindow, layoutApplyer);
     }
 
@@ -24,7 +22,7 @@ public class ingrWindow extends updateGUI {
     }
 
     public void addActionListeners() {
-        updateGUI temp = this;
+        abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
@@ -32,7 +30,7 @@ public class ingrWindow extends updateGUI {
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mealsWindow mealsWdw = new mealsWindow(temp, new GridLayoutApplyer(theFrame, 5));
+                meals_Window mealsWdw = new meals_Window(temp, new GridLayoutApplyer(theFrame, 5));
                 mealsWdw.updateToThisMenu();
             }
         });
@@ -49,3 +47,14 @@ public class ingrWindow extends updateGUI {
     }
 
 }
+
+// CASCADE DELETE:
+/*
+ * Constraint "nameOfConstraint"
+ * FOREIGN KEY "column thats a foreign key"
+ * REFERENCES "column thats referenced previous foreign key" (prob primary key
+ * of other table)
+ * ON DELETE CASCADE
+ * ON UPDATE CASCADE (if there's need to change IDs)
+ * 
+ */

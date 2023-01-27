@@ -16,5 +16,4 @@ public class GridLayoutApplyer implements iLayout {
     public void applyLayout() {
         theFrame.setLayout(new GridLayout(numberOfButtons / 2, numberOfButtons / 2));
     }
-
 }

@@ -1,17 +1,18 @@
 import javax.swing.*;
-
+import java.sql.*;
 import iLayouts.GridLayoutApplyer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class mainWindow extends updateGUI {
+public class main_Window extends abstractUpdater {
 
     static JFrame theFrame = new JFrame("Main window");
 
-    mainWindow() {
+    main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
         setFrame(theFrame);
+        setManagerDB(new managerDB());
         theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         theFrame.setSize(600, 600);
         theFrame.setVisible(true);
@@ -20,7 +21,8 @@ public class mainWindow extends updateGUI {
     }
 
     public void addComponents() {
-        theFrame.setTitle("new main menu uno");
+        theManagerDB.query1();
+        theFrame.setTitle("new main menu uno.");
         addToButtonList(new JButton("Ingredients"));
         addToButtonList(new JButton("Meals"));
         addToButtonList(new JButton("Drinks"));
@@ -30,26 +32,23 @@ public class mainWindow extends updateGUI {
     }
 
     public void addActionListeners() {
-        updateGUI temp = this;
+        abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ingrWindow ingredientesWdw = new ingrWindow(temp, new GridLayoutApplyer(theFrame, 5));
+                ingredients_Window ingredientesWdw = new ingredients_Window(temp, new GridLayoutApplyer(theFrame, 5));
                 ingredientesWdw.updateToThisMenu();
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
             }
         });
         getButtonList().get(2).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
             }
         });
         getButtonList().get(3).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
             }
         });
     }

@@ -14,7 +14,7 @@ public class meals_Window extends abstractUpdater {
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("new main menu fucking tres");
+        theFrame.setTitle("new main menu tres");
         addToButtonList(new JButton("GO BACK"));
         addToButtonList(new JButton("Meaasdals"));
         addToButtonList(new JButton("Drasdainks"));

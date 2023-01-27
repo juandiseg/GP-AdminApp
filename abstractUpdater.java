@@ -1,16 +1,18 @@
 import java.util.ArrayList;
+import java.sql.Connection;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import iLayouts.*;
 
-public abstract class aFrameUpdater {
+public abstract class abstractUpdater {
 
     public static JFrame theFrame;
-    private aFrameUpdater previousWindow;
+    public static managerDB theManagerDB;
+    private abstractUpdater previousWindow;
     private iLayout layoutApplyer;
     private ArrayList<JButton> buttonList;
 
-    public aFrameUpdater(aFrameUpdater previousWindow, iLayout layoutApplyer) {
+    public abstractUpdater(abstractUpdater previousWindow, iLayout layoutApplyer) {
         this.previousWindow = previousWindow;
         this.layoutApplyer = layoutApplyer;
         buttonList = new ArrayList<JButton>();
@@ -18,6 +20,10 @@ public abstract class aFrameUpdater {
 
     final public void setFrame(JFrame _theFrame) {
         theFrame = _theFrame;
+    }
+
+    final public void setManagerDB(managerDB _theManagerDB) {
+        theManagerDB = _theManagerDB;
     }
 
     public void updateToThisMenu() {
