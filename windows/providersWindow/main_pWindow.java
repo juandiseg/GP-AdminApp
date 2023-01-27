@@ -7,9 +7,9 @@ import util.abstractUpdater;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 
-public class mainProviders_Window extends abstractUpdater {
+public class main_pWindow extends abstractUpdater {
 
-    public mainProviders_Window(abstractUpdater previousWindow) {
+    public main_pWindow(abstractUpdater previousWindow) {
         super(previousWindow, new GridLayoutApplyer(theFrame, 6));
     }
 
@@ -30,12 +30,14 @@ public class mainProviders_Window extends abstractUpdater {
         abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mainProviders_Window ingredientesWdw = new mainProviders_Window(temp);
-                ingredientesWdw.updateToThisMenu();
+                add_pWindow tempWind = new add_pWindow(temp);
+                tempWind.updateToThisMenu();
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                edit_pWindow tempWind = new edit_pWindow(temp);
+                tempWind.updateToThisMenu();
             }
         });
         getButtonList().get(2).addActionListener(new ActionListener() {

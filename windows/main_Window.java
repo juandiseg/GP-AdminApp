@@ -39,7 +39,7 @@ public class main_Window extends abstractUpdater {
         abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mainProviders_Window ingredientesWdw = new mainProviders_Window(temp);
+                main_pWindow ingredientesWdw = new main_pWindow(temp);
                 ingredientesWdw.updateToThisMenu();
             }
         });
