@@ -83,4 +83,45 @@ public class managerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
+
+    public provider getProvider(int ID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM providers WHERE provider_id = " + Integer.toString(ID);
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int providerID = rs.getInt("provider_id");
+                    String name = rs.getString("name");
+                    String email = rs.getString("email");
+                    provider temp = new provider(providerID, name, email);
+                    connection.close();
+                    return temp;
+                }
+                connection.close();
+                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean editProvider(int ID, String name, String email) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE providers SET name = '" + name + "', email = '" + email
+                    + "' WHERE provider_id = " + Integer.toString(ID);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

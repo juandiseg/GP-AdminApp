@@ -2,9 +2,15 @@ package windows.providersWindow;
 
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import java.awt.*;
+
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.*;
 import javax.swing.table.DefaultTableModel;
 
 import com.mysql.cj.protocol.a.authentication.MysqlNativePasswordPlugin;
@@ -29,23 +35,22 @@ public class edit_pWindow extends abstractUpdater {
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("Edit Providers");
+        theFrame.setTitle("Choose Provider to Change");
         summaryTXT.setBounds(200, 20, 250, 25);
         theFrame.add(summaryTXT);
         ArrayList<provider> temp = theManagerDB.getAllProviders();
-
         myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email", "" }, 0);
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
         myTable.setModel(model);
         for (provider temp2 : temp) {
-            JButton tempButton = new JButton("Edit");
+            // JButton tempButton = new JButton("Edit");
             model.addRow(
-                    new Object[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail(), tempButton });
+                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
         }
         myTable.setBounds(45, 60, 500, 300);
         myTable.setDefaultEditor(Object.class, null);
+        myTable.setFocusable(true);
         theFrame.add(myTable);
-
         JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
@@ -60,7 +65,21 @@ public class edit_pWindow extends abstractUpdater {
                 updateToPreviousMenu();
             }
         });
-
+        myTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 1) { // to detect doble click events
+                    try {
+                        JTable target = (JTable) me.getSource();
+                        if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
+                            return;
+                        String ID = (String) target.getValueAt(target.getSelectedRow(), 0);
+                        new assist_edit_pWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
+                    } catch (IndexOutOfBoundsException e) {
+                        return;
+                    }
+                }
+            }
+        });
     }
 
 }

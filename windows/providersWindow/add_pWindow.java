@@ -13,7 +13,7 @@ public class add_pWindow extends abstractUpdater {
     private JTextField textFieldName = new JTextField();
     private JTextField textFieldEmail = new JTextField();
     JLabel succesful = new JLabel("The provider has been successfully added.");
-    JLabel inputError = new JLabel("The is something wrong with the given input.");
+    JLabel inputError = new JLabel("There is something wrong with the given input.");
 
     public add_pWindow(abstractUpdater previousWindow) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
@@ -52,17 +52,16 @@ public class add_pWindow extends abstractUpdater {
                 String name = textFieldName.getText();
                 String email = textFieldEmail.getText();
                 if (name.isEmpty() || email.isEmpty()) {
-                    theFrame.remove(succesful);
-                    theFrame.add(inputError);
-                    theFrame.repaint();
+                    printErrorGUI();
                     return;
                 }
                 if (theManagerDB.addProvider(name, email)) {
                     theFrame.remove(inputError);
                     theFrame.add(succesful);
                     theFrame.repaint();
+                } else {
+                    printErrorGUI();
                 }
-
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
@@ -70,6 +69,12 @@ public class add_pWindow extends abstractUpdater {
                 updateToPreviousMenu();
             }
         });
+    }
+
+    private void printErrorGUI() {
+        theFrame.remove(succesful);
+        theFrame.add(inputError);
+        theFrame.repaint();
     }
 
 }
