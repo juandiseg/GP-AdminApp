@@ -10,8 +10,8 @@ import java.awt.event.*;
 
 public class edit_pWindow extends abstractEdit_CheckWindow {
 
-    public edit_pWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, true);
+    public edit_pWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Provider", true);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class assist_add_iWindow extends abstractAddWindow {
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
 
     public assist_add_iWindow(abstractUpdater previousWindow, String name, String amount, String price) {
-        super(previousWindow, "Provider");
+        super(previousWindow, "Provider", true);
         this.name = name;
         this.amount = Integer.parseInt(amount);
         this.price = price;

@@ -11,14 +11,22 @@ import iLayouts.placeholderLayoutApplyer;
 public abstract class abstractAddWindow extends abstractUpdater {
 
     private JButton backButton = new JButton("Back");
-    private JButton addButton = new JButton("Add Provider");
+    private JButton addButton;
 
-    private JLabel inputSuccesful = new JLabel("The provider has been successfully added.");
+    private JLabel inputSuccesful;
     private JLabel inputError = new JLabel("There is something wrong with the given input.");
 
-    public abstractAddWindow(abstractUpdater previousWindow, String title) {
+    public abstractAddWindow(abstractUpdater previousWindow, String title, boolean add) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
-        theFrame.setTitle("Add " + title);
+        inputSuccesful = new JLabel("The " + title + " has been successfully added.");
+        if (add) {
+            theFrame.setTitle("Add " + title);
+            addButton = new JButton("Add " + title);
+            return;
+        }
+        theFrame.setTitle("Change " + title);
+        addButton = new JButton("Change " + title);
+
     }
 
     @Override

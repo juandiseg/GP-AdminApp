@@ -2,6 +2,7 @@ package windows.ingredientsWindow;
 
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
+import componentsFood.ingredient;
 import componentsFood.provider;
 import util.abstractUpdater;
 import java.util.ArrayList;
@@ -36,18 +37,37 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addRowsToModel() {
-        ArrayList<provider> temp = theManagerDB.getAllProviders();
+        ArrayList<ingredient> tempList = theManagerDB.getAllIngredients();
         myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
-        myTable.setModel(model);
-        for (provider temp2 : temp)
-            model.addRow(new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
+        model = new DefaultTableModel(
+                new String[] { "ID", "Prov_ID", "Date", "Name", "Price", "Amount", "in_inventory", "active" }, 0);
+        for (ingredient temp : tempList) {
+            String id = Integer.toString(temp.getId());
+            String prov_id = Integer.toString(temp.getProviderID());
+            String price = Float.toString(temp.getPrice());
+            String amount = Integer.toString(temp.getAmount());
+            String in_inventory;
+            String active;
+            if (temp.getInInventory())
+                in_inventory = "In inventory";
+            else
+                in_inventory = "Not in inventory";
+            if (temp.getActive())
+                active = "Active";
+            else
+                active = "Not active";
+            model.addRow(
+                    new String[] { id, prov_id, temp.getDate(), temp.getName(), price, amount, in_inventory, active });
+        }
     }
 
     @Override
     public void adjustTable() {
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
+        myTable.setModel(model);
+        myTable.removeColumn(myTable.getColumn("ID"));
+        myTable.removeColumn(myTable.getColumn("Prov_ID"));
     }
 
     @Override

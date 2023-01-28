@@ -14,8 +14,8 @@ public class add_pWindow extends abstractAddWindow {
     private JTextField textFieldName = new JTextField();
     private JTextField textFieldEmail = new JTextField();
 
-    public add_pWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title);
+    public add_pWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Provider", true);
     }
 
     @Override

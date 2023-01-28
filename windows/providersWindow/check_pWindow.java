@@ -9,8 +9,8 @@ import javax.swing.JTable;
 
 public class check_pWindow extends abstractEdit_CheckWindow {
 
-    public check_pWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, false);
+    public check_pWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Provider", false);
     }
 
     @Override

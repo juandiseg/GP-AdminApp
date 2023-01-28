@@ -20,7 +20,7 @@ public class main_aWindow extends abstractUpdater {
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("Ingredients menu");
+        theFrame.setTitle("Allergens menu");
         theFrame.add(button1);
         theFrame.add(button2);
         theFrame.add(button3);

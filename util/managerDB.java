@@ -302,4 +302,31 @@ public class managerDB {
         }
     }
 
+    public ArrayList<ingredient> getAllIngredients() {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

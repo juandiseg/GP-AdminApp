@@ -34,13 +34,13 @@ public class main_pWindow extends abstractUpdater {
         abstractUpdater temp = this;
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                add_pWindow tempWind = new add_pWindow(temp, "Provider");
+                add_pWindow tempWind = new add_pWindow(temp);
                 tempWind.updateToThisMenu();
             }
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                edit_pWindow tempWind = new edit_pWindow(temp, "Provider");
+                edit_pWindow tempWind = new edit_pWindow(temp);
                 tempWind.updateToThisMenu();
             }
         });
@@ -50,7 +50,7 @@ public class main_pWindow extends abstractUpdater {
         });
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                check_pWindow tempWinw = new check_pWindow(temp, "Provider");
+                check_pWindow tempWinw = new check_pWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });

@@ -17,7 +17,7 @@ public class add_iWindow extends abstractAddWindow {
     private JTextField textFieldAmount = new JTextField();
 
     public add_iWindow(abstractUpdater previousWindow) {
-        super(previousWindow, "Ingredient");
+        super(previousWindow, "Ingredient", true);
     }
 
     @Override

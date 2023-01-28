@@ -13,7 +13,7 @@ public class add_aWindow extends abstractAddWindow {
     private JTextField textFieldName = new JTextField();
 
     public add_aWindow(abstractUpdater previousWindow) {
-        super(previousWindow, "Allergen");
+        super(previousWindow, "Allergen", true);
     }
 
     @Override
