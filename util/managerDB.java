@@ -80,7 +80,7 @@ public class managerDB {
         }
     }
 
-    public boolean addIngredient(int provID, String date, String name, float price, int amount, boolean in_inventory,
+    public boolean addIngredient(int provID, String date, String name, String price, int amount, boolean in_inventory,
             boolean active) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             int ingrID = getLastIngredientID() + 1;

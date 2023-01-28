@@ -2,6 +2,8 @@ package windows.ingredientsWindow;
 
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import util.abstractUpdater;
@@ -15,7 +17,7 @@ import javax.swing.*;
 public class assist_add_iWindow extends abstractUpdater {
 
     private String name;
-    private String amount;
+    private int amount;
     private String price;
     private JTable myTable;
     private JList<provider> theList = new JList<provider>();
@@ -25,7 +27,7 @@ public class assist_add_iWindow extends abstractUpdater {
     private JLabel enterEmail = new JLabel("Is this ingredient in inventory: ");
     private JLabel chooseProv = new JLabel("Which provider provides you this ingredient:");
 
-    private JLabel succesful = new JLabel("The provider has been successfully edited.");
+    private JLabel succesful = new JLabel("The ingredient has been successfully added.");
     private JLabel inputError = new JLabel("There is something wrong with the given input.");
     private JToggleButton activeButton = new JToggleButton("Active");
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
@@ -33,15 +35,15 @@ public class assist_add_iWindow extends abstractUpdater {
     public assist_add_iWindow(abstractUpdater previousWindow, String name, String amount, String price) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
         this.name = name;
-        this.amount = amount;
+        this.amount = Integer.parseInt(amount);
         this.price = price;
     }
 
     @Override
     public void addComponents() {
         theFrame.setTitle("Adding Ingredient");
-        succesful.setBounds(250, 130, 250, 25);
-        inputError.setBounds(250, 130, 300, 25);
+        succesful.setBounds(220, 360, 300, 25);
+        inputError.setBounds(220, 360, 300, 25);
         summaryTXT.setBounds(200, 20, 250, 25);
         enterName.setBounds(10, 60, 220, 25);
         activeButton.setBounds(240, 60, 170, 25);
@@ -75,8 +77,22 @@ public class assist_add_iWindow extends abstractUpdater {
     public void addActionListeners() {
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                System.out.println(theList.getSelectedValue().getId());
+                int providerID = theList.getSelectedValue().getId();
+                boolean inventory = true;
+                if (inventoryButton.getText().equals("Without Inventory"))
+                    inventory = false;
+                boolean active = true;
+                if (activeButton.getText().equals("Non Active"))
+                    inventory = false;
+                LocalDate dateObj = LocalDate.now();
+                String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                if (theManagerDB.addIngredient(providerID, date, name, price, amount, inventory, active)) {
+                    theFrame.remove(inputError);
+                    theFrame.add(succesful);
+                    theFrame.repaint();
+                } else {
+                    printErrorGUI();
+                }
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
