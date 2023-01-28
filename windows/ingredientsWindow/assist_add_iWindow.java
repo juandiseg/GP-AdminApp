@@ -1,7 +1,6 @@
 package windows.ingredientsWindow;
 
 import java.time.format.DateTimeFormatter;
-import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import java.awt.event.ActionEvent;
@@ -10,9 +9,7 @@ import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import java.time.LocalDate;
-import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.JList;
 
 public class assist_add_iWindow extends abstractAddWindow {
@@ -20,7 +17,6 @@ public class assist_add_iWindow extends abstractAddWindow {
     private String name;
     private int amount;
     private String price;
-    private JTable myTable;
     private JList<provider> theList = new JList<provider>();
 
     private JLabel summaryTXT = new JLabel("Specify the following information:");
@@ -47,8 +43,11 @@ public class assist_add_iWindow extends abstractAddWindow {
 
     @Override
     public void addActionListeners() {
+        abstractUpdater temp = this;
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (theList.getSelectedValue() == null)
+                    return;
                 int providerID = theList.getSelectedValue().getId();
                 boolean inventory = true;
                 if (inventoryButton.getText().equals("Without Inventory"))
@@ -58,11 +57,12 @@ public class assist_add_iWindow extends abstractAddWindow {
                     inventory = false;
                 LocalDate dateObj = LocalDate.now();
                 String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                if (theManagerDB.addIngredient(providerID, date, name, price, amount, inventory, active)) {
-                    printSuccessGUI();
-                } else {
+                int ID = theManagerDB.addIngredient(providerID, date, name, price, amount, inventory, active);
+                if (ID != -1) {
+                    assist_assist_add_iWindow tempWinw = new assist_assist_add_iWindow(temp, ID, name);
+                    tempWinw.updateToThisMenu();
+                } else
                     printErrorGUI();
-                }
             }
         });
         activeButton.addActionListener(new ActionListener() {

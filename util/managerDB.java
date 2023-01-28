@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JOptionPane;
 
@@ -83,7 +84,7 @@ public class managerDB {
         }
     }
 
-    public boolean addIngredient(int provID, String date, String name, String price, int amount, boolean in_inventory,
+    public int addIngredient(int provID, String date, String name, String price, int amount, boolean in_inventory,
             boolean active) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             int ingrID = getLastIngredientID() + 1;
@@ -92,10 +93,10 @@ public class managerDB {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return true;
+                return ingrID;
             } catch (Exception e) {
                 System.out.println(e);
-                return false;
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -327,6 +328,29 @@ public class managerDB {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean addAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            while (!stackSelected.isEmpty()) {
+                allergen temp = stackSelected.pop();
+                System.out
+                        .println("The ingredient ID is: " + ingredientID + ", and the allergenId is: " + temp.getId());
+                String query = "INSERT INTO ingredients_allergens VALUES (" + ingredientID + ", '" + temp.getId()
+                        + "');";
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate(query);
+                } catch (Exception a) {
+                    System.out.println(a);
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
         }
     }
 }

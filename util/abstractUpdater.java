@@ -50,4 +50,7 @@ public abstract class abstractUpdater {
 
     public abstract void addActionListeners();
 
+    public abstractUpdater getPreviousWindow() {
+        return previousWindow;
+    }
 }
