@@ -1,17 +1,10 @@
 package windows.ingredientsWindow.allergensWindow;
 
-import javax.swing.*;
-import java.sql.*;
-import iLayouts.GridLayoutApplyer;
-import iLayouts.iLayout;
-import iLayouts.placeholderLayoutApplyer;
-import util.abstractUpdater;
-import util.managerDB;
-import windows.ingredientsWindow.main_iWindow;
-import windows.providersWindow.*;
-
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import iLayouts.GridLayoutApplyer;
+import java.awt.event.ActionEvent;
+import util.abstractUpdater;
+import javax.swing.*;
 
 public class main_aWindow extends abstractUpdater {
 
@@ -40,13 +33,13 @@ public class main_aWindow extends abstractUpdater {
         abstractUpdater temp = this;
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                add_aWindow tempWinw = new add_aWindow(temp, "Allergen");
+                add_aWindow tempWinw = new add_aWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                edit_aWindow tempWinw = new edit_aWindow(temp, "Allergen");
+                edit_aWindow tempWinw = new edit_aWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });
@@ -56,7 +49,7 @@ public class main_aWindow extends abstractUpdater {
         });
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                check_aWindow tempWinw = new check_aWindow(temp, "Allergen");
+                check_aWindow tempWinw = new check_aWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });

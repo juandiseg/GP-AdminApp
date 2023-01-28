@@ -42,7 +42,6 @@ public class add_pWindow extends abstractAddWindow {
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();

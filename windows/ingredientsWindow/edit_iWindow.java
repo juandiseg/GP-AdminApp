@@ -1,31 +1,17 @@
 package windows.ingredientsWindow;
 
-import iLayouts.placeholderLayoutApplyer;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import java.awt.*;
-
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
 import javax.swing.table.DefaultTableModel;
-
-import com.mysql.cj.protocol.a.authentication.MysqlNativePasswordPlugin;
-
-import componentsFood.provider;
 import util.abstractEdit_CheckWindow;
+import componentsFood.provider;
 import util.abstractUpdater;
-import javax.swing.JButton;
+import java.util.ArrayList;
 import javax.swing.JTable;
-import javax.swing.JLabel;
+import java.awt.event.*;
 
 public class edit_iWindow extends abstractEdit_CheckWindow {
 
-    public edit_iWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, true);
+    public edit_iWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Ingredient", true);
     }
 
     @Override
@@ -54,19 +40,14 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
         myTable = new JTable();
         model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
         myTable.setModel(model);
-        for (provider temp2 : temp) {
-            // JButton tempButton = new JButton("Edit");
-            model.addRow(
-                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
-        }
+        for (provider temp2 : temp)
+            model.addRow(new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
     }
 
     @Override
     public void adjustTable() {
-        // TODO Auto-generated method stub
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
-
     }
 
     @Override
@@ -79,11 +60,9 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addToFrame() {
-        // TODO Auto-generated method stub
         theFrame.add(getSummaryTXT());
         theFrame.add(getBackButton());
         theFrame.add(myTable);
-
     }
 
 }

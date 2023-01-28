@@ -43,7 +43,7 @@ public class main_iWindow extends abstractUpdater {
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                edit_iWindow tempWind = new edit_iWindow(temp, "Ingredients");
+                edit_iWindow tempWind = new edit_iWindow(temp);
                 tempWind.updateToThisMenu();
             }
         });

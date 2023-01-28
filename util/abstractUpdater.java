@@ -1,10 +1,7 @@
 package util;
 
-import java.util.ArrayList;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-
-import iLayouts.*;
+import iLayouts.iLayout;
 
 public abstract class abstractUpdater {
 

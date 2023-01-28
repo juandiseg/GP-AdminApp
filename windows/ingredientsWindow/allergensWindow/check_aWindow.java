@@ -1,17 +1,16 @@
 package windows.ingredientsWindow.allergensWindow;
 
 import javax.swing.table.DefaultTableModel;
-import componentsFood.allergen;
 import util.abstractEdit_CheckWindow;
+import componentsFood.allergen;
 import util.abstractUpdater;
 import java.util.ArrayList;
 import javax.swing.JTable;
-import java.awt.event.*;
 
 public class check_aWindow extends abstractEdit_CheckWindow {
 
-    public check_aWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, false);
+    public check_aWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Allergen", false);
     }
 
     @Override

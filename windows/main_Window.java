@@ -1,15 +1,13 @@
 package windows;
 
-import javax.swing.*;
-import java.sql.*;
+import windows.ingredientsWindow.main_iWindow;
+import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
+import java.awt.event.ActionEvent;
+import windows.providersWindow.*;
 import util.abstractUpdater;
 import util.managerDB;
-import windows.ingredientsWindow.main_iWindow;
-import windows.providersWindow.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class main_Window extends abstractUpdater {
 

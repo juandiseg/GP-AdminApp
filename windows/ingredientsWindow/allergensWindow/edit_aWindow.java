@@ -10,8 +10,8 @@ import java.awt.event.*;
 
 public class edit_aWindow extends abstractEdit_CheckWindow {
 
-    public edit_aWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, true);
+    public edit_aWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Allergen", true);
     }
 
     @Override

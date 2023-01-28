@@ -1,13 +1,11 @@
 package windows.ingredientsWindow.allergensWindow;
 
+import javax.swing.table.DefaultTableModel;
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 import componentsFood.allergen;
-import componentsFood.provider;
 import util.abstractUpdater;
 import javax.swing.JButton;
 import javax.swing.JLabel;

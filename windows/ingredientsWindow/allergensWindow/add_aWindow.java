@@ -12,13 +12,12 @@ public class add_aWindow extends abstractAddWindow {
     private JLabel enterName = new JLabel("Enter the allergen's NAME: ");
     private JTextField textFieldName = new JTextField();
 
-    public add_aWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title);
+    public add_aWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Allergen");
     }
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();

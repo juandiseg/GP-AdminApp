@@ -1,16 +1,11 @@
 package windows.providersWindow;
 
-import iLayouts.placeholderLayoutApplyer;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
-import componentsFood.provider;
 import util.abstractEdit_CheckWindow;
+import componentsFood.provider;
 import util.abstractUpdater;
-import javax.swing.JButton;
+import java.util.ArrayList;
 import javax.swing.JTable;
-import javax.swing.JLabel;
 
 public class check_pWindow extends abstractEdit_CheckWindow {
 

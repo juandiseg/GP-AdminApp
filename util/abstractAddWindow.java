@@ -60,7 +60,7 @@ public abstract class abstractAddWindow extends abstractUpdater {
         theFrame.repaint();
     }
 
-    private void setBackButton() {
+    public void setBackButton() {
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
