@@ -21,6 +21,9 @@ public class assist_edit_pWindow extends abstractUpdater {
     JLabel succesful = new JLabel("The provider has been successfully edited.");
     JLabel inputError = new JLabel("There is something wrong with the given input.");
 
+    private JButton backButton = new JButton("Back");
+    private JButton addButton = new JButton("Edit Provider");
+
     public assist_edit_pWindow(abstractUpdater previousWindow, int ID) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
         theCurrentProvider = theManagerDB.getProvider(ID);
@@ -45,19 +48,15 @@ public class assist_edit_pWindow extends abstractUpdater {
         theFrame.add(enterEmail);
         theFrame.add(textFieldEmail);
         loadTable();
-        JButton addButton = new JButton("Edit Provider");
         addButton.setBounds(80, 160, 130, 20);
         theFrame.add(addButton);
-        addToButtonList(addButton);
-        JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
-        addToButtonList(backButton);
     }
 
     @Override
     public void addActionListeners() {
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();
                 String email = textFieldEmail.getText();
@@ -82,7 +81,7 @@ public class assist_edit_pWindow extends abstractUpdater {
 
             }
         });
-        getButtonList().get(1).addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
             }

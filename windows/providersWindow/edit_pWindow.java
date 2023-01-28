@@ -1,71 +1,22 @@
 package windows.providersWindow;
 
-import iLayouts.placeholderLayoutApplyer;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import java.awt.*;
-
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
 import javax.swing.table.DefaultTableModel;
-
-import com.mysql.cj.protocol.a.authentication.MysqlNativePasswordPlugin;
-
 import componentsFood.provider;
+import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
-import javax.swing.JButton;
+import java.util.ArrayList;
 import javax.swing.JTable;
-import javax.swing.JLabel;
+import java.awt.event.*;
 
-public class edit_pWindow extends abstractUpdater {
+public class edit_pWindow extends abstractEdit_CheckWindow {
 
-    private JTextField textFieldName = new JTextField();
-    private JTextField textFieldEmail = new JTextField();
-    private JTable myTable;
-    private DefaultTableModel model;
-    JLabel summaryTXT = new JLabel("Summary of current providers:");
-
-    public edit_pWindow(abstractUpdater previousWindow) {
-        super(previousWindow, new placeholderLayoutApplyer(theFrame));
-    }
-
-    @Override
-    public void addComponents() {
-        theFrame.setTitle("Choose Provider to Change");
-        summaryTXT.setBounds(200, 20, 250, 25);
-        theFrame.add(summaryTXT);
-        ArrayList<provider> temp = theManagerDB.getAllProviders();
-        myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
-        myTable.setModel(model);
-        for (provider temp2 : temp) {
-            // JButton tempButton = new JButton("Edit");
-            model.addRow(
-                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
-        }
-        myTable.removeColumn(myTable.getColumn("ID"));
-        myTable.setBounds(45, 60, 500, 300);
-        myTable.setDefaultEditor(Object.class, null);
-        myTable.setFocusable(true);
-        theFrame.add(myTable);
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(400, 400, 120, 80);
-        theFrame.add(backButton);
-        addToButtonList(backButton);
+    public edit_pWindow(abstractUpdater previousWindow, String title) {
+        super(previousWindow, title, true);
     }
 
     @Override
     public void addActionListeners() {
         abstractUpdater temp = this;
-        getButtonList().get(0).addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateToPreviousMenu();
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) { // to detect doble click events
@@ -74,6 +25,8 @@ public class edit_pWindow extends abstractUpdater {
                         if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
                             return;
                         String ID = (String) model.getValueAt(target.getSelectedRow(), 0);
+                        model = null;
+                        myTable = null;
                         new assist_edit_pWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
@@ -83,4 +36,34 @@ public class edit_pWindow extends abstractUpdater {
         });
     }
 
+    @Override
+    public void setBounds() {
+        getSummaryTXT().setBounds(200, 20, 250, 25);
+        getBackButton().setBounds(400, 400, 120, 80);
+        myTable.setBounds(45, 60, 500, 300);
+    }
+
+    @Override
+    public void addRowsToModel() {
+        myTable = new JTable();
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        ArrayList<provider> providerList = theManagerDB.getAllProviders();
+        for (provider temp : providerList)
+            model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName(), temp.getEmail() });
+    }
+
+    @Override
+    public void adjustTable() {
+        myTable.setModel(model);
+        myTable.removeColumn(myTable.getColumn("ID"));
+        myTable.setDefaultEditor(Object.class, null);
+        myTable.setFocusable(true);
+    }
+
+    @Override
+    public void addToFrame() {
+        theFrame.add(getSummaryTXT());
+        theFrame.add(getBackButton());
+        theFrame.add(myTable);
+    }
 }

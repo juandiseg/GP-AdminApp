@@ -15,6 +15,7 @@ public class check_iWindow extends abstractUpdater {
 
     private JTable myTable;
     private DefaultTableModel model;
+    private JButton backButton = new JButton("Back");
     JLabel summaryTXT = new JLabel("Summary of current providers:");
 
     public check_iWindow(abstractUpdater previousWindow) {
@@ -39,15 +40,13 @@ public class check_iWindow extends abstractUpdater {
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         theFrame.add(myTable);
-        JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
-        addToButtonList(backButton);
     }
 
     @Override
     public void addActionListeners() {
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
             }

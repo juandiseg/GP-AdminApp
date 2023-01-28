@@ -12,12 +12,10 @@ public abstract class abstractUpdater {
     public static managerDB theManagerDB;
     private abstractUpdater previousWindow;
     private iLayout layoutApplyer;
-    private ArrayList<JButton> buttonList;
 
     public abstractUpdater(abstractUpdater previousWindow, iLayout layoutApplyer) {
         this.previousWindow = previousWindow;
         this.layoutApplyer = layoutApplyer;
-        buttonList = new ArrayList<JButton>();
     }
 
     final public void setFrame(JFrame _theFrame) {
@@ -43,7 +41,6 @@ public abstract class abstractUpdater {
     public void updateToPreviousMenu() {
         if (previousWindow == null)
             return;
-        previousWindow.getButtonList().clear();
         previousWindow.updateToThisMenu();
     }
 
@@ -55,13 +52,5 @@ public abstract class abstractUpdater {
     public abstract void addComponents();
 
     public abstract void addActionListeners();
-
-    public void addToButtonList(JButton theButton) {
-        buttonList.add(theButton);
-    }
-
-    public ArrayList<JButton> getButtonList() {
-        return buttonList;
-    }
 
 }

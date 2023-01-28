@@ -8,31 +8,14 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import java.awt.event.*;
 
-public class edit_aWindow extends abstractEdit_CheckWindow {
+public class check_aWindow extends abstractEdit_CheckWindow {
 
-    public edit_aWindow(abstractUpdater previousWindow, String title) {
-        super(previousWindow, title, true);
+    public check_aWindow(abstractUpdater previousWindow, String title) {
+        super(previousWindow, title, false);
     }
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
-        myTable.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent me) {
-                if (me.getClickCount() == 1) { // to detect doble click events
-                    try {
-                        JTable target = (JTable) me.getSource();
-                        if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
-                            return;
-                        String ID = (String) model.getValueAt(target.getSelectedRow(), 0);
-
-                        new assist_edit_aWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
-                    } catch (IndexOutOfBoundsException e) {
-                        return;
-                    }
-                }
-            }
-        });
     }
 
     @Override

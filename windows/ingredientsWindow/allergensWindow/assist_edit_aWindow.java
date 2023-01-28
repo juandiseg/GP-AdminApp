@@ -21,6 +21,9 @@ public class assist_edit_aWindow extends abstractUpdater {
     JLabel succesful = new JLabel("The allergen has been successfully edited.");
     JLabel inputError = new JLabel("There is something wrong with the given input.");
 
+    private JButton backButton = new JButton("Back");
+    private JButton addButton = new JButton("Edit Allergen");
+
     public assist_edit_aWindow(abstractUpdater previousWindow, int ID) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
         theCurrentAllergen = theManagerDB.getAllergen(ID);
@@ -40,19 +43,15 @@ public class assist_edit_aWindow extends abstractUpdater {
         theFrame.add(enterName);
         theFrame.add(textFieldName);
         loadTable();
-        JButton addButton = new JButton("Edit Allergen");
         addButton.setBounds(80, 160, 130, 20);
         theFrame.add(addButton);
-        addToButtonList(addButton);
-        JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
-        addToButtonList(backButton);
     }
 
     @Override
     public void addActionListeners() {
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();
                 if (name.isEmpty()) {
@@ -68,7 +67,7 @@ public class assist_edit_aWindow extends abstractUpdater {
 
             }
         });
-        getButtonList().get(1).addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
             }

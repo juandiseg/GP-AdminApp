@@ -14,6 +14,10 @@ import java.awt.event.ActionListener;
 public class main_Window extends abstractUpdater {
 
     static JFrame theFrame = new JFrame("Main window");
+    private JButton button1 = new JButton("Providers");
+    private JButton button2 = new JButton("Ingredients");
+    private JButton button3 = new JButton("Drinks");
+    private JButton button4 = new JButton("Else");
 
     public main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
@@ -28,33 +32,31 @@ public class main_Window extends abstractUpdater {
 
     public void addComponents() {
         theFrame.setTitle("new main menu uno.");
-        addToButtonList(new JButton("Providers"));
-        addToButtonList(new JButton("Ingredients"));
-        addToButtonList(new JButton("Drinks"));
-        addToButtonList(new JButton("Your mum"));
-        for (JButton temp : getButtonList())
-            theFrame.add(temp);
+        theFrame.add(button1);
+        theFrame.add(button2);
+        theFrame.add(button3);
+        theFrame.add(button4);
     }
 
     public void addActionListeners() {
         abstractUpdater temp = this;
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 main_pWindow providersWdw = new main_pWindow(temp);
                 providersWdw.updateToThisMenu();
             }
         });
-        getButtonList().get(1).addActionListener(new ActionListener() {
+        button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 main_iWindow ingredientsWdw = new main_iWindow(temp);
                 ingredientsWdw.updateToThisMenu();
             }
         });
-        getButtonList().get(2).addActionListener(new ActionListener() {
+        button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        getButtonList().get(3).addActionListener(new ActionListener() {
+        button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });

@@ -22,6 +22,9 @@ public class assist_add_iWindow extends abstractUpdater {
     private JTable myTable;
     private JList<provider> theList = new JList<provider>();
 
+    private JButton backButton = new JButton("Back");
+    private JButton addButton = new JButton("Add Ingredient");
+
     private JLabel summaryTXT = new JLabel("Specify the following information:");
     private JLabel enterName = new JLabel("Is this ingredient ACTIVE or NOT: ");
     private JLabel enterEmail = new JLabel("Is this ingredient in inventory: ");
@@ -63,19 +66,15 @@ public class assist_add_iWindow extends abstractUpdater {
         theList.setModel(listModel);
         theList.setBounds(240, 150, 170, 200);
         theFrame.add(theList);
-        JButton addButton = new JButton("Add Ingredient");
         addButton.setBounds(80, 400, 130, 20);
         theFrame.add(addButton);
-        addToButtonList(addButton);
-        JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
-        addToButtonList(backButton);
     }
 
     @Override
     public void addActionListeners() {
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int providerID = theList.getSelectedValue().getId();
                 boolean inventory = true;
@@ -93,7 +92,7 @@ public class assist_add_iWindow extends abstractUpdater {
                 }
             }
         });
-        getButtonList().get(1).addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
             }

@@ -16,55 +16,21 @@ import javax.swing.table.DefaultTableModel;
 import com.mysql.cj.protocol.a.authentication.MysqlNativePasswordPlugin;
 
 import componentsFood.provider;
+import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 
-public class edit_iWindow extends abstractUpdater {
+public class edit_iWindow extends abstractEdit_CheckWindow {
 
-    private JTextField textFieldName = new JTextField();
-    private JTextField textFieldEmail = new JTextField();
-    private JTable myTable;
-    private DefaultTableModel model;
-    JLabel summaryTXT = new JLabel("Summary of current ingredients:");
-
-    public edit_iWindow(abstractUpdater previousWindow) {
-        super(previousWindow, new placeholderLayoutApplyer(theFrame));
-    }
-
-    @Override
-    public void addComponents() {
-        theFrame.setTitle("Display Current Ingredients");
-        summaryTXT.setBounds(200, 20, 250, 25);
-        theFrame.add(summaryTXT);
-        ArrayList<provider> temp = theManagerDB.getAllProviders();
-        myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
-        myTable.setModel(model);
-        for (provider temp2 : temp) {
-            // JButton tempButton = new JButton("Edit");
-            model.addRow(
-                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
-        }
-        myTable.setBounds(45, 60, 500, 300);
-        myTable.setDefaultEditor(Object.class, null);
-        myTable.setFocusable(true);
-        theFrame.add(myTable);
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(400, 400, 120, 80);
-        theFrame.add(backButton);
-        addToButtonList(backButton);
+    public edit_iWindow(abstractUpdater previousWindow, String title) {
+        super(previousWindow, title, true);
     }
 
     @Override
     public void addActionListeners() {
         abstractUpdater temp = this;
-        getButtonList().get(0).addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateToPreviousMenu();
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) { // to detect doble click events
@@ -80,6 +46,44 @@ public class edit_iWindow extends abstractUpdater {
                 }
             }
         });
+    }
+
+    @Override
+    public void addRowsToModel() {
+        ArrayList<provider> temp = theManagerDB.getAllProviders();
+        myTable = new JTable();
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        myTable.setModel(model);
+        for (provider temp2 : temp) {
+            // JButton tempButton = new JButton("Edit");
+            model.addRow(
+                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
+        }
+    }
+
+    @Override
+    public void adjustTable() {
+        // TODO Auto-generated method stub
+        myTable.setDefaultEditor(Object.class, null);
+        myTable.setFocusable(true);
+
+    }
+
+    @Override
+    public void setBounds() {
+        myTable.setBounds(45, 60, 500, 300);
+        getSummaryTXT().setBounds(200, 20, 250, 25);
+        getBackButton().setBounds(400, 400, 120, 80);
+
+    }
+
+    @Override
+    public void addToFrame() {
+        // TODO Auto-generated method stub
+        theFrame.add(getSummaryTXT());
+        theFrame.add(getBackButton());
+        theFrame.add(myTable);
+
     }
 
 }

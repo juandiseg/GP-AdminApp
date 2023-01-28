@@ -6,52 +6,51 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
 import componentsFood.provider;
+import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 
-public class check_pWindow extends abstractUpdater {
+public class check_pWindow extends abstractEdit_CheckWindow {
 
-    private JTable myTable;
-    private DefaultTableModel model;
-    JLabel summaryTXT = new JLabel("Summary of current providers:");
-
-    public check_pWindow(abstractUpdater previousWindow) {
-        super(previousWindow, new placeholderLayoutApplyer(theFrame));
-    }
-
-    @Override
-    public void addComponents() {
-        theFrame.setTitle("Display Current Providers");
-        summaryTXT.setBounds(200, 20, 250, 25);
-        theFrame.add(summaryTXT);
-        ArrayList<provider> temp = theManagerDB.getAllProviders();
-        myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "Name", "Email" }, 0);
-        myTable.setModel(model);
-        for (provider temp2 : temp) {
-            // JButton tempButton = new JButton("Edit");
-            model.addRow(
-                    new String[] { temp2.getName(), temp2.getEmail() });
-        }
-        myTable.setBounds(45, 60, 500, 300);
-        myTable.setDefaultEditor(Object.class, null);
-        myTable.setFocusable(true);
-        theFrame.add(myTable);
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(400, 400, 120, 80);
-        theFrame.add(backButton);
-        addToButtonList(backButton);
+    public check_pWindow(abstractUpdater previousWindow, String title) {
+        super(previousWindow, title, false);
     }
 
     @Override
     public void addActionListeners() {
-        getButtonList().get(0).addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateToPreviousMenu();
-            }
-        });
+    }
+
+    @Override
+    public void addRowsToModel() {
+        myTable = new JTable();
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        ArrayList<provider> providerList = theManagerDB.getAllProviders();
+        for (provider temp : providerList)
+            model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName(), temp.getEmail() });
+    }
+
+    @Override
+    public void adjustTable() {
+        myTable.setModel(model);
+        myTable.removeColumn(myTable.getColumn("ID"));
+        myTable.setDefaultEditor(Object.class, null);
+        myTable.setFocusable(true);
+    }
+
+    @Override
+    public void setBounds() {
+        getSummaryTXT().setBounds(200, 20, 250, 25);
+        getBackButton().setBounds(400, 400, 120, 80);
+        myTable.setBounds(45, 60, 500, 300);
+    }
+
+    @Override
+    public void addToFrame() {
+        theFrame.add(getSummaryTXT());
+        theFrame.add(getBackButton());
+        theFrame.add(myTable);
     }
 
 }

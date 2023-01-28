@@ -17,6 +17,9 @@ public class add_iWindow extends abstractUpdater {
     private JTextField textFieldPrice = new JTextField();
     private JTextField textFieldAmount = new JTextField();
 
+    private JButton backButton = new JButton("Back");
+    private JButton addButton = new JButton("Add Ingredient");
+
     private JLabel succesful = new JLabel("The provider has been successfully added.");
     private JLabel inputError = new JLabel("There is something wrong with the given input.");
 
@@ -44,20 +47,16 @@ public class add_iWindow extends abstractUpdater {
         theFrame.add(enterAmount);
         theFrame.add(textFieldAmount);
 
-        JButton addButton = new JButton("Add Ingredient");
         addButton.setBounds(80, 120, 130, 20);
         theFrame.add(addButton);
-        addToButtonList(addButton);
-        JButton backButton = new JButton("Back");
         backButton.setBounds(400, 400, 120, 80);
         theFrame.add(backButton);
-        addToButtonList(backButton);
     }
 
     @Override
     public void addActionListeners() {
         abstractUpdater temp = this;
-        getButtonList().get(0).addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();
                 String price = textFieldPrice.getText();
@@ -68,7 +67,7 @@ public class add_iWindow extends abstractUpdater {
                 }
             }
         });
-        getButtonList().get(1).addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateToPreviousMenu();
             }
