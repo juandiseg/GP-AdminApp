@@ -1,4 +1,4 @@
-package windows.providersWindow;
+package windows.ingredientsWindow;
 
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.*;
 
-public class assist_edit_pWindow extends abstractUpdater {
+public class assist_edit_iWindow extends abstractUpdater {
 
     private provider theCurrentProvider;
     private JTextField textFieldName = new JTextField();
@@ -21,7 +21,7 @@ public class assist_edit_pWindow extends abstractUpdater {
     JLabel succesful = new JLabel("The provider has been successfully edited.");
     JLabel inputError = new JLabel("There is something wrong with the given input.");
 
-    public assist_edit_pWindow(abstractUpdater previousWindow, int ID) {
+    public assist_edit_iWindow(abstractUpdater previousWindow, int ID) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
         theCurrentProvider = theManagerDB.getProvider(ID);
     }

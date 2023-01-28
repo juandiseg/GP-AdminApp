@@ -32,4 +32,7 @@ public class provider {
         return email;
     }
 
+    public String toString() {
+        return name;
+    }
 }

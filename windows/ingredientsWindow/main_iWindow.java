@@ -1,4 +1,4 @@
-package windows.providersWindow;
+package windows.ingredientsWindow;
 
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
@@ -7,19 +7,19 @@ import util.abstractUpdater;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 
-public class main_pWindow extends abstractUpdater {
+public class main_iWindow extends abstractUpdater {
 
-    public main_pWindow(abstractUpdater previousWindow) {
+    public main_iWindow(abstractUpdater previousWindow) {
         super(previousWindow, new GridLayoutApplyer(theFrame, 6));
     }
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("Providers menu");
-        addToButtonList(new JButton("Add Provider"));
-        addToButtonList(new JButton("Edit Provider"));
-        addToButtonList(new JButton("Delete Provider"));
-        addToButtonList(new JButton("Check Provider"));
+        theFrame.setTitle("Ingredients menu");
+        addToButtonList(new JButton("Add Ingredient"));
+        addToButtonList(new JButton("Edit Ingredient"));
+        addToButtonList(new JButton("Delete Ingredient"));
+        addToButtonList(new JButton("Check Ingredients"));
         addToButtonList(new JButton("Back"));
         for (JButton temp : getButtonList())
             theFrame.add(temp);
@@ -30,13 +30,13 @@ public class main_pWindow extends abstractUpdater {
         abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                add_pWindow tempWind = new add_pWindow(temp);
+                add_iWindow tempWind = new add_iWindow(temp);
                 tempWind.updateToThisMenu();
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                edit_pWindow tempWind = new edit_pWindow(temp);
+                edit_iWindow tempWind = new edit_iWindow(temp);
                 tempWind.updateToThisMenu();
             }
         });
@@ -46,7 +46,7 @@ public class main_pWindow extends abstractUpdater {
         });
         getButtonList().get(3).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                check_pWindow tempWinw = new check_pWindow(temp);
+                check_iWindow tempWinw = new check_iWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });

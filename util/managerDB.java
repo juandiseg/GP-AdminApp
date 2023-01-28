@@ -30,7 +30,6 @@ public class managerDB {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                System.out.println("succesfully updated!!!");
                 return true;
             } catch (Exception e) {
                 System.out.println(e);
@@ -55,6 +54,64 @@ public class managerDB {
             } catch (Exception e) {
                 System.out.println(e);
                 return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private int getLastIngredientID() {
+        try (Connection connection = DriverManager.getConnection(url, "juandi", "Juandi")) {
+            String query = "SELECT ingredient_id FROM beatneat.ingredients ORDER BY ingredient_id DESC LIMIT 1;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int providerID = rs.getInt("ingredient_id");
+                    connection.close();
+                    return providerID;
+                }
+                return -1;
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean addIngredient(int provID, String date, String name, float price, int amount, boolean in_inventory,
+            boolean active) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            int ingrID = getLastIngredientID() + 1;
+            String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", '" + date + "', '" + name
+                    + "', " + price + ", " + amount + ", " + in_inventory + ", " + active + ");";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean editIngredient(int ingID, int provID, String date, String name, double price, int amount,
+            boolean in_inventory, boolean active) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE ingredients SET provider_id = " + provID + ", date = '" + date
+                    + "', name = '" + name + "', price = " + price + ", amount = " + amount + ", in_inventory = "
+                    + in_inventory + ", active = " + active + " WHERE provider_id = " + Integer.toString(ingID);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

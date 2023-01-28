@@ -5,6 +5,7 @@ import java.sql.*;
 import iLayouts.GridLayoutApplyer;
 import util.abstractUpdater;
 import util.managerDB;
+import windows.ingredientsWindow.main_iWindow;
 import windows.providersWindow.*;
 
 import java.awt.event.ActionEvent;
@@ -28,7 +29,7 @@ public class main_Window extends abstractUpdater {
     public void addComponents() {
         theFrame.setTitle("new main menu uno.");
         addToButtonList(new JButton("Providers"));
-        addToButtonList(new JButton("Meals"));
+        addToButtonList(new JButton("Ingredients"));
         addToButtonList(new JButton("Drinks"));
         addToButtonList(new JButton("Your mum"));
         for (JButton temp : getButtonList())
@@ -39,12 +40,14 @@ public class main_Window extends abstractUpdater {
         abstractUpdater temp = this;
         getButtonList().get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                main_pWindow ingredientesWdw = new main_pWindow(temp);
-                ingredientesWdw.updateToThisMenu();
+                main_pWindow providersWdw = new main_pWindow(temp);
+                providersWdw.updateToThisMenu();
             }
         });
         getButtonList().get(1).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                main_iWindow ingredientsWdw = new main_iWindow(temp);
+                ingredientsWdw.updateToThisMenu();
             }
         });
         getButtonList().get(2).addActionListener(new ActionListener() {
