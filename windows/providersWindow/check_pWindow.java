@@ -23,7 +23,7 @@ public class check_pWindow extends abstractUpdater {
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("Choose Provider to Change");
+        theFrame.setTitle("Display Current Providers");
         summaryTXT.setBounds(200, 20, 250, 25);
         theFrame.add(summaryTXT);
         ArrayList<provider> temp = theManagerDB.getAllProviders();

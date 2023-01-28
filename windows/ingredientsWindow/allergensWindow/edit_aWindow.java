@@ -1,4 +1,4 @@
-package windows.ingredientsWindow;
+package windows.ingredientsWindow.allergensWindow;
 
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
@@ -15,38 +15,39 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mysql.cj.protocol.a.authentication.MysqlNativePasswordPlugin;
 
+import componentsFood.allergen;
 import componentsFood.provider;
 import util.abstractUpdater;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 
-public class edit_iWindow extends abstractUpdater {
+public class edit_aWindow extends abstractUpdater {
 
     private JTextField textFieldName = new JTextField();
     private JTextField textFieldEmail = new JTextField();
     private JTable myTable;
     private DefaultTableModel model;
-    JLabel summaryTXT = new JLabel("Summary of current ingredients:");
+    JLabel summaryTXT = new JLabel("Summary of current allergens:");
 
-    public edit_iWindow(abstractUpdater previousWindow) {
+    public edit_aWindow(abstractUpdater previousWindow) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
     }
 
     @Override
     public void addComponents() {
-        theFrame.setTitle("Display Current Ingredients");
+        theFrame.setTitle("Choose allergen to Change");
         summaryTXT.setBounds(200, 20, 250, 25);
         theFrame.add(summaryTXT);
-        ArrayList<provider> temp = theManagerDB.getAllProviders();
+        ArrayList<allergen> temp = theManagerDB.getAllAllergens();
         myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        model = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
         myTable.setModel(model);
-        for (provider temp2 : temp) {
-            // JButton tempButton = new JButton("Edit");
+        for (allergen temp2 : temp) {
             model.addRow(
-                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
+                    new String[] { Integer.toString(temp2.getId()), temp2.getName() });
         }
+        myTable.removeColumn(myTable.getColumn("ID"));
         myTable.setBounds(45, 60, 500, 300);
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
@@ -72,8 +73,9 @@ public class edit_iWindow extends abstractUpdater {
                         JTable target = (JTable) me.getSource();
                         if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        String ID = (String) target.getValueAt(target.getSelectedRow(), 0);
-                        new assist_edit_iWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
+                        String ID = (String) model.getValueAt(target.getSelectedRow(), 0);
+
+                        new assist_edit_aWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }

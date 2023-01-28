@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import java.sql.ResultSet;
 import componentsFood.*;
 
@@ -181,4 +184,122 @@ public class managerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
+
+    private int getLastAllergenID() {
+        try (Connection connection = DriverManager.getConnection(url, "juandi", "Juandi")) {
+            String query = "SELECT allergen_id FROM beatneat.allergens ORDER BY allergen_id DESC LIMIT 1;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int allergenID = rs.getInt("allergen_id");
+                    connection.close();
+                    return allergenID;
+                }
+                return -1;
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public allergen getAllergen(int ID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM allergens WHERE allergen_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int allergenID = rs.getInt("allergen_id");
+                    String name = rs.getString("name");
+                    allergen temp = new allergen(allergenID, name);
+                    connection.close();
+                    return temp;
+                }
+                connection.close();
+                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean addAllergen(String name) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String queryTest = "SELECT * FROM allergens WHERE name LIKE '%" + name + "%' LIMIT 1";
+            try (Statement stmt1 = connection.createStatement()) {
+                ResultSet rs = stmt1.executeQuery(queryTest);
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(null, "There is a similar entry with that name.", "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                    return false;
+                }
+            }
+            int allergenID = getLastAllergenID() + 1;
+            String query = "INSERT INTO allergens VALUES (" + allergenID + ", '" + name + "');";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<allergen> getAllAllergens() {
+        ArrayList<allergen> tempList = new ArrayList<allergen>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM allergens";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int allergenID = rs.getInt("allergen_id");
+                    String name = rs.getString("name");
+                    tempList.add(new allergen(allergenID, name));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean editAllergen(int ID, String name) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String queryTest = "SELECT * FROM allergens WHERE name LIKE '%" + name + "%' LIMIT 1";
+            try (Statement stmt1 = connection.createStatement()) {
+                ResultSet rs = stmt1.executeQuery(queryTest);
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(null, "There is a already a similar entry with that name.", "Error",
+                            JOptionPane.WARNING_MESSAGE);
+                    return false;
+                }
+            }
+
+            String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + Integer.toString(ID);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
 }
