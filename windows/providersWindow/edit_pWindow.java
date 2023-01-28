@@ -47,6 +47,7 @@ public class edit_pWindow extends abstractUpdater {
             model.addRow(
                     new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
         }
+        myTable.removeColumn(myTable.getColumn("ID"));
         myTable.setBounds(45, 60, 500, 300);
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
@@ -72,7 +73,7 @@ public class edit_pWindow extends abstractUpdater {
                         JTable target = (JTable) me.getSource();
                         if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        String ID = (String) target.getValueAt(target.getSelectedRow(), 0);
+                        String ID = (String) model.getValueAt(target.getSelectedRow(), 0);
                         new assist_edit_pWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;

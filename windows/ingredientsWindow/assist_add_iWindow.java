@@ -1,18 +1,18 @@
 package windows.ingredientsWindow;
 
+import java.time.format.DateTimeFormatter;
 import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import java.awt.event.ActionEvent;
+import javax.swing.JToggleButton;
+import componentsFood.provider;
 import util.abstractUpdater;
+import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
-import componentsFood.provider;
-
-import javax.swing.*;
+import javax.swing.JTable;
+import javax.swing.JList;
 
 public class assist_add_iWindow extends abstractUpdater {
 
@@ -87,9 +87,7 @@ public class assist_add_iWindow extends abstractUpdater {
                 LocalDate dateObj = LocalDate.now();
                 String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 if (theManagerDB.addIngredient(providerID, date, name, price, amount, inventory, active)) {
-                    theFrame.remove(inputError);
-                    theFrame.add(succesful);
-                    theFrame.repaint();
+                    printSuccessGUI();
                 } else {
                     printErrorGUI();
                 }
@@ -128,22 +126,6 @@ public class assist_add_iWindow extends abstractUpdater {
         theFrame.remove(inputError);
         theFrame.add(succesful);
         theFrame.remove(myTable);
-    }
-
-    private void loadTable() {
-        /*
-         * myTable = new JTable();
-         * DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Name",
-         * "Email" }, 0);
-         * myTable.setModel(model);
-         * model.addRow(new Object[] { theCurrentProvider.getId(),
-         * theCurrentProvider.getName(),
-         * theCurrentProvider.getEmail() });
-         * myTable.setBounds(45, 60, 500, 15);
-         * myTable.setDefaultEditor(Object.class, null);
-         * myTable.setFocusable(true);
-         * theFrame.add(myTable);
-         */
     }
 
 }

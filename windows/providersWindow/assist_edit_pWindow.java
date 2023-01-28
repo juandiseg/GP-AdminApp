@@ -109,9 +109,9 @@ public class assist_edit_pWindow extends abstractUpdater {
 
     private void loadTable() {
         myTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        DefaultTableModel model = new DefaultTableModel(new String[] { "Name", "Email" }, 0);
         myTable.setModel(model);
-        model.addRow(new Object[] { theCurrentProvider.getId(), theCurrentProvider.getName(),
+        model.addRow(new Object[] { theCurrentProvider.getName(),
                 theCurrentProvider.getEmail() });
         myTable.setBounds(45, 60, 500, 15);
         myTable.setDefaultEditor(Object.class, null);

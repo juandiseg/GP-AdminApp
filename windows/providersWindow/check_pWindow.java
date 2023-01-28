@@ -28,12 +28,12 @@ public class check_pWindow extends abstractUpdater {
         theFrame.add(summaryTXT);
         ArrayList<provider> temp = theManagerDB.getAllProviders();
         myTable = new JTable();
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        model = new DefaultTableModel(new String[] { "Name", "Email" }, 0);
         myTable.setModel(model);
         for (provider temp2 : temp) {
             // JButton tempButton = new JButton("Edit");
             model.addRow(
-                    new String[] { Integer.toString(temp2.getId()), temp2.getName(), temp2.getEmail() });
+                    new String[] { temp2.getName(), temp2.getEmail() });
         }
         myTable.setBounds(45, 60, 500, 300);
         myTable.setDefaultEditor(Object.class, null);
