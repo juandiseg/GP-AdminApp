@@ -106,7 +106,7 @@ public class managerDB {
     public boolean editIngredient(int ingID, int provID, String date, String name, double price, int amount,
             boolean in_inventory, boolean active) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE ingredients SET provider_id = " + provID + ", date = '" + date
+            String query = "UPDATE ingredients SET provider_id = " + provID + ", ingredients_date = '" + date
                     + "', name = '" + name + "', price = " + price + ", amount = " + amount + ", in_inventory = "
                     + in_inventory + ", active = " + active + " WHERE provider_id = " + Integer.toString(ingID);
             try (Statement stmt = connection.createStatement()) {
@@ -302,7 +302,7 @@ public class managerDB {
                 while (rs.next()) {
                     int ID = rs.getInt("ingredient_id");
                     int providerID = rs.getInt("provider_id");
-                    String date = rs.getString("date");
+                    String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     int amount = rs.getInt("amount");
@@ -370,7 +370,7 @@ public class managerDB {
                 if (rs.next()) {
                     int ingredient_id = rs.getInt("ingredient_id");
                     int providerID = rs.getInt("provider_id");
-                    String date = rs.getString("date");
+                    String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     int amount = rs.getInt("amount");
@@ -438,6 +438,26 @@ public class managerDB {
                 }
             }
             return containingAllergenNames;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean ingredientSimpleEdit(ingredient theIngredient, String newName, boolean newInventory,
+            boolean newActive) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE ingredients SET name = '" + newName + "', in_inventory = " + newInventory
+                    + ", active = " + newActive + " WHERE ingredient_id = " + theIngredient.getId()
+                    + " AND provider_id = "
+                    + theIngredient.getProviderID() + " AND ingredients_date ='" + theIngredient.getDate() + "'";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }

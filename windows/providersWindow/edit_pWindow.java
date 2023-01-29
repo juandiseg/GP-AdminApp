@@ -23,12 +23,9 @@ public class edit_pWindow extends abstractEdit_CheckWindow {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) { // to detect doble click events
                     try {
-                        JTable target = (JTable) me.getSource();
-                        if (target.getValueAt(target.getSelectedRow(), 0).toString().equals(""))
+                        if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        String ID = (String) model.getValueAt(target.getSelectedRow(), 0);
-                        model = null;
-                        myTable = null;
+                        String ID = (String) model.getValueAt(myTable.getSelectedRow(), 0);
                         new assist_edit_pWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
