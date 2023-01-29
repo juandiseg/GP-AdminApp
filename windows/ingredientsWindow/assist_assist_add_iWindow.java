@@ -1,32 +1,27 @@
 package windows.ingredientsWindow;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Stack;
 import java.awt.event.ActionListener;
-import javax.swing.DefaultListModel;
 import java.awt.event.ActionEvent;
-import javax.swing.JToggleButton;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.*;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
-import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import java.time.LocalDate;
 import javax.swing.*;
-import javax.swing.JList;
 
 public class assist_assist_add_iWindow extends abstractAddWindow {
 
     private int ID;
 
-    private JList<allergen> listAllergens = new JList<allergen>();
-    private DefaultListModel<allergen> modelAllergenList = new DefaultListModel<allergen>();
+    private JScrollPane scrollPaneAllergen;
+    private JScrollPane scrollPaneSelected;
 
-    private JList<allergen> listSelected = new JList<allergen>();
-    private DefaultListModel<allergen> modelSelectedList = new DefaultListModel<allergen>();
+    private JTable tableAllergens;
+    private JTable tableSelected;
+
+    private DefaultTableModel modelAllergens;
+    private DefaultTableModel modelSelected;
 
     private JButton swapLeft = new JButton("Left");
     private JButton swapRight = new JButton("Right");
@@ -37,11 +32,12 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
         super(previousWindow, "Provider", true);
         summaryTXT = new JLabel("Select the allergens contained in " + name + ":");
         this.ID = ID;
+
     }
 
     @Override
     public void addComponents() {
-        setList();
+        setTable();
         setBounds();
         addToFrame();
         setBackButton();
@@ -53,8 +49,11 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Stack<allergen> selectedAllergens = new Stack<allergen>();
-                for (int i = 0; i < modelSelectedList.getSize(); i++)
-                    selectedAllergens.push(modelSelectedList.getElementAt(i));
+                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                    int ID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                    String name = (String) modelSelected.getValueAt(i, 1);
+                    selectedAllergens.push(new allergen(ID, name));
+                }
                 if (theManagerDB.addAlergensOfIngredient(selectedAllergens, ID)) {
                     add_iWindow tempWind = new add_iWindow(
                             temp.getPreviousWindow().getPreviousWindow().getPreviousWindow());
@@ -66,20 +65,24 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
         });
         swapLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (listAllergens.isSelectionEmpty())
+                int row = tableAllergens.getSelectedRow();
+                if (row == -1)
                     return;
-                allergen temp = listAllergens.getSelectedValue();
-                modelAllergenList.remove(listAllergens.getSelectedIndex());
-                modelSelectedList.addElement(temp);
+                String ID = (String) modelAllergens.getValueAt(row, 0);
+                String name = (String) modelAllergens.getValueAt(row, 1);
+                modelAllergens.removeRow(row);
+                modelSelected.addRow(new String[] { ID, name });
             }
         });
         swapRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (listSelected.isSelectionEmpty())
+                int row = tableSelected.getSelectedRow();
+                if (row == -1)
                     return;
-                allergen temp = listSelected.getSelectedValue();
-                modelSelectedList.remove(listSelected.getSelectedIndex());
-                modelAllergenList.addElement(temp);
+                String ID = (String) modelSelected.getValueAt(row, 0);
+                String name = (String) modelSelected.getValueAt(row, 1);
+                modelSelected.removeRow(row);
+                modelAllergens.addRow(new String[] { ID, name });
             }
         });
     }
@@ -91,8 +94,8 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
         getBackButton().setBounds(400, 400, 120, 80);
         getAddButton().setBounds(80, 400, 130, 20);
         summaryTXT.setBounds(200, 20, 250, 25);
-        listAllergens.setBounds(320, 150, 170, 200);
-        listSelected.setBounds(50, 150, 170, 200);
+        scrollPaneAllergen.setBounds(320, 150, 170, 200);
+        scrollPaneSelected.setBounds(50, 150, 170, 200);
         swapLeft.setBounds(230, 210, 80, 25);
         swapRight.setBounds(230, 250, 80, 25);
     }
@@ -101,17 +104,27 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
     public void addToFrame() {
         theFrame.add(getBackButton());
         theFrame.add(getAddButton());
-        theFrame.add(listAllergens);
-        theFrame.add(listSelected);
+        theFrame.add(scrollPaneAllergen);
+        theFrame.add(scrollPaneSelected);
         theFrame.add(summaryTXT);
         theFrame.add(swapRight);
         theFrame.add(swapLeft);
     }
 
-    private void setList() {
-        for (allergen tempProv : theManagerDB.getAllAllergens())
-            modelAllergenList.addElement(tempProv);
-        listAllergens.setModel(modelAllergenList);
-        listSelected.setModel(modelSelectedList);
+    private void setTable() {
+        tableAllergens = new JTable();
+        tableSelected = new JTable();
+        modelAllergens = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
+        modelSelected = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
+        for (allergen tempAllergen : theManagerDB.getAllAllergens())
+            modelAllergens.addRow(new String[] { Integer.toString(tempAllergen.getId()), tempAllergen.getName() });
+        tableAllergens.setModel(modelAllergens);
+        tableSelected.setModel(modelSelected);
+        tableAllergens.removeColumn(tableAllergens.getColumn("ID"));
+        tableSelected.removeColumn(tableSelected.getColumn("ID"));
+        scrollPaneAllergen = new JScrollPane(tableAllergens);
+        scrollPaneAllergen.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneSelected = new JScrollPane(tableSelected);
+        scrollPaneSelected.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 }

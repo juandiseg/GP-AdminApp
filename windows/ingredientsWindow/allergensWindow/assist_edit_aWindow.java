@@ -1,14 +1,12 @@
 package windows.ingredientsWindow.allergensWindow;
 
 import javax.swing.table.DefaultTableModel;
-import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import componentsFood.allergen;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.*;
 
@@ -20,6 +18,8 @@ public class assist_edit_aWindow extends abstractAddWindow {
     private allergen theCurrentAllergen;
     private JTextField textFieldName = new JTextField();
     private JTable myTable;
+    private DefaultTableModel model;
+    private JScrollPane scrollPane;
 
     public assist_edit_aWindow(abstractUpdater previousWindow, int ID) {
         super(previousWindow, "Allergen", false);
@@ -44,28 +44,25 @@ public class assist_edit_aWindow extends abstractAddWindow {
                 }
                 if (theManagerDB.editAllergen(theCurrentAllergen.getId(), name)) {
                     printSuccessGUI();
-                    updateFrame(theCurrentAllergen.getId());
+                    theCurrentAllergen = theManagerDB.getAllergen(theCurrentAllergen.getId());
+                    model.removeRow(0);
+                    model.addRow(new String[] { theCurrentAllergen.getName() });
                 } else {
                     printErrorGUI();
                 }
-
             }
         });
     }
 
-    private void updateFrame(int id) {
-        theCurrentAllergen = theManagerDB.getAllergen(id);
-        loadTable();
-        theFrame.revalidate();
-    }
-
     private void loadTable() {
         myTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel(new String[] { "Name" }, 0);
+        model = new DefaultTableModel(new String[] { "Name" }, 0);
         myTable.setModel(model);
         model.addRow(new Object[] { theCurrentAllergen.getName() });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
+        scrollPane = new JScrollPane(myTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
     @Override
@@ -74,10 +71,10 @@ public class assist_edit_aWindow extends abstractAddWindow {
         getInputError().setBounds(250, 160, 300, 25);
         getBackButton().setBounds(400, 400, 120, 80);
         getAddButton().setBounds(80, 160, 130, 20);
-        textFieldName.setBounds(200, 90, 165, 25);
+        textFieldName.setBounds(200, 115, 165, 25);
         summaryTXT.setBounds(200, 20, 250, 25);
-        enterName.setBounds(10, 90, 220, 25);
-        myTable.setBounds(45, 60, 500, 15);
+        enterName.setBounds(10, 115, 220, 25);
+        scrollPane.setBounds(45, 60, 500, 40);
     }
 
     @Override
@@ -87,7 +84,7 @@ public class assist_edit_aWindow extends abstractAddWindow {
         theFrame.add(textFieldName);
         theFrame.add(summaryTXT);
         theFrame.add(enterName);
-        theFrame.add(myTable);
+        theFrame.add(scrollPane);
     }
 
 }

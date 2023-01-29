@@ -1,6 +1,5 @@
 package windows.providersWindow;
 
-import iLayouts.placeholderLayoutApplyer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -9,7 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.*;
 
@@ -19,10 +17,12 @@ public class assist_edit_pWindow extends abstractAddWindow {
     private JTextField textFieldName = new JTextField();
     private JTextField textFieldEmail = new JTextField();
     private JTable myTable;
+    private DefaultTableModel model;
+    private JScrollPane scrollPane;
 
-    JLabel summaryTXT = new JLabel("Provider to be changed:");
-    JLabel enterEmail = new JLabel("Enter the new provider's EMAIL: ");
-    JLabel enterName = new JLabel("Enter the new provider's NAME: ");
+    private JLabel summaryTXT = new JLabel("Provider to be changed:");
+    private JLabel enterEmail = new JLabel("Enter the new provider's EMAIL: ");
+    private JLabel enterName = new JLabel("Enter the new provider's NAME: ");
 
     public assist_edit_pWindow(abstractUpdater previousWindow, int ID) {
         super(previousWindow, "Provider", false);
@@ -52,12 +52,16 @@ public class assist_edit_pWindow extends abstractAddWindow {
                     else
                         theManagerDB.editProvider(theCurrentProvider.getId(), name, theCurrentProvider.getEmail());
                     printSuccessGUI();
-                    updateFrame(theCurrentProvider.getId());
+                    model.removeRow(0);
+                    theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+                    model.addRow(new String[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
                     return;
                 }
                 if (theManagerDB.editProvider(theCurrentProvider.getId(), name, email)) {
                     printSuccessGUI();
-                    updateFrame(theCurrentProvider.getId());
+                    theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+                    model.removeRow(0);
+                    model.addRow(new String[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
                 } else {
                     printErrorGUI();
                 }
@@ -66,33 +70,29 @@ public class assist_edit_pWindow extends abstractAddWindow {
         });
     }
 
-    private void updateFrame(int id) {
-        theCurrentProvider = theManagerDB.getProvider(id);
-        loadTable();
-        theFrame.revalidate();
-    }
-
     private void loadTable() {
         myTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel(new String[] { "Name", "Email" }, 0);
+        model = new DefaultTableModel(new String[] { "Name", "Email" }, 0);
         myTable.setModel(model);
         model.addRow(new Object[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
+        scrollPane = new JScrollPane(myTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
     @Override
     public void setBounds() {
-        getInputSuccesful().setBounds(250, 160, 250, 25);
-        getInputError().setBounds(250, 160, 300, 25);
+        getInputSuccesful().setBounds(250, 175, 250, 25);
+        getInputError().setBounds(250, 175, 300, 25);
         getBackButton().setBounds(400, 400, 120, 80);
-        textFieldEmail.setBounds(200, 120, 165, 25);
-        getAddButton().setBounds(80, 160, 130, 20);
-        textFieldName.setBounds(200, 90, 165, 25);
+        textFieldEmail.setBounds(200, 135, 165, 25);
+        getAddButton().setBounds(80, 175, 130, 20);
+        textFieldName.setBounds(200, 105, 165, 25);
         summaryTXT.setBounds(200, 20, 250, 25);
-        enterEmail.setBounds(10, 120, 220, 25);
-        enterName.setBounds(10, 90, 220, 25);
-        myTable.setBounds(45, 60, 500, 15);
+        enterEmail.setBounds(10, 135, 220, 25);
+        enterName.setBounds(10, 105, 220, 25);
+        scrollPane.setBounds(45, 60, 500, 40);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class assist_edit_pWindow extends abstractAddWindow {
         theFrame.add(summaryTXT);
         theFrame.add(enterEmail);
         theFrame.add(enterName);
-        theFrame.add(myTable);
+        theFrame.add(scrollPane);
     }
 
 }

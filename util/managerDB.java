@@ -279,16 +279,6 @@ public class managerDB {
 
     public boolean editAllergen(int ID, String name) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String queryTest = "SELECT * FROM allergens WHERE name LIKE '%" + name + "%' LIMIT 1";
-            try (Statement stmt1 = connection.createStatement()) {
-                ResultSet rs = stmt1.executeQuery(queryTest);
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(null, "There is a already a similar entry with that name.", "Error",
-                            JOptionPane.WARNING_MESSAGE);
-                    return false;
-                }
-            }
-
             String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + Integer.toString(ID);
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
@@ -332,7 +322,6 @@ public class managerDB {
     }
 
     public boolean addAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
-        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             while (!stackSelected.isEmpty()) {
                 allergen temp = stackSelected.pop();
@@ -350,6 +339,27 @@ public class managerDB {
             return true;
         } catch (SQLException e) {
             System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean removeAllergen(String ID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "DELETE FROM ingredients_allergens WHERE allergen_id = " + ID + ";";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+            } catch (Exception e) {
+                return false;
+            }
+            query = "DELETE FROM allergens WHERE allergen_id = " + ID + ";";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }

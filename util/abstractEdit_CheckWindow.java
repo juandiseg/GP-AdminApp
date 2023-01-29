@@ -7,33 +7,23 @@ import javax.swing.table.*;
 
 public abstract class abstractEdit_CheckWindow extends abstractUpdater {
 
-    private boolean edit;
     private JButton backButton = new JButton("Back");
+    private JScrollPane scrollPane;
     private JLabel summaryTXT;
-    private String title;
     protected DefaultTableModel model;
     protected JTable myTable;
 
-    public abstractEdit_CheckWindow(abstractUpdater previousWindow, String title, boolean edit) {
+    public abstractEdit_CheckWindow(abstractUpdater previousWindow, String title, String name) {
         super(previousWindow, new placeholderLayoutApplyer(theFrame));
-        this.title = title;
-        this.edit = edit;
-        summaryTXT = new JLabel("Summary of current " + title + ":");
+        theFrame.setTitle(title);
+        summaryTXT = new JLabel("Summary of current " + name + ":");
     }
 
     public void addComponents() {
-        setTitle(title);
         setTable();
         setBounds();
         addToFrame();
         setBackButton();
-    }
-
-    private void setTitle(String name) {
-        if (edit)
-            theFrame.setTitle("Choose " + name + " to be edited");
-        else
-            theFrame.setTitle("Check " + name + "s");
     }
 
     private void setTable() {
@@ -63,6 +53,14 @@ public abstract class abstractEdit_CheckWindow extends abstractUpdater {
 
     public JButton getBackButton() {
         return backButton;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    public void setScrollPane(JScrollPane newScrollPane) {
+        this.scrollPane = newScrollPane;
     }
 
 }

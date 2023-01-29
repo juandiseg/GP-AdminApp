@@ -3,16 +3,17 @@ package windows.ingredientsWindow;
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
 import componentsFood.ingredient;
-import componentsFood.provider;
 import util.abstractUpdater;
 import java.util.ArrayList;
+
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.*;
 
 public class edit_iWindow extends abstractEdit_CheckWindow {
 
     public edit_iWindow(abstractUpdater previousWindow) {
-        super(previousWindow, "Ingredient", true);
+        super(previousWindow, "Choose Ingredient to be edited", "Ingredient");
     }
 
     @Override
@@ -63,6 +64,8 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void adjustTable() {
+        setScrollPane(new JScrollPane(myTable));
+        getScrollPane().setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.setModel(model);
@@ -72,7 +75,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void setBounds() {
-        myTable.setBounds(45, 60, 500, 300);
+        getScrollPane().setBounds(45, 60, 500, 300);
         getSummaryTXT().setBounds(200, 20, 250, 25);
         getBackButton().setBounds(400, 400, 120, 80);
 
@@ -82,7 +85,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
     public void addToFrame() {
         theFrame.add(getSummaryTXT());
         theFrame.add(getBackButton());
-        theFrame.add(myTable);
+        theFrame.add(getScrollPane());
     }
 
 }
