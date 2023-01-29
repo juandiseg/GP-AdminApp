@@ -2,15 +2,17 @@ package windows.ingredientsWindow;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
+
 import javax.swing.plaf.metal.MetalBorders.TextFieldBorder;
 
 import componentsFood.allergen;
 import componentsFood.ingredient;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import javax.swing.JLabel;
+
 import javax.swing.*;
 
 public class assist_edit_iWindow extends abstractAddWindow {
@@ -28,9 +30,9 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private JToggleButton activeButton = new JToggleButton("Active");
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
 
-    public assist_edit_iWindow(abstractUpdater previousWindow, int ID) {
+    public assist_edit_iWindow(abstractUpdater previousWindow, int ID, int prov_id, String date) {
         super(previousWindow, "Ingredient", false);
-        theCurrentIngredient = theManagerDB.getIngredient(Integer.toString(ID));
+        theCurrentIngredient = theManagerDB.getIngredient(ID, prov_id, date);
         getAddButton().setText("Apply Changes");
     }
 
@@ -67,7 +69,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         abstractUpdater temp = this;
         editOtherAttributes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                assist_assist_edit_iWindow tempWdw = new assist_assist_edit_iWindow(temp);
+                assist_assist_edit_iWindow tempWdw = new assist_assist_edit_iWindow(temp, theCurrentIngredient);
                 tempWdw.updateToThisMenu();
             }
         });
@@ -90,7 +92,10 @@ public class assist_edit_iWindow extends abstractAddWindow {
     }
 
     private void updateTable() {
-        theCurrentIngredient = theManagerDB.getIngredient(Integer.toString((theCurrentIngredient.getId())));
+        LocalDate dateObj = LocalDate.now();
+        String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId(),
+                theCurrentIngredient.getProviderID(), date);
         model.removeRow(0);
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());

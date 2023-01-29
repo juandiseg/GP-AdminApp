@@ -1,9 +1,12 @@
 package util;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -321,6 +324,97 @@ public class managerDB {
         }
     }
 
+    public ArrayList<ingredient> getAllCurrentIngredients() {
+        ArrayList<ingredient> tempList = getNonRepeatedIngredients();
+        tempList = getCorrectRepeatedIngredient(tempList);
+        return tempList;
+    }
+
+    private ArrayList<ingredient> getNonRepeatedIngredients() {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT ingredient_id FROM ingredients GROUP BY ingredient_id HAVING count(*) > 1);";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("ingredients_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private ArrayList<ingredient> getCorrectRepeatedIngredient(ArrayList<ingredient> theList) {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients WHERE ingredient_id IN (SELECT ingredient_id FROM ingredients GROUP BY ingredient_id HAVING count(*) > 1);";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("ingredients_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                }
+                checkLatestIngredients(tempList);
+                theList.addAll(tempList);
+                connection.close();
+                return theList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return theList;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private ArrayList<ingredient> checkLatestIngredients(ArrayList<ingredient> theList) {
+        int goal = theList.size();
+        for (int i = 0; i < goal - 1; i++) {
+            if (compareIDs(theList.get(i), theList.get(i + 1))) {
+                LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate date2 = LocalDate.parse(theList.get(i + 1).getDate(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                if (date1.isBefore(date2)) {
+                    theList.remove(i);
+                    goal--;
+                    i--;
+                } else {
+                    theList.remove(i + 1);
+                    goal--;
+                    i--;
+                }
+            }
+        }
+        return theList;
+    }
+
+    private boolean compareIDs(ingredient a, ingredient b) {
+        if (a.getId() == b.getId())
+            return true;
+        return false;
+    }
+
     public boolean addAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             while (!stackSelected.isEmpty()) {
@@ -362,22 +456,20 @@ public class managerDB {
         }
     }
 
-    public ingredient getIngredient(String ID) {
+    public ingredient getIngredient(int ID, int prov_id, String date) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID;
+            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID + " AND provider_id  = " + prov_id
+                    + " AND ingredients_date = '" + date + "';";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    int ingredient_id = rs.getInt("ingredient_id");
-                    int providerID = rs.getInt("provider_id");
-                    String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     int amount = rs.getInt("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     connection.close();
-                    return new ingredient(ingredient_id, providerID, date, name, price, amount, in_inventory, active);
+                    return new ingredient(ID, prov_id, date, name, price, amount, in_inventory, active);
                 } else {
                     connection.close();
                     return null;
@@ -450,6 +542,33 @@ public class managerDB {
                     + ", active = " + newActive + " WHERE ingredient_id = " + theIngredient.getId()
                     + " AND provider_id = "
                     + theIngredient.getProviderID() + " AND ingredients_date ='" + theIngredient.getDate() + "'";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean ingredientComplexIngredientEdit(ingredient theIngredient, int prov_id, int amount, float price) {
+        if (theIngredient.getProviderID() == prov_id && theIngredient.getAmount() == amount
+                && theIngredient.getPrice() == price)
+            return false;
+        LocalDate dateObj = LocalDate.now();
+        String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (theIngredient.getDate().equals(date))
+            return false;
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "INSERT INTO ingredients VALUES (" + theIngredient.getId() + ", " + prov_id + ", '"
+                    + date
+                    + "', '" + theIngredient.getName()
+                    + "', " + price + ", " + amount + ", " + theIngredient.getInInventory() + ", "
+                    + theIngredient.getActive() + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

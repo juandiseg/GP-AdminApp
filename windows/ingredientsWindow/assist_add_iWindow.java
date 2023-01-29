@@ -11,13 +11,16 @@ import util.abstractUpdater;
 import java.time.LocalDate;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class assist_add_iWindow extends abstractAddWindow {
 
     private String name;
     private int amount;
     private String price;
+
     private JList<provider> theList = new JList<provider>();
+    private JScrollPane scrollPane;
 
     private JLabel summaryTXT = new JLabel("Specify the following information:");
     private JLabel enterName = new JLabel("Is this ingredient ACTIVE or NOT: ");
@@ -91,10 +94,12 @@ public class assist_add_iWindow extends abstractAddWindow {
         getAddButton().setBounds(80, 400, 130, 20);
         inventoryButton.setBounds(240, 90, 170, 25);
         activeButton.setBounds(240, 60, 170, 25);
-        chooseProv.setBounds(10, 120, 280, 25);
         summaryTXT.setBounds(200, 20, 250, 25);
         enterEmail.setBounds(10, 90, 220, 25);
-        theList.setBounds(240, 150, 170, 200);
+
+        chooseProv.setBounds(10, 120, 280, 25);
+        scrollPane.setBounds(240, 150, 170, 200);
+
         enterName.setBounds(10, 60, 220, 25);
     }
 
@@ -108,7 +113,7 @@ public class assist_add_iWindow extends abstractAddWindow {
         theFrame.add(enterEmail);
         theFrame.add(chooseProv);
         theFrame.add(enterName);
-        theFrame.add(theList);
+        theFrame.add(scrollPane);
     }
 
     private void setList() {
@@ -116,5 +121,7 @@ public class assist_add_iWindow extends abstractAddWindow {
         for (provider tempProv : theManagerDB.getAllProviders())
             listModel.addElement(tempProv);
         theList.setModel(listModel);
+        scrollPane = new JScrollPane(theList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 }

@@ -40,7 +40,7 @@ public class check_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addRowsToModel() {
-        ArrayList<ingredient> tempList = theManagerDB.getAllIngredients();
+        ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
                 new String[] { "ID", "Prov_ID", "Date", "Name", "Price", "Amount", "in_inventory", "active" }, 0);

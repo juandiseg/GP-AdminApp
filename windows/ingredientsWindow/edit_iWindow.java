@@ -25,8 +25,10 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
                     try {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        String ID = (String) model.getValueAt(myTable.getSelectedRow(), 0);
-                        new assist_edit_iWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
+                        int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
+                        int prov_id = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
+                        String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
+                        new assist_edit_iWindow(temp, ID, prov_id, date).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
@@ -37,7 +39,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addRowsToModel() {
-        ArrayList<ingredient> tempList = theManagerDB.getAllIngredients();
+        ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
                 new String[] { "ID", "Prov_ID", "Date", "Name", "Price", "Amount", "in_inventory", "active" }, 0);
