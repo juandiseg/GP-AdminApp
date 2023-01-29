@@ -11,7 +11,7 @@ public class main_pWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Provider");
     private JButton button2 = new JButton("Edit Provider");
-    private JButton button3 = new JButton("Delete Provider");
+    private JButton button3 = new JButton("NOT WORKING [Delete Provider]");
     private JButton button4 = new JButton("Check Provider");
     private JButton backButton = new JButton("Back");
 

@@ -12,7 +12,7 @@ public class main_iWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Ingredient");
     private JButton button2 = new JButton("Edit Ingredient");
-    private JButton button3 = new JButton("Delete Ingredient");
+    private JButton button3 = new JButton("NOT WORKING [Delete Ingredient]");
     private JButton button4 = new JButton("Check Ingredients");
     private JButton button5 = new JButton("Allergen Menu");
     private JButton backButton = new JButton("Back");

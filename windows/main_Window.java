@@ -14,8 +14,8 @@ public class main_Window extends abstractUpdater {
     static JFrame theFrame = new JFrame("Main window");
     private JButton button1 = new JButton("Providers");
     private JButton button2 = new JButton("Ingredients");
-    private JButton button3 = new JButton("Drinks");
-    private JButton button4 = new JButton("Else");
+    private JButton button3 = new JButton("Products");
+    private JButton button4 = new JButton("...");
 
     public main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
