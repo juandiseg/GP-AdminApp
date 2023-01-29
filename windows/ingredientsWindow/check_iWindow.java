@@ -6,10 +6,14 @@ import componentsFood.ingredient;
 import util.abstractUpdater;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.event.*;
 
 public class check_iWindow extends abstractEdit_CheckWindow {
+
+    private JLabel instruction = new JLabel("Double-click on Ingredient to check Allergens");
 
     public check_iWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Check Ingredients", "Ingredients");
@@ -17,6 +21,21 @@ public class check_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addActionListeners() {
+        abstractUpdater temp = this;
+        myTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {
+                    try {
+                        if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
+                            return;
+                        String ID = (String) model.getValueAt(myTable.getSelectedRow(), 0);
+                        new assist_check_iWindow(temp, ID).updateToThisMenu();
+                    } catch (IndexOutOfBoundsException e) {
+                        return;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -62,6 +81,7 @@ public class check_iWindow extends abstractEdit_CheckWindow {
         getScrollPane().setBounds(45, 60, 500, 300);
         getSummaryTXT().setBounds(200, 20, 250, 25);
         getBackButton().setBounds(400, 400, 120, 80);
+        instruction.setBounds(150, 370, 300, 25);
     }
 
     @Override
@@ -69,6 +89,7 @@ public class check_iWindow extends abstractEdit_CheckWindow {
         theFrame.add(getSummaryTXT());
         theFrame.add(getBackButton());
         theFrame.add(getScrollPane());
+        theFrame.add(instruction);
     }
 
 }

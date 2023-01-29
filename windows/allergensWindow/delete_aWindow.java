@@ -1,4 +1,4 @@
-package windows.ingredientsWindow.allergensWindow;
+package windows.allergensWindow;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import util.abstractUpdater;
 
 public class delete_aWindow extends abstractEdit_CheckWindow {
 
-    private JLabel instruction = new JLabel("Double-click on allergen to be deleted");
+    private JLabel instruction = new JLabel("Double-click on Allergen to be deleted");
 
     public delete_aWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Allergen to be deleted", "Allergen");

@@ -3,7 +3,7 @@ package windows.ingredientsWindow;
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
 import util.abstractUpdater;
-import windows.ingredientsWindow.allergensWindow.main_aWindow;
+import windows.allergensWindow.main_aWindow;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;

@@ -1,4 +1,4 @@
-package windows.ingredientsWindow.allergensWindow;
+package windows.allergensWindow;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

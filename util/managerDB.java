@@ -325,8 +325,6 @@ public class managerDB {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             while (!stackSelected.isEmpty()) {
                 allergen temp = stackSelected.pop();
-                System.out
-                        .println("The ingredient ID is: " + ingredientID + ", and the allergenId is: " + temp.getId());
                 String query = "INSERT INTO ingredients_allergens VALUES (" + ingredientID + ", '" + temp.getId()
                         + "');";
                 try (Statement stmt = connection.createStatement()) {
@@ -361,6 +359,87 @@ public class managerDB {
             }
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public ingredient getIngredient(String ID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int ingredient_id = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    connection.close();
+                    return new ingredient(ingredient_id, providerID, date, name, price, amount, in_inventory, active);
+                } else {
+                    connection.close();
+                    return null;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public String getIngredientName(String ID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    String name = rs.getString("name");
+                    connection.close();
+                    return name;
+                } else {
+                    connection.close();
+                    return "";
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<String> getAllergensOfIngredient(String ID) {
+        Stack<Integer> allergenIDs = new Stack<Integer>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next())
+                    allergenIDs.add(rs.getInt("allergen_id"));
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+            ArrayList<String> containingAllergenNames = new ArrayList<String>();
+            while (!allergenIDs.isEmpty()) {
+                query = "SELECT name FROM allergens WHERE allergen_id = " + allergenIDs.pop();
+                try (Statement stmt = connection.createStatement()) {
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next())
+                        containingAllergenNames.add(rs.getString("name"));
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return null;
+                }
+            }
+            return containingAllergenNames;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 }

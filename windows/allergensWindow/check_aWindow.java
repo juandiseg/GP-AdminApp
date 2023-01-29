@@ -1,4 +1,4 @@
-package windows.ingredientsWindow.allergensWindow;
+package windows.allergensWindow;
 
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
