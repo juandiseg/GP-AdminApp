@@ -30,9 +30,9 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private JToggleButton activeButton = new JToggleButton("Active");
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
 
-    public assist_edit_iWindow(abstractUpdater previousWindow, int ID, int prov_id, String date) {
+    public assist_edit_iWindow(abstractUpdater previousWindow, ingredient theCurrentIngredient) {
         super(previousWindow, "Ingredient", false);
-        theCurrentIngredient = theManagerDB.getIngredient(ID, prov_id, date);
+        this.theCurrentIngredient = theCurrentIngredient;
         getAddButton().setText("Apply Changes");
     }
 
@@ -92,24 +92,18 @@ public class assist_edit_iWindow extends abstractAddWindow {
     }
 
     private void updateTable() {
-        LocalDate dateObj = LocalDate.now();
-        String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId(),
-                theCurrentIngredient.getProviderID(), date);
+                theCurrentIngredient.getProviderID(), theCurrentIngredient.getDate());
         model.removeRow(0);
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
         String amount = Integer.toString(theCurrentIngredient.getAmount());
-        String in_inventory;
-        String active;
-        if (theCurrentIngredient.getInInventory())
-            in_inventory = "Yes";
-        else
+        String in_inventory = "Yes";
+        String active = "Yes";
+        if (!theCurrentIngredient.getInInventory())
             in_inventory = "No";
-        if (theCurrentIngredient.getActive())
-            active = "Yes";
-        else
+        if (!theCurrentIngredient.getActive())
             active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
                 theManagerDB.getProvider(Integer.parseInt(prov_id)).getName(),
@@ -120,7 +114,8 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Name", "Provider", "Date", "Price", "Amount", "In inventory", "Active" }, 0);
+                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory", "Active" },
+                0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());

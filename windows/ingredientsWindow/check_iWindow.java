@@ -43,7 +43,8 @@ public class check_iWindow extends abstractEdit_CheckWindow {
         ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "Date", "Name", "Price", "Amount", "in_inventory", "active" }, 0);
+                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory", "active" },
+                0);
         for (ingredient temp : tempList) {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());

@@ -111,7 +111,8 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Name", "Provider", "Date", "Price", "Amount", "In inventory", "Active" }, 0);
+                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory", "Active" },
+                0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());

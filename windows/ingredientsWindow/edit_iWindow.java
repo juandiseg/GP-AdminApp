@@ -28,7 +28,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         int prov_id = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
                         String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                        new assist_edit_iWindow(temp, ID, prov_id, date).updateToThisMenu();
+                        new assist_edit_iWindow(temp, theManagerDB.getIngredient(ID, prov_id, date)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
@@ -42,7 +42,8 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
         ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "Date", "Name", "Price", "Amount", "in_inventory", "active" }, 0);
+                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory", "active" },
+                0);
         for (ingredient temp : tempList) {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());
