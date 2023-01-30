@@ -12,6 +12,7 @@ public class main_aWindow extends abstractUpdater {
     private JButton button2 = new JButton("Edit Allergen");
     private JButton button3 = new JButton("Delete Allergen");
     private JButton button4 = new JButton("Check Allergen");
+    private JButton button5 = new JButton("Edit Ingredient's Allergens");
     private JButton backButton = new JButton("Back");
 
     public main_aWindow(abstractUpdater previousWindow) {
@@ -25,6 +26,7 @@ public class main_aWindow extends abstractUpdater {
         theFrame.add(button2);
         theFrame.add(button3);
         theFrame.add(button4);
+        theFrame.add(button5);
         theFrame.add(backButton);
     }
 
@@ -52,6 +54,12 @@ public class main_aWindow extends abstractUpdater {
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 check_aWindow tempWinw = new check_aWindow(temp);
+                tempWinw.updateToThisMenu();
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                editIngr_aWindow tempWinw = new editIngr_aWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });

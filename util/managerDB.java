@@ -21,15 +21,6 @@ public class managerDB {
     private final String user = "juandi"; // Change to your local user
     private final String password = "Juandi"; // Change to your local password
 
-    public Connection getConnection() {
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            System.out.println("Database connected!");
-            return connection;
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
     public boolean addProvider(String name, String email) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             int provID = getLastProvID() + 1;
@@ -280,6 +271,52 @@ public class managerDB {
         }
     }
 
+    public ArrayList<allergen> getSelectedAllergens(ingredient theIngredient) {
+        ArrayList<allergen> tempList = new ArrayList<allergen>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT allergen_id, name FROM ingredients_allergens NATURAL JOIN allergens WHERE ingredient_id = "
+                    + theIngredient.getId();
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int allergenID = rs.getInt("allergen_id");
+                    String name = rs.getString("name");
+                    tempList.add(new allergen(allergenID, name));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<allergen> getNonSelectedAllergens(ingredient theIngredient) {
+        ArrayList<allergen> tempList = new ArrayList<allergen>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT allergen_id, name FROM allergens WHERE allergen_id NOT IN (SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = "
+                    + theIngredient.getId() + ")";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int allergenID = rs.getInt("allergen_id");
+                    String name = rs.getString("name");
+                    tempList.add(new allergen(allergenID, name));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public boolean editAllergen(int ID, String name) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + Integer.toString(ID);
@@ -429,6 +466,22 @@ public class managerDB {
                 }
             }
             return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public boolean updateAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = " + ingredientID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+            } catch (Exception a) {
+                System.out.println(a);
+                return false;
+            }
+            return addAlergensOfIngredient(stackSelected, ingredientID);
         } catch (SQLException e) {
             System.out.println(e);
             return false;
