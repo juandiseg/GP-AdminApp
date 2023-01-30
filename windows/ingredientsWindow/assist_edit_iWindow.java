@@ -17,7 +17,7 @@ import javax.swing.*;
 
 public class assist_edit_iWindow extends abstractAddWindow {
 
-    private ingredient theCurrentIngredient;
+    protected ingredient theCurrentIngredient;
     private JTextField textFieldName = new JTextField();
     private JScrollPane scrollPane;
     private JTable myTable;

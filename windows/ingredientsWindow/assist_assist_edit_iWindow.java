@@ -74,6 +74,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
                 if (theManagerDB.ingredientComplexIngredientEdit(theCurrentIngredient, providerID, amount, price)) {
                     printSuccessGUI();
                     updateTable(providerID);
+                    ((assist_edit_iWindow) (getPreviousWindow())).theCurrentIngredient = theCurrentIngredient;
                     return;
                 }
                 printErrorGUI();

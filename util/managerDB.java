@@ -561,6 +561,9 @@ public class managerDB {
             return false;
         LocalDate dateObj = LocalDate.now();
         String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (theIngredient.getDate().equals(date)) {
+            return updateComplexIngredient(theIngredient, prov_id, amount, price);
+        }
         if (theIngredient.getDate().equals(date))
             return false;
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -581,4 +584,24 @@ public class managerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
+
+    public boolean updateComplexIngredient(ingredient theIngredient, int prov_id, int amount, float price) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE ingredients SET provider_id = " + prov_id
+                    + ", amount = " + amount + ", price = " + price
+                    + " WHERE ingredient_id = " + theIngredient.getId() + " AND provider_id = "
+                    + theIngredient.getProviderID() + " AND ingredients_date = '" + theIngredient.getDate() + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
 }
