@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.prefs.PreferenceChangeEvent;
 
 import javax.swing.JOptionPane;
 
@@ -480,10 +481,36 @@ public class managerDB {
         }
     }
 
-    private ArrayList<ingredient> checkLatestIngredients(ArrayList<ingredient> theList) {
+    public ArrayList<product> getAllCurrentProducts() {
+        ArrayList<product> tempList = new ArrayList<product>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM product ORDER BY product_id";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("product_id");
+                    String date = rs.getString("product_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new product(ID, date, name, price, active));
+                }
+                tempList = checkRepeatedProducts(tempList);
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private ArrayList<product> checkRepeatedProducts(ArrayList<product> theList) {
         int goal = theList.size();
         for (int i = 0; i < goal - 1; i++) {
-            if (compareIDs(theList.get(i), theList.get(i + 1))) {
+            if (theList.get(i).getId() == theList.get(i + 1).getId()) {
                 LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 LocalDate date2 = LocalDate.parse(theList.get(i + 1).getDate(),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -501,10 +528,25 @@ public class managerDB {
         return theList;
     }
 
-    private boolean compareIDs(ingredient a, ingredient b) {
-        if (a.getId() == b.getId())
-            return true;
-        return false;
+    private ArrayList<ingredient> checkLatestIngredients(ArrayList<ingredient> theList) {
+        int goal = theList.size();
+        for (int i = 0; i < goal - 1; i++) {
+            if (theList.get(i) == theList.get(i + 1)) {
+                LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate date2 = LocalDate.parse(theList.get(i + 1).getDate(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                if (date1.isBefore(date2)) {
+                    theList.remove(i);
+                    goal--;
+                    i--;
+                } else {
+                    theList.remove(i + 1);
+                    goal--;
+                    i--;
+                }
+            }
+        }
+        return theList;
     }
 
     public boolean addAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
@@ -591,6 +633,31 @@ public class managerDB {
         }
     }
 
+    public product getProduct(int productID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM beatneat.product WHERE product_id = " + productID
+                    + " ORDER BY product_date DESC LIMIT 1;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                ArrayList<product> temp = new ArrayList<product>();
+                if (rs.next()) {
+                    int ID = rs.getInt("product_id");
+                    String date = rs.getString("product_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    boolean active = rs.getBoolean("active");
+                    return new product(ID, date, name, price, active);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+        return null;
+    }
+
     public String getIngredientName(String ID) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID;
@@ -672,8 +739,6 @@ public class managerDB {
         if (theIngredient.getDate().equals(date)) {
             return updateComplexIngredient(theIngredient, prov_id, amount, price);
         }
-        if (theIngredient.getDate().equals(date))
-            return false;
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO ingredients VALUES (" + theIngredient.getId() + ", " + prov_id + ", '"
                     + date
@@ -699,6 +764,61 @@ public class managerDB {
                     + ", amount = " + amount + ", price = " + price
                     + " WHERE ingredient_id = " + theIngredient.getId() + " AND provider_id = "
                     + theIngredient.getProviderID() + " AND ingredients_date = '" + theIngredient.getDate() + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean easyUpdateProduct(int productID, String name, boolean active) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE product SET name = '" + name + "', active = " + active
+                    + " WHERE product_id = " + productID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean mediumUpdateProduct(product theProduct, float price) {
+        LocalDate dateObj = LocalDate.now();
+        String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (theProduct.getDate().equals(date)) {
+            return easyMediumProduct(theProduct, price);
+        }
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "INSERT INTO product VALUES (" + theProduct.getId() + ", '" + date + "', '"
+                    + theProduct.getName() + "', " + price + ", " + theProduct.getActive() + ");";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private boolean easyMediumProduct(product theProduct, float price) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "UPDATE product SET price = " + price + " WHERE product_id = " + theProduct.getId() + ";";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

@@ -1,7 +1,5 @@
 package componentsFood;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
 public class product {
     private final int id;
     private String date;

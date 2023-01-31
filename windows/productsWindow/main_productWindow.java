@@ -40,8 +40,8 @@ public class main_productWindow extends abstractUpdater {
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // edit_iWindow tempWind = new edit_iWindow(temp);
-                // tempWind.updateToThisMenu();
+                edit_productWindow tempWind = new edit_productWindow(temp);
+                tempWind.updateToThisMenu();
             }
         });
         button3.addActionListener(new ActionListener() {

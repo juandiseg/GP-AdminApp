@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Stack;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.ingredient;
@@ -16,7 +14,6 @@ import util.abstractUpdater;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JButton;
 
 public class assist_assist_add_productWindow extends abstractAddWindow {
 
@@ -46,7 +43,6 @@ public class assist_assist_add_productWindow extends abstractAddWindow {
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {

@@ -1,27 +1,41 @@
 package windows.productsWindow;
 
-import java.awt.event.ActionListener;
-import java.util.Stack;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.ingredient;
 import componentsFood.product;
+import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JButton;
 
-public class assist_add_productWindow extends abstractAddWindow {
+public class assist_assist_edit_productWindow extends abstractAddWindow {
 
-    private JLabel selectIngredients = new JLabel("Select ingredients used: ");
+    private product theCurrentProduct;
+
+    private JTextField textFieldPrice = new JTextField();
+    private JScrollPane scrollPaneTable;
+    private JTable myTable;
+    private DefaultTableModel model;
+    private JLabel summaryTXT = new JLabel("Product to be changed:");
+    private JLabel enterPrice = new JLabel("Enter the products's new PRICE: ");
+    private JLabel changeLabel = new JLabel("Select the product's new INGREDIENTS: ");
+    private JToggleButton changeIngredientsButton = new JToggleButton("Change Ingredients Too");
 
     private JButton swapLeft = new JButton("Left");
     private JButton swapRight = new JButton("Right");
-    private product theProduct;
-
     private JScrollPane scrollPaneIngredients;
     private JScrollPane scrollPaneSelected;
     private JTable tableIngredients;
@@ -29,49 +43,72 @@ public class assist_add_productWindow extends abstractAddWindow {
     private DefaultTableModel modelIngredients;
     private DefaultTableModel modelSelected;
 
-    public assist_add_productWindow(abstractUpdater previousWindow, product theProduct) {
-        super(previousWindow, "Product", true);
-        this.theProduct = theProduct;
+    public assist_assist_edit_productWindow(abstractUpdater previousWindow, product theCurrentProduct) {
+        super(previousWindow, "Product", false);
+        this.theCurrentProduct = theCurrentProduct;
+        getAddButton().setText("Apply Changes");
     }
 
     @Override
     public void addComponents() {
+        loadTable();
         setTable();
         setBounds();
         addToFrame();
         setBackButton();
     }
 
+    private void showList() {
+        theFrame.add(changeLabel);
+        theFrame.add(scrollPaneIngredients);
+        theFrame.add(scrollPaneSelected);
+        theFrame.add(swapRight);
+        theFrame.add(swapLeft);
+        theFrame.revalidate();
+        theFrame.repaint();
+    }
+
+    private void hideList() {
+        theFrame.remove(changeLabel);
+        theFrame.remove(scrollPaneIngredients);
+        theFrame.remove(scrollPaneSelected);
+        theFrame.remove(swapRight);
+        theFrame.remove(swapLeft);
+        theFrame.revalidate();
+        theFrame.repaint();
+    }
+
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         getAddButton().addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                Stack<ingredient> stackIngredients = new Stack<ingredient>();
-                for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                    int ingID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                    int provID = Integer.parseInt((String) modelSelected.getValueAt(i, 1));
-                    String date = (String) modelSelected.getValueAt(i, 2);
-                    String name = (String) modelSelected.getValueAt(i, 3);
-                    Float price = Float.parseFloat((String) modelSelected.getValueAt(i, 4));
-                    int amount = Integer.parseInt((String) modelSelected.getValueAt(i, 5));
-                    boolean in_inventory = false;
-                    if (((String) modelSelected.getValueAt(i, 6)).equals("Yes"))
-                        in_inventory = true;
-                    boolean active = false;
-                    if (((String) modelSelected.getValueAt(i, 7)).equals("Yes"))
-                        active = true;
-                    stackIngredients
-                            .push(new ingredient(ingID, provID, date, name, price, amount, in_inventory, active));
+                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
+                    String tempPrice = textFieldPrice.getText();
+                    if (tempPrice.isEmpty())
+                        return;
+                    Float price = Float.parseFloat(tempPrice);
+                    if (theManagerDB.mediumUpdateProduct(theCurrentProduct, price)) {
+                        updateTable();
+                        printSuccessGUI();
+                    }
+                } else {
+
                 }
-                if (stackIngredients.empty()) {
-                    getPreviousWindow().getPreviousWindow().updateToThisMenu();
-                    return;
-                }
-                new assist_assist_add_productWindow(temp, theProduct, stackIngredients).updateToThisMenu();
             }
         });
-
+        changeIngredientsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
+                    changeIngredientsButton.setText("Don't Change Ingredients Too");
+                    showList();
+                } else {
+                    changeIngredientsButton.setText("Change Ingredients Too");
+                    hideList();
+                }
+            }
+        });
         swapLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int row = tableIngredients.getSelectedRow();
@@ -107,30 +144,60 @@ public class assist_add_productWindow extends abstractAddWindow {
                         .addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
             }
         });
+
+    }
+
+    private void updateTable() {
+        theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
+        model.removeRow(0);
+        String id = Integer.toString(theCurrentProduct.getId());
+        String date = theCurrentProduct.getDate();
+        String name = theCurrentProduct.getName();
+        String price = Float.toString(theCurrentProduct.getPrice());
+        String active = "No";
+        if (theCurrentProduct.getActive())
+            active = "Yes";
+        model.addRow(new String[] { id, date, name, price, active });
+        myTable.revalidate();
+        myTable.repaint();
+    }
+
+    private void loadTable() {
+        myTable = new JTable();
+        model = new DefaultTableModel(
+                new String[] { "product_id", "Active Since", "Name", "Price", "Active" }, 0);
+        myTable.setModel(model);
+        String id = Integer.toString(theCurrentProduct.getId());
+        String date = theCurrentProduct.getDate();
+        String name = theCurrentProduct.getName();
+        String price = Float.toString(theCurrentProduct.getPrice());
+        String active = "No";
+        if (theCurrentProduct.getActive())
+            active = "Yes";
+        model.addRow(new String[] { id, date, name, price, active });
+        myTable.setDefaultEditor(Object.class, null);
+        myTable.setFocusable(true);
+        myTable.removeColumn(myTable.getColumn("product_id"));
+        scrollPaneTable = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 
     @Override
     public void setBounds() {
-        getInputSuccesful().setBounds(250, 120, 250, 25);
-        getInputError().setBounds(250, 120, 300, 25);
-        getAddButton().setBounds(80, 400, 130, 20);
-        getBackButton().setBounds(400, 400, 120, 80);
-        selectIngredients.setBounds(10, 50, 200, 25);
-        scrollPaneIngredients.setBounds(320, 90, 170, 200);
-        scrollPaneSelected.setBounds(50, 90, 170, 200);
-        swapLeft.setBounds(230, 150, 80, 25);
-        swapRight.setBounds(230, 190, 80, 25);
-    }
-
-    @Override
-    public void addToFrame() {
-        theFrame.add(getAddButton());
-        theFrame.add(getBackButton());
-        theFrame.add(selectIngredients);
-        theFrame.add(scrollPaneIngredients);
-        theFrame.add(scrollPaneSelected);
-        theFrame.add(swapRight);
-        theFrame.add(swapLeft);
+        getInputSuccesful().setBounds(230, 300, 300, 25);
+        getInputError().setBounds(230, 300, 300, 25);
+        getBackButton().setBounds(400, 460, 120, 80);
+        getAddButton().setBounds(80, 500, 180, 20);
+        summaryTXT.setBounds(200, 20, 250, 25);
+        textFieldPrice.setBounds(270, 170, 165, 25);
+        enterPrice.setBounds(10, 170, 220, 25);
+        scrollPaneTable.setBounds(45, 60, 500, 55);
+        changeIngredientsButton.setBounds(45, 130, 500, 25);
+        changeLabel.setBounds(10, 200, 270, 25);
+        scrollPaneIngredients.setBounds(320, 240, 170, 200);
+        scrollPaneSelected.setBounds(50, 240, 170, 200);
+        swapLeft.setBounds(230, 300, 80, 25);
+        swapRight.setBounds(230, 340, 80, 25);
     }
 
     private void setTable() {
@@ -182,6 +249,17 @@ public class assist_add_productWindow extends abstractAddWindow {
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaneSelected = new JScrollPane(tableSelected, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    }
+
+    @Override
+    public void addToFrame() {
+        theFrame.add(getBackButton());
+        theFrame.add(getAddButton());
+        theFrame.add(summaryTXT);
+        theFrame.add(scrollPaneTable);
+        theFrame.add(textFieldPrice);
+        theFrame.add(enterPrice);
+        theFrame.add(changeIngredientsButton);
     }
 
 }

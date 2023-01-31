@@ -6,16 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.table.DefaultTableModel;
-
-import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JButton;
 
 public class add_productWindow extends abstractAddWindow {
 
