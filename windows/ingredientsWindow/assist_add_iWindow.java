@@ -57,7 +57,7 @@ public class assist_add_iWindow extends abstractAddWindow {
                     inventory = false;
                 boolean active = true;
                 if (activeButton.getText().equals("Non Active"))
-                    inventory = false;
+                    active = false;
                 LocalDate dateObj = LocalDate.now();
                 String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 int ID = theManagerDB.addIngredient(providerID, date, name, price, amount, inventory, active);

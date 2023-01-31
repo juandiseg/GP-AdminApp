@@ -78,6 +78,44 @@ public class managerDB {
         }
     }
 
+    private int getLastProductID() {
+        try (Connection connection = DriverManager.getConnection(url, "juandi", "Juandi")) {
+            String query = "SELECT product_id FROM product ORDER BY product_id DESC LIMIT 1;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int providerID = rs.getInt("product_id");
+                    connection.close();
+                    return providerID;
+                }
+                return -1;
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public product addProduct(String date, String name, float price, boolean active) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            int productID = getLastProductID() + 1;
+            String query = "INSERT INTO product VALUES (" + productID + ", '" + date + "', '" + name + "', " + price
+                    + ", " + active + ");";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return new product(productID, date, name, price, active);
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public int addIngredient(int provID, String date, String name, String price, int amount, boolean in_inventory,
             boolean active) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {

@@ -1,6 +1,8 @@
 package windows;
 
 import windows.ingredientsWindow.main_iWindow;
+import windows.productsWindow.main_productWindow;
+
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
 import java.awt.event.ActionEvent;
@@ -52,6 +54,8 @@ public class main_Window extends abstractUpdater {
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                main_productWindow ingredientsWdw = new main_productWindow(temp);
+                ingredientsWdw.updateToThisMenu();
             }
         });
         button4.addActionListener(new ActionListener() {
