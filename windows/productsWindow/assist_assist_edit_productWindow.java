@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -93,7 +94,7 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                         printSuccessGUI();
                     }
                 } else {
-
+                    // HAVE TO IMPLEMENT THIS ONE TO GET THE EDIT TO WORK 100%
                 }
             }
         });
@@ -200,21 +201,15 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
         swapRight.setBounds(230, 340, 80, 25);
     }
 
-    private void setTable() {
-        tableIngredients = new JTable();
-        tableIngredients.setDefaultEditor(Object.class, null);
-        tableSelected = new JTable();
-        tableSelected.setDefaultEditor(Object.class, null);
-        modelIngredients = new DefaultTableModel(
-                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
-                        "active" },
-                0);
-        modelSelected = new DefaultTableModel(
-                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
-                        "active" },
-                0);
+    private void loadTable(boolean alreadySelected, JTable tempTable, DefaultTableModel tempModel) {
+        tempTable.setDefaultEditor(Object.class, null);
+        ArrayList<ingredient> tempIngredients = new ArrayList<ingredient>();
+        if (alreadySelected)
+            tempIngredients = theManagerDB.getSelectedIngredients(theCurrentProduct);
+        else
+            tempIngredients = theManagerDB.getNonSelectedIngredients(theCurrentProduct);
 
-        for (ingredient tempIngredient : theManagerDB.getAllCurrentIngredients()) {
+        for (ingredient tempIngredient : tempIngredients) {
             String ingID = Integer.toString(tempIngredient.getId());
             String provID = Integer.toString(tempIngredient.getProviderID());
             String date = tempIngredient.getDate();
@@ -227,26 +222,40 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String active = "No";
             if (tempIngredient.getActive())
                 active = "Yes";
-
-            modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
+            tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
         }
 
-        tableIngredients.setModel(modelIngredients);
-        tableSelected.setModel(modelSelected);
-        tableIngredients.removeColumn(tableIngredients.getColumn("ingredient_id"));
-        tableIngredients.removeColumn(tableIngredients.getColumn("provider_id"));
-        tableIngredients.removeColumn(tableIngredients.getColumn("date"));
-        tableIngredients.removeColumn(tableIngredients.getColumn("in_inventory"));
-        tableIngredients.removeColumn(tableIngredients.getColumn("active"));
+        tempTable.setModel(tempModel);
 
-        tableSelected.removeColumn(tableSelected.getColumn("ingredient_id"));
-        tableSelected.removeColumn(tableSelected.getColumn("provider_id"));
-        tableSelected.removeColumn(tableSelected.getColumn("date"));
-        tableSelected.removeColumn(tableSelected.getColumn("in_inventory"));
-        tableSelected.removeColumn(tableSelected.getColumn("active"));
+        tempTable.removeColumn(tempTable.getColumn("ingredient_id"));
+        tempTable.removeColumn(tempTable.getColumn("provider_id"));
+        tempTable.removeColumn(tempTable.getColumn("date"));
+        tempTable.removeColumn(tempTable.getColumn("in_inventory"));
+        tempTable.removeColumn(tempTable.getColumn("active"));
+
+    }
+
+    private void setTable() {
+
+        tableIngredients = new JTable();
+        modelIngredients = new DefaultTableModel(
+                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
+                        "active" },
+                0);
+        loadTable(false, tableIngredients, modelIngredients);
+
+        tableSelected = new JTable();
+        tableSelected.setDefaultEditor(Object.class, null);
+        modelSelected = new DefaultTableModel(
+                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
+                        "active" },
+                0);
+
+        loadTable(true, tableSelected, modelSelected);
 
         scrollPaneIngredients = new JScrollPane(tableIngredients, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         scrollPaneSelected = new JScrollPane(tableSelected, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }

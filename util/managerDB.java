@@ -350,6 +350,35 @@ public class managerDB {
         }
     }
 
+    public ArrayList<ingredient> getSelectedIngredients(product theProduct) {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM product_ingredients NATURAL JOIN (SELECT * FROM ingredients WHERE (ingredient_id,ingredients_date) IN ( SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id )) as clean WHERE product_id = "
+                    + theProduct.getId();
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("ingredients_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public ArrayList<allergen> getNonSelectedAllergens(ingredient theIngredient) {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -361,6 +390,36 @@ public class managerDB {
                     int allergenID = rs.getInt("allergen_id");
                     String name = rs.getString("name");
                     tempList.add(new allergen(allergenID, name));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<ingredient> getNonSelectedIngredients(product theProduct) {
+        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN product_ingredients WHERE product_id ="
+                    + theProduct.getId()
+                    + ") AND (ingredient_id, ingredients_date) IN (SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id)";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("ingredient_id");
+                    int providerID = rs.getInt("provider_id");
+                    String date = rs.getString("ingredients_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    int amount = rs.getInt("amount");
+                    boolean in_inventory = rs.getBoolean("in_inventory");
+                    boolean active = rs.getBoolean("active");
+                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
                 }
                 connection.close();
                 return tempList;
