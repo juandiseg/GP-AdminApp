@@ -16,7 +16,6 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
 
     private JScrollPane scrollPaneAllergen;
     private JScrollPane scrollPaneSelected;
-
     private JTable tableAllergens;
     private JTable tableSelected;
 

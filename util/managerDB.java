@@ -116,6 +116,23 @@ public class managerDB {
         }
     }
 
+    public boolean addIngredientsToProduct(int productID, int ingredientID, String date, float quantity) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "INSERT INTO product_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
+                    + "', " + quantity + ")";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+            } catch (Exception a) {
+                System.out.println(a);
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
     public int addIngredient(int provID, String date, String name, String price, int amount, boolean in_inventory,
             boolean active) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {

@@ -46,9 +46,9 @@ public class add_productWindow extends abstractAddWindow {
                     product theResultProduct = theManagerDB.addProduct(date, name, Float.parseFloat(price), active);
                     if (theResultProduct != null) {
                         new assist_add_productWindow(temp, theResultProduct).updateToThisMenu();
+                    } else {
+                        System.out.println("error");
                     }
-                    // price);
-                    // tempWdw.updateToThisMenu();
                 }
             }
         });
