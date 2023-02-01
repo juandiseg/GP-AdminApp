@@ -15,9 +15,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.transform.Templates;
 
 import componentsFood.ingredient;
 import componentsFood.product;
+import componentsFood.product_ingredients;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
@@ -94,7 +96,37 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                         printSuccessGUI();
                     }
                 } else {
-                    // HAVE TO IMPLEMENT THIS ONE TO GET THE EDIT TO WORK 100%
+                    String tempPrice = textFieldPrice.getText();
+                    if (tempPrice.isEmpty())
+                        return;
+                    Float price = Float.parseFloat(tempPrice);
+                    ArrayList<product_ingredients> tempList = new ArrayList<product_ingredients>();
+                    if (theManagerDB.isProductIngredientDateToday(theCurrentProduct.getId())) {
+                        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                            int productID = theCurrentProduct.getId();
+                            int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                            tempList.add(new product_ingredients(productID, ingredientID, dateToday, 0));
+                        }
+                        System.out.println(tempList);
+
+                    }
+
+                    /*
+                     * String tempPrice = textFieldPrice.getText();
+                     * if (tempPrice.isEmpty())
+                     * return;
+                     * Float price = Float.parseFloat(tempPrice);
+                     * for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                     * int productID = theCurrentProduct.getId();
+                     * int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                     * LocalDate dateObj = LocalDate.now();
+                     * String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                     * / Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 6));
+                     * // theManagerDB.addIngredientsToProduct(productID, ingredientID, date, qty);
+                     * //}
+                     * //// HAVE TO IMPLEMENT THIS ONE TO GET THE EDIT TO WORK 100%
+                     */
                 }
             }
         });
@@ -124,7 +156,8 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 String in_inventory = (String) modelIngredients.getValueAt(row, 6);
                 String active = (String) modelIngredients.getValueAt(row, 7);
                 modelIngredients.removeRow(row);
-                modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
+                modelSelected
+                        .addRow(new String[] { ingID, provID, date, name, price, amount, "", in_inventory, active });
             }
         });
         swapRight.addActionListener(new ActionListener() {
@@ -138,8 +171,8 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 String name = (String) modelSelected.getValueAt(row, 3);
                 String price = (String) modelSelected.getValueAt(row, 4);
                 String amount = (String) modelSelected.getValueAt(row, 5);
-                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
-                String active = (String) modelIngredients.getValueAt(row, 7);
+                String in_inventory = (String) modelSelected.getValueAt(row, 7);
+                String active = (String) modelSelected.getValueAt(row, 8);
                 modelSelected.removeRow(row);
                 modelIngredients
                         .addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
@@ -202,7 +235,8 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
     }
 
     private void loadTable(boolean alreadySelected, JTable tempTable, DefaultTableModel tempModel) {
-        tempTable.setDefaultEditor(Object.class, null);
+        if (!alreadySelected)
+            tempTable.setDefaultEditor(Object.class, null);
         ArrayList<ingredient> tempIngredients = new ArrayList<ingredient>();
         if (alreadySelected)
             tempIngredients = theManagerDB.getSelectedIngredients(theCurrentProduct);
@@ -222,7 +256,10 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String active = "No";
             if (tempIngredient.getActive())
                 active = "Yes";
-            tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
+            if (alreadySelected)
+                tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, "", in_inventory, active });
+            else
+                tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
         }
 
         tempTable.setModel(tempModel);
@@ -244,10 +281,14 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 0);
         loadTable(false, tableIngredients, modelIngredients);
 
-        tableSelected = new JTable();
-        tableSelected.setDefaultEditor(Object.class, null);
+        tableSelected = new JTable() {
+            public boolean isCellEditable(int row, int column) {
+                return column == 3;
+            }
+        };
         modelSelected = new DefaultTableModel(
-                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
+                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "Enter Amount",
+                        "in_inventory",
                         "active" },
                 0);
 

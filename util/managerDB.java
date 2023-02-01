@@ -353,8 +353,9 @@ public class managerDB {
     public ArrayList<ingredient> getSelectedIngredients(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "SELECT * FROM product_ingredients NATURAL JOIN (SELECT * FROM ingredients WHERE (ingredient_id,ingredients_date) IN ( SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id )) as clean WHERE product_id = "
-                    + theProduct.getId();
+            String query = "SELECT * FROM ingredients WHERE ingredient_id IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN product_ingredients WHERE product_id = "
+                    + theProduct.getId()
+                    + ") AND (ingredient_id, ingredients_date) IN (SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id)";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
@@ -891,4 +892,31 @@ public class managerDB {
         }
     }
 
+    public boolean isProductIngredientDateToday(int product_id) {
+        try (Connection connection = DriverManager.getConnection(url, user,
+                password)) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "SELECT product_id, MAX(product_ingredients_date) FROM product_ingredients WHERE product_id = "
+                    + product_id + ";";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    String dateDB = rs.getString("MAX(product_ingredients_date)");
+                    connection.close();
+                    if (dateToday.equals(dateDB))
+                        return true;
+                    else
+                        return false;
+                } else {
+                    connection.close();
+                    return false;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }
