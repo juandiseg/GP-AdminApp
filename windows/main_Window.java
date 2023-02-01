@@ -1,5 +1,6 @@
 package windows;
 
+import windows.categoryWindow.main_cWindow;
 import windows.ingredientsWindow.main_iWindow;
 import windows.productsWindow.main_productWindow;
 
@@ -16,7 +17,7 @@ public class main_Window extends abstractUpdater {
     private JButton button1 = new JButton("Providers");
     private JButton button2 = new JButton("Ingredients");
     private JButton button3 = new JButton("Products");
-    private JButton button4 = new JButton("...");
+    private JButton button4 = new JButton("Categories");
 
     public main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
@@ -58,6 +59,8 @@ public class main_Window extends abstractUpdater {
         });
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                main_cWindow ingredientsWdw = new main_cWindow(temp);
+                ingredientsWdw.updateToThisMenu();
             }
         });
     }
