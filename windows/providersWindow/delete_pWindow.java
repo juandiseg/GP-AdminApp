@@ -8,13 +8,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import componentsFood.allergen;
 import componentsFood.provider;
 import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
 
 public class delete_pWindow extends abstractEdit_CheckWindow {
 
+    private providerAPI theManagerDB = new providerAPI();
     private JLabel instruction = new JLabel("Double-click on Provider to be deleted");
 
     public delete_pWindow(abstractUpdater previousWindow) {

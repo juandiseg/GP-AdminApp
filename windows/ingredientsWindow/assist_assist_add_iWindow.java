@@ -8,9 +8,13 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.allergen;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.allergensWindow.allergensAPI;
+
 import javax.swing.*;
 
 public class assist_assist_add_iWindow extends abstractAddWindow {
+
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
 
     private int ID;
 
@@ -53,7 +57,7 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
                     String name = (String) modelSelected.getValueAt(i, 1);
                     selectedAllergens.push(new allergen(ID, name));
                 }
-                if (theManagerDB.addAlergensOfIngredient(selectedAllergens, ID)) {
+                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ID)) {
                     add_iWindow tempWind = new add_iWindow(
                             temp.getPreviousWindow().getPreviousWindow().getPreviousWindow());
                     tempWind.updateToThisMenu();
@@ -115,7 +119,7 @@ public class assist_assist_add_iWindow extends abstractAddWindow {
         tableSelected = new JTable();
         modelAllergens = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
         modelSelected = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
-        for (allergen tempAllergen : theManagerDB.getAllAllergens())
+        for (allergen tempAllergen : new allergensAPI().getAllAllergens())
             modelAllergens.addRow(new String[] { Integer.toString(tempAllergen.getId()), tempAllergen.getName() });
         tableAllergens.setModel(modelAllergens);
         tableSelected.setModel(modelSelected);

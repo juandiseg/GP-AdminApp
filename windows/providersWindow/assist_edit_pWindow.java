@@ -13,6 +13,7 @@ import javax.swing.*;
 
 public class assist_edit_pWindow extends abstractAddWindow {
 
+    private providerAPI theManagerDB = new providerAPI();
     private provider theCurrentProvider;
     private JTextField textFieldName = new JTextField();
     private JTextField textFieldEmail = new JTextField();

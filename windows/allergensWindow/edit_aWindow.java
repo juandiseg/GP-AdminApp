@@ -12,6 +12,8 @@ import java.awt.event.*;
 
 public class edit_aWindow extends abstractEdit_CheckWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
+
     public edit_aWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Allergen to be edited", "Allergen");
     }

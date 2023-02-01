@@ -12,6 +12,8 @@ import java.awt.event.*;
 
 public class edit_iWindow extends abstractEdit_CheckWindow {
 
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
+
     public edit_iWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Ingredient to be edited", "Ingredient");
     }

@@ -11,9 +11,11 @@ import componentsFood.ingredient;
 import componentsFood.provider;
 import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
+import windows.allergensWindow.allergensAPI;
 
 public class assist_check_iWindow extends abstractEdit_CheckWindow {
 
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
     private String ingredientID;
 
     public assist_check_iWindow(abstractUpdater previousWindow, String ID) {
@@ -29,7 +31,7 @@ public class assist_check_iWindow extends abstractEdit_CheckWindow {
     }
 
     private int setUpModel() {
-        ArrayList<allergen> allergenList = theManagerDB.getAllAllergens();
+        ArrayList<allergen> allergenList = new allergensAPI().getAllAllergens();
         model.addColumn("Ingredient");
         for (allergen temp : allergenList)
             model.addColumn(temp.getName());
@@ -38,7 +40,7 @@ public class assist_check_iWindow extends abstractEdit_CheckWindow {
 
     public void addEntriesToModel(int totalAllergens) {
         String name = theManagerDB.getIngredientName(ingredientID);
-        ArrayList<String> displayText = getDisplayValues(theManagerDB.getAllergensOfIngredient(ingredientID),
+        ArrayList<String> displayText = getDisplayValues(new allergensAPI().getAllergensOfIngredient(ingredientID),
                 totalAllergens);
         displayText.add(0, name);
 

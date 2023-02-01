@@ -8,7 +8,6 @@ import iLayouts.GridLayoutApplyer;
 import java.awt.event.ActionEvent;
 import windows.providersWindow.*;
 import util.abstractUpdater;
-import util.managerDB;
 import javax.swing.*;
 
 public class main_Window extends abstractUpdater {
@@ -22,7 +21,6 @@ public class main_Window extends abstractUpdater {
     public main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
         setFrame(theFrame);
-        setManagerDB(new managerDB());
         theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         theFrame.setSize(600, 600);
         theFrame.setVisible(true);

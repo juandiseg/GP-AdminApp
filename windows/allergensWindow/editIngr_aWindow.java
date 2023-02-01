@@ -4,6 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
 import componentsFood.ingredient;
 import util.abstractUpdater;
+import windows.ingredientsWindow.ingredientsAPI;
+
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -13,6 +15,7 @@ import java.awt.event.*;
 
 public class editIngr_aWindow extends abstractEdit_CheckWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
     private JLabel instruction = new JLabel("Double-click on Ingredient to change its Allergens");
 
     public editIngr_aWindow(abstractUpdater previousWindow) {
@@ -28,7 +31,8 @@ public class editIngr_aWindow extends abstractEdit_CheckWindow {
                     int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                     int prov_id = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
                     String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                    new assist_editIngr_aWindow(temp, theManagerDB.getIngredient(ID, prov_id, date)).updateToThisMenu();
+                    new assist_editIngr_aWindow(temp, new ingredientsAPI().getIngredient(ID, prov_id, date))
+                            .updateToThisMenu();
                 }
             }
         });
@@ -36,7 +40,7 @@ public class editIngr_aWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addRowsToModel() {
-        ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
+        ArrayList<ingredient> tempList = new ingredientsAPI().getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
                 new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory", "active" },

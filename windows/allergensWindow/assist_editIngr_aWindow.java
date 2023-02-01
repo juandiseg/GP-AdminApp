@@ -13,6 +13,8 @@ import javax.swing.*;
 
 public class assist_editIngr_aWindow extends abstractAddWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
+
     private ingredient theIngredient;
 
     private JScrollPane scrollPaneAllergen;
@@ -56,7 +58,7 @@ public class assist_editIngr_aWindow extends abstractAddWindow {
                     String name = (String) modelSelected.getValueAt(i, 1);
                     selectedAllergens.push(new allergen(ID, name));
                 }
-                if (theManagerDB.updateAlergensOfIngredient(selectedAllergens, theIngredient.getId())) {
+                if (theManagerDB.editAlergensOfIngredient(selectedAllergens, theIngredient.getId())) {
                     System.out.println("print success and return to other window");
                     return;
                 }

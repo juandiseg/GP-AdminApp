@@ -19,8 +19,11 @@ import componentsFood.ingredient;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.providersWindow.providerAPI;
 
 public class assist_assist_edit_iWindow extends abstractAddWindow {
+
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
 
     private ingredient theCurrentIngredient;
     private JTextField textFieldPrice = new JTextField();
@@ -52,7 +55,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
 
     public void setList() {
         DefaultListModel<provider> listModel = new DefaultListModel<provider>();
-        for (provider tempProv : theManagerDB.getAllProviders())
+        for (provider tempProv : new providerAPI().getAllProviders())
             listModel.addElement(tempProv);
         theList.setModel(listModel);
         scrollPaneList = new JScrollPane(theList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -104,7 +107,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         else
             active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
-                theManagerDB.getProvider(Integer.parseInt(prov_id)).getName(),
+                new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
                 amount, in_inventory, active });
     }
@@ -130,7 +133,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         else
             active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
-                theManagerDB.getProvider(Integer.parseInt(prov_id)).getName(),
+                new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
                 amount, in_inventory, active });
         myTable.setDefaultEditor(Object.class, null);

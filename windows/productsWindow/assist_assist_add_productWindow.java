@@ -11,12 +11,15 @@ import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.ingredientsWindow.ingredientsAPI;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 public class assist_assist_add_productWindow extends abstractAddWindow {
 
+    private productAPI theManagerDB = new productAPI();
     private JLabel selectIngredients = new JLabel("Specify amount used of each ingredient: ");
 
     private product theProduct;
@@ -51,7 +54,7 @@ public class assist_assist_add_productWindow extends abstractAddWindow {
                     LocalDate dateObj = LocalDate.now();
                     String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 6));
-                    theManagerDB.addIngredientsToProduct(productID, ingredientID, date, qty);
+                    new ingredientsAPI().addIngredientsToProduct(productID, ingredientID, date, qty);
                 }
                 System.out.println("done congrats");
                 // new assist_assist_add_productWindow(temp, theProduct,

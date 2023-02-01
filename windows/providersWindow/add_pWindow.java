@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 
 public class add_pWindow extends abstractAddWindow {
 
+    private providerAPI theManagerDB = new providerAPI();
     private JLabel enterName = new JLabel("Enter the provider's NAME: ");
     private JLabel enterEmail = new JLabel("Enter the provider's EMAIL: ");
     private JTextField textFieldName = new JTextField();

@@ -12,6 +12,8 @@ import javax.swing.*;
 
 public class assist_edit_aWindow extends abstractAddWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
+
     private JLabel summaryTXT = new JLabel("Allergen to be changed:");
     private JLabel enterName = new JLabel("Enter the new allergen's NAME: ");
 

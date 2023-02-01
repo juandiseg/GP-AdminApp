@@ -11,6 +11,8 @@ import javax.swing.JTable;
 
 public class check_pWindow extends abstractEdit_CheckWindow {
 
+    private providerAPI theManagerDB = new providerAPI();
+
     public check_pWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Check Providers", "Provider");
     }

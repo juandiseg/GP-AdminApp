@@ -12,10 +12,14 @@ import componentsFood.allergen;
 import componentsFood.ingredient;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.allergensWindow.allergensAPI;
+import windows.providersWindow.providerAPI;
 
 import javax.swing.*;
 
 public class assist_edit_iWindow extends abstractAddWindow {
+
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
 
     protected ingredient theCurrentIngredient;
     private JTextField textFieldName = new JTextField();
@@ -106,7 +110,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         if (!theCurrentIngredient.getActive())
             active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
-                theManagerDB.getProvider(Integer.parseInt(prov_id)).getName(),
+                new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
                 amount, in_inventory, active });
     }
@@ -132,7 +136,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         else
             active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
-                theManagerDB.getProvider(Integer.parseInt(prov_id)).getName(),
+                new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
                 amount, in_inventory, active });
         myTable.setDefaultEditor(Object.class, null);

@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 
 public class add_productWindow extends abstractAddWindow {
 
+    private productAPI theManagerDB = new productAPI();
+
     private JLabel enterName = new JLabel("Enter the product's NAME: ");
     private JLabel enterPrice = new JLabel("Enter the product's PRICE: ");
     private JLabel enterActive = new JLabel("Is this product ACTIVE or NOT: ");

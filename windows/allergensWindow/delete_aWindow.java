@@ -14,6 +14,7 @@ import util.abstractUpdater;
 
 public class delete_aWindow extends abstractEdit_CheckWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
     private JLabel instruction = new JLabel("Double-click on Allergen to be deleted");
 
     public delete_aWindow(abstractUpdater previousWindow) {

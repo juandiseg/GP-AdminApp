@@ -12,6 +12,8 @@ import java.awt.event.*;
 
 public class edit_pWindow extends abstractEdit_CheckWindow {
 
+    private providerAPI theManagerDB = new providerAPI();
+
     public edit_pWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Provider to be edited", "Provider");
     }

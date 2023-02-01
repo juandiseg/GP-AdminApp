@@ -8,12 +8,18 @@ import javax.swing.JToggleButton;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.allergensWindow.allergensAPI;
+import windows.productsWindow.productAPI;
+import windows.providersWindow.providerAPI;
+
 import java.time.LocalDate;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 public class assist_add_iWindow extends abstractAddWindow {
+
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
 
     private String name;
     private int amount;
@@ -118,7 +124,7 @@ public class assist_add_iWindow extends abstractAddWindow {
 
     private void setList() {
         DefaultListModel<provider> listModel = new DefaultListModel<provider>();
-        for (provider tempProv : theManagerDB.getAllProviders())
+        for (provider tempProv : new providerAPI().getAllProviders())
             listModel.addElement(tempProv);
         theList.setModel(listModel);
         scrollPane = new JScrollPane(theList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,

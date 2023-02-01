@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 
 public class add_aWindow extends abstractAddWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
+
     private JLabel enterName = new JLabel("Enter the allergen's NAME: ");
     private JTextField textFieldName = new JTextField();
 

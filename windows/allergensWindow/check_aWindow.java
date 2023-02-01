@@ -11,6 +11,8 @@ import javax.swing.JTable;
 
 public class check_aWindow extends abstractEdit_CheckWindow {
 
+    private allergensAPI theManagerDB = new allergensAPI();
+
     public check_aWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Check Allergens", "Allergen");
     }

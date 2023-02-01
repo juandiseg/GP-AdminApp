@@ -6,7 +6,6 @@ import iLayouts.iLayout;
 public abstract class abstractUpdater {
 
     public static JFrame theFrame;
-    public static managerDB theManagerDB;
     private abstractUpdater previousWindow;
     private iLayout layoutApplyer;
 
@@ -17,10 +16,6 @@ public abstract class abstractUpdater {
 
     final public void setFrame(JFrame _theFrame) {
         theFrame = _theFrame;
-    }
-
-    final public void setManagerDB(managerDB _theManagerDB) {
-        theManagerDB = _theManagerDB;
     }
 
     public void updateToThisMenu() {

@@ -23,9 +23,11 @@ import componentsFood.product_ingredients;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.ingredientsWindow.ingredientsAPI;
 
 public class assist_assist_edit_productWindow extends abstractAddWindow {
 
+    private productAPI theManagerDB = new productAPI();
     private product theCurrentProduct;
 
     private JTextField textFieldPrice = new JTextField();
@@ -103,7 +105,7 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                         int productID = theCurrentProduct.getId();
                         int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
                         int amountUsed = Integer.parseInt((String) modelSelected.getValueAt(i, 6));
-                        theManagerDB.addIngredientsToProduct(productID, ingredientID, dateToday, amountUsed);
+                        new ingredientsAPI().addIngredientsToProduct(productID, ingredientID, dateToday, amountUsed);
                     }
                     updateTable();
 
@@ -228,9 +230,9 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             tempTable.setDefaultEditor(Object.class, null);
         ArrayList<ingredient> tempIngredients = new ArrayList<ingredient>();
         if (alreadySelected)
-            tempIngredients = theManagerDB.getSelectedIngredients(theCurrentProduct);
+            tempIngredients = new ingredientsAPI().getSelectedIngredientsInProduct(theCurrentProduct);
         else
-            tempIngredients = theManagerDB.getNonSelectedIngredients(theCurrentProduct);
+            tempIngredients = new ingredientsAPI().getNonSelectedIngredientsInProduct(theCurrentProduct);
 
         for (ingredient tempIngredient : tempIngredients) {
             String ingID = Integer.toString(tempIngredient.getId());
@@ -240,7 +242,7 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String price = Float.toString(tempIngredient.getPrice());
             String amount = Integer.toString(tempIngredient.getAmount());
             String amountUsed = "Type here";
-            int tempAmount = theManagerDB.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+            int tempAmount = new ingredientsAPI().getAmountOfIngredientInProduct(theCurrentProduct.getId(),
                     tempIngredient.getId());
             if (tempAmount != -1)
                 amountUsed = Integer.toString(tempAmount);

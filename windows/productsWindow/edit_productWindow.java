@@ -2,7 +2,6 @@ package windows.productsWindow;
 
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
-import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractUpdater;
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import javax.swing.JTable;
 import java.awt.event.*;
 
 public class edit_productWindow extends abstractEdit_CheckWindow {
+
+    private productAPI theManagerDB = new productAPI();
 
     public edit_productWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Product to be edited", "Product");

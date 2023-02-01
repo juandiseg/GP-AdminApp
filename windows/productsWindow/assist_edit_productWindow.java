@@ -12,6 +12,8 @@ import javax.swing.*;
 
 public class assist_edit_productWindow extends abstractAddWindow {
 
+    private productAPI theManagerDB = new productAPI();
+
     protected product theCurrentProduct;
     private JTextField textFieldName = new JTextField();
     private JScrollPane scrollPane;

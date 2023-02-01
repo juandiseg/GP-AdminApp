@@ -9,6 +9,8 @@ import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.ingredientsWindow.ingredientsAPI;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,6 +18,7 @@ import javax.swing.JButton;
 
 public class assist_add_productWindow extends abstractAddWindow {
 
+    private productAPI theManagerDB = new productAPI();
     private JLabel selectIngredients = new JLabel("Select ingredients used: ");
 
     private JButton swapLeft = new JButton("Left");
@@ -147,7 +150,7 @@ public class assist_add_productWindow extends abstractAddWindow {
                         "active" },
                 0);
 
-        for (ingredient tempIngredient : theManagerDB.getAllCurrentIngredients()) {
+        for (ingredient tempIngredient : new ingredientsAPI().getAllCurrentIngredients()) {
             String ingID = Integer.toString(tempIngredient.getId());
             String provID = Integer.toString(tempIngredient.getProviderID());
             String date = tempIngredient.getDate();

@@ -13,6 +13,8 @@ import java.awt.event.*;
 
 public class check_iWindow extends abstractEdit_CheckWindow {
 
+    private ingredientsAPI theManagerDB = new ingredientsAPI();
+
     private JLabel instruction = new JLabel("Double-click on Ingredient to check Allergens");
 
     public check_iWindow(abstractUpdater previousWindow) {
