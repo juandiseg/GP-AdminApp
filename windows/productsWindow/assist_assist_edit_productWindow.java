@@ -96,37 +96,22 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                         printSuccessGUI();
                     }
                 } else {
-                    String tempPrice = textFieldPrice.getText();
-                    if (tempPrice.isEmpty())
-                        return;
-                    Float price = Float.parseFloat(tempPrice);
-                    ArrayList<product_ingredients> tempList = new ArrayList<product_ingredients>();
-                    if (theManagerDB.isProductIngredientDateToday(theCurrentProduct.getId())) {
-                        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                            int productID = theCurrentProduct.getId();
-                            int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                            tempList.add(new product_ingredients(productID, ingredientID, dateToday, 0));
-                        }
-                        System.out.println(tempList);
-
+                    if (theManagerDB.isProductIngredientDateToday(theCurrentProduct.getId()))
+                        theManagerDB.removeProductIngredientsToday(theCurrentProduct.getId());
+                    String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                        int productID = theCurrentProduct.getId();
+                        int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                        int amountUsed = Integer.parseInt((String) modelSelected.getValueAt(i, 6));
+                        theManagerDB.addIngredientsToProduct(productID, ingredientID, dateToday, amountUsed);
                     }
+                    updateTable();
 
-                    /*
-                     * String tempPrice = textFieldPrice.getText();
-                     * if (tempPrice.isEmpty())
-                     * return;
-                     * Float price = Float.parseFloat(tempPrice);
-                     * for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                     * int productID = theCurrentProduct.getId();
-                     * int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                     * LocalDate dateObj = LocalDate.now();
-                     * String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                     * / Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 6));
-                     * // theManagerDB.addIngredientsToProduct(productID, ingredientID, date, qty);
-                     * //}
-                     * //// HAVE TO IMPLEMENT THIS ONE TO GET THE EDIT TO WORK 100%
-                     */
+                    String tempPrice = textFieldPrice.getText();
+                    float price = Float.parseFloat(tempPrice);
+                    if (theManagerDB.mediumUpdateProduct(theCurrentProduct, price)) {
+                        updateTable();
+                    }
                 }
             }
         });
@@ -153,11 +138,13 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 String name = (String) modelIngredients.getValueAt(row, 3);
                 String price = (String) modelIngredients.getValueAt(row, 4);
                 String amount = (String) modelIngredients.getValueAt(row, 5);
-                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
-                String active = (String) modelIngredients.getValueAt(row, 7);
+                String entAmount = (String) modelIngredients.getValueAt(row, 6);
+                String in_inventory = (String) modelIngredients.getValueAt(row, 7);
+                String active = (String) modelIngredients.getValueAt(row, 8);
                 modelIngredients.removeRow(row);
                 modelSelected
-                        .addRow(new String[] { ingID, provID, date, name, price, amount, "", in_inventory, active });
+                        .addRow(new String[] { ingID, provID, date, name, price, amount, entAmount, in_inventory,
+                                active });
             }
         });
         swapRight.addActionListener(new ActionListener() {
@@ -171,11 +158,13 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 String name = (String) modelSelected.getValueAt(row, 3);
                 String price = (String) modelSelected.getValueAt(row, 4);
                 String amount = (String) modelSelected.getValueAt(row, 5);
+                String entAmount = (String) modelSelected.getValueAt(row, 6);
                 String in_inventory = (String) modelSelected.getValueAt(row, 7);
                 String active = (String) modelSelected.getValueAt(row, 8);
                 modelSelected.removeRow(row);
                 modelIngredients
-                        .addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
+                        .addRow(new String[] { ingID, provID, date, name, price, amount, entAmount, in_inventory,
+                                active });
             }
         });
 
@@ -250,6 +239,11 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String name = tempIngredient.getName();
             String price = Float.toString(tempIngredient.getPrice());
             String amount = Integer.toString(tempIngredient.getAmount());
+            String amountUsed = "Type here";
+            int tempAmount = theManagerDB.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+                    tempIngredient.getId());
+            if (tempAmount != -1)
+                amountUsed = Integer.toString(tempAmount);
             String in_inventory = "No";
             if (tempIngredient.getInInventory())
                 in_inventory = "Yes";
@@ -257,9 +251,11 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             if (tempIngredient.getActive())
                 active = "Yes";
             if (alreadySelected)
-                tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, "", in_inventory, active });
+                tempModel.addRow(
+                        new String[] { ingID, provID, date, name, price, amount, amountUsed, in_inventory, active });
             else
-                tempModel.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory, active });
+                tempModel.addRow(
+                        new String[] { ingID, provID, date, name, price, amount, amountUsed, in_inventory, active });
         }
 
         tempTable.setModel(tempModel);
@@ -269,14 +265,16 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
         tempTable.removeColumn(tempTable.getColumn("date"));
         tempTable.removeColumn(tempTable.getColumn("in_inventory"));
         tempTable.removeColumn(tempTable.getColumn("active"));
-
+        if (!alreadySelected)
+            tempTable.removeColumn(tempTable.getColumn("Enter Amount"));
     }
 
     private void setTable() {
 
         tableIngredients = new JTable();
         modelIngredients = new DefaultTableModel(
-                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "in_inventory",
+                new String[] { "ingredient_id", "provider_id", "date", "Name", "Price", "Amount", "Enter Amount",
+                        "in_inventory",
                         "active" },
                 0);
         loadTable(false, tableIngredients, modelIngredients);

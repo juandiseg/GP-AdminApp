@@ -858,7 +858,7 @@ public class managerDB {
         LocalDate dateObj = LocalDate.now();
         String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (theProduct.getDate().equals(date)) {
-            return easyMediumProduct(theProduct, price);
+            return updateProductPriceToday(theProduct.getId(), price);
         }
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String query = "INSERT INTO product VALUES (" + theProduct.getId() + ", '" + date + "', '"
@@ -876,27 +876,11 @@ public class managerDB {
         }
     }
 
-    private boolean easyMediumProduct(product theProduct, float price) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String query = "UPDATE product SET price = " + price + " WHERE product_id = " + theProduct.getId() + ";";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-                return true;
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
     public boolean isProductIngredientDateToday(int product_id) {
         try (Connection connection = DriverManager.getConnection(url, user,
                 password)) {
             String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String query = "SELECT product_id, MAX(product_ingredients_date) FROM product_ingredients WHERE product_id = "
+            String query = "SELECT MAX(product_ingredients_date) FROM product_ingredients WHERE product_id = "
                     + product_id + ";";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
@@ -911,6 +895,93 @@ public class managerDB {
                     connection.close();
                     return false;
                 }
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public int getAmountOfIngredientInProduct(int productID, int ingredient_id) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String query = "SELECT ingredientQuantity FROM product_ingredients WHERE product_id = " + productID
+                    + " AND ingredient_id = " + ingredient_id + " ORDER BY product_ingredients_date DESC LIMIT 1";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int name = rs.getInt("ingredientQuantity");
+                    connection.close();
+                    return name;
+                } else {
+                    connection.close();
+                    return -1;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean removeProductIngredientsToday(int productID) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "DELETE FROM product_ingredients WHERE product_id = " + productID
+                    + " AND product_ingredients_date = '" + dateToday + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean isProductDateToday(int product_id) {
+        try (Connection connection = DriverManager.getConnection(url, user,
+                password)) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "SELECT MAX(product_date) FROM product WHERE product_id = " + product_id + ";";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    String dateDB = rs.getString("MAX(product_date)");
+                    connection.close();
+                    if (dateToday.equals(dateDB))
+                        return true;
+                    else
+                        return false;
+                } else {
+                    connection.close();
+                    return false;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean updateProductPriceToday(int productID, float productPrice) {
+        try (Connection connection = DriverManager.getConnection(url, user,
+                password)) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "UPDATE product SET price = " + productPrice + " WHERE product_date = '" + dateToday
+                    + "' AND product_id = " + productID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
