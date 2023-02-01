@@ -48,7 +48,6 @@ public class assist_editIngr_aWindow extends abstractAddWindow {
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         getAddButton().setText("Change Allergens");
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

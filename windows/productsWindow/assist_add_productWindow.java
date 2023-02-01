@@ -18,7 +18,6 @@ import javax.swing.JButton;
 
 public class assist_add_productWindow extends abstractAddWindow {
 
-    private productAPI theManagerDB = new productAPI();
     private JLabel selectIngredients = new JLabel("Select ingredients used: ");
 
     private JButton swapLeft = new JButton("Left");

@@ -72,6 +72,7 @@ public class delete_pWindow extends abstractEdit_CheckWindow {
                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                         if (reply == JOptionPane.YES_OPTION) {
                             // HAVE TO IMPLEMENT
+                            System.out.println(ID);
                         }
                     } catch (IndexOutOfBoundsException e) {
                         return;

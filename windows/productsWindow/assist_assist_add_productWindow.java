@@ -19,7 +19,6 @@ import javax.swing.JTable;
 
 public class assist_assist_add_productWindow extends abstractAddWindow {
 
-    private productAPI theManagerDB = new productAPI();
     private JLabel selectIngredients = new JLabel("Specify amount used of each ingredient: ");
 
     private product theProduct;

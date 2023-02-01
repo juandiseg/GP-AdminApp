@@ -2,17 +2,11 @@ package windows.ingredientsWindow;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 
-import javax.swing.plaf.metal.MetalBorders.TextFieldBorder;
-
-import componentsFood.allergen;
 import componentsFood.ingredient;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import windows.allergensWindow.allergensAPI;
 import windows.providersWindow.providerAPI;
 
 import javax.swing.*;

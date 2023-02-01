@@ -15,7 +15,6 @@ import java.awt.event.*;
 
 public class editIngr_aWindow extends abstractEdit_CheckWindow {
 
-    private allergensAPI theManagerDB = new allergensAPI();
     private JLabel instruction = new JLabel("Double-click on Ingredient to change its Allergens");
 
     public editIngr_aWindow(abstractUpdater previousWindow) {

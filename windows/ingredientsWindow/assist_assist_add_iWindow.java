@@ -14,8 +14,6 @@ import javax.swing.*;
 
 public class assist_assist_add_iWindow extends abstractAddWindow {
 
-    private ingredientsAPI theManagerDB = new ingredientsAPI();
-
     private int ID;
 
     private JScrollPane scrollPaneAllergen;

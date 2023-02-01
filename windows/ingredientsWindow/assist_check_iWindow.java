@@ -7,8 +7,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
-import componentsFood.ingredient;
-import componentsFood.provider;
 import util.abstractEdit_CheckWindow;
 import util.abstractUpdater;
 import windows.allergensWindow.allergensAPI;

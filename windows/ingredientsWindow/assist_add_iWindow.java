@@ -8,8 +8,6 @@ import javax.swing.JToggleButton;
 import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import windows.allergensWindow.allergensAPI;
-import windows.productsWindow.productAPI;
 import windows.providersWindow.providerAPI;
 
 import java.time.LocalDate;
