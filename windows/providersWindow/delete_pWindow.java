@@ -19,7 +19,6 @@ public class delete_pWindow extends abstractEdit_CheckWindow {
 
     public delete_pWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Provider to be deleted", "Provider");
-        // TODO Auto-generated constructor stub
     }
 
     @Override

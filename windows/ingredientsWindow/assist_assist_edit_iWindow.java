@@ -65,7 +65,6 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int providerID = theList.getSelectedValue().getId();
                 int amount = Integer.parseInt(textFieldAmount.getText());
                 float price = Float.parseFloat(textFieldPrice.getText());

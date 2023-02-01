@@ -4,9 +4,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-
-import com.mysql.cj.protocol.x.ReusableOutputStream;
-
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import javax.swing.JLabel;

@@ -6,8 +6,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.category;
-import componentsFood.product;
-import componentsFood.provider;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import javax.swing.JLabel;

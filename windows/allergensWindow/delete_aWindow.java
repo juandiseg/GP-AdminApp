@@ -19,7 +19,6 @@ public class delete_aWindow extends abstractEdit_CheckWindow {
 
     public delete_aWindow(abstractUpdater previousWindow) {
         super(previousWindow, "Choose Allergen to be deleted", "Allergen");
-        // TODO Auto-generated constructor stub
     }
 
     @Override
