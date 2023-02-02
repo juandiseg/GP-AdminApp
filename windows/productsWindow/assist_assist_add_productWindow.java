@@ -55,8 +55,6 @@ public class assist_assist_add_productWindow extends abstractAddWindow {
                     new productAPI().addIngredients(productID, ingredientID, date, qty);
                 }
                 System.out.println("done congrats");
-                // new assist_assist_add_productWindow(temp, theProduct,
-                // stackIngredients).updateToThisMenu();
             }
         });
     }

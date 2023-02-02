@@ -163,6 +163,22 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
+    public boolean addMenuToCategory(int menu_id, int category_id) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO menus_categories VALUES (" + category_id + ", " + menu_id + ");";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     private int getLastCategoryID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT category_id FROM categories ORDER BY category_id DESC LIMIT 1;";

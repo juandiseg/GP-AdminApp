@@ -2,6 +2,7 @@ package windows;
 
 import windows.categoryWindow.main_cWindow;
 import windows.ingredientsWindow.main_iWindow;
+import windows.menuWindow.main_mWindow;
 import windows.productsWindow.main_productWindow;
 
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class main_Window extends abstractUpdater {
     private JButton button2 = new JButton("Ingredients");
     private JButton button3 = new JButton("Products");
     private JButton button4 = new JButton("Categories");
+    private JButton button5 = new JButton("Menus");
 
     public main_Window() {
         super(null, new GridLayoutApplyer(theFrame, 4));
@@ -35,6 +37,7 @@ public class main_Window extends abstractUpdater {
         theFrame.add(button2);
         theFrame.add(button3);
         theFrame.add(button4);
+        theFrame.add(button5);
     }
 
     public void addActionListeners() {
@@ -60,6 +63,12 @@ public class main_Window extends abstractUpdater {
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 main_cWindow ingredientsWdw = new main_cWindow(temp);
+                ingredientsWdw.updateToThisMenu();
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                main_mWindow ingredientsWdw = new main_mWindow(temp);
                 ingredientsWdw.updateToThisMenu();
             }
         });
