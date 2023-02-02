@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractManagerDB;
 
@@ -216,11 +215,11 @@ public class productAPI extends abstractManagerDB {
     private boolean isLastProductEntryToday(int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String query = "SELECT MAX(product_date) FROM products WHERE product_id = " + productID + ";";
+            String query = "SELECT product_date FROM products WHERE product_id = " + productID + " AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("MAX(product_date)");
+                    String dateDB = rs.getString("product_date");
                     connection.close();
                     if (dateToday.equals(dateDB))
                         return true;
@@ -284,7 +283,7 @@ public class productAPI extends abstractManagerDB {
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("MAX(product_date)");
+                    String dateDB = rs.getString("product_ingredients_date");
                     connection.close();
                     if (dateToday.equals(dateDB))
                         return true;
@@ -308,7 +307,7 @@ public class productAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String query = "DELETE FROM products_ingredients WHERE product_id = " + productID
-                    + " AND products_ingredients_date = '" + dateToday + "';";
+                    + " AND product_ingredients_date = '" + dateToday + "';";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

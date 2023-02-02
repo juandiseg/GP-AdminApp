@@ -2,8 +2,6 @@ package windows.productsWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -15,10 +13,12 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 
+import componentsFood.category;
 import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
+import windows.categoryWindow.categoryAPI;
 import windows.ingredientsWindow.ingredientsAPI;
 
 public class assist_assist_edit_productWindow extends abstractAddWindow {
@@ -88,8 +88,9 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 if (!tempPrice.isEmpty()) {
                     float price = Float.parseFloat(tempPrice);
                     theManagerDB.updatePrice(theCurrentProduct.getId(), price);
+                    theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
                 }
-                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
+                if (changeIngredientsButton.getText().equals("Don't Change Ingredients Too")) {
                     int productID = theCurrentProduct.getId();
                     Stack<Integer> stackIDs = new Stack<Integer>();
                     Stack<Integer> stackQtys = new Stack<Integer>();
@@ -97,8 +98,9 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                         stackIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
                         stackQtys.push(Integer.parseInt((String) modelSelected.getValueAt(i, 6)));
                     }
-                    theManagerDB.updateIngredients(productID, stackIDs, stackIDs);
+                    theManagerDB.updateIngredients(productID, stackIDs, stackQtys);
                 }
+                updateTable();
             }
         });
         changeIngredientsButton.addActionListener(new ActionListener() {
@@ -163,27 +165,20 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
         String date = theCurrentProduct.getDate();
         String name = theCurrentProduct.getName();
         String price = Float.toString(theCurrentProduct.getPrice());
-        String active = "No";
-        if (theCurrentProduct.getActive())
-            active = "Yes";
-        model.addRow(new String[] { id, date, name, price, active });
-        myTable.revalidate();
-        myTable.repaint();
+        category tempCategory = new categoryAPI().getCategoryOfProduct(theCurrentProduct.getId());
+        model.addRow(new String[] { id, date, name, price, tempCategory.getName() });
     }
 
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price", "Active" }, 0);
+                new String[] { "product_id", "Active Since", "Name", "Price" }, 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentProduct.getId());
         String date = theCurrentProduct.getDate();
         String name = theCurrentProduct.getName();
         String price = Float.toString(theCurrentProduct.getPrice());
-        String active = "No";
-        if (theCurrentProduct.getActive())
-            active = "Yes";
-        model.addRow(new String[] { id, date, name, price, active });
+        model.addRow(new String[] { id, date, name, price });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("product_id"));

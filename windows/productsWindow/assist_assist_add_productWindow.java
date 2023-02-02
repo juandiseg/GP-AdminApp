@@ -11,8 +11,6 @@ import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
-import util.managerDB;
-import windows.ingredientsWindow.ingredientsAPI;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;

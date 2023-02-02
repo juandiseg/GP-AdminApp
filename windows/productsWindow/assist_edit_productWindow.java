@@ -23,10 +23,8 @@ public class assist_edit_productWindow extends abstractAddWindow {
     private DefaultTableModel model;
     private JLabel summaryTXT = new JLabel("Product to be changed:");
     private JLabel enterName = new JLabel("Enter the product's new NAME: ");
-    private JLabel enterActive = new JLabel("Enter the product's new ACTIVE state: ");
     private JLabel chooseCategory = new JLabel("Select this product's new category:");
     private JButton editOtherAttributes = new JButton("See more changes");
-    private JToggleButton activeButton = new JToggleButton("Active");
     private JList<category> theList = new JList<category>();
     private JScrollPane scrollPaneList;
 
@@ -52,9 +50,6 @@ public class assist_edit_productWindow extends abstractAddWindow {
                 String name = textFieldName.getText();
                 if (!name.isEmpty())
                     theManagerDB.updateProductName(theCurrentProduct.getId(), name);
-                boolean active = activeButton.getText().equals("Active");
-                if (active != theCurrentProduct.getActive())
-                    theManagerDB.updateProductActive(theCurrentProduct.getId(), active);
                 category tempSelectedCategory = theList.getSelectedValue();
                 if (tempSelectedCategory != null)
                     new categoryAPI().editCategoryOfProduct(theCurrentProduct.getId(), tempSelectedCategory.getId());
@@ -69,14 +64,6 @@ public class assist_edit_productWindow extends abstractAddWindow {
                 tempWdw.updateToThisMenu();
             }
         });
-        activeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (activeButton.getText().equals("Active"))
-                    activeButton.setText("Non Active");
-                else
-                    activeButton.setText("Active");
-            }
-        });
     }
 
     private void updateTable() {
@@ -86,27 +73,21 @@ public class assist_edit_productWindow extends abstractAddWindow {
         String date = theCurrentProduct.getDate();
         String name = theCurrentProduct.getName();
         String price = Float.toString(theCurrentProduct.getPrice());
-        String active = "No";
-        if (theCurrentProduct.getActive())
-            active = "Yes";
         category tempCategory = new categoryAPI().getCategoryOfProduct(theCurrentProduct.getId());
-        model.addRow(new String[] { id, date, name, price, active, tempCategory.getName() });
+        model.addRow(new String[] { id, date, name, price, tempCategory.getName() });
     }
 
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price", "Active", "Category" }, 0);
+                new String[] { "product_id", "Active Since", "Name", "Price", "Category" }, 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentProduct.getId());
         String date = theCurrentProduct.getDate();
         String name = theCurrentProduct.getName();
         String price = Float.toString(theCurrentProduct.getPrice());
-        String active = "No";
-        if (theCurrentProduct.getActive())
-            active = "Yes";
         category tempCategory = new categoryAPI().getCategoryOfProduct(theCurrentProduct.getId());
-        model.addRow(new String[] { id, date, name, price, active, tempCategory.getName() });
+        model.addRow(new String[] { id, date, name, price, tempCategory.getName() });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("product_id"));
@@ -125,10 +106,8 @@ public class assist_edit_productWindow extends abstractAddWindow {
         textFieldName.setBounds(270, 130, 165, 25);
         enterName.setBounds(10, 130, 220, 25);
         scrollPane.setBounds(45, 60, 500, 55);
-        activeButton.setBounds(270, 160, 170, 25);
-        enterActive.setBounds(10, 160, 270, 25);
-        chooseCategory.setBounds(10, 190, 270, 25);
-        scrollPaneList.setBounds(270, 190, 170, 200);
+        chooseCategory.setBounds(10, 160, 270, 25);
+        scrollPaneList.setBounds(270, 160, 170, 200);
     }
 
     @Override
@@ -139,8 +118,6 @@ public class assist_edit_productWindow extends abstractAddWindow {
         theFrame.add(summaryTXT);
         theFrame.add(enterName);
         theFrame.add(scrollPane);
-        theFrame.add(activeButton);
-        theFrame.add(enterActive);
         theFrame.add(editOtherAttributes);
         theFrame.add(chooseCategory);
         theFrame.add(scrollPaneList);

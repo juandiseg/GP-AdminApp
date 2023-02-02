@@ -23,9 +23,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private JLabel summaryTXT = new JLabel("Ingredient to be changed:");
     private JLabel enterName = new JLabel("Enter the ingredient's new NAME: ");
     private JLabel enterInventory = new JLabel("Enter the ingredient's new INVETORY state: ");
-    private JLabel enterActive = new JLabel("Enter the ingredient's new ACTIVE state: ");
     private JButton editOtherAttributes = new JButton("See more changes");
-    private JToggleButton activeButton = new JToggleButton("Active");
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
 
     public assist_edit_iWindow(abstractUpdater previousWindow, ingredient theCurrentIngredient) {
@@ -46,22 +44,15 @@ public class assist_edit_iWindow extends abstractAddWindow {
     public void addActionListeners() {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String newName = theCurrentIngredient.getName();
-                String temp = textFieldName.getText();
-                if (!temp.isEmpty())
-                    newName = temp;
+                String newName = textFieldName.getText();
+                if (!newName.isEmpty())
+                    theManagerDB.updateName(theCurrentIngredient.getId(), newName);
                 boolean inventory = true;
                 if (inventoryButton.getText().equals("Without Inventory"))
                     inventory = false;
-                boolean active = true;
-                if (activeButton.getText().equals("Non Active"))
-                    active = false;
-                if (theManagerDB.ingredientSimpleEdit(theCurrentIngredient, newName, inventory, active)) {
-                    printSuccessGUI();
-                    updateTable();
-                    return;
-                }
-                printErrorGUI();
+                if (inventory != theCurrentIngredient.getInInventory())
+                    theManagerDB.updateInInventory(theCurrentIngredient.getId(), inventory);
+                updateTable();
             }
         });
         abstractUpdater temp = this;
@@ -69,14 +60,6 @@ public class assist_edit_iWindow extends abstractAddWindow {
             public void actionPerformed(ActionEvent e) {
                 assist_assist_edit_iWindow tempWdw = new assist_assist_edit_iWindow(temp, theCurrentIngredient);
                 tempWdw.updateToThisMenu();
-            }
-        });
-        activeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (activeButton.getText().equals("Active"))
-                    activeButton.setText("Non Active");
-                else
-                    activeButton.setText("Active");
             }
         });
         inventoryButton.addActionListener(new ActionListener() {
@@ -90,8 +73,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
     }
 
     private void updateTable() {
-        theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId(),
-                theCurrentIngredient.getProviderID(), theCurrentIngredient.getDate());
+        theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId());
         model.removeRow(0);
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
@@ -112,7 +94,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory", "Active" },
+                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory" },
                 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentIngredient.getId());
@@ -120,19 +102,14 @@ public class assist_edit_iWindow extends abstractAddWindow {
         String price = Float.toString(theCurrentIngredient.getPrice());
         String amount = Integer.toString(theCurrentIngredient.getAmount());
         String in_inventory;
-        String active;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";
         else
             in_inventory = "No";
-        if (theCurrentIngredient.getActive())
-            active = "Yes";
-        else
-            active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
                 new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
-                amount, in_inventory, active });
+                amount, in_inventory });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("ID"));
@@ -153,8 +130,6 @@ public class assist_edit_iWindow extends abstractAddWindow {
         scrollPane.setBounds(45, 60, 500, 55);
         inventoryButton.setBounds(270, 160, 170, 25);
         enterInventory.setBounds(10, 160, 270, 25);
-        activeButton.setBounds(270, 190, 170, 25);
-        enterActive.setBounds(10, 190, 270, 25);
     }
 
     @Override
@@ -165,9 +140,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         theFrame.add(summaryTXT);
         theFrame.add(enterName);
         theFrame.add(scrollPane);
-        theFrame.add(activeButton);
         theFrame.add(inventoryButton);
-        theFrame.add(enterActive);
         theFrame.add(enterInventory);
         theFrame.add(editOtherAttributes);
     }

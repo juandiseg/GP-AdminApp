@@ -65,54 +65,48 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int providerID = theList.getSelectedValue().getId();
-                int amount = Integer.parseInt(textFieldAmount.getText());
-                float price = Float.parseFloat(textFieldPrice.getText());
-                // if(!checkInput(price, amount))
-                // return;
-
-                if (theManagerDB.ingredientComplexIngredientEdit(theCurrentIngredient, providerID, amount, price)) {
-                    printSuccessGUI();
-                    updateTable(providerID);
-                    ((assist_edit_iWindow) (getPreviousWindow())).theCurrentIngredient = theCurrentIngredient;
-                    return;
+                provider temProvider = theList.getSelectedValue();
+                if (temProvider != null) {
+                    if (temProvider.getId() != theCurrentIngredient.getProviderID())
+                        theManagerDB.updateProvider(theCurrentIngredient.getId(), temProvider.getId());
                 }
-                printErrorGUI();
-
+                if (!textFieldAmount.getText().isEmpty()) {
+                    int amount = Integer.parseInt(textFieldAmount.getText());
+                    theManagerDB.updateAmount(theCurrentIngredient.getId(), amount);
+                }
+                if (!textFieldPrice.getText().isEmpty()) {
+                    float price = Float.parseFloat(textFieldPrice.getText());
+                    theManagerDB.updatePrice(theCurrentIngredient.getId(), price);
+                }
+                updateTable();
             }
         });
     }
 
-    private void updateTable(int provider_id) {
+    private void updateTable() {
+        theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId());
+
         LocalDate dateObj = LocalDate.now();
         String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        theCurrentIngredient = theManagerDB.getIngredient(theCurrentIngredient.getId(),
-                provider_id, date);
         model.removeRow(0);
         String id = Integer.toString(theCurrentIngredient.getId());
-        String prov_id = Integer.toString(provider_id);
+        String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
         String amount = Integer.toString(theCurrentIngredient.getAmount());
         String in_inventory;
-        String active;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";
         else
             in_inventory = "No";
-        if (theCurrentIngredient.getActive())
-            active = "Yes";
-        else
-            active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
                 new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
-                theCurrentIngredient.getDate(), price,
-                amount, in_inventory, active });
+                date, price, amount, in_inventory });
     }
 
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory", "Active" },
+                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory" },
                 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentIngredient.getId());
@@ -120,19 +114,14 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         String price = Float.toString(theCurrentIngredient.getPrice());
         String amount = Integer.toString(theCurrentIngredient.getAmount());
         String in_inventory;
-        String active;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";
         else
             in_inventory = "No";
-        if (theCurrentIngredient.getActive())
-            active = "Yes";
-        else
-            active = "No";
         model.addRow(new String[] { id, theCurrentIngredient.getName(),
                 new providerAPI().getProvider(Integer.parseInt(prov_id)).getName(),
                 theCurrentIngredient.getDate(), price,
-                amount, in_inventory, active });
+                amount, in_inventory });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("ID"));

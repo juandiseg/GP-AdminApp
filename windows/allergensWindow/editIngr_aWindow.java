@@ -30,7 +30,7 @@ public class editIngr_aWindow extends abstractEdit_CheckWindow {
                     int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                     int prov_id = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
                     String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                    new assist_editIngr_aWindow(temp, new ingredientsAPI().getIngredient(ID, prov_id, date))
+                    new assist_editIngr_aWindow(temp, new ingredientsAPI().getIngredient(ID))
                             .updateToThisMenu();
                 }
             }

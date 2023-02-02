@@ -43,30 +43,14 @@ public class assist_edit_pWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();
+                if (!name.isEmpty())
+                    theManagerDB.updateName(theCurrentProvider.getId(), name);
                 String email = textFieldEmail.getText();
-                if (name.isEmpty() && email.isEmpty()) {
-                    printErrorGUI();
-                    return;
-                } else if (name.isEmpty() || email.isEmpty()) {
-                    if (name.isEmpty())
-                        theManagerDB.editProvider(theCurrentProvider.getId(), theCurrentProvider.getName(), email);
-                    else
-                        theManagerDB.editProvider(theCurrentProvider.getId(), name, theCurrentProvider.getEmail());
-                    printSuccessGUI();
-                    model.removeRow(0);
-                    theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
-                    model.addRow(new String[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
-                    return;
-                }
-                if (theManagerDB.editProvider(theCurrentProvider.getId(), name, email)) {
-                    printSuccessGUI();
-                    theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
-                    model.removeRow(0);
-                    model.addRow(new String[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
-                } else {
-                    printErrorGUI();
-                }
-
+                if (!email.isEmpty())
+                    theManagerDB.updateEmail(theCurrentProvider.getId(), email);
+                model.removeRow(0);
+                theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+                model.addRow(new String[] { theCurrentProvider.getName(), theCurrentProvider.getEmail() });
             }
         });
     }

@@ -26,7 +26,7 @@ public class add_iWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String name = textFieldName.getText();
-                String price = textFieldPrice.getText();
+                float price = Float.parseFloat(textFieldPrice.getText());
                 String amount = textFieldAmount.getText();
                 if (checkInput(name, price, amount)) {
                     assist_add_iWindow tempWdw = new assist_add_iWindow(temp, name, amount, price);
@@ -36,8 +36,8 @@ public class add_iWindow extends abstractAddWindow {
         });
     }
 
-    private boolean checkInput(String name, String price, String amount) {
-        if (name.isEmpty() || price.isEmpty() || amount.isEmpty()) {
+    private boolean checkInput(String name, float price, String amount) {
+        if (name.isEmpty() || amount.isEmpty()) {
             printErrorGUI();
             return false;
         }

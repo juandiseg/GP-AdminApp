@@ -28,9 +28,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
-                        int prov_id = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
-                        String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                        new assist_edit_iWindow(temp, theManagerDB.getIngredient(ID, prov_id, date)).updateToThisMenu();
+                        new assist_edit_iWindow(temp, theManagerDB.getIngredient(ID)).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
@@ -44,25 +42,18 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
         ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory", "active" },
+                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory" },
                 0);
         for (ingredient temp : tempList) {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());
             String price = Float.toString(temp.getPrice());
             String amount = Integer.toString(temp.getAmount());
-            String in_inventory;
-            String active;
+            String in_inventory = "No";
             if (temp.getInInventory())
-                in_inventory = "In inventory";
-            else
-                in_inventory = "Not in inventory";
-            if (temp.getActive())
-                active = "Active";
-            else
-                active = "Not active";
+                in_inventory = "Yes";
             model.addRow(
-                    new String[] { id, prov_id, temp.getDate(), temp.getName(), price, amount, in_inventory, active });
+                    new String[] { id, prov_id, temp.getDate(), temp.getName(), price, amount, in_inventory });
         }
     }
 

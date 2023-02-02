@@ -64,7 +64,7 @@ public class providerAPI extends abstractManagerDB {
     public boolean addProvider(String name, String email) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int provID = getLastProvID() + 1;
-            String query = "INSERT INTO providers VALUES (" + provID + ", '" + name + "', '" + email + "');";
+            String query = "INSERT INTO providers VALUES (" + provID + ", '" + name + "', '" + email + "', true);";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -99,10 +99,25 @@ public class providerAPI extends abstractManagerDB {
     }
 
     // UPDATE something "product" related in database.
-    public boolean editProvider(int ID, String name, String email) {
+    public boolean updateName(int ID, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE providers SET name = '" + name + "', email = '" + email
-                    + "' WHERE provider_id = " + Integer.toString(ID);
+            String query = "UPDATE providers SET name = '" + name + "' WHERE provider_id = " + Integer.toString(ID);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean updateEmail(int ID, String email) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE providers SET email = '" + email + "' WHERE provider_id = " + Integer.toString(ID);
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
