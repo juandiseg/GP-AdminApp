@@ -282,23 +282,6 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addIngredientsToProduct(int productID, int ingredientID, String date, float quantity) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO products_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
-                    + "', " + quantity + ")";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-            } catch (Exception a) {
-                System.out.println(a);
-                return false;
-            }
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
     private int getLastIngredientID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredient_id FROM beatneat.ingredients ORDER BY ingredient_id DESC LIMIT 1;";

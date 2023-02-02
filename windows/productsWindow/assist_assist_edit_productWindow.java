@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -83,32 +84,20 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
-                    String tempPrice = textFieldPrice.getText();
-                    if (tempPrice.isEmpty())
-                        return;
-                    Float price = Float.parseFloat(tempPrice);
-                    if (theManagerDB.mediumUpdateProduct(theCurrentProduct, price)) {
-                        updateTable();
-                        printSuccessGUI();
-                    }
-                } else {
-                    if (theManagerDB.isProductIngredientDateToday(theCurrentProduct.getId()))
-                        theManagerDB.removeProductIngredientsToday(theCurrentProduct.getId());
-                    String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                        int productID = theCurrentProduct.getId();
-                        int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                        int amountUsed = Integer.parseInt((String) modelSelected.getValueAt(i, 6));
-                        new ingredientsAPI().addIngredientsToProduct(productID, ingredientID, dateToday, amountUsed);
-                    }
-                    updateTable();
-
-                    String tempPrice = textFieldPrice.getText();
+                String tempPrice = textFieldPrice.getText();
+                if (!tempPrice.isEmpty()) {
                     float price = Float.parseFloat(tempPrice);
-                    if (theManagerDB.mediumUpdateProduct(theCurrentProduct, price)) {
-                        updateTable();
+                    theManagerDB.updatePrice(theCurrentProduct.getId(), price);
+                }
+                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
+                    int productID = theCurrentProduct.getId();
+                    Stack<Integer> stackIDs = new Stack<Integer>();
+                    Stack<Integer> stackQtys = new Stack<Integer>();
+                    for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                        stackIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                        stackQtys.push(Integer.parseInt((String) modelSelected.getValueAt(i, 6)));
                     }
+                    theManagerDB.updateIngredients(productID, stackIDs, stackIDs);
                 }
             }
         });
