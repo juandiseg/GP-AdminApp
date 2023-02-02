@@ -212,7 +212,6 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             tempIngredients = new ingredientsAPI().getSelectedIngredientsInProduct(theCurrentProduct);
         else
             tempIngredients = new ingredientsAPI().getNonSelectedIngredientsInProduct(theCurrentProduct);
-
         for (ingredient tempIngredient : tempIngredients) {
             String ingID = Integer.toString(tempIngredient.getId());
             String provID = Integer.toString(tempIngredient.getProviderID());
