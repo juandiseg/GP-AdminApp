@@ -100,10 +100,8 @@ public class assist_add_iWindow extends abstractAddWindow {
         activeButton.setBounds(240, 60, 170, 25);
         summaryTXT.setBounds(200, 20, 250, 25);
         enterEmail.setBounds(10, 90, 220, 25);
-
         chooseProv.setBounds(10, 120, 280, 25);
         scrollPane.setBounds(240, 150, 170, 200);
-
         enterName.setBounds(10, 60, 220, 25);
     }
 

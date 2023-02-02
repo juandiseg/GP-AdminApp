@@ -2,8 +2,11 @@ package windows.productsWindow;
 
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
+import componentsFood.category;
 import componentsFood.product;
 import util.abstractUpdater;
+import windows.categoryWindow.categoryAPI;
+
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -47,17 +50,19 @@ public class edit_productWindow extends abstractEdit_CheckWindow {
         ArrayList<product> tempList = theManagerDB.getAllCurrentProducts();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price", "Active" },
+                new String[] { "product_id", "Active Since", "Name", "Price", "Active", "Category" },
                 0);
+        categoryAPI tempAPI = new categoryAPI();
         for (product temp : tempList) {
             String id = Integer.toString(temp.getId());
             String date = temp.getDate();
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
             String active = "No";
+            category tempCategory = tempAPI.getCategoryOfProduct(temp.getId());
             if (temp.getActive())
                 active = "Yes";
-            model.addRow(new String[] { id, date, name, price, active });
+            model.addRow(new String[] { id, date, name, price, active, tempCategory.getName() });
         }
     }
 

@@ -3,7 +3,6 @@ package windows.categoryWindow;
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
 import componentsFood.category;
-import componentsFood.provider;
 import util.abstractUpdater;
 import java.util.ArrayList;
 

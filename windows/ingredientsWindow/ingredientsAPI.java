@@ -158,10 +158,10 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private ArrayList<ingredient> checkLatestIngredients(ArrayList<ingredient> theList) {
+    private void checkLatestIngredients(ArrayList<ingredient> theList) {
         int goal = theList.size();
         for (int i = 0; i < goal - 1; i++) {
-            if (theList.get(i) == theList.get(i + 1)) {
+            if (theList.get(i).getId() == theList.get(i + 1).getId()) {
                 LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 LocalDate date2 = LocalDate.parse(theList.get(i + 1).getDate(),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -176,13 +176,12 @@ public class ingredientsAPI extends abstractManagerDB {
                 }
             }
         }
-        return theList;
     }
 
     public ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN product_ingredients WHERE product_id = "
+            String query = "SELECT * FROM ingredients WHERE ingredient_id IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN products_ingredients WHERE product_id = "
                     + theProduct.getId()
                     + ") AND (ingredient_id, ingredients_date) IN (SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id)";
             try (Statement stmt = connection.createStatement()) {
@@ -212,7 +211,7 @@ public class ingredientsAPI extends abstractManagerDB {
     public ArrayList<ingredient> getNonSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN product_ingredients WHERE product_id ="
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM ingredients NATURAL JOIN products_ingredients WHERE product_id ="
                     + theProduct.getId()
                     + ") AND (ingredient_id, ingredients_date) IN (SELECT ingredient_id, MAX(ingredients_date) FROM ingredients GROUP BY ingredient_id)";
             try (Statement stmt = connection.createStatement()) {
@@ -241,8 +240,8 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public int getAmountOfIngredientInProduct(int productID, int ingredient_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredientQuantity FROM product_ingredients WHERE product_id = " + productID
-                    + " AND ingredient_id = " + ingredient_id + " ORDER BY product_ingredients_date DESC LIMIT 1";
+            String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_id = " + productID
+                    + " AND ingredient_id = " + ingredient_id + " ORDER BY products_ingredients_date DESC LIMIT 1";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
@@ -285,7 +284,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean addIngredientsToProduct(int productID, int ingredientID, String date, float quantity) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO product_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
+            String query = "INSERT INTO products_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
                     + "', " + quantity + ")";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
