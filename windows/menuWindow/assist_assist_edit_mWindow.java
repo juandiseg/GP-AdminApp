@@ -197,7 +197,7 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
             tempTable.setDefaultEditor(Object.class, null);
         ArrayList<product> tempProducts = new ArrayList<product>();
         if (alreadySelected)
-            tempProducts = new productAPI().getSelectedProductsInMenu(theCurrentMenu);
+            tempProducts = new productAPI().getSelectedProductsInMenu(theCurrentMenu.getId());
         else
             tempProducts = new productAPI().getNonSelectedProductsInMenu(theCurrentMenu);
         for (product temp : tempProducts) {

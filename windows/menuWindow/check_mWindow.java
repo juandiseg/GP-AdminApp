@@ -9,16 +9,19 @@ import windows.categoryWindow.categoryAPI;
 
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.*;
 
-public class edit_mWindow extends abstractEdit_CheckWindow {
+public class check_mWindow extends abstractEdit_CheckWindow {
 
     private menuAPI theManagerDB = new menuAPI();
 
-    public edit_mWindow(abstractUpdater previousWindow) {
-        super(previousWindow, "Choose Menu to be edited", "Menu");
+    private JLabel instruction = new JLabel("Double-click on Menu to check its Products");
+
+    public check_mWindow(abstractUpdater previousWindow) {
+        super(previousWindow, "Check Menus", "Menu");
     }
 
     @Override
@@ -26,16 +29,12 @@ public class edit_mWindow extends abstractEdit_CheckWindow {
         abstractUpdater temp = this;
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
-                if (me.getClickCount() == 2) { // to detect doble click events
+                if (me.getClickCount() == 2) {
                     try {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        int menuID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
-                        String date = (String) model.getValueAt(myTable.getSelectedRow(), 1);
-                        String name = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                        Float price = Float.parseFloat((String) model.getValueAt(myTable.getSelectedRow(), 3));
-                        boolean active = ((String) model.getValueAt(myTable.getSelectedRow(), 4)) == "Yes";
-                        new assist_edit_mWindow(temp, new menu(menuID, date, name, price, active)).updateToThisMenu();
+                        int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
+                        new assist_check_mWindow(temp, ID).updateToThisMenu();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
@@ -49,8 +48,7 @@ public class edit_mWindow extends abstractEdit_CheckWindow {
         ArrayList<menu> tempList = theManagerDB.getAllCurrentMenus();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "menu_id", "Active Since", "Name", "Price", "Category" },
-                0);
+                new String[] { "menu_id", "active", "Name", "Price", "Category" }, 0);
         categoryAPI tempAPI = new categoryAPI();
         for (menu temp : tempList) {
             String id = Integer.toString(temp.getId());
@@ -84,6 +82,7 @@ public class edit_mWindow extends abstractEdit_CheckWindow {
         theFrame.add(getSummaryTXT());
         theFrame.add(getBackButton());
         theFrame.add(getScrollPane());
+        theFrame.add(instruction);
     }
 
 }

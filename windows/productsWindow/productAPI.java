@@ -89,11 +89,11 @@ public class productAPI extends abstractManagerDB {
         return theList;
     }
 
-    public ArrayList<product> getSelectedProductsInMenu(menu theMenu) {
+    public ArrayList<product> getSelectedProductsInMenu(int menuID) {
         ArrayList<product> tempList = new ArrayList<product>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM products NATURAL JOIN (SELECT product_id, a.menu_products_date, productQuantity FROM menus_products AS a, (SELECT MAX(menu_products_date) AS menu_products_date FROM menus_products WHERE menu_id = "
-                    + theMenu.getId() + ") AS b WHERE menu_id = " + theMenu.getId()
+                    + menuID + ") AS b WHERE menu_id = " + menuID
                     + " AND a.menu_products_date = b.menu_products_date) as x WHERE active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
