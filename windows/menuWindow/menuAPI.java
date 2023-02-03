@@ -262,4 +262,19 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
+    public void deleteMenu(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE menus SET active = false WHERE menu_id = " + menuID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+
+    }
+
 }

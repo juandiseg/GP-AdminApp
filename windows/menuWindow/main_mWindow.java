@@ -11,7 +11,7 @@ public class main_mWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Menu");
     private JButton button2 = new JButton("Edit Menu");
-    private JButton button3 = new JButton("NOT WORKING [Delete Menu]");
+    private JButton button3 = new JButton("Delete Menu");
     private JButton button4 = new JButton("Check Menus");
     private JButton backButton = new JButton("Back");
 
@@ -46,8 +46,8 @@ public class main_mWindow extends abstractUpdater {
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // delete_pWindow tempWinw = new delete_pWindow(temp);
-                // tempWinw.updateToThisMenu();
+                delete_mWindow tempWinw = new delete_mWindow(temp);
+                tempWinw.updateToThisMenu();
             }
         });
         button4.addActionListener(new ActionListener() {

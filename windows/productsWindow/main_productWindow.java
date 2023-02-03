@@ -46,6 +46,8 @@ public class main_productWindow extends abstractUpdater {
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                delete_productWindow tempWind = new delete_productWindow(temp);
+                tempWind.updateToThisMenu();
             }
         });
         button4.addActionListener(new ActionListener() {

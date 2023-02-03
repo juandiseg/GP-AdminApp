@@ -77,8 +77,6 @@ public class delete_aWindow extends abstractEdit_CheckWindow {
                                 System.out.println("something went wrong with the DB");
                             }
                         }
-                        // new assist_remove_aWindow(temp, Integer.valueOf(ID)).updateToThisMenu();
-
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
