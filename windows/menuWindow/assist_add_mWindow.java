@@ -7,13 +7,11 @@ import java.util.Stack;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
 
-import componentsFood.ingredient;
 import componentsFood.menu;
 import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
-import windows.ingredientsWindow.ingredientsAPI;
 import windows.productsWindow.productAPI;
 
 import javax.swing.JLabel;

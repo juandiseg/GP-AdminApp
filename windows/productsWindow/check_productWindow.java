@@ -3,11 +3,9 @@ package windows.productsWindow;
 import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
 import componentsFood.category;
-import componentsFood.ingredient;
 import componentsFood.product;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
-import windows.ingredientsWindow.assist_check_iWindow;
 
 import java.util.ArrayList;
 

@@ -14,13 +14,11 @@ import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.category;
-import componentsFood.ingredient;
 import componentsFood.product;
 import componentsFood.menu;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
-import windows.ingredientsWindow.ingredientsAPI;
 import windows.productsWindow.productAPI;
 
 public class assist_assist_edit_mWindow extends abstractAddWindow {
@@ -35,15 +33,15 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
     private JLabel summaryTXT = new JLabel("Product to be changed:");
     private JLabel enterPrice = new JLabel("Enter the Menu's new PRICE: ");
     private JLabel changeLabel = new JLabel("Select the Menu's new PRODUCTS: ");
-    private JToggleButton changeIngredientsButton = new JToggleButton("Change Products Too");
+    private JToggleButton changeProductsButton = new JToggleButton("Change Products Too");
 
     private JButton swapLeft = new JButton("Left");
     private JButton swapRight = new JButton("Right");
-    private JScrollPane scrollPaneIngredients;
+    private JScrollPane scrollPaneProducts;
     private JScrollPane scrollPaneSelected;
-    private JTable tableIngredients;
+    private JTable tableProducts;
     private JTable tableSelected;
-    private DefaultTableModel modelIngredients;
+    private DefaultTableModel modelProducts;
     private DefaultTableModel modelSelected;
 
     public assist_assist_edit_mWindow(abstractUpdater previousWindow, menu theCurrentMenu) {
@@ -63,7 +61,7 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
 
     private void showList() {
         theFrame.add(changeLabel);
-        theFrame.add(scrollPaneIngredients);
+        theFrame.add(scrollPaneProducts);
         theFrame.add(scrollPaneSelected);
         theFrame.add(swapRight);
         theFrame.add(swapLeft);
@@ -73,7 +71,7 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
 
     private void hideList() {
         theFrame.remove(changeLabel);
-        theFrame.remove(scrollPaneIngredients);
+        theFrame.remove(scrollPaneProducts);
         theFrame.remove(scrollPaneSelected);
         theFrame.remove(swapRight);
         theFrame.remove(swapLeft);
@@ -92,52 +90,43 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
                     theManagerDB.updatePrice(theCurrentMenu.getId(), price);
                     theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
                 }
-                /*
-                 * if (changeIngredientsButton.getText().equals("Don't Change Ingredients Too"))
-                 * {
-                 * int productID = theCurrentMenu.getId();
-                 * Stack<Integer> stackIDs = new Stack<Integer>();
-                 * Stack<Integer> stackQtys = new Stack<Integer>();
-                 * for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                 * stackIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
-                 * stackQtys.push(Integer.parseInt((String) modelSelected.getValueAt(i, 6)));
-                 * }
-                 * theManagerDB.updateIngredients(productID, stackIDs, stackQtys);
-                 * }
-                 */
+
+                if (changeProductsButton.getText().equals("Don't Change Products Too")) {
+                    Stack<Integer> stackIDs = new Stack<Integer>();
+                    Stack<Integer> stackQtys = new Stack<Integer>();
+                    for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                        stackIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                        stackQtys.push(Integer.parseInt((String) modelSelected.getValueAt(i, 4)));
+                    }
+                    theManagerDB.updateProducts(theCurrentMenu.getId(), stackIDs, stackQtys);
+                }
                 updateTable();
             }
         });
-        changeIngredientsButton.addActionListener(new ActionListener() {
+        changeProductsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (changeIngredientsButton.getText().equals("Change Ingredients Too")) {
-                    changeIngredientsButton.setText("Don't Change Ingredients Too");
+                if (changeProductsButton.getText().equals("Change Products Too")) {
+                    changeProductsButton.setText("Don't Change Products Too");
                     showList();
                 } else {
-                    changeIngredientsButton.setText("Change Ingredients Too");
+                    changeProductsButton.setText("Change Products Too");
                     hideList();
                 }
             }
         });
         swapLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int row = tableIngredients.getSelectedRow();
+                int row = tableProducts.getSelectedRow();
                 if (row == -1)
                     return;
-                String ingID = (String) modelIngredients.getValueAt(row, 0);
-                String provID = (String) modelIngredients.getValueAt(row, 1);
-                String date = (String) modelIngredients.getValueAt(row, 2);
-                String name = (String) modelIngredients.getValueAt(row, 3);
-                String price = (String) modelIngredients.getValueAt(row, 4);
-                String amount = (String) modelIngredients.getValueAt(row, 5);
-                String entAmount = (String) modelIngredients.getValueAt(row, 6);
-                String in_inventory = (String) modelIngredients.getValueAt(row, 7);
-                String active = (String) modelIngredients.getValueAt(row, 8);
-                modelIngredients.removeRow(row);
-                modelSelected
-                        .addRow(new String[] { ingID, provID, date, name, price, amount, entAmount, in_inventory,
-                                active });
+                String productID = (String) modelProducts.getValueAt(row, 0);
+                String date = (String) modelProducts.getValueAt(row, 1);
+                String name = (String) modelProducts.getValueAt(row, 2);
+                String price = (String) modelProducts.getValueAt(row, 3);
+                String entAmount = (String) modelProducts.getValueAt(row, 4);
+                modelProducts.removeRow(row);
+                modelSelected.addRow(new String[] { productID, date, name, price, entAmount, "true" });
             }
         });
         swapRight.addActionListener(new ActionListener() {
@@ -145,19 +134,13 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
                 int row = tableSelected.getSelectedRow();
                 if (row == -1)
                     return;
-                String ingID = (String) modelSelected.getValueAt(row, 0);
-                String provID = (String) modelSelected.getValueAt(row, 1);
-                String date = (String) modelSelected.getValueAt(row, 2);
-                String name = (String) modelSelected.getValueAt(row, 3);
-                String price = (String) modelSelected.getValueAt(row, 4);
-                String amount = (String) modelSelected.getValueAt(row, 5);
-                String entAmount = (String) modelSelected.getValueAt(row, 6);
-                String in_inventory = (String) modelSelected.getValueAt(row, 7);
-                String active = (String) modelSelected.getValueAt(row, 8);
+                String productID = (String) modelSelected.getValueAt(row, 0);
+                String date = (String) modelSelected.getValueAt(row, 1);
+                String name = (String) modelSelected.getValueAt(row, 2);
+                String price = (String) modelSelected.getValueAt(row, 3);
+                String entAmount = (String) modelSelected.getValueAt(row, 4);
                 modelSelected.removeRow(row);
-                modelIngredients
-                        .addRow(new String[] { ingID, provID, date, name, price, amount, entAmount, in_inventory,
-                                active });
+                modelProducts.addRow(new String[] { productID, date, name, price, entAmount, "true" });
             }
         });
 
@@ -201,16 +184,15 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
         textFieldPrice.setBounds(270, 170, 165, 25);
         enterPrice.setBounds(10, 170, 220, 25);
         scrollPaneTable.setBounds(45, 60, 500, 55);
-        changeIngredientsButton.setBounds(45, 130, 500, 25);
+        changeProductsButton.setBounds(45, 130, 500, 25);
         changeLabel.setBounds(10, 200, 270, 25);
-        scrollPaneIngredients.setBounds(320, 240, 170, 200);
+        scrollPaneProducts.setBounds(320, 240, 170, 200);
         scrollPaneSelected.setBounds(50, 240, 170, 200);
         swapLeft.setBounds(230, 300, 80, 25);
         swapRight.setBounds(230, 340, 80, 25);
     }
 
     private void loadProductTable(boolean alreadySelected, JTable tempTable, DefaultTableModel tempModel) {
-        // PROBLEM WHEN TRUE
         if (!alreadySelected)
             tempTable.setDefaultEditor(Object.class, null);
         ArrayList<product> tempProducts = new ArrayList<product>();
@@ -224,9 +206,10 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
             String amountUsed = "Type here";
-            int tempAmount = new productAPI().getAmountOfProductInMenu(theCurrentMenu.getId(), temp.getId());
-            if (tempAmount != -1)
+            if (alreadySelected) {
+                int tempAmount = new productAPI().getAmountOfProductInMenu(theCurrentMenu.getId(), temp.getId());
                 amountUsed = Integer.toString(tempAmount);
+            }
             tempModel.addRow(new String[] { productID, date, name, price, amountUsed, "Yes" });
         }
 
@@ -240,13 +223,13 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
 
     private void setTable() {
 
-        tableIngredients = new JTable();
-        modelIngredients = new DefaultTableModel(
+        tableProducts = new JTable();
+        modelProducts = new DefaultTableModel(
                 new String[] { "product_id", "date", "Name", "Price", "Enter Amount", "active" }, 0);
-        loadProductTable(false, tableIngredients, modelIngredients);
+        loadProductTable(false, tableProducts, modelProducts);
         tableSelected = new JTable() {
             public boolean isCellEditable(int row, int column) {
-                return column == 3;
+                return column == 2;
             }
         };
 
@@ -255,7 +238,7 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
 
         loadProductTable(true, tableSelected, modelSelected);
 
-        scrollPaneIngredients = new JScrollPane(tableIngredients, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        scrollPaneProducts = new JScrollPane(tableProducts, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         scrollPaneSelected = new JScrollPane(tableSelected, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -270,7 +253,7 @@ public class assist_assist_edit_mWindow extends abstractAddWindow {
         theFrame.add(scrollPaneTable);
         theFrame.add(textFieldPrice);
         theFrame.add(enterPrice);
-        theFrame.add(changeIngredientsButton);
+        theFrame.add(changeProductsButton);
     }
 
 }

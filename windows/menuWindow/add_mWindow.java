@@ -1,14 +1,10 @@
 package windows.menuWindow;
 
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 
 import componentsFood.category;
-import componentsFood.product;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
@@ -19,8 +15,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 public class add_mWindow extends abstractAddWindow {
-
-    private menuAPI theManagerDB = new menuAPI();
 
     private JLabel enterName = new JLabel("Enter the Menu's NAME: ");
     private JLabel enterPrice = new JLabel("Enter the Menu's PRICE: ");

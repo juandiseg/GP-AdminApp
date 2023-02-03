@@ -8,10 +8,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Stack;
 
-import componentsFood.category;
 import componentsFood.menu;
-import componentsFood.product;
 import util.abstractManagerDB;
 
 public class menuAPI extends abstractManagerDB {
@@ -198,6 +197,60 @@ public class menuAPI extends abstractManagerDB {
     public void setMenuIDUnactive(int menuID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus SET active = false WHERE menu_id = " + menuID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean updateProducts(int menuID, Stack<Integer> stackIDs, Stack<Integer> stackAmounts) {
+        if (areProductEntriesToday(menuID))
+            removeMenuProductsToday(menuID);
+        while (!stackIDs.empty() && !stackAmounts.empty()) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            addProducts(menuID, stackIDs.pop(), dateToday, stackAmounts.pop()); // HAVE TO DO QUANTITY TOO
+        }
+        return true;
+    }
+
+    private boolean areProductEntriesToday(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = " + menuID
+                    + " ORDER BY menu_products_date DESC LIMIT 1;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    String dateDB = rs.getString("menu_products_date");
+                    connection.close();
+                    if (dateToday.equals(dateDB))
+                        return true;
+                    else
+                        return false;
+                } else {
+                    connection.close();
+                    return false;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    // REMOVE "product" from database.
+    private void removeMenuProductsToday(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String query = "DELETE FROM menus_products WHERE menu_id = " + menuID +
+                    " AND menu_products_date = '" + dateToday + "'";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

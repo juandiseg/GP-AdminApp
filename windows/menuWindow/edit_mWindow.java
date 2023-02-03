@@ -4,10 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import util.abstractEdit_CheckWindow;
 import componentsFood.category;
 import componentsFood.menu;
-import componentsFood.product;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
-import windows.productsWindow.assist_edit_productWindow;
 
 import java.util.ArrayList;
 
