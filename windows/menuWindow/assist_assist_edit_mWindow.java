@@ -1,4 +1,4 @@
-package windows.productsWindow;
+package windows.menuWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,15 +16,16 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.category;
 import componentsFood.ingredient;
 import componentsFood.product;
+import componentsFood.menu;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
 import windows.ingredientsWindow.ingredientsAPI;
 
-public class assist_assist_edit_productWindow extends abstractAddWindow {
+public class assist_assist_edit_mWindow extends abstractAddWindow {
 
-    private productAPI theManagerDB = new productAPI();
-    private product theCurrentProduct;
+    private menuAPI theManagerDB = new menuAPI();
+    private menu theCurrentMenu;
 
     private JTextField textFieldPrice = new JTextField();
     private JScrollPane scrollPaneTable;
@@ -44,9 +45,9 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
     private DefaultTableModel modelIngredients;
     private DefaultTableModel modelSelected;
 
-    public assist_assist_edit_productWindow(abstractUpdater previousWindow, product theCurrentProduct) {
-        super(previousWindow, "Product", false);
-        this.theCurrentProduct = theCurrentProduct;
+    public assist_assist_edit_mWindow(abstractUpdater previousWindow, menu theCurrentMenu) {
+        super(previousWindow, "Menu", false);
+        this.theCurrentMenu = theCurrentMenu;
         getAddButton().setText("Apply Changes");
     }
 
@@ -159,25 +160,25 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
     }
 
     private void updateTable() {
-        theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
+        theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
         model.removeRow(0);
-        String id = Integer.toString(theCurrentProduct.getId());
-        String date = theCurrentProduct.getDate();
-        String name = theCurrentProduct.getName();
-        String price = Float.toString(theCurrentProduct.getPrice());
-        category tempCategory = new categoryAPI().getCategoryOfProduct(theCurrentProduct.getId());
+        String id = Integer.toString(theCurrentMenu.getId());
+        String date = theCurrentMenu.getDate();
+        String name = theCurrentMenu.getName();
+        String price = Float.toString(theCurrentMenu.getPrice());
+        category tempCategory = new categoryAPI().getCategoryOfMenu(theCurrentMenu.getId());
         model.addRow(new String[] { id, date, name, price, tempCategory.getName() });
     }
 
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price" }, 0);
+                new String[] { "menu_id", "Active Since", "Name", "Price" }, 0);
         myTable.setModel(model);
-        String id = Integer.toString(theCurrentProduct.getId());
-        String date = theCurrentProduct.getDate();
-        String name = theCurrentProduct.getName();
-        String price = Float.toString(theCurrentProduct.getPrice());
+        String id = Integer.toString(theCurrentMenu.getId());
+        String date = theCurrentMenu.getDate();
+        String name = theCurrentMenu.getName();
+        String price = Float.toString(theCurrentMenu.getPrice());
         model.addRow(new String[] { id, date, name, price });
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
@@ -220,20 +221,22 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String price = Float.toString(tempIngredient.getPrice());
             String amount = Integer.toString(tempIngredient.getAmount());
             String amountUsed = "Type here";
-            if (alreadySelected) {
-                int tempAmount = new ingredientsAPI().getAmountOfIngredientInProduct(theCurrentProduct.getId(),
-                        tempIngredient.getId());
-                if (tempAmount != -1)
-                    amountUsed = Integer.toString(tempAmount);
-            }
+            int tempAmount = new ingredientsAPI().getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+                    tempIngredient.getId());
+            if (tempAmount != -1)
+                amountUsed = Integer.toString(tempAmount);
             String in_inventory = "No";
             if (tempIngredient.getInInventory())
                 in_inventory = "Yes";
             String active = "No";
             if (tempIngredient.getActive())
                 active = "Yes";
-            tempModel.addRow(
-                    new String[] { ingID, provID, date, name, price, amount, amountUsed, in_inventory, active });
+            if (alreadySelected)
+                tempModel.addRow(
+                        new String[] { ingID, provID, date, name, price, amount, amountUsed, in_inventory, active });
+            else
+                tempModel.addRow(
+                        new String[] { ingID, provID, date, name, price, amount, amountUsed, in_inventory, active });
         }
 
         tempTable.setModel(tempModel);

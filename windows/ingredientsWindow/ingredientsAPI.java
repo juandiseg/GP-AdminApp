@@ -181,9 +181,9 @@ public class ingredientsAPI extends abstractManagerDB {
     public ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients AS c NATURAL JOIN (SELECT * FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = "
-                    + theProduct.getId()
-                    + ") AS b WHERE a.product_ingredients_date = b.temp) AS a WHERE c.active = true";
+            String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date , ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = "
+                    + theProduct.getId() + ") AS b WHERE product_id = " + theProduct.getId()
+                    + " AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
@@ -210,9 +210,10 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public ArrayList<ingredient> getNonSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
+        // NOT WORKING FOR INGREDIENTS WITH NO INGREDIENTS
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = "
-                    + theProduct.getId() + ") AS b WHERE a.product_ingredients_date = b.temp)";
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = 1) AS b WHERE a.product_id = "
+                    + theProduct.getId() + " AND a.product_ingredients_date = b.temp) AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {

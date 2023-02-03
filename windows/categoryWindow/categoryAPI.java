@@ -129,6 +129,31 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
+    public category getCategoryOfMenu(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT category_id, category_name, iscategory_product FROM menus_categories NATURAL JOIN categories WHERE menu_id = "
+                    + menuID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int categoryID = rs.getInt("category_id");
+                    String name = rs.getString("category_name");
+                    Boolean isProduct = rs.getBoolean("iscategory_product");
+                    category temp = new category(categoryID, name, isProduct);
+                    connection.close();
+                    return temp;
+                }
+                connection.close();
+                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     // ADD "provider" to database.
     public boolean addCategory(String name, boolean isProduct) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -220,6 +245,23 @@ public class categoryAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE products_categories SET category_id = " + newCategoryID + " WHERE product_id = "
                     + productID + ";";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean editCategoryOfMenu(int menuID, int newCategoryID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE menus_categories SET category_id = " + newCategoryID + " WHERE menu_id = "
+                    + menuID + ";";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
