@@ -6,11 +6,12 @@ public class ingredient {
     private String date;
     private String name;
     private float price;
-    private int amount;
+    private float amount;
     private boolean in_inventory;
     private boolean active;
 
-    public ingredient(int id, int provider_id, String date, String name, float price, int amount, boolean in_inventory,
+    public ingredient(int id, int provider_id, String date, String name, float price, float amount,
+            boolean in_inventory,
             boolean active) {
         this.id = id;
         this.provider_id = provider_id;
@@ -42,7 +43,7 @@ public class ingredient {
         return price;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 

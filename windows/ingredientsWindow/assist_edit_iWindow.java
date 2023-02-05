@@ -78,7 +78,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
-        String amount = Integer.toString(theCurrentIngredient.getAmount());
+        String amount = Float.toString(theCurrentIngredient.getAmount());
         String in_inventory = "Yes";
         String active = "Yes";
         if (!theCurrentIngredient.getInInventory())
@@ -100,7 +100,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
-        String amount = Integer.toString(theCurrentIngredient.getAmount());
+        String amount = Float.toString(theCurrentIngredient.getAmount());
         String in_inventory;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";

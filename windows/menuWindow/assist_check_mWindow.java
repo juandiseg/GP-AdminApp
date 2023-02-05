@@ -40,7 +40,7 @@ public class assist_check_mWindow extends abstractEdit_CheckWindow {
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
             category tempCategory = tempCatAPI.getCategoryOfProduct(temp.getId());
-            String amountUsed = Integer.toString(tempProdAPI.getAmountOfProductInMenu(menuID, temp.getId()));
+            String amountUsed = Float.toString(tempProdAPI.getAmountOfProductInMenu(menuID, temp.getId()));
             model.addRow(new String[] { name, price, tempCategory.getName(), amountUsed });
         }
     }

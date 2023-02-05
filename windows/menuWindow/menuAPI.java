@@ -106,7 +106,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addProducts(int menuID, int productID, String date, float quantity) {
+    public boolean addProducts(int menuID, int productID, String date, Float quantity) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus_products VALUES (" + menuID + ", " + productID + ", '" + date
                     + "', " + quantity + ")";
@@ -208,7 +208,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateProducts(int menuID, Stack<Integer> stackIDs, Stack<Integer> stackAmounts) {
+    public boolean updateProducts(int menuID, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
         if (areProductEntriesToday(menuID))
             removeMenuProductsToday(menuID);
         while (!stackIDs.empty() && !stackAmounts.empty()) {

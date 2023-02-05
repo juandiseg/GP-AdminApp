@@ -57,10 +57,10 @@ public class assist_add_mWindow extends abstractAddWindow {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Stack<Integer> productIDs = new Stack<Integer>();
-                Stack<Integer> productAmounts = new Stack<Integer>();
+                Stack<Float> productAmounts = new Stack<Float>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                     productIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
-                    productAmounts.push(Integer.parseInt((String) modelSelected.getValueAt(i, 3)));
+                    productAmounts.push(Float.parseFloat((String) modelSelected.getValueAt(i, 3)));
                 }
 
                 if (productIDs.isEmpty() || productAmounts.isEmpty())

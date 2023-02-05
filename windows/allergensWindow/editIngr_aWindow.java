@@ -46,7 +46,7 @@ public class editIngr_aWindow extends abstractEdit_CheckWindow {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());
             String price = Float.toString(temp.getPrice());
-            String amount = Integer.toString(temp.getAmount());
+            String amount = Float.toString(temp.getAmount());
             String in_inventory;
             String active;
             if (temp.getInInventory())

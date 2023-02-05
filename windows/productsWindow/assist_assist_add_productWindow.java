@@ -95,7 +95,7 @@ public class assist_assist_add_productWindow extends abstractAddWindow {
             String date = tempIngredient.getDate();
             String name = tempIngredient.getName();
             String price = Float.toString(tempIngredient.getPrice());
-            String amount = Integer.toString(tempIngredient.getAmount());
+            String amount = Float.toString(tempIngredient.getAmount());
             String in_inventory = "No";
             if (tempIngredient.getInInventory())
                 in_inventory = "Yes";

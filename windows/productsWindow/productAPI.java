@@ -371,7 +371,7 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateIngredients(int productID, Stack<Integer> stackIDs, Stack<Integer> stackAmounts) {
+    public boolean updateIngredients(int productID, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
         if (areIngredientEntriesToday(productID))
             removeProductIngredientsToday(productID);
         while (!stackIDs.empty() && !stackAmounts.empty()) {

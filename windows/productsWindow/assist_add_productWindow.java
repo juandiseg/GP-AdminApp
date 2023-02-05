@@ -55,8 +55,8 @@ public class assist_add_productWindow extends abstractAddWindow {
                     int provID = Integer.parseInt((String) modelSelected.getValueAt(i, 1));
                     String date = (String) modelSelected.getValueAt(i, 2);
                     String name = (String) modelSelected.getValueAt(i, 3);
-                    Float price = Float.parseFloat((String) modelSelected.getValueAt(i, 4));
-                    int amount = Integer.parseInt((String) modelSelected.getValueAt(i, 5));
+                    float price = Float.parseFloat((String) modelSelected.getValueAt(i, 4));
+                    float amount = Float.parseFloat((String) modelSelected.getValueAt(i, 5));
                     boolean in_inventory = false;
                     if (((String) modelSelected.getValueAt(i, 6)).equals("Yes"))
                         in_inventory = true;
@@ -155,7 +155,7 @@ public class assist_add_productWindow extends abstractAddWindow {
             String date = tempIngredient.getDate();
             String name = tempIngredient.getName();
             String price = Float.toString(tempIngredient.getPrice());
-            String amount = Integer.toString(tempIngredient.getAmount());
+            String amount = Float.toString(tempIngredient.getAmount());
             String in_inventory = "No";
             if (tempIngredient.getInInventory())
                 in_inventory = "Yes";

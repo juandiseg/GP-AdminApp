@@ -71,7 +71,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
                         theManagerDB.updateProvider(theCurrentIngredient.getId(), temProvider.getId());
                 }
                 if (!textFieldAmount.getText().isEmpty()) {
-                    int amount = Integer.parseInt(textFieldAmount.getText());
+                    float amount = Float.parseFloat(textFieldAmount.getText());
                     theManagerDB.updateAmount(theCurrentIngredient.getId(), amount);
                 }
                 if (!textFieldPrice.getText().isEmpty()) {
@@ -92,7 +92,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
-        String amount = Integer.toString(theCurrentIngredient.getAmount());
+        String amount = Float.toString(theCurrentIngredient.getAmount());
         String in_inventory;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";
@@ -112,7 +112,7 @@ public class assist_assist_edit_iWindow extends abstractAddWindow {
         String id = Integer.toString(theCurrentIngredient.getId());
         String prov_id = Integer.toString(theCurrentIngredient.getProviderID());
         String price = Float.toString(theCurrentIngredient.getPrice());
-        String amount = Integer.toString(theCurrentIngredient.getAmount());
+        String amount = Float.toString(theCurrentIngredient.getAmount());
         String in_inventory;
         if (theCurrentIngredient.getInInventory())
             in_inventory = "Yes";

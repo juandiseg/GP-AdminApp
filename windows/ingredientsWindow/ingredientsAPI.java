@@ -28,7 +28,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
@@ -54,7 +54,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     connection.close();
@@ -112,7 +112,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
@@ -140,7 +140,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     String date = rs.getString("ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
@@ -181,10 +181,9 @@ public class ingredientsAPI extends abstractManagerDB {
     public ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date , ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = "
+            String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date, ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = "
                     + theProduct.getId() + ") AS b WHERE product_id = " + theProduct.getId()
-                    + " AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true AND ingredient_id = "
-                    + theProduct.getId();
+                    + " AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
@@ -193,7 +192,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     String date = rs.getString("product_ingredients_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
@@ -222,7 +221,7 @@ public class ingredientsAPI extends abstractManagerDB {
                     int providerID = rs.getInt("provider_id");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    int amount = rs.getInt("amount");
+                    float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, "", name, price, amount, in_inventory, active));
@@ -238,16 +237,16 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public int getAmountOfIngredientInProduct(int productID, int ingredient_id) {
+    public float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM beatneat.products WHERE active = true AND product_id = "
                     + productID + ") AND ingredient_id = " + ingredient_id;
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    int name = rs.getInt("ingredientQuantity");
+                    float quantity = rs.getFloat("ingredientQuantity");
                     connection.close();
-                    return name;
+                    return quantity;
                 } else {
                     connection.close();
                     return -1;
@@ -263,12 +262,12 @@ public class ingredientsAPI extends abstractManagerDB {
 
     // ADD "ingredient" to database.
 
-    public int addIngredient(int provID, String date, String name, float price, int amount, boolean in_inventory) {
+    public int addIngredient(int provID, String date, String name, float price, float amount, boolean in_inventory) {
         int ingrID = getLastIngredientID() + 1;
         return addIngredient(ingrID, provID, date, name, price, amount, in_inventory);
     }
 
-    private int addIngredient(int ingrID, int provID, String date, String name, float price, int amount,
+    private int addIngredient(int ingrID, int provID, String date, String name, float price, float amount,
             boolean in_inventory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", '" + date + "', '" + name
@@ -378,7 +377,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateAmount(int ingredientID, int newAmount) {
+    public boolean updateAmount(int ingredientID, float newAmount) {
         fixIngredientDate(ingredientID);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET amount = " + newAmount

@@ -15,7 +15,7 @@ public class assist_check_productWindow extends abstractEdit_CheckWindow {
     private int productID;
 
     public assist_check_productWindow(abstractUpdater previousWindow, int ID) {
-        super(previousWindow, "Allergens of selected ingredient", "Ingredient");
+        super(previousWindow, "Ingredients of selected product", "Product");
         this.productID = ID;
     }
 
@@ -34,8 +34,8 @@ public class assist_check_productWindow extends abstractEdit_CheckWindow {
                 .getSelectedIngredientsInProduct(new productAPI().getProduct(productID));
         for (ingredient tempIngr : listIngredients) {
             String cost = Float.toString(tempIngr.getPrice());
-            String amount = Integer.toString(tempIngr.getAmount());
-            String used = Integer.toString(temp.getAmountOfIngredientInProduct(productID, tempIngr.getId()));
+            String amount = Float.toString(tempIngr.getAmount());
+            String used = Float.toString(temp.getAmountOfIngredientInProduct(productID, tempIngr.getId()));
             model.addRow(new String[] { tempIngr.getName(), cost, amount, used });
         }
 

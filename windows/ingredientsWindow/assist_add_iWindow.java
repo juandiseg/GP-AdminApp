@@ -20,7 +20,7 @@ public class assist_add_iWindow extends abstractAddWindow {
     private ingredientsAPI theManagerDB = new ingredientsAPI();
 
     private String name;
-    private int amount;
+    private float amount;
     private float price;
 
     private JList<provider> theList = new JList<provider>();
@@ -31,10 +31,10 @@ public class assist_add_iWindow extends abstractAddWindow {
     private JLabel providerLabel = new JLabel("Which provider provides you this ingredient:");
     private JToggleButton inventoryButton = new JToggleButton("With Inventory");
 
-    public assist_add_iWindow(abstractUpdater previousWindow, String name, String amount, float price) {
+    public assist_add_iWindow(abstractUpdater previousWindow, String name, float amount, float price) {
         super(previousWindow, "Provider", true);
         this.name = name;
-        this.amount = Integer.parseInt(amount);
+        this.amount = amount;
         this.price = price;
     }
 

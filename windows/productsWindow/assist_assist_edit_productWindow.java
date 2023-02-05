@@ -93,10 +93,10 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
                 if (changeIngredientsButton.getText().equals("Don't Change Ingredients Too")) {
                     int productID = theCurrentProduct.getId();
                     Stack<Integer> stackIDs = new Stack<Integer>();
-                    Stack<Integer> stackQtys = new Stack<Integer>();
+                    Stack<Float> stackQtys = new Stack<Float>();
                     for (int i = 0; i < modelSelected.getRowCount(); i++) {
                         stackIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
-                        stackQtys.push(Integer.parseInt((String) modelSelected.getValueAt(i, 6)));
+                        stackQtys.push(Float.parseFloat((String) modelSelected.getValueAt(i, 6)));
                     }
                     theManagerDB.updateIngredients(productID, stackIDs, stackQtys);
                 }
@@ -218,13 +218,13 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
             String date = tempIngredient.getDate();
             String name = tempIngredient.getName();
             String price = Float.toString(tempIngredient.getPrice());
-            String amount = Integer.toString(tempIngredient.getAmount());
+            String amount = Float.toString(tempIngredient.getAmount());
             String amountUsed = "Type here";
             if (alreadySelected) {
-                int tempAmount = new ingredientsAPI().getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+                float tempAmount = new ingredientsAPI().getAmountOfIngredientInProduct(theCurrentProduct.getId(),
                         tempIngredient.getId());
                 if (tempAmount != -1)
-                    amountUsed = Integer.toString(tempAmount);
+                    amountUsed = Float.toString(tempAmount);
             }
             String in_inventory = "No";
             if (tempIngredient.getInInventory())

@@ -101,7 +101,7 @@ public class providerAPI extends abstractManagerDB {
     // UPDATE something "product" related in database.
     public boolean updateName(int ID, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE providers SET name = '" + name + "' WHERE provider_id = " + Integer.toString(ID);
+            String query = "UPDATE providers SET name = '" + name + "' WHERE provider_id = " + ID;
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -117,7 +117,7 @@ public class providerAPI extends abstractManagerDB {
 
     public boolean updateEmail(int ID, String email) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE providers SET email = '" + email + "' WHERE provider_id = " + Integer.toString(ID);
+            String query = "UPDATE providers SET email = '" + email + "' WHERE provider_id = " + ID;
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
