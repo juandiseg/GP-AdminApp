@@ -21,7 +21,7 @@ public class productAPI extends abstractManagerDB {
     public ArrayList<product> getAllCurrentProducts() {
         ArrayList<product> tempList = new ArrayList<product>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM products ORDER BY product_id";
+            String query = "SELECT * FROM products WHERE active = true ORDER BY product_id";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
@@ -29,8 +29,7 @@ public class productAPI extends abstractManagerDB {
                     String date = rs.getString("product_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    boolean active = rs.getBoolean("active");
-                    tempList.add(new product(ID, date, name, price, active));
+                    tempList.add(new product(ID, date, name, price, true));
                 }
                 tempList = checkRepeatedProducts(tempList);
                 connection.close();
@@ -142,6 +141,49 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
+    public Stack<Integer> getAllActiveMenuIDs() {
+        Stack<Integer> tempStack = new Stack<Integer>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT DISTINCT menu_id FROM menus WHERE active = true;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("menu_id");
+                    tempStack.add(ID);
+                }
+                connection.close();
+                return tempStack;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private boolean isProductContainedInMenu(int menuID, int productID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT menu_id FROM menus_products WHERE menu_id = " + menuID + " AND product_id = "
+                    + productID
+                    + " AND menu_products_date IN (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = "
+                    + menuID + ")";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    connection.close();
+                    return true;
+                }
+                return false;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     // ADD "product" to database.
     public product addProduct(String date, String name, float price, boolean active) {
         int productID = getLastProductID() + 1;
@@ -221,11 +263,11 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateProductActive(int productID, boolean active) {
+    public boolean updatePrice(int productID, float productPrice) {
+        fixProductDate(productID);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products AS p, (SELECT MAX(product_date) AS product_date FROM products WHERE product_id = "
-                    + productID + ") AS temp SET p.active = " + active
-                    + " WHERE p.product_date = temp.product_date AND p.product_id = " + productID + ";";
+            String query = "UPDATE products SET price = " + productPrice + " WHERE product_id = " + productID
+                    + " AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -239,18 +281,14 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updatePrice(int productID, float productPrice) {
-        fixProductDate(productID);
+    public void updateActive(int productID, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products SET price = " + productPrice + " WHERE product_id = " + productID
-                    + " AND active = true;";
+            String query = "UPDATE products SET active = " + active + " WHERE product_id = " + productID;
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return true;
             } catch (Exception e) {
                 System.out.println(e);
-                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -412,4 +450,37 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
+    public void deleteMenuWithProduct(int menuID, int productID) {
+        if (!isProductContainedInMenu(menuID, productID))
+            return;
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE menus SET active = false WHERE menu_id = " + menuID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public void deleteProductsInMenu(int menuID, int productID) {
+        if (!isProductContainedInMenu(menuID, productID))
+            return;
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "DELETE FROM menus_products WHERE menu_id = " + menuID + " AND product_id = " + productID
+                    + " AND menu_products_date IN (SELECT * FROM (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = "
+                    + menuID + ") AS x)";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

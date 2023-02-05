@@ -6,7 +6,6 @@ import componentsFood.ingredient;
 import util.abstractUpdater;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.*;
@@ -21,7 +20,6 @@ public class delete_iWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) { // to detect doble click events

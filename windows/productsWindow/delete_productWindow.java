@@ -8,6 +8,7 @@ import util.abstractUpdater;
 import windows.categoryWindow.categoryAPI;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -25,7 +26,6 @@ public class delete_productWindow extends abstractEdit_CheckWindow {
 
     @Override
     public void addActionListeners() {
-        abstractUpdater temp = this;
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 1) { // to detect doble click events
@@ -40,6 +40,14 @@ public class delete_productWindow extends abstractEdit_CheckWindow {
                                     "Do you want to delete the menus that use this product, or keep them without the product?",
                                     "Choice",
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                            int productID = Integer.parseInt(model.getValueAt(myTable.getSelectedRow(), 0).toString());
+                            if (response == 0) {
+                                deleteMenusAssociatedToProductID(productID);
+                                model.removeRow(myTable.getSelectedRow());
+                            } else if (response == 1) {
+                                deleteProductsFromMenus(productID);
+                                model.removeRow(myTable.getSelectedRow());
+                            }
                         }
                     } catch (IndexOutOfBoundsException e) {
                         return;
@@ -47,6 +55,20 @@ public class delete_productWindow extends abstractEdit_CheckWindow {
                 }
             }
         });
+    }
+
+    private void deleteMenusAssociatedToProductID(int productID) {
+        Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
+        while (!stackMenuIDs.empty())
+            theManagerDB.deleteMenuWithProduct(stackMenuIDs.pop(), productID);
+        theManagerDB.updateActive(productID, false);
+    }
+
+    private void deleteProductsFromMenus(int productID) {
+        Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
+        while (!stackMenuIDs.empty())
+            theManagerDB.deleteProductsInMenu(stackMenuIDs.pop(), productID);
+        theManagerDB.updateActive(productID, false);
     }
 
     @Override

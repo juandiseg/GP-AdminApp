@@ -11,7 +11,7 @@ public class main_productWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Product");
     private JButton button2 = new JButton("Edit Product");
-    private JButton button3 = new JButton("NOT WORKING [Delete Product]");
+    private JButton button3 = new JButton("Delete Product");
     private JButton button4 = new JButton("Check Products");
     private JButton backButton = new JButton("Back");
 
