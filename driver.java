@@ -1,7 +1,7 @@
-import food.main_Window;
+import navigation.mainMenu;
 
 public class driver {
     public static void main(String[] args) {
-        main_Window hi = new main_Window();
+        mainMenu hi = new mainMenu();
     }
 }
