@@ -11,7 +11,7 @@ public class main_rWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Role");
     private JButton button2 = new JButton("Edit Role");
-    private JButton button3 = new JButton("NOT YET [Delete Role]");
+    private JButton button3 = new JButton("Delete Role");
     private JButton button4 = new JButton("Check Roles");
     private JButton backButton = new JButton("Back");
 
@@ -46,8 +46,8 @@ public class main_rWindow extends abstractUpdater {
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // delete_productWindow tempWind = new delete_productWindow(temp);
-                // tempWind.updateToThisMenu();
+                delete_rWindow tempWind = new delete_rWindow(temp);
+                tempWind.updateToThisMenu();
             }
         });
         button4.addActionListener(new ActionListener() {
