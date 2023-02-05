@@ -50,7 +50,7 @@ public class edit_productWindow extends abstractEdit_CheckWindow {
         ArrayList<product> tempList = theManagerDB.getAllCurrentProducts();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price", "Active", "Category" },
+                new String[] { "product_id", "date", "Name", "Price", "Category" },
                 0);
         categoryAPI tempAPI = new categoryAPI();
         for (product temp : tempList) {
@@ -58,11 +58,8 @@ public class edit_productWindow extends abstractEdit_CheckWindow {
             String date = temp.getDate();
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
-            String active = "No";
             category tempCategory = tempAPI.getCategoryOfProduct(temp.getId());
-            if (temp.getActive())
-                active = "Yes";
-            model.addRow(new String[] { id, date, name, price, active, tempCategory.getName() });
+            model.addRow(new String[] { id, date, name, price, tempCategory.getName() });
         }
     }
 
@@ -74,6 +71,8 @@ public class edit_productWindow extends abstractEdit_CheckWindow {
         myTable.setFocusable(true);
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("product_id"));
+        myTable.removeColumn(myTable.getColumn("date"));
+
     }
 
     @Override

@@ -42,7 +42,7 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
         ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory" },
+                new String[] { "ID", "prov_ID", "date", "Name", "Price", "Amount", "Inventory" },
                 0);
         for (ingredient temp : tempList) {
             String id = Integer.toString(temp.getId());
@@ -65,7 +65,9 @@ public class edit_iWindow extends abstractEdit_CheckWindow {
         myTable.setFocusable(true);
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("ID"));
-        myTable.removeColumn(myTable.getColumn("Prov_ID"));
+        myTable.removeColumn(myTable.getColumn("prov_ID"));
+        myTable.removeColumn(myTable.getColumn("date"));
+
     }
 
     @Override

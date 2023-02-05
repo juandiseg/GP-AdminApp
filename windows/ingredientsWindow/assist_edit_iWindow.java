@@ -94,7 +94,7 @@ public class assist_edit_iWindow extends abstractAddWindow {
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Name", "Provider", "Active Since", "Price", "Amount", "In inventory" },
+                new String[] { "ID", "Name", "Provider", "date", "Price", "Amount", "Inventory" },
                 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentIngredient.getId());
@@ -113,6 +113,8 @@ public class assist_edit_iWindow extends abstractAddWindow {
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("ID"));
+        myTable.removeColumn(myTable.getColumn("date"));
+
         scrollPane = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }

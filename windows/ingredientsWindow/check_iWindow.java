@@ -45,7 +45,7 @@ public class check_iWindow extends abstractEdit_CheckWindow {
         ArrayList<ingredient> tempList = theManagerDB.getAllCurrentIngredients();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "Active Since", "Name", "Price", "Amount", "in_inventory", "active" },
+                new String[] { "ID", "Prov_ID", "date", "Name", "Price", "Amount", "Inventory", "active" },
                 0);
         for (ingredient temp : tempList) {
             String id = Integer.toString(temp.getId());
@@ -55,9 +55,9 @@ public class check_iWindow extends abstractEdit_CheckWindow {
             String in_inventory;
             String active;
             if (temp.getInInventory())
-                in_inventory = "In inventory";
+                in_inventory = "Yes";
             else
-                in_inventory = "Not in inventory";
+                in_inventory = "No";
             if (temp.getActive())
                 active = "Active";
             else
@@ -76,7 +76,8 @@ public class check_iWindow extends abstractEdit_CheckWindow {
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("ID"));
         myTable.removeColumn(myTable.getColumn("Prov_ID"));
-
+        myTable.removeColumn(myTable.getColumn("date"));
+        myTable.removeColumn(myTable.getColumn("active"));
     }
 
     @Override

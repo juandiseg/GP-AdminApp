@@ -185,9 +185,9 @@ public class productAPI extends abstractManagerDB {
     }
 
     // ADD "product" to database.
-    public product addProduct(String date, String name, float price, boolean active) {
+    public product addProduct(String date, String name, float price) {
         int productID = getLastProductID() + 1;
-        return addProduct(productID, date, name, price, active);
+        return addProduct(productID, date, name, price, true);
     }
 
     private product addProduct(int ID, String date, String name, float price, boolean active) {

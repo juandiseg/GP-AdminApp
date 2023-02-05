@@ -76,7 +76,7 @@ public class delete_productWindow extends abstractEdit_CheckWindow {
         ArrayList<product> tempList = theManagerDB.getAllCurrentProducts();
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price", "Active", "Category" },
+                new String[] { "product_id", "date", "Name", "Price", "active", "Category" },
                 0);
         categoryAPI tempAPI = new categoryAPI();
         for (product temp : tempList) {
@@ -100,6 +100,9 @@ public class delete_productWindow extends abstractEdit_CheckWindow {
         myTable.setFocusable(true);
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("product_id"));
+        myTable.removeColumn(myTable.getColumn("date"));
+        myTable.removeColumn(myTable.getColumn("active"));
+
     }
 
     @Override

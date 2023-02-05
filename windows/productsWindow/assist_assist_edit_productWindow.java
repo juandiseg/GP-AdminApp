@@ -172,7 +172,7 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
     private void loadTable() {
         myTable = new JTable();
         model = new DefaultTableModel(
-                new String[] { "product_id", "Active Since", "Name", "Price" }, 0);
+                new String[] { "product_id", "date", "Name", "Price" }, 0);
         myTable.setModel(model);
         String id = Integer.toString(theCurrentProduct.getId());
         String date = theCurrentProduct.getDate();
@@ -182,6 +182,7 @@ public class assist_assist_edit_productWindow extends abstractAddWindow {
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.removeColumn(myTable.getColumn("product_id"));
+        myTable.removeColumn(myTable.getColumn("date"));
         scrollPaneTable = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
