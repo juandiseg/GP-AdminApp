@@ -1,4 +1,4 @@
-package navigation.administration.employees_Window;
+package navigation.administration.shifts_Window;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,67 +10,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import componentsFood.employee;
 
-import componentsFood.role;
 import util.abstractManagerDB;
 
-public class employeesAPI extends abstractManagerDB {
+public class shiftsAPI extends abstractManagerDB {
 
     // GET "product" objects from database.
 
-    public ArrayList<role> getAllRoles() {
-        ArrayList<role> tempList = new ArrayList<role>();
+    // "id", "Name", "Salary", "Hours per Week", "Role"
+    public void addShift(String employeeID, String shiftDate, String startShift, String endShift) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM roles WHERE unactive IS NULL";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    int ID = rs.getInt("role_id");
-                    String name = rs.getString("role_name");
-                    tempList.add(new role(ID, name));
-                }
-                connection.close();
-                return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public role getRole(int roleID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM roles WHERE role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int ID = rs.getInt("role_id");
-                    String name = rs.getString("role_name");
-                    connection.close();
-                    return new role(ID, name);
-                }
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public boolean addRole(String name) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            int roleID = getLastRoleID() + 1;
-            String query = "INSERT INTO roles VALUES (" + roleID + ", '" + name + "');";
+            String query = "INSERT INTO employees_schedule VALUES (" + employeeID + ", '" + shiftDate + "', '"
+                    + startShift + "', '" + endShift + "', NULL, NULL, NULL)";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return true;
             } catch (Exception e) {
                 System.out.println(e);
-                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -153,31 +108,6 @@ public class employeesAPI extends abstractManagerDB {
         ArrayList<employee> tempList = new ArrayList<employee>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees WHERE active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    int ID = rs.getInt("employee_id");
-                    String name = rs.getString("name");
-                    float salary = rs.getFloat("salary");
-                    String hoursWeek = rs.getString("hours_a_week");
-                    int roleID = rs.getInt("role_id");
-                    tempList.add(new employee(ID, name, salary, hoursWeek, roleID, true));
-                }
-                connection.close();
-                return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public ArrayList<employee> getAllCurrentEmployeesOrdered() {
-        ArrayList<employee> tempList = new ArrayList<employee>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees WHERE active = true ORDER BY role_id";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {

@@ -3,6 +3,7 @@ package navigation.administration;
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
 import navigation.administration.employees_Window.main_employees_Window;
+import navigation.administration.shifts_Window.main_sWindow;
 
 import java.awt.event.ActionEvent;
 
@@ -38,8 +39,8 @@ public class main_adminstration_Window extends abstractUpdater {
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // main_iWindow ingredientsWdw = new main_iWindow(temp);
-                // ingredientsWdw.updateToThisMenu();
+                main_sWindow ingredientsWdw = new main_sWindow(temp);
+                ingredientsWdw.updateToThisMenu();
             }
         });
         button3.addActionListener(new ActionListener() {
