@@ -45,8 +45,8 @@ public class main_adminstration_Window extends abstractUpdater {
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // main_productWindow ingredientsWdw = new main_productWindow(temp);
-                // ingredientsWdw.updateToThisMenu();
+                main_report_Window ingredientsWdw = new main_report_Window(temp);
+                ingredientsWdw.updateToThisMenu();
             }
         });
         backButton.addActionListener(new ActionListener() {
