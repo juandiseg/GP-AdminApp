@@ -80,6 +80,36 @@ public class shiftsAPI extends abstractManagerDB {
         }
     }
 
+    public ArrayList<shift> getLateEntries() {
+        ArrayList<shift> tempList = new ArrayList<shift>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE undertime = true ORDER BY shift_date, role_id";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int employeeID = rs.getInt("employee_id");
+                    String date = rs.getString("shift_date");
+                    String startTime = rs.getString("start_shift");
+                    String endTime = rs.getString("end_shift");
+                    String realStartTime = rs.getString("realtime_in");
+                    String realEndTime = rs.getString("realtime_out");
+                    boolean undertime = rs.getBoolean("undertime");
+                    tempList.add(
+                            new shift(employeeID, date, startTime, endTime, realStartTime, realEndTime, undertime));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
+            }
+        } catch (
+
+        SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public boolean addEmployee(String name, float salary, String hoursWeek, int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int employeeID = getLastEmployeeID() + 1;

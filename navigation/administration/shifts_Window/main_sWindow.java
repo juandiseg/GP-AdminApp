@@ -52,8 +52,8 @@ public class main_sWindow extends abstractUpdater {
         });
         button5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // check_eWindow tempWinw = new check_eWindow(temp);
-                // tempWinw.updateToThisMenu();
+                late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
+                tempWinw.updateToThisMenu();
             }
         });
         backButton.addActionListener(new ActionListener() {
