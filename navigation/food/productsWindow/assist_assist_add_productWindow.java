@@ -54,7 +54,7 @@ public class assist_assist_add_productWindow extends abstractAddWindow {
                     Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 6));
                     new productAPI().addIngredients(productID, ingredientID, date, qty);
                 }
-                System.out.println("done congrats");
+                new add_productWindow(getPreviousWindow().getPreviousWindow().getPreviousWindow()).updateToThisMenu();
             }
         });
     }

@@ -24,7 +24,6 @@ public class main_report_Window extends abstractUpdater {
         theFrame.add(button1);
         theFrame.add(button2);
         theFrame.add(button4);
-        theFrame.add(button5);
         theFrame.add(backButton);
     }
 
@@ -44,12 +43,6 @@ public class main_report_Window extends abstractUpdater {
             }
         });
         button4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
-                // tempWinw.updateToThisMenu();
-            }
-        });
-        button5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
                 // tempWinw.updateToThisMenu();

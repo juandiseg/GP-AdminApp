@@ -3,6 +3,7 @@ package navigation.administration;
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
 import navigation.administration.employees_Window.main_employees_Window;
+import navigation.administration.reports_Window.main_report_Window;
 import navigation.administration.shifts_Window.main_sWindow;
 
 import java.awt.event.ActionEvent;
