@@ -11,7 +11,6 @@ public class main_sWindow extends abstractUpdater {
 
     private JButton button1 = new JButton("Add Shifts");
     private JButton button2 = new JButton("Edit Shift");
-    private JButton button3 = new JButton("Delete Shifts");
     private JButton button4 = new JButton("Check Shifts");
     private JButton button5 = new JButton("Check Late entries");
     private JButton backButton = new JButton("Back");
@@ -25,7 +24,6 @@ public class main_sWindow extends abstractUpdater {
         theFrame.setTitle("Employees menu");
         theFrame.add(button1);
         theFrame.add(button2);
-        theFrame.add(button3);
         theFrame.add(button4);
         theFrame.add(button5);
         theFrame.add(backButton);
@@ -46,16 +44,10 @@ public class main_sWindow extends abstractUpdater {
                 // tempWind.updateToThisMenu();
             }
         });
-        button3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // delete_eWindow tempWind = new delete_eWindow(temp);
-                // tempWind.updateToThisMenu();
-            }
-        });
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // check_eWindow tempWinw = new check_eWindow(temp);
-                // tempWinw.updateToThisMenu();
+                check_sWindow tempWinw = new check_sWindow(temp);
+                tempWinw.updateToThisMenu();
             }
         });
         button5.addActionListener(new ActionListener() {
