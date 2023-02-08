@@ -332,4 +332,50 @@ public class shiftsAPI extends abstractManagerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
+
+    public void updateEntryTime(shift theShift, String newEntryTime) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE employees_schedule SET start_shift = '" + newEntryTime + "' WHERE employee_id = "
+                    + theShift.getEmployeeId() + " AND shift_date = '" + theShift.getDate() + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public void updateEndTime(shift theShift, String newEndTime) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE employees_schedule SET end_shift = '" + newEndTime + "' WHERE employee_id = "
+                    + theShift.getEmployeeId() + " AND shift_date = '" + theShift.getDate() + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public void deleteShift(shift theShift) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "DELETE FROM employees_schedule WHERE employee_id = " + theShift.getEmployeeId()
+                    + " AND shift_date = '" + theShift.getDate() + "' AND start_shift = '" + theShift.getStartTime()
+                    + "' AND end_shift = '" + theShift.getEndTime() + "';";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

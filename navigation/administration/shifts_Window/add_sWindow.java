@@ -6,15 +6,12 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.employee;
-import componentsFood.role;
 import navigation.administration.employees_Window.employeesAPI;
 import util.abstractAddWindow;
 import util.abstractUpdater;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -59,7 +56,8 @@ public class add_sWindow extends abstractAddWindow {
     public void addActionListeners() {
         getAddButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // check inputs
+                // check inputs and add check shifts not imbeded. This is having a 10:00 - 18:00
+                // and also a 13:00-15:00 on the same day
                 String shifDate = textFieldDate.getText();
                 String startShift = textFieldStart.getText();
                 String endShift = textFieldEnd.getText();

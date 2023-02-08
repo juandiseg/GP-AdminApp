@@ -31,8 +31,6 @@ public class assist_check_sWindow extends abstractEdit_CheckWindow {
     public void addRowsToModel() {
         ArrayList<shift> tempList = theManagerDB.getShiftsWithinDateSorted(from, to, shift_date);
         myTable = new JTable();
-        // employee_id, shift_date, start_shift, end_shift, realtime_in, realtime_out,
-        // undertime
         model = new DefaultTableModel(
                 new String[] { "Employee", "Role", "Shift Date", "Start", "End", "Check-In", "Check-Out" },
                 0);
