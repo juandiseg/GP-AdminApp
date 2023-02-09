@@ -1,3 +1,5 @@
+package navigation.administration.reports_Window;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,23 +10,7 @@ import componentsFood.menu;
 import componentsFood.product;
 import util.abstractManagerDB;
 
-public class testingAPI extends abstractManagerDB {
-
-    // GET "product" objects from database.
-
-    public void updateRoleName(int roleID, String newName) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE roles SET role_name = '" + newName + "' WHERE role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
+public class reportsAPI extends abstractManagerDB {
 
     public ArrayList<ArrayList<product>> getAllProducts() {
         ArrayList<ArrayList<product>> listOfLists = new ArrayList<ArrayList<product>>();
@@ -100,14 +86,14 @@ public class testingAPI extends abstractManagerDB {
         }
     }
 
-    public int getNumberSoldProduct(product current, product next){
+    public int getNumberSoldProduct(product current, product next, String from, String to){
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= '"
             + current.getDate() + "'";
             if(next != null){
                 query = query.concat(" AND date < '" + next.getDate() + "'");
             }
-            query = query.concat(" AND product_id = " + current.getId() + " AND product_date = '" + current.getDate() + "'");
+            query = query.concat(" AND date >= '"+from+"' AND date <= '"+to+"' AND product_id = " + current.getId() + " AND product_date = '" + current.getDate() + "'");
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 int amount = 0;
@@ -125,14 +111,14 @@ public class testingAPI extends abstractManagerDB {
         }
     }
 
-    public int getNumberSoldMenu(menu current, menu next){
+    public int getNumberSoldMenu(menu current, menu next, String from, String to){
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_menus NATURAL JOIN orders_summary NATURAL JOIN menus WHERE date >= '"
             + current.getDate() + "'";
             if(next != null){
                 query = query.concat(" AND date < '" + next.getDate() + "'");
             }
-            query = query.concat(" AND menu_id = " + current.getId() + " AND menu_date = '" + current.getDate() + "'");
+            query = query.concat(" AND date >= '"+from+"' AND date <= '"+to+"' AND menu_id = " + current.getId() + " AND menu_date = '" + current.getDate() + "'");
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 int amount = 0;

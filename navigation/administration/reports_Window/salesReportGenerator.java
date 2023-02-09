@@ -1,59 +1,53 @@
+package navigation.administration.reports_Window;
+
+import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.text.NumberFormat.Style;
+import componentsFood.product;
+import util.iReportable;
+import componentsFood.menu;
 import java.util.ArrayList;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
-
-import componentsFood.menu;
-import componentsFood.product;
-
-
-
-public class testingExcel {
+public class salesReportGenerator implements iReportable {
     
-    static Workbook workbook = new XSSFWorkbook();
-    static CellStyle style = workbook.createCellStyle();
-    static DataFormat format = workbook.createDataFormat();
+    private Workbook workbook = new XSSFWorkbook();
+    private CellStyle style = workbook.createCellStyle();
+    private DataFormat format = workbook.createDataFormat();
 
-    public static void main(String[] args) throws Exception {
-        // Create a Sheet
+
+    public void generateReport(String from, String to) throws Exception {
         Sheet sheet = workbook.createSheet("Sales Report");
         style.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
 
         int row = 1;
-        sheet.createRow(row).createCell(1).setCellValue("PRODUCT SALES");
-        row += 2;
-        Row row3 = sheet.createRow(row);
-        row3.createCell(1).setCellValue("Price Since");
-        row3.createCell(2).setCellValue("Product");
-        row3.createCell(3).setCellValue("Quantity");
-        row3.createCell(4).setCellValue("Price");
-        row3.createCell(5).setCellValue("Total");
-        row = productSales(sheet, row + 1);
-
-        sheet.createRow(row).createCell(1).setCellValue("MENU SALES");
-        row += 2;
-        Row rowI = sheet.createRow(row);
-        rowI.createCell(1).setCellValue("Price Since");
-        rowI.createCell(2).setCellValue("Menu");
-        rowI.createCell(3).setCellValue("Quantity");
-        rowI.createCell(4).setCellValue("Price");
-        rowI.createCell(5).setCellValue("Total");
-        row = menuSales(sheet, row+1);
+        row = productData(sheet, row, from, to);
+        row = menuData(sheet, row, from, to);
 
         FileOutputStream fileOut = new FileOutputStream("ExcelFile.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-
-        // Closing the workbook
         workbook.close();
     }
-    public static int productSales(Sheet sheet, int row){
+
+    private int productData(Sheet theSheet, int row, String from, String to){
+        theSheet.createRow(row).createCell(1).setCellValue("PRODUCT SALES");
+        row += 2;
+        return productSales(theSheet, from, to, productHeaders(theSheet, row));
+    }
+
+    private int productHeaders(Sheet theSheet, int row){
+        Row tempRow = theSheet.createRow(row);
+        tempRow.createCell(1).setCellValue("Price Since");
+        tempRow.createCell(2).setCellValue("Product");
+        tempRow.createCell(3).setCellValue("Quantity");
+        tempRow.createCell(4).setCellValue("Price");
+        tempRow.createCell(5).setCellValue("Total");
+        return ++row;
+    }
+
+    private int productSales(Sheet sheet, String from, String to, int row){
         int initialRow = row;
-        testingAPI managerDB = new testingAPI();
+        reportsAPI managerDB = new reportsAPI();
         ArrayList<ArrayList<product>> productsLists = managerDB.getAllProducts();
         for(ArrayList<product> bigTemp: productsLists){
             for(int i=0; i<bigTemp.size(); i++){
@@ -61,7 +55,7 @@ public class testingExcel {
                 product tempNext = null;
                 if(i+1 < bigTemp.size())
                 tempNext = bigTemp.get(i+1);
-                int amountSold = managerDB.getNumberSoldProduct(temp, tempNext);
+                int amountSold = managerDB.getNumberSoldProduct(temp, tempNext, from, to);
                 if(amountSold > 0){
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getDate());
@@ -83,9 +77,25 @@ public class testingExcel {
         return row+2;
     }
 
-    public static int menuSales(Sheet sheet, int row){
+    private int menuData(Sheet theSheet, int row, String from, String to){
+        theSheet.createRow(row).createCell(1).setCellValue("MENU SALES");
+        row += 2;
+        return menuSales(theSheet, from, to, menuHeaders(theSheet, row));
+    }
+
+    private int menuHeaders(Sheet theSheet, int row){
+        Row tempRow = theSheet.createRow(row);
+        tempRow.createCell(1).setCellValue("Price Since");
+        tempRow.createCell(2).setCellValue("Menu");
+        tempRow.createCell(3).setCellValue("Quantity");
+        tempRow.createCell(4).setCellValue("Price");
+        tempRow.createCell(5).setCellValue("Total");
+        return ++row;
+    }
+
+    private int menuSales(Sheet sheet, String from, String to, int row){
         int initialRow = row;
-        testingAPI managerDB = new testingAPI();
+        reportsAPI managerDB = new reportsAPI();
         ArrayList<ArrayList<menu>> menusLists = managerDB.getAllMenus();
         for(ArrayList<menu> listOfMenu: menusLists){
             for(int i=0; i<listOfMenu.size(); i++){
@@ -93,7 +103,7 @@ public class testingExcel {
                 menu tempNext = null;
                 if(i + 1 < listOfMenu.size())
                 tempNext = listOfMenu.get(i+1);
-                int amountSold = managerDB.getNumberSoldMenu(temp, tempNext);
+                int amountSold = managerDB.getNumberSoldMenu(temp, tempNext, from, to);
                 if(amountSold > 0){
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getDate());
@@ -113,10 +123,6 @@ public class testingExcel {
         summarySales.setCellFormula("SUM(F"+(initialRow+1)+":F"+row+")");
         summarySales.setCellStyle(style);
         return row+2;
-    }
-
-    public char turnColumnIntoLetter(int columnNumber){
-        return ((char)(columnNumber + 65));
     }
 
 }

@@ -6,6 +6,9 @@ import util.abstractUpdater;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
+import org.apache.logging.log4j.core.impl.ReusableLogEventFactory;
 
 public class main_report_Window extends abstractUpdater {
 
@@ -32,14 +35,29 @@ public class main_report_Window extends abstractUpdater {
         abstractUpdater temp = this;
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
-                // tempWinw.updateToThisMenu();
-            }
-        });
+                String from = JOptionPane.showInputDialog("Enter FROM date", "2023-01-01");
+                String to = JOptionPane.showInputDialog("Enter TO date", "2023-02-09");
+                if(from.isEmpty() || to.isBlank())
+                    return;
+                try {
+                    new reportGeneratorFactory().createReportGenerator("SALES").generateReport(from, to);
+                    JOptionPane.showConfirmDialog(theFrame, "Report Successfully generated", "Success", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+        }});
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
-                // tempWinw.updateToThisMenu();
+                String from = JOptionPane.showInputDialog("Enter FROM date", "2023-01-01");
+                String to = JOptionPane.showInputDialog("Enter TO date", "2023-02-09");
+                if(from.isEmpty() || to.isBlank())
+                    return;
+                try {
+                    new reportGeneratorFactory().createReportGenerator("EXPENSES").generateReport(from, to);
+                    JOptionPane.showConfirmDialog(theFrame, "Report Successfully generated", "Success", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         button4.addActionListener(new ActionListener() {
