@@ -116,6 +116,26 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
+    public String getNameOfProduct(int prodID, String date){
+        String name = "";
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM products WHERE product_id = "+prodID+" AND product_date = '"+date+"'";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    name = rs.getString("name");
+                    connection.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return "";
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+        return name;
+    }
+
     
     public int getNumberSoldProduct(int productID, String currentDate, String nextDate, String from, String to){
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -170,22 +190,24 @@ public class reportsAPI extends abstractManagerDB {
     public ArrayList<ArrayList<productIngredients>> getAllProductIngredients() {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT DISTINCT product_id, product_ingredients_date FROM products_ingredients ORDER BY product_id, product_ingredients_date;";
+            String query = "SELECT DISTINCT product_id, product_date, product_ingredients_date FROM products_ingredients NATURAL JOIN products ORDER BY product_id, product_ingredients_date;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 ArrayList<productIngredients> tempList = new ArrayList<>();
                 int lastID = -1;
                 while (rs.next()) {
                     int ID = rs.getInt("product_id");
-                    String date = rs.getString("product_ingredients_date");
+                    String ingredientsDate = rs.getString("product_ingredients_date");
+                    String productDate = rs.getString("product_date");
+
                     if(lastID==ID){
-                        tempList.add(new productIngredients(ID, date));
+                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
                     } else {
                         if(!tempList.isEmpty())
                             listOfLists.add(tempList);
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
-                        tempList.add(new productIngredients(ID, date));
+                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
                     }
                 }
                 if(!tempList.isEmpty())
@@ -203,7 +225,7 @@ public class reportsAPI extends abstractManagerDB {
 
     public void addIngredientsToProductIngredients(productIngredients productIngr){
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredientQuantity, ingredients.* FROM (SELECT ingredient_id, MAX(product_ingredients_date) as max_date FROM products_ingredients WHERE product_id = "+productIngr.getProductID()+" AND product_ingredients_date <= '"+productIngr.getDate()+"' GROUP BY ingredient_id) subq JOIN products_ingredients ON subq.ingredient_id = products_ingredients.ingredient_id AND subq.max_date = products_ingredients.product_ingredients_date JOIN ingredients ON products_ingredients.ingredient_id = ingredients.ingredient_id AND subq.max_date = ingredients.ingredients_date WHERE product_id = "+productIngr.getProductID()+" ORDER BY ingredients.name;";
+            String query = "SELECT ingredientQuantity, ingredients.* FROM (SELECT ingredient_id, MAX(product_ingredients_date) as max_date FROM products_ingredients WHERE product_id = "+productIngr.getProductID()+" AND product_ingredients_date <= '"+productIngr.getIngredientsDate()+"' GROUP BY ingredient_id) subq JOIN products_ingredients ON subq.ingredient_id = products_ingredients.ingredient_id AND subq.max_date = products_ingredients.product_ingredients_date JOIN ingredients ON products_ingredients.ingredient_id = ingredients.ingredient_id AND subq.max_date = ingredients.ingredients_date WHERE product_id = "+productIngr.getProductID()+" ORDER BY ingredients.name;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {

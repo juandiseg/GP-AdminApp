@@ -3,6 +3,8 @@ package navigation.administration.reports_Window;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
+
+import componentsFood.ingredient;
 import componentsFood.productIngredients;
 import util.iReportable;
 import java.util.ArrayList;
@@ -30,7 +32,42 @@ public class expensesReportGenerator implements iReportable {
     private int productData(Sheet theSheet, int row, String from, String to){
         theSheet.createRow(row).createCell(1).setCellValue("PRODUCT SALES");
         row += 2;
-        return productSales(theSheet, from, to, productHeaders(theSheet, row));
+        row = productHeaders(theSheet, row);
+        ArrayList<ArrayList<productIngredients>> listListsSales = generateProductSales(theSheet, from, to);
+        printProductSales(theSheet, listListsSales, row);
+        
+        
+        return row;
+    }
+
+    public int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row){
+        reportsAPI managerDB = new reportsAPI();
+        for(ArrayList<productIngredients> bigTemp : listList){
+            for(productIngredients temp : bigTemp){
+                if(temp.getNumberProductsSold()!=0){
+                    Row tempRow = sheet.createRow(row);
+                    tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
+                    tempRow.createCell(2).setCellValue(managerDB.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
+                    tempRow.createCell(3).setCellValue(temp.getNumberProductsSold());
+                    int originalRow = row;
+                    for(int i = 0; i<temp.getIngredients().size(); i++){
+                        ingredient tempIngr = temp.getIngredients().get(i);
+                        tempRow.createCell(4).setCellValue(tempIngr.getName());
+                        tempRow.createCell(5).setCellValue(tempIngr.getAmount());
+                        tempRow.createCell(6).setCellValue(tempIngr.getPrice());
+                        tempRow.createCell(7).setCellValue(temp.getQuantity().get(i));
+                        tempRow.createCell(8).setCellFormula("D"+(originalRow+1)+"*H"+(row+1)+"/F"+(row+1)+"*G"+(row+1));
+                        row++;
+                        tempRow = sheet.createRow(row);
+                    }
+                    for(ingredient tempIngr : temp.getIngredients()){
+                    }
+                    
+                    row++;
+                }
+            }
+        }        
+        return -99;
     }
 
     private int productHeaders(Sheet theSheet, int row){
@@ -46,7 +83,7 @@ public class expensesReportGenerator implements iReportable {
         return ++row;
     }
 
-    private int productSales(Sheet sheet, String from, String to, int row){
+    private ArrayList<ArrayList<productIngredients>> generateProductSales(Sheet sheet, String from, String to){
         reportsAPI managerDB = new reportsAPI();
         ArrayList<ArrayList<productIngredients>> productIngredientsLists = managerDB.getAllProductIngredients();
         for(ArrayList<productIngredients> bigTemp: productIngredientsLists){
@@ -57,18 +94,13 @@ public class expensesReportGenerator implements iReportable {
                 String nextDate = "";
                 if(i+1 < bigTemp.size()){
                     tempNext = bigTemp.get(i+1);
-                    nextDate = tempNext.getDate();
+                    nextDate = tempNext.getIngredientsDate();
                 }
-                int amountSold = managerDB.getNumberSoldProduct(temp.getProductID(), temp.getDate(), nextDate, from, to);
+                int amountSold = managerDB.getNumberSoldProduct(temp.getProductID(), temp.getIngredientsDate(), nextDate, from, to);
                 temp.setNumberProductsSold(amountSold);
             }
         }
-        for(ArrayList<productIngredients> aTemp : productIngredientsLists){
-            for(productIngredients temp : aTemp){
-                temp.print();
-            }
-        }
-        return row+2;
+        return productIngredientsLists;
     }
 
 }
