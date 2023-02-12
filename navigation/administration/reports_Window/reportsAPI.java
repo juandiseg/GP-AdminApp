@@ -186,7 +186,7 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<ArrayList<productIngredients>> getAllProductIngredients() {
+    public ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromProducts() {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT DISTINCT product_id, product_date, product_ingredients_date FROM products_ingredients NATURAL JOIN products ORDER BY product_id, product_ingredients_date;";
@@ -207,6 +207,45 @@ public class reportsAPI extends abstractManagerDB {
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
                         tempList.add(new productIngredients(ID, productDate, ingredientsDate));
+                    }
+                }
+                if(!tempList.isEmpty())
+                    listOfLists.add(tempList);
+                connection.close();
+                return listOfLists;
+            } catch (Exception e) {
+                System.out.println(e);
+                return listOfLists;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from, String to) {
+        ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= '"+from+"' AND date <= '"+to+"' GROUP BY date, menu_id) AS subq WHERE mp.menu_products_date <= subq.date AND subq.menu_id = mp.menu_id GROUP BY product_id, dateProducts ORDER BY product_id) AS ssquery WHERE product_ingredients_date <= ssquery.dateProducts AND query.product_id = ssquery.product_id GROUP BY ssquery.product_id, ssquery.dateProducts, ssquery.totalOrdered";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                ArrayList<productIngredients> tempList = new ArrayList<>();
+                int lastID = -1;
+                while (rs.next()) {
+                    int ID = rs.getInt("product_id");
+                    String ingredientsDate = rs.getString("dateIngredients");
+                    String productDate = rs.getString("dateProducts");
+                    if(lastID==ID){
+                        productIngredients temp = new productIngredients(ID, productDate, ingredientsDate);
+                        temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
+                        tempList.add(temp);
+                    } else {
+                        if(!tempList.isEmpty())
+                            listOfLists.add(tempList);
+                        tempList = new ArrayList<productIngredients>();
+                        lastID = ID;
+                        productIngredients temp = new productIngredients(ID, productDate, ingredientsDate);
+                        temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
+                        tempList.add(temp);
                     }
                 }
                 if(!tempList.isEmpty())

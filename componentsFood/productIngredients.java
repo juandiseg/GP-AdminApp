@@ -8,7 +8,8 @@ public class productIngredients {
     private final String ingredientsDate;
     private ArrayList<ingredient> ingredientIDs = new ArrayList<ingredient>();
     private ArrayList<Float> quantities = new ArrayList<Float>();
-    private float numberProductsSold = 0;
+    private int numberSoldProducts = 0;
+    private int numberSoldMenus = 0;
 
     public productIngredients(int productID, String productDate, String ingredientsDate) {
         this.productID = productID;
@@ -16,12 +17,20 @@ public class productIngredients {
         this.ingredientsDate = ingredientsDate;
     }
 
-    public void setNumberProductsSold(int sum){
-        numberProductsSold = sum;
+    public void setNumberSoldProducts(int sum){
+        numberSoldProducts = sum;
     }
 
-    public float getNumberProductsSold(){
-        return numberProductsSold;
+    public int getNumberSoldProducts(){
+        return numberSoldProducts;
+    }
+
+    public void setNumberSoldMenus(int sum){
+        numberSoldMenus = sum;
+    }
+
+    public int getNumberSoldMenus(){
+        return numberSoldMenus;
     }
 
     public int getProductID() {
