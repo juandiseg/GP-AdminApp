@@ -136,7 +136,6 @@ public class reportsAPI extends abstractManagerDB {
         return name;
     }
 
-    
     public int getNumberSoldProduct(int productID, String currentDate, String nextDate, String from, String to){
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= '"

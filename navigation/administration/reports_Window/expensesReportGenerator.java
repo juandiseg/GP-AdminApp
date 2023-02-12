@@ -12,14 +12,19 @@ import java.util.ArrayList;
 public class expensesReportGenerator implements iReportable {
     
     private Workbook workbook = new XSSFWorkbook();
-    private CellStyle style = workbook.createCellStyle();
+    private CellStyle currencyStyle = workbook.createCellStyle();
     private DataFormat format = workbook.createDataFormat();
-
+    private CellStyle boldStyle = workbook.createCellStyle();
+    private Font boldFont = workbook.createFont();
+    private CellStyle roundingStyle = workbook.createCellStyle();
 
     public void generateReport(String from, String to) throws Exception {
         Sheet sheet = workbook.createSheet("Expenses Report");
-        style.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
-
+        currencyStyle.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
+        boldFont.setBold(true);
+        boldStyle.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
+        boldStyle.setFont(boldFont);
+        roundingStyle.setDataFormat((format.getFormat("0.00")));
         int row = 1;
         row = productData(sheet, row, from, to);
 
@@ -54,20 +59,26 @@ public class expensesReportGenerator implements iReportable {
                         ingredient tempIngr = temp.getIngredients().get(i);
                         tempRow.createCell(4).setCellValue(tempIngr.getName());
                         tempRow.createCell(5).setCellValue(tempIngr.getAmount());
-                        tempRow.createCell(6).setCellValue(tempIngr.getPrice());
-                        tempRow.createCell(7).setCellValue(temp.getQuantity().get(i));
-                        tempRow.createCell(8).setCellFormula("D"+(originalRow+1)+"*H"+(row+1)+"/F"+(row+1)+"*G"+(row+1));
+                        Cell cell6 = tempRow.createCell(6);
+                        cell6.setCellValue(tempIngr.getPrice());
+                        cell6.setCellStyle(currencyStyle);
+                        Cell cell7 = tempRow.createCell(7);
+                        cell7.setCellValue(temp.getQuantity().get(i));
+                        cell7.setCellStyle(roundingStyle);
+                        Cell cell8 = tempRow.createCell(8);
+                        cell8.setCellFormula("D"+(originalRow+1)+"*H"+(row+1)+"/F"+(row+1)+"*G"+(row+1));
+                        cell8.setCellStyle(currencyStyle);
                         row++;
                         tempRow = sheet.createRow(row);
                     }
-                    for(ingredient tempIngr : temp.getIngredients()){
-                    }
-                    
-                    row++;
+                    tempRow = sheet.createRow(row);
+                    tempRow.createCell(8).setCellFormula("SUM(I"+(originalRow+1)+":I"+(row)+")");
+                    tempRow.getCell(8).setCellStyle(boldStyle);
+                    row+=2;
                 }
             }
         }        
-        return -99;
+        return row;
     }
 
     private int productHeaders(Sheet theSheet, int row){
