@@ -23,7 +23,7 @@ public class salesReportGenerator implements iReportable {
         row = productData(sheet, row, from, to);
         row = menuData(sheet, row, from, to);
 
-        FileOutputStream fileOut = new FileOutputStream("Expenses" +from+ "-"+to+".xlsx");
+        FileOutputStream fileOut = new FileOutputStream("Sales" +from+ "-"+to+".xlsx");
         workbook.write(fileOut);
         fileOut.close();
         workbook.close();

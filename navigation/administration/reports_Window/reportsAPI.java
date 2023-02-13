@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.xml.transform.Templates;
 
 import componentsFood.ingredient;
+import componentsFood.ingredientsProviders;
 import componentsFood.menu;
 import componentsFood.product;
 import componentsFood.productIngredients;
@@ -288,4 +289,25 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
+    public ArrayList<ingredientsProviders> getAllProviders(){
+        ArrayList<ingredientsProviders> tempList = new ArrayList<ingredientsProviders>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT provider_id, name FROM providers";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int providerID = rs.getInt("provider_id");
+                    String name = rs.getString("name");
+                    tempList.add(new ingredientsProviders(providerID, name));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

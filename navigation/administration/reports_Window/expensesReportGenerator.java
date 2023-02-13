@@ -9,6 +9,7 @@ import componentsFood.productIngredients;
 import util.iReportable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 
 public class expensesReportGenerator implements iReportable {
     
@@ -42,8 +43,7 @@ public class expensesReportGenerator implements iReportable {
         ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(theSheet, from, to);
         ArrayList<ArrayList<productIngredients>> lLMenus = new reportsAPI().getAllProductIngredientsFromMenus(from, to);
         ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
-        printProductSales(theSheet, combination, row);
-        return row;
+        return printProductSales(theSheet, combination, row);
     }
 
     private ArrayList<ArrayList<productIngredients>> combineListOfLists(ArrayList<ArrayList<productIngredients>> a, ArrayList<ArrayList<productIngredients>>b){
@@ -81,6 +81,7 @@ public class expensesReportGenerator implements iReportable {
     
     public int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row){
         reportsAPI managerDB = new reportsAPI();
+        Stack<Integer> productTotals = new Stack<Integer>(); 
         for(ArrayList<productIngredients> bigTemp : listList){
             for(productIngredients temp : bigTemp){
                 if(temp.getNumberSoldProducts()!=0 || temp.getNumberSoldMenus()!=0){
@@ -92,6 +93,7 @@ public class expensesReportGenerator implements iReportable {
                     int originalRow = row;
                     for(int i = 0; i<temp.getIngredients().size(); i++){
                         ingredient tempIngr = temp.getIngredients().get(i);
+                        tempIngr.getProviderID();
                         tempRow.createCell(5).setCellValue(tempIngr.getName());
                         tempRow.createCell(6).setCellValue(tempIngr.getAmount());
                         Cell cell7 = tempRow.createCell(7);
@@ -109,11 +111,24 @@ public class expensesReportGenerator implements iReportable {
                     tempRow = sheet.createRow(row);
                     tempRow.createCell(9).setCellFormula("SUM(J"+(originalRow+1)+":J"+(row)+")");
                     tempRow.getCell(9).setCellStyle(boldStyle);
+                    productTotals.add(row+1);
                     row+=2;
                 }
             }
-        }        
-        return row;
+        }
+        String formula = "SUM(";
+        if(productTotals.isEmpty())
+            return row;
+        while(!productTotals.isEmpty()){
+            String temp = "J" + productTotals.pop() + ",";
+            formula = formula.concat(temp);
+        }
+        formula = formula.substring(0, formula.length()-1);
+        formula = formula.concat(")");        
+        Row totalRow = sheet.createRow(row);
+        totalRow.createCell(9).setCellFormula(formula);
+        totalRow.getCell(9).setCellStyle(boldStyle);
+        return row+=2;
     }
 
     private int productHeaders(Sheet theSheet, int row){
