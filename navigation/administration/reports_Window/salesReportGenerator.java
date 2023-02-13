@@ -8,7 +8,7 @@ import util.iReportable;
 import componentsFood.menu;
 import java.util.ArrayList;
 
-public class salesReportGenerator implements iReportable {
+public class salesReportGenerator extends iReportable {
     
     private Workbook workbook = new XSSFWorkbook();
     private CellStyle style = workbook.createCellStyle();

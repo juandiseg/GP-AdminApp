@@ -1,23 +1,25 @@
 package navigation.administration.reports_Window;
+
+import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
-import componentsFood.productIngredients;
+
 import componentsFood.employee;
 import componentsFood.ingredient;
+import componentsFood.productIngredients;
 import componentsFood.shift;
 import util.iReportable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
-public class expensesReportGenerator extends iReportable {
+public class generalReportGenerator extends iReportable {
     
     public void generateReport(String from, String to) throws Exception {
         Sheet sheet = getWorkbook().createSheet("Expenses Report");
         int row = 1;
         row = productData(sheet, row, from, to);
         row = employeeData(sheet, row, from, to);
-
         FileOutputStream fileOut = new FileOutputStream("Expenses" +from+ "-"+to+".xlsx");
         getWorkbook().write(fileOut);
         fileOut.close();
