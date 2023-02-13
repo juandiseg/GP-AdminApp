@@ -9,11 +9,13 @@ import java.util.ArrayList;
 
 import javax.xml.transform.Templates;
 
+import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.ingredientsProviders;
 import componentsFood.menu;
 import componentsFood.product;
 import componentsFood.productIngredients;
+import componentsFood.shift;
 import util.abstractManagerDB;
 
 public class reportsAPI extends abstractManagerDB {
@@ -309,5 +311,62 @@ public class reportsAPI extends abstractManagerDB {
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
+    }
+
+    public ArrayList<employee> getAllEmployeesAndShifts(String from, String to){
+        ArrayList<employee> tempList = new ArrayList<employee>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= '"+from+"' AND shift_date <= '"+to+"' ORDER BY employee_id, shift_date, start_shift, role_id;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                employee temp = new employee(-1, "", -99, "", -99);
+                while (rs.next()) {
+                    if(rs.getInt("employee_id") != temp.getId()){
+                        if(temp.getId() != -1){
+                            tempList.add(temp);
+                        }
+                        int employeeID = rs.getInt("employee_id");
+                        String name = rs.getString("name");
+                        Float salary = rs.getFloat("salary");
+                        String hoursWeek = rs.getString("hours_a_week");
+                        int roleID = rs.getInt("role_id");
+                        temp = new employee(employeeID, name, salary, hoursWeek, roleID);
+                    }
+                        String date = rs.getString("shift_date");
+                        String startTime = rs.getString("start_shift");
+                        String endTime = rs.getString("end_shift");
+                        temp.addShift(new shift(temp.getId(), date, startTime, endTime));
+                }
+                if(temp.getId() != -1)
+                    tempList.add(temp);
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public String getRoleName(int roleID){
+        String name = "";
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT role_name FROM roles WHERE role_id = "+roleID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    name = rs.getString("role_name");         
+                    connection.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return name;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+        return name;
     }
 }
