@@ -628,36 +628,6 @@ public class mainFood {
                 });
         }
 
-        private boolean checkPanelSelected(JPanel thePanel) {
-                Color unselectedColor = new Color(71, 120, 197);
-                if (!menusPanel.getBackground().equals(unselectedColor)) {
-                        if (!menusPanel.equals(thePanel))
-                                return false;
-                }
-                if (!productsPanel.getBackground().equals(unselectedColor)) {
-                        if (!productsPanel.equals(thePanel))
-                                return false;
-                }
-                if (!ingredientsPanel.getBackground().equals(unselectedColor)) {
-                        if (!ingredientsPanel.equals(thePanel))
-                                return false;
-                }
-                if (!providersPanel.getBackground().equals(unselectedColor)) {
-                        if (!providersPanel.equals(thePanel))
-                                return false;
-                }
-                if (!categoriesPanel.getBackground().equals(unselectedColor)) {
-                        if (!categoriesPanel.equals(thePanel))
-                                return false;
-                }
-                if (!allergensPanel.getBackground().equals(unselectedColor)) {
-                        if (!allergensPanel.equals(thePanel))
-                                return false;
-                }
-                return true;
-
-        }
-
         private void setColor(JPanel panel) {
                 panel.setBackground(new Color(120, 168, 252));
         }
