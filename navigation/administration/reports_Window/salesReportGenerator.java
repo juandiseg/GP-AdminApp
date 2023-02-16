@@ -23,7 +23,7 @@ public class salesReportGenerator extends iReportable {
         row = productData(sheet, row, from, to);
         row = menuData(sheet, row, from, to);
 
-        FileOutputStream fileOut = new FileOutputStream("Sales" +from+ "-"+to+".xlsx");
+        FileOutputStream fileOut = new FileOutputStream("Sales "+from.substring(8,10)+ "-"+from.substring(5,7)+ "~"+to.substring(8,10)+ "-"+to.substring(5,7)+ ".xlsx");
         workbook.write(fileOut);
         fileOut.close();
         workbook.close();

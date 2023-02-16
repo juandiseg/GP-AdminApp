@@ -1,0 +1,7 @@
+TO DO:
+------------------
+mainShifts.java	-> 	Late entries highlights.	(Formatting and restricting entries)
+editShifts.java 	->	Check for imbedeed shifts and similar entries.
+addShifts.java 	->	Check for imbedeed shifts and similar entries.
+
+editEmployees.java	->	Check for shifts referencing that employee in the future.

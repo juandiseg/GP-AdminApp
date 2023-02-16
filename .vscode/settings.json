@@ -57,7 +57,9 @@
       "c:\\Program Files (x86)\\Apache Excel\\binary\\lib\\commons-collections4-4.4.jar",
       "c:\\Program Files (x86)\\Apache Excel\\binary\\lib\\commons-math3-3.6.1.jar",
       "c:\\Program Files (x86)\\Apache Excel\\binary\\lib\\log4j-api-2.18.0.jar",
-      "c:\\Program Files (x86)\\Apache Excel\\binary\\lib\\SparseBitSet-1.2.jar"
+      "c:\\Program Files (x86)\\Apache Excel\\binary\\lib\\SparseBitSet-1.2.jar",
+      "c:\\Program Files (x86)\\Apache Excel\\insane-RELEASE73.jar",
+      "c:\\Program Files (x86)\\Apache Excel\\AbsoluteLayout-RELEASE160.jar"
     ],
     "exclude": [
       "c:\\Program Files (x86)\\Apache Excel\\commons-fileupload-1.4-javadoc.jar",

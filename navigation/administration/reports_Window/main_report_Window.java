@@ -14,7 +14,7 @@ public class main_report_Window extends abstractUpdater {
 
     private JButton button1 = new JButton("Generate Sales Report");
     private JButton button2 = new JButton("Generate Expenses Report");
-    private JButton button4 = new JButton("Generate General Report");
+    private JButton button3 = new JButton("Generate General Report");
     private JButton backButton = new JButton("Back");
 
     public main_report_Window(abstractUpdater previousWindow) {
@@ -26,7 +26,7 @@ public class main_report_Window extends abstractUpdater {
         theFrame.setTitle("Employees menu");
         theFrame.add(button1);
         theFrame.add(button2);
-        theFrame.add(button4);
+        theFrame.add(button3);
         theFrame.add(backButton);
     }
 
@@ -60,10 +60,18 @@ public class main_report_Window extends abstractUpdater {
                 }
             }
         });
-        button4.addActionListener(new ActionListener() {
+        button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // late_entries_sWindow tempWinw = new late_entries_sWindow(temp);
-                // tempWinw.updateToThisMenu();
+                String from = JOptionPane.showInputDialog("Enter FROM date", "2023-01-01");
+                String to = JOptionPane.showInputDialog("Enter TO date", "2023-02-15");
+                if(from.isEmpty() || to.isBlank())
+                    return;
+                try {
+                    new reportGeneratorFactory().createReportGenerator("GENERAL").generateReport(from, to);
+                    JOptionPane.showConfirmDialog(theFrame, "Report Successfully generated", "Success", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         backButton.addActionListener(new ActionListener() {

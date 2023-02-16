@@ -6,8 +6,8 @@ public class shift {
     private String date;
     private String startTime;
     private String endTime;
-    private String realStartTime;
-    private String realEndTime;
+    private String realStartTime = null;
+    private String realEndTime = null;
     private boolean undertime;
 
     public shift(int employeeID, String date, String startTime, String endTime) {
@@ -39,12 +39,24 @@ public class shift {
         return date;
     }
 
+    public void setDate(String newDate) {
+        date = newDate;
+    }
+
     public String getStartTime() {
         return startTime;
     }
 
+    public void setStartTime(String newStart) {
+        startTime = newStart;
+    }
+
     public String getEndTime() {
         return endTime;
+    }
+
+    public void setEndTime(String newEnd) {
+        endTime = newEnd;
     }
 
     public String getRealStartTime() {
@@ -57,5 +69,16 @@ public class shift {
 
     public boolean getIsUndertime() {
         return undertime;
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof shift))
+            return false;
+        shift temp = (shift) o;
+        if (temp.getEmployeeId() == employeeID && temp.getDate().equals(date) && temp.getStartTime().equals(startTime)
+                && temp.getEndTime().equals(endTime))
+            return true;
+        return false;
+
     }
 }

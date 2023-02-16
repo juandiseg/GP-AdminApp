@@ -9,6 +9,8 @@ public class reportGeneratorFactory {
             return new salesReportGenerator();
         } else if ("EXPENSES".equals(request)){
             return new expensesReportGenerator();
+        } else if("GENERAL".equals(request)){
+            return new generalReportGenerator();
         }
         return reportGenerator;
     }

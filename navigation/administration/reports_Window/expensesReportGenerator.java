@@ -18,7 +18,7 @@ public class expensesReportGenerator extends iReportable {
         row = productData(sheet, row, from, to);
         row = employeeData(sheet, row, from, to);
 
-        FileOutputStream fileOut = new FileOutputStream("Expenses" +from+ "-"+to+".xlsx");
+        FileOutputStream fileOut = new FileOutputStream("Expenses "+from.substring(8,10)+ "-"+from.substring(5,7)+ "~"+to.substring(8,10)+ "-"+to.substring(5,7)+ ".xlsx");
         getWorkbook().write(fileOut);
         fileOut.close();
         getWorkbook().close();
@@ -34,8 +34,9 @@ public class expensesReportGenerator extends iReportable {
         return printProductSales(theSheet, combination, row);
     }
 
-    private int employeeData(Sheet theSheet, int row, String from, String to){
-        ArrayList<employee> temp = new reportsAPI().getAllEmployeesAndShifts(from,to);
+    public int employeeData(Sheet theSheet, int row, String from, String to){
+        reportsAPI managerDB = new reportsAPI();
+        ArrayList<employee> temp = managerDB.getAllEmployeesAndShifts(from,to);
         Row tempRow = theSheet.createRow(row);
         tempRow.createCell(1).setCellValue("Shift Date");
         tempRow.createCell(2).setCellValue("Employee");
@@ -46,7 +47,6 @@ public class expensesReportGenerator extends iReportable {
         tempRow.createCell(7).setCellValue("Salary/Hour");
         tempRow.createCell(8).setCellValue("Total Cost");
         row+=2;
-        reportsAPI managerDB = new reportsAPI();
         int originalRow = row;
         for(employee tempEmployee : temp){
             for(shift tempShift : tempEmployee.getShifts()){
@@ -56,25 +56,25 @@ public class expensesReportGenerator extends iReportable {
                 tempRow.createCell(3).setCellValue(managerDB.getRoleName(tempEmployee.getRoleID()));
                 Cell cell4 = tempRow.createCell(4);
                 cell4.setCellValue(tempShift.getStartTime().substring(0,5));
-                cell4.setCellStyle(timeStyle);                
+                cell4.setCellStyle(iReportable.timeStyle);                
                 Cell cell5 = tempRow.createCell(5);
                 cell5.setCellValue(tempShift.getEndTime().substring(0,5));
-                cell5.setCellStyle(timeStyle);
+                cell5.setCellStyle(iReportable.timeStyle);
                 Cell cell6 = tempRow.createCell(6);
                 cell6.setCellFormula("F"+(row+1)+"-E"+(row+1));
-                cell6.setCellStyle(timeStyle);
+                cell6.setCellStyle(iReportable.timeStyle);
                 Cell cell7 = tempRow.createCell(7);
                 cell7.setCellValue(tempEmployee.getSalary());
-                cell7.setCellStyle(currencyStyle);
+                cell7.setCellStyle(iReportable.currencyStyle);
                 Cell cell8 = tempRow.createCell(8);
                 cell8.setCellFormula("G"+(row+1)+"*24*H"+(row+1));
-                cell8.setCellStyle(currencyStyle);
+                cell8.setCellStyle(iReportable.currencyStyle);
                 ++row;
             }
         }
         Cell totalCell = theSheet.createRow(row).createCell(8);
         totalCell.setCellFormula("SUM(I"+(originalRow+1)+":I"+(row)+")");
-        totalCell.setCellStyle(boldStyle);
+        totalCell.setCellStyle(iReportable.boldStyle);
         return row+2;
     }
 
@@ -130,19 +130,19 @@ public class expensesReportGenerator extends iReportable {
                         tempRow.createCell(6).setCellValue(tempIngr.getAmount());
                         Cell cell7 = tempRow.createCell(7);
                         cell7.setCellValue(tempIngr.getPrice());
-                        cell7.setCellStyle(currencyStyle);
+                        cell7.setCellStyle(iReportable.currencyStyle);
                         Cell cell8 = tempRow.createCell(8);
                         cell8.setCellValue(temp.getQuantity().get(i));
-                        cell8.setCellStyle(roundingStyle);
+                        cell8.setCellStyle(iReportable.roundingStyle);
                         Cell cell9 = tempRow.createCell(9);
                         cell9.setCellFormula("(D"+(originalRow+1)+"+E"+(originalRow+1)+")/G"+(row+1)+"*H"+(row+1)+"*I"+(row+1));
-                        cell9.setCellStyle(currencyStyle);
+                        cell9.setCellStyle(iReportable.currencyStyle);
                         row++;
                         tempRow = sheet.createRow(row);
                     }
                     tempRow = sheet.createRow(row);
                     tempRow.createCell(9).setCellFormula("SUM(J"+(originalRow+1)+":J"+(row)+")");
-                    tempRow.getCell(9).setCellStyle(boldStyle);
+                    tempRow.getCell(9).setCellStyle(iReportable.boldStyle);
                     productTotals.add(row+1);
                     row+=2;
                 }
@@ -159,7 +159,7 @@ public class expensesReportGenerator extends iReportable {
         formula = formula.concat(")");        
         Row totalRow = sheet.createRow(row);
         totalRow.createCell(9).setCellFormula(formula);
-        totalRow.getCell(9).setCellStyle(boldStyle);
+        totalRow.getCell(9).setCellStyle(iReportable.boldStyle);
         return row+=2;
     }
 
