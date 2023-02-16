@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import navigation.administration.mainAdmin;
-import navigation.food.mainFood;
+import navigation.administration.*;
+import navigation.food.*;
 
 public class mainMenu extends JFrame {
 

@@ -407,7 +407,7 @@ public class edit_employeeWindow {
 
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new main_employeesWindow(playground);
+                                new mainEmployees(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -485,7 +485,7 @@ public class edit_employeeWindow {
                                 if (reply == JOptionPane.YES_OPTION) {
                                         new employeesAPI().setEmployeeUnactive(theEmployee.getId());
                                         playground.removeAll();
-                                        new main_employeesWindow(playground);
+                                        new mainEmployees(playground);
                                         playground.revalidate();
                                         playground.repaint();
                                 }

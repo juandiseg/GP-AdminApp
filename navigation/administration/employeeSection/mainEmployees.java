@@ -10,7 +10,7 @@ import java.awt.*;
 
 import java.awt.event.*;
 
-public class main_employeesWindow {
+public class mainEmployees {
 
     private JLabel clickEmployee = new JLabel("Double-Click on employee to edit it");
     private JButton addEmployeeButton = new JButton("Add Employee");
@@ -19,7 +19,7 @@ public class main_employeesWindow {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public main_employeesWindow(JPanel playground) {
+    public mainEmployees(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

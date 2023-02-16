@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import navigation.administration.employeeSection.main_employeesWindow;
+import navigation.administration.employeeSection.mainEmployees;
 import navigation.administration.roleSection.mainRole;
 import navigation.administration.shifts_Window.mainShifts;
 
@@ -325,7 +325,7 @@ public class mainAdmin {
                                 resetColor(rolesPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new main_employeesWindow(playground);
+                                new mainEmployees(playground);
                                 playground.revalidate();
                                 playground.repaint();
                                 // initComp2();

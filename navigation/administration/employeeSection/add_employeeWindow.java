@@ -370,7 +370,7 @@ public class add_employeeWindow {
 
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new main_employeesWindow(playground);
+                                new mainEmployees(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
