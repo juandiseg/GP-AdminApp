@@ -10,7 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import navigation.administration.main_adminstration_Window;
+import navigation.administration.mainAdmin;
+import navigation.food.mainFood;
 
 public class mainMenu extends JFrame {
 
@@ -362,10 +363,17 @@ public class mainMenu extends JFrame {
 
                         public void mouseClicked(MouseEvent e) {
                                 setColor(administrationPanel);
-                                resetColor(foodPanel);
                                 resetColor(homePanel);
+                                resetColor(foodPanel);
                                 clicked = true;
-                                new main_adminstration_Window(leftAuxPanel, playground, jPanel4, date);
+                                playground.removeAll();
+                                leftAuxPanel.removeAll();
+                                new mainAdmin(leftAuxPanel, playground, jPanel4, date);
+                                playground.revalidate();
+                                leftAuxPanel.revalidate();
+                                playground.repaint();
+                                leftAuxPanel.repaint();
+
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -395,13 +403,16 @@ public class mainMenu extends JFrame {
 
                         public void mouseClicked(MouseEvent e) {
                                 setColor(foodPanel);
-                                resetColor(administrationPanel);
                                 resetColor(homePanel);
+                                resetColor(administrationPanel);
                                 clicked = true;
+                                playground.removeAll();
                                 leftAuxPanel.removeAll();
+                                new mainFood(leftAuxPanel, playground, jPanel4, date);
+                                playground.revalidate();
                                 leftAuxPanel.revalidate();
+                                playground.repaint();
                                 leftAuxPanel.repaint();
-                                initComp2();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -438,9 +449,9 @@ public class mainMenu extends JFrame {
                                 leftAuxPanel.revalidate();
                                 leftAuxPanel.repaint();
                                 playground.removeAll();
+                                initComp2();
                                 playground.revalidate();
                                 playground.repaint();
-                                initComp2();
                         }
 
                         public void mousePressed(MouseEvent e) {

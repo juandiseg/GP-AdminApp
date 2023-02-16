@@ -14,7 +14,7 @@ import navigation.administration.employeeSection.main_employeesWindow;
 import navigation.administration.roleSection.mainRole;
 import navigation.administration.shifts_Window.mainShifts;
 
-public class main_adminstration_Window {
+public class mainAdmin {
 
         private JPanel employeesPanel = new JPanel();
         private JPanel employeesAux = new JPanel();
@@ -34,7 +34,7 @@ public class main_adminstration_Window {
 
         private JPanel topLeftAux = new JPanel();
 
-        public main_adminstration_Window(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
+        public mainAdmin(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
                 initComp3(playground);
