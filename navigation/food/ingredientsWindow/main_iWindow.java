@@ -2,7 +2,6 @@ package navigation.food.ingredientsWindow;
 
 import java.awt.event.ActionListener;
 import iLayouts.GridLayoutApplyer;
-import navigation.food.allergensWindow.main_aWindow;
 import util.abstractUpdater;
 
 import java.awt.event.ActionEvent;
@@ -56,12 +55,6 @@ public class main_iWindow extends abstractUpdater {
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 check_iWindow tempWinw = new check_iWindow(temp);
-                tempWinw.updateToThisMenu();
-            }
-        });
-        button5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                main_aWindow tempWinw = new main_aWindow(temp);
                 tempWinw.updateToThisMenu();
             }
         });

@@ -1,17 +1,15 @@
 package navigation.food;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.MouseListener;
 
 import java.awt.event.MouseEvent;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import navigation.administration.roleSection.mainRole;
 import navigation.food.allergensWindow.mainAllergen;
+import navigation.food.categoryWindow.mainCategory;
 
 public class mainFood {
 
@@ -565,10 +563,10 @@ public class mainFood {
                                 resetColor(providersPanel);
                                 resetColor(allergensPanel);
                                 clicked = true;
-                                // playground.removeAll();
-                                // new main_employeesWindow(playground);
-                                // playground.revalidate();
-                                // playground.repaint();
+                                playground.removeAll();
+                                new mainCategory(playground);
+                                playground.revalidate();
+                                playground.repaint();
                         }
 
                         public void mousePressed(MouseEvent e) {

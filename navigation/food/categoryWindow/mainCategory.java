@@ -1,4 +1,4 @@
-package navigation.food.allergensWindow;
+package navigation.food.categoryWindow;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,20 +14,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
+import componentsFood.category;
 import componentsFood.role;
 
 import java.awt.event.*;
 
-public class mainAllergen {
+public class mainCategory {
 
-    private JLabel clickAllergen = new JLabel("Double-Click on allergen to edit it");
-    private JButton addAllergenButton = new JButton("Add Allergen");
+    private JLabel clickAllergen = new JLabel("Double-Click on category to edit it");
+    private JButton addCategoryButton = new JButton("Add Category");
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainAllergen(JPanel playground) {
+    public mainCategory(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);
@@ -38,9 +39,9 @@ public class mainAllergen {
         clickAllergen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         clickAllergen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         clickAllergen.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        addAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addAllergenButton.setBackground(new Color(23, 35, 51));
-        addAllergenButton.setForeground(new Color(255, 255, 255));
+        addCategoryButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addCategoryButton.setBackground(new Color(23, 35, 51));
+        addCategoryButton.setForeground(new Color(255, 255, 255));
 
         javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -61,7 +62,7 @@ public class mainAllergen {
                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(334, 334, 334)
-                                                .addComponent(addAllergenButton, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(addCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(75, Short.MAX_VALUE)));
         playgroundLayout.setVerticalGroup(
@@ -74,16 +75,16 @@ public class mainAllergen {
                                 .addComponent(rolesJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 337,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(addAllergenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
+                                .addComponent(addCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
     private void addActionListeners(JPanel playground) {
-        addAllergenButton.addMouseListener(new MouseListener() {
+        addCategoryButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                new addAllergen(playground);
+                // new addAllergen(playground);
                 playground.revalidate();
                 playground.repaint();
             }
@@ -95,13 +96,13 @@ public class mainAllergen {
             }
 
             public void mouseEntered(MouseEvent e) {
-                addAllergenButton.setBackground(new Color(120, 168, 252));
-                addAllergenButton.setForeground(new Color(0, 0, 0));
+                addCategoryButton.setBackground(new Color(120, 168, 252));
+                addCategoryButton.setForeground(new Color(0, 0, 0));
             }
 
             public void mouseExited(MouseEvent e) {
-                addAllergenButton.setBackground(new Color(23, 35, 51));
-                addAllergenButton.setForeground(new Color(255, 255, 255));
+                addCategoryButton.setBackground(new Color(23, 35, 51));
+                addCategoryButton.setForeground(new Color(255, 255, 255));
             }
         });
         myTable.addMouseListener(new MouseAdapter() {
@@ -113,7 +114,7 @@ public class mainAllergen {
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         String name = (String) model.getValueAt(myTable.getSelectedRow(), 1);
                         playground.removeAll();
-                        new editAllergen(playground, new allergen(ID, name));
+                        // new editAllergen(playground, new allergen(ID, name));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {
@@ -125,11 +126,15 @@ public class mainAllergen {
     }
 
     private void populateTable() {
-        model = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
-        ArrayList<allergen> tempAllergens = new allergensAPI().getAllAllergens();
-        if (!tempAllergens.isEmpty()) {
-            for (allergen temp : tempAllergens)
-                model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName() });
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Type" }, 0);
+        ArrayList<category> categoriesList = new categoryAPI().getAllCategories();
+        for (category temp : categoriesList) {
+            String ID = Integer.toString(temp.getId());
+            String name = temp.getName();
+            String isProduct = "Menu";
+            if (temp.getIsProduct())
+                isProduct = "Product";
+            model.addRow(new String[] { ID, name, isProduct });
         }
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
@@ -141,7 +146,7 @@ public class mainAllergen {
         myTable.setFont(new Font("Segoe UI", 0, 14));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        myTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        myTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
         Dimension tempdimen = new Dimension(20, 1);
         myTable.setIntercellSpacing(tempdimen);

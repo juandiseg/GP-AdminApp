@@ -206,9 +206,9 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // UPDATE something "allergen" related in database.
-    public boolean editAllergen(int ID, String name) {
+    public boolean editAllergen(allergen theAllergen, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + Integer.toString(ID);
+            String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + theAllergen.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -239,15 +239,15 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // REMOVE "allergen" from database.
-    public boolean removeAllergen(String ID) {
+    public boolean removeAllergen(allergen theAllergen) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM ingredients_allergens WHERE allergen_id = " + ID + ";";
+            String query = "DELETE FROM ingredients_allergens WHERE allergen_id = " + theAllergen.getId() + ";";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
             } catch (Exception e) {
                 return false;
             }
-            query = "DELETE FROM allergens WHERE allergen_id = " + ID + ";";
+            query = "DELETE FROM allergens WHERE allergen_id = " + theAllergen.getId() + ";";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
