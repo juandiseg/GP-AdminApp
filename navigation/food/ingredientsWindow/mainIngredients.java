@@ -71,7 +71,7 @@ public class mainIngredients {
         addCategoryButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                // new addIngredient(playground);
+                new addIngredient(playground);
                 playground.revalidate();
                 playground.repaint();
             }

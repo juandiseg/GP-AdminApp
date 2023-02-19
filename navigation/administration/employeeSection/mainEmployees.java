@@ -75,7 +75,7 @@ public class mainEmployees {
         addEmployeeButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                new add_employeeWindow(playground);
+                new addEmployee(playground);
                 playground.revalidate();
                 playground.repaint();
             }
@@ -104,7 +104,7 @@ public class mainEmployees {
 
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         playground.removeAll();
-                        new edit_employeeWindow(playground, new employeesAPI().getEmployee(ID));
+                        new editEmployee(playground, new employeesAPI().getEmployee(ID));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {
