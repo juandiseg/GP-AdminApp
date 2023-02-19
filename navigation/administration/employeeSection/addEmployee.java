@@ -311,7 +311,6 @@ public class addEmployee {
                 for (role temp : roles)
                         tempNames.add(temp.getName());
                 String[] namesArr = tempNames.toArray(new String[0]);
-
                 roleComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
                 roleComboBox.setFont(new Font("Segoe UI", 0, 18));
                 roleComboBox.setForeground(Color.BLACK);

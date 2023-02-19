@@ -103,22 +103,7 @@ public class editEmployee {
                 roleLabel.setText("Role");
                 roleLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                for (int i = 0; i < roles.size(); i++) {
-                        if (roles.get(i).getId() == theEmployee.getRoleID()) {
-                                role temp = roles.remove(i);
-                                roles.add(0, temp);
-                        }
-                }
-                roleComboBox.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
-                ArrayList<String> tempNames = new ArrayList<>();
-                for (role temp : roles)
-                        tempNames.add(temp.getName());
-
-                String[] namesArr = tempNames.toArray(new String[0]);
-                roleComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
-                roleComboBox.setFont(new Font("Segoe UI", 0, 18));
-                roleComboBox.setForeground(Color.BLACK);
-                roleComboBox.setBackground(Color.WHITE);
+                setComboBox();
 
                 hoursWeekTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 hoursWeekTextField.setText(theEmployee.getHoursWeek().substring(0, 5));
@@ -507,6 +492,25 @@ public class editEmployee {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+        }
+
+        private void setComboBox() {
+                for (int i = 0; i < roles.size(); i++) {
+                        if (roles.get(i).getId() == theEmployee.getRoleID()) {
+                                role temp = roles.remove(i);
+                                roles.add(0, temp);
+                        }
+                }
+                roleComboBox.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
+                ArrayList<String> tempNames = new ArrayList<>();
+                for (role temp : roles)
+                        tempNames.add(temp.getName());
+
+                String[] namesArr = tempNames.toArray(new String[0]);
+                roleComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
+                roleComboBox.setFont(new Font("Segoe UI", 0, 18));
+                roleComboBox.setForeground(Color.BLACK);
+                roleComboBox.setBackground(Color.WHITE);
         }
 
         private void updatePlaceholders() {

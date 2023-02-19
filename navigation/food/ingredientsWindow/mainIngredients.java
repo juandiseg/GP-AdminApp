@@ -1,6 +1,8 @@
 package navigation.food.ingredientsWindow;
 
 import componentsFood.ingredient;
+import navigation.food.providersWindow.providerAPI;
+
 import javax.swing.table.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -99,10 +101,15 @@ public class mainIngredients {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
-                        String name = (String) model.getValueAt(myTable.getSelectedRow(), 1);
-                        boolean type = ((String) model.getValueAt(myTable.getSelectedRow(), 2)).equals("Product");
+                        int provID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 1));
+                        String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
+                        String name = (String) model.getValueAt(myTable.getSelectedRow(), 3);
+                        float price = Float.parseFloat((String) model.getValueAt(myTable.getSelectedRow(), 5));
+                        float amount = Float.parseFloat((String) model.getValueAt(myTable.getSelectedRow(), 6));
+                        Boolean inventory = ((String) model.getValueAt(myTable.getSelectedRow(), 7)).equals("Yes");
                         playground.removeAll();
-                        // new editIngredient(playground, new category(ID, name, type));
+                        new editIngredient(playground,
+                                new ingredient(ID, provID, date, name, price, amount, inventory, true));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {
@@ -115,11 +122,12 @@ public class mainIngredients {
 
     private void populateTable() {
         model = new DefaultTableModel(
-                new String[] { "ID", "Prov_ID", "date", "Name", "Price", "Amount", "Inventory", "active" },
+                new String[] { "ID", "Prov_ID", "date", "Name", "Provider", "Price", "Amount", "Inventory", "active" },
                 0);
         for (ingredient temp : new ingredientsAPI().getAllCurrentIngredients()) {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());
+            String provName = new providerAPI().getProvider(temp.getProviderID()).getName();
             String price = Float.toString(temp.getPrice());
             String amount = Float.toString(temp.getAmount());
             String in_inventory;
@@ -133,7 +141,8 @@ public class mainIngredients {
             else
                 active = "Not active";
             model.addRow(
-                    new String[] { id, prov_id, temp.getDate(), temp.getName(), price, amount, in_inventory, active });
+                    new String[] { id, prov_id, temp.getDate(), temp.getName(), provName, price, amount, in_inventory,
+                            active });
         }
 
         myTable.setDefaultEditor(Object.class, null);
@@ -149,9 +158,9 @@ public class mainIngredients {
         myTable.setFont(new Font("Segoe UI", 0, 14));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        myTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         myTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         myTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        myTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
         Dimension tempdimen = new Dimension(20, 1);
         myTable.setIntercellSpacing(tempdimen);

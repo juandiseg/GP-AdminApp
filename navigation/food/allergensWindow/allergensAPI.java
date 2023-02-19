@@ -108,36 +108,6 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<String> getAllergensOfIngredient(String ID) {
-        Stack<Integer> allergenIDs = new Stack<Integer>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = " + ID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next())
-                    allergenIDs.add(rs.getInt("allergen_id"));
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-            ArrayList<String> containingAllergenNames = new ArrayList<String>();
-            while (!allergenIDs.isEmpty()) {
-                query = "SELECT name FROM allergens WHERE allergen_id = " + allergenIDs.pop();
-                try (Statement stmt = connection.createStatement()) {
-                    ResultSet rs = stmt.executeQuery(query);
-                    if (rs.next())
-                        containingAllergenNames.add(rs.getString("name"));
-                } catch (Exception e) {
-                    System.out.println(e);
-                    return null;
-                }
-            }
-            return containingAllergenNames;
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
     // ADD "allergen" to database.
     public boolean addAllergen(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {

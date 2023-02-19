@@ -27,4 +27,14 @@ public class provider {
     public String toString() {
         return name;
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof provider))
+            return false;
+        provider temp = (provider) obj;
+        if (temp.getId() == id && temp.getName() == name && temp.getEmail() == email)
+            return true;
+        else
+            return false;
+    }
 }

@@ -272,7 +272,7 @@ public class addCategory {
                         public void mouseClicked(MouseEvent e) {
                                 categoryAPI theManagerDB = new categoryAPI();
                                 if (namePlaceholder) {
-                                        successLabel.setText("To add a category you must specify a name for it.");
+                                        successLabel.setText("Error. You must fill all the given fields.");
                                         successLabel.setVisible(true);
                                         return;
                                 }

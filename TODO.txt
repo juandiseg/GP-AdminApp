@@ -1,12 +1,13 @@
 TO DO:
 ------------------
+DATABASE            Change all values that reference money to support another decimal.
 add*.java           Returns when trying to add if ANY of the fields is empty.
 edit*.java          Returns whem trying to add if ALL of the fields are empty.
 
 
-mainShifts.java	-> 	Late entries highlights.	(Formatting and restricting entries)
+mainShifts.java	    -> 	Late entries highlights.	(Formatting and restricting entries)
 editShifts.java 	->	Check for imbedeed shifts and similar entries.
-addShifts.java 	->	Check for imbedeed shifts and similar entries.
+addShifts.java 	    ->	Check for imbedeed shifts and similar entries.
 
 editEmployees.java	->	Check for shifts referencing that employee in the future.
-
+editEmployee.java   ->  Show in Combo Box the already picked option first.

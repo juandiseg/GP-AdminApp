@@ -328,6 +328,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean updatePrice(int ingredientID, float newPrice) {
         fixIngredientDate(ingredientID);
+        System.out.println("here");
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET price = " + newPrice
                     + " WHERE active = true AND ingredient_id = " + ingredientID;

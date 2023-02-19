@@ -21,4 +21,14 @@ public class allergen {
     public String toString() {
         return name;
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof allergen))
+            return false;
+        allergen temp = (allergen) obj;
+        if (temp.getId() == id && temp.getName().equals(name))
+            return true;
+        else
+            return false;
+    }
 }

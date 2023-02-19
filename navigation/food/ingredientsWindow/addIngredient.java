@@ -1,7 +1,10 @@
 package navigation.food.ingredientsWindow;
 
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -68,7 +71,8 @@ public class addIngredient {
 
         successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         successLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        successLabel.setVisible(false);
+        successLabel.setText("                                             ");
+
         successLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         jPanel1.setBackground(new java.awt.Color(120, 168, 252));
@@ -149,6 +153,8 @@ public class addIngredient {
 
         addIngredientButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         addIngredientButton.setText("Add Ingredient");
+        addIngredientButton.setBackground(new Color(255, 255, 255));
+        addIngredientButton.setForeground(new Color(23, 35, 51));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -324,7 +330,6 @@ public class addIngredient {
         backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         backButton.setForeground(new java.awt.Color(255, 255, 255));
         backButton.setText("Back");
-        backButton.setToolTipText("");
 
         javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -366,6 +371,7 @@ public class addIngredient {
                                                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(7, Short.MAX_VALUE)));
+
     }
 
     private void setTables() {
@@ -444,24 +450,35 @@ public class addIngredient {
         });
         addIngredientButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
+                if (namePlaceholder || pricePlaceholder || quantityPlaceholder) {
+                    successLabel.setText("Error. You must fill all the given fields.");
+                    return;
+                }
+                String name = nameTextField.getText();
+                String price = priceTextField.getText();
+                String quantity = quantityTextField.getText();
+                int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
+                boolean inventory = inventoryToggle.getText().equals("Yes");
+                LocalDate dateObj = LocalDate.now();
+                String date = dateObj.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-                /*
-                 * providerAPI theManagerDB = new providerAPI();
-                 * if (namePlaceholder || emailPlaceholder) {
-                 * successLabel.
-                 * setText("To add a category you must specify a name and email for it.");
-                 * successLabel.setVisible(true);
-                 * return;
-                 * }
-                 * String name = nameTextField.getText();
-                 * String email = emailTextField.getText();
-                 * if (theManagerDB.addProvider(name, email))
-                 * successLabel.setText("Provider: \"" + name + "\" was successfully added.");
-                 * else
-                 * successLabel.setText(
-                 * "Something went wrong while adding \"" + name + "\".");
-                 * successLabel.setVisible(true);
-                 */
+                int ingredientID = new ingredientsAPI().addIngredient(providerID, date, name, Float.parseFloat(price),
+                        Float.parseFloat(quantity), inventory);
+                if (ingredientID == -1) {
+                    successLabel.setText("Error. Something went wrong while adding the ingredient.");
+                    return;
+                }
+                Stack<allergen> selectedAllergens = new Stack<allergen>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                    int ID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                    String allerName = (String) modelSelected.getValueAt(i, 1);
+                    selectedAllergens.push(new allergen(ID, allerName));
+                }
+                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID)) {
+                    successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
+                    return;
+                }
+                successLabel.setText("Error. Something went wrong when adding the \"" + name + "\"'s allergens.");
             }
 
             public void mousePressed(MouseEvent e) {
