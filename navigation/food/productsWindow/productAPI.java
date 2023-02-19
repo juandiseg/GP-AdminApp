@@ -100,10 +100,11 @@ public class productAPI extends abstractManagerDB {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("product_id");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
-                    tempList.add(new product(ID, "", name, price, active));
+                    tempList.add(new product(ID, catID, "", name, price, active));
                 }
                 connection.close();
                 return tempList;
@@ -127,10 +128,11 @@ public class productAPI extends abstractManagerDB {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("category_id");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
-                    tempList.add(new product(ID, "", name, price, active));
+                    tempList.add(new product(ID, catID, "", name, price, active));
                 }
                 connection.close();
                 return tempList;
@@ -187,19 +189,20 @@ public class productAPI extends abstractManagerDB {
     }
 
     // ADD "product" to database.
-    public product addProduct(String date, String name, float price) {
+    public product addProduct(String date, int catID, String name, float price) {
         int productID = getLastProductID() + 1;
-        return addProduct(productID, date, name, price, true);
+        return addProduct(productID, catID, date, name, price, true);
     }
 
-    private product addProduct(int ID, String date, String name, float price, boolean active) {
+    private product addProduct(int ID, int catID, String date, String name, float price, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO products VALUES (" + ID + ", '" + date + "', '" + name + "', " + price
+            String query = "INSERT INTO products VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
+                    + price
                     + ", " + active + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new product(ID, date, name, price, active);
+                return new product(ID, catID, date, name, price, active);
             } catch (Exception e) {
                 System.out.println(e);
                 return null;
@@ -303,7 +306,8 @@ public class productAPI extends abstractManagerDB {
         product tempProduct = getProduct(productID);
         setProductIDUnactive(productID);
         String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        addProduct(productID, dateToday, tempProduct.getName(), tempProduct.getPrice(), true);
+        addProduct(productID, tempProduct.getCategoryID(), dateToday, tempProduct.getName(), tempProduct.getPrice(),
+                true);
     }
 
     public void setProductIDUnactive(int productID) {

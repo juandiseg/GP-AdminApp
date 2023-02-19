@@ -104,44 +104,15 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public category getCategoryOfProduct(int productID) {
+    public String getNameOfCategory(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT category_id, category_name, iscategory_product FROM products_categories NATURAL JOIN categories WHERE product_id = "
-                    + productID;
+            String query = "SELECT category_name FROM categories WHERE category_id = " + ID;
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    int categoryID = rs.getInt("category_id");
                     String name = rs.getString("category_name");
-                    Boolean isProduct = rs.getBoolean("iscategory_product");
-                    category temp = new category(categoryID, name, isProduct);
                     connection.close();
-                    return temp;
-                }
-                connection.close();
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public category getCategoryOfMenu(int menuID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT category_id, category_name, iscategory_product FROM menus_categories NATURAL JOIN categories WHERE menu_id = "
-                    + menuID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int categoryID = rs.getInt("category_id");
-                    String name = rs.getString("category_name");
-                    Boolean isProduct = rs.getBoolean("iscategory_product");
-                    category temp = new category(categoryID, name, isProduct);
-                    connection.close();
-                    return temp;
+                    return name;
                 }
                 connection.close();
                 return null;
