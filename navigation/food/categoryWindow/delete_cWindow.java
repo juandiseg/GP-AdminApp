@@ -29,7 +29,7 @@ public class delete_cWindow extends abstractEdit_CheckWindow {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
                         int reply = JOptionPane.showConfirmDialog(null,
-                                "Are you sure you want to delete this Category? It needs to be empty before doing so",
+                                "Are you sure you want to delete this Category? It needs to be empty before doing so.",
                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                         if (reply == JOptionPane.YES_OPTION) {
                             System.out.println("okay have to simplement");

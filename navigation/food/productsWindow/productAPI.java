@@ -26,10 +26,11 @@ public class productAPI extends abstractManagerDB {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("category_id");
                     String date = rs.getString("product_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    tempList.add(new product(ID, date, name, price, true));
+                    tempList.add(new product(ID, catID, date, name, price, true));
                 }
                 tempList = checkRepeatedProducts(tempList);
                 connection.close();
@@ -51,11 +52,12 @@ public class productAPI extends abstractManagerDB {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
                     int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("category_id");
                     String date = rs.getString("product_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
-                    return new product(ID, date, name, price, active);
+                    return new product(ID, catID, date, name, price, active);
                 }
             } catch (Exception e) {
                 System.out.println(e);

@@ -113,8 +113,9 @@ public class mainCategory {
                             return;
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         String name = (String) model.getValueAt(myTable.getSelectedRow(), 1);
+                        boolean type = ((String) model.getValueAt(myTable.getSelectedRow(), 2)).equals("Product");
                         playground.removeAll();
-                        // new editAllergen(playground, new allergen(ID, name));
+                        new editCategory(playground, new category(ID, name, type));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {

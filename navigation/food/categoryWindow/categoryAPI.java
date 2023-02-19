@@ -225,7 +225,43 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // UPDATE something "product" related in database.
-    public boolean editCategory(int ID, String newName) {
+    public boolean updateType(int ID, boolean isProduct) {
+        if (checkTypeUpdateable(ID) == false)
+            return false;
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE categories SET iscategory_product = " + isProduct + " WHERE category_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean checkTypeUpdateable(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM products WHERE category_id = " + ID + " LIMIT 1";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    return false;
+                }
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean updateName(int ID, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE categories SET category_name = '" + newName + "' WHERE category_id = " + ID;
             try (Statement stmt = connection.createStatement()) {
@@ -272,6 +308,21 @@ public class categoryAPI extends abstractManagerDB {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean deleteCategory(int catID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "DELETE FROM categories WHERE category_id = " + catID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } catch (SQLException e) {
+            return false;
         }
     }
 }
