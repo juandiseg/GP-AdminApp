@@ -84,7 +84,7 @@ public class mainCategory {
         addCategoryButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                // new addAllergen(playground);
+                new addCategory(playground);
                 playground.revalidate();
                 playground.repaint();
             }
