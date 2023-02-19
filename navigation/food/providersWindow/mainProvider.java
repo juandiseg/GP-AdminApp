@@ -1,34 +1,21 @@
-package navigation.food.categoryWindow;
+package navigation.food.providersWindow;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
-import componentsFood.allergen;
-import componentsFood.category;
-import componentsFood.role;
-
+import componentsFood.provider;
+import javax.swing.table.*;
 import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
 
-public class mainCategory {
+public class mainProvider {
 
-    private JLabel clickCategory = new JLabel("Double-Click on category to edit it");
-    private JButton addCategoryButton = new JButton("Add Category");
+    private JLabel clickProvider = new JLabel("Double-Click on provider to edit it");
+    private JButton addProviderButton = new JButton("Add Provider");
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainCategory(JPanel playground) {
+    public mainProvider(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);
@@ -36,12 +23,12 @@ public class mainCategory {
 
     private void initComponents(JPanel playground) {
         playground.setBackground(new java.awt.Color(255, 255, 255));
-        clickCategory.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        clickCategory.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        clickCategory.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        addCategoryButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addCategoryButton.setBackground(new Color(23, 35, 51));
-        addCategoryButton.setForeground(new Color(255, 255, 255));
+        clickProvider.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        clickProvider.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        clickProvider.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        addProviderButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addProviderButton.setBackground(new Color(23, 35, 51));
+        addProviderButton.setForeground(new Color(255, 255, 255));
 
         javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -57,34 +44,34 @@ public class mainCategory {
                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(88, 88, 88)
-                                                .addComponent(clickCategory, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(clickProvider, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         707,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(334, 334, 334)
-                                                .addComponent(addCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(addProviderButton, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(75, Short.MAX_VALUE)));
         playgroundLayout.setVerticalGroup(
                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
                                 .addGap(58, 58, 58)
-                                .addComponent(clickCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
+                                .addComponent(clickProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30)
                                 .addComponent(rolesJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 337,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(addCategoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
+                                .addComponent(addProviderButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
     private void addActionListeners(JPanel playground) {
-        addCategoryButton.addMouseListener(new MouseListener() {
+        addProviderButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                new addCategory(playground);
+                new addProvider(playground);
                 playground.revalidate();
                 playground.repaint();
             }
@@ -96,13 +83,13 @@ public class mainCategory {
             }
 
             public void mouseEntered(MouseEvent e) {
-                addCategoryButton.setBackground(new Color(120, 168, 252));
-                addCategoryButton.setForeground(new Color(0, 0, 0));
+                addProviderButton.setBackground(new Color(120, 168, 252));
+                addProviderButton.setForeground(new Color(0, 0, 0));
             }
 
             public void mouseExited(MouseEvent e) {
-                addCategoryButton.setBackground(new Color(23, 35, 51));
-                addCategoryButton.setForeground(new Color(255, 255, 255));
+                addProviderButton.setBackground(new Color(23, 35, 51));
+                addProviderButton.setForeground(new Color(255, 255, 255));
             }
         });
         myTable.addMouseListener(new MouseAdapter() {
@@ -113,9 +100,9 @@ public class mainCategory {
                             return;
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         String name = (String) model.getValueAt(myTable.getSelectedRow(), 1);
-                        boolean type = ((String) model.getValueAt(myTable.getSelectedRow(), 2)).equals("Product");
+                        String email = (String) model.getValueAt(myTable.getSelectedRow(), 2);
                         playground.removeAll();
-                        new editCategory(playground, new category(ID, name, type));
+                        new editProvider(playground, new provider(ID, name, email));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {
@@ -127,16 +114,10 @@ public class mainCategory {
     }
 
     private void populateTable() {
-        model = new DefaultTableModel(new String[] { "ID", "Name", "Type" }, 0);
-        ArrayList<category> categoriesList = new categoryAPI().getAllCategories();
-        for (category temp : categoriesList) {
-            String ID = Integer.toString(temp.getId());
-            String name = temp.getName();
-            String isProduct = "Menu";
-            if (temp.getIsProduct())
-                isProduct = "Product";
-            model.addRow(new String[] { ID, name, isProduct });
-        }
+        model = new DefaultTableModel(new String[] { "ID", "Name", "Email" }, 0);
+        for (provider temp : new providerAPI().getAllActiveProviders())
+            model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName(), temp.getEmail() });
+
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.setModel(model);
@@ -147,8 +128,7 @@ public class mainCategory {
         myTable.setFont(new Font("Segoe UI", 0, 14));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        myTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-
+        myTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         Dimension tempdimen = new Dimension(20, 1);
         myTable.setIntercellSpacing(tempdimen);
         myTable.setRowHeight(myTable.getRowHeight() + 10);

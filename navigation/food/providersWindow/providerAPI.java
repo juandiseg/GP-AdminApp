@@ -36,6 +36,29 @@ public class providerAPI extends abstractManagerDB {
         }
     }
 
+    public ArrayList<provider> getAllActiveProviders() {
+        ArrayList<provider> tempList = new ArrayList<provider>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM providers WHERE active = TRUE";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int providerID = rs.getInt("provider_id");
+                    String name = rs.getString("name");
+                    String email = rs.getString("email");
+                    tempList.add(new provider(providerID, name, email));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public provider getProvider(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM providers WHERE provider_id = " + Integer.toString(ID);
@@ -122,6 +145,44 @@ public class providerAPI extends abstractManagerDB {
                 stmt.executeUpdate(query);
                 connection.close();
                 return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean deleteProvider(int ID) {
+        if (isProviderAssigned(ID))
+            return false;
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE providers SET active = false WHERE provider_id = " + ID;
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private boolean isProviderAssigned(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM ingredients JOIN providers ON ingredients.provider_id = providers.provider_id WHERE ingredients.provider_id = "
+                    + ID + " AND ingredients.active = TRUE";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    connection.close();
+                    return true;
+                }
+                return false;
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
