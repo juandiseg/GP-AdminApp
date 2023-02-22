@@ -98,28 +98,17 @@ public class mainProducts {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
                     try {
-                        /*
-                         * if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
-                         * return;
-                         * int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(),
-                         * 0));
-                         * int provID = Integer.parseInt((String)
-                         * model.getValueAt(myTable.getSelectedRow(), 1));
-                         * String date = (String) model.getValueAt(myTable.getSelectedRow(), 2);
-                         * String name = (String) model.getValueAt(myTable.getSelectedRow(), 3);
-                         * float price = Float.parseFloat((String)
-                         * model.getValueAt(myTable.getSelectedRow(), 5));
-                         * float amount = Float.parseFloat((String)
-                         * model.getValueAt(myTable.getSelectedRow(), 6));
-                         * Boolean inventory = ((String) model.getValueAt(myTable.getSelectedRow(),
-                         * 7)).equals("Yes");
-                         * playground.removeAll();
-                         * new editIngredient(playground,
-                         * new ingredient(ID, provID, date, name, price, amount, inventory, true));
-                         * playground.revalidate();
-                         * playground.repaint();
-                         */
-
+                        if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
+                            return;
+                        int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
+                        String date = (String) model.getValueAt(myTable.getSelectedRow(), 1);
+                        String name = (String) model.getValueAt(myTable.getSelectedRow(), 2);
+                        Float price = Float.parseFloat((String) model.getValueAt(myTable.getSelectedRow(), 3));
+                        int catID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 4));
+                        playground.removeAll();
+                        new editProduct(playground, new product(ID, catID, date, name, price, true));
+                        playground.repaint();
+                        playground.revalidate();
                     } catch (IndexOutOfBoundsException e) {
                         return;
                     }
@@ -130,7 +119,7 @@ public class mainProducts {
 
     private void populateTable() {
         model = new DefaultTableModel(
-                new String[] { "product_id", "date", "Name", "Price", "Category" },
+                new String[] { "product_id", "date", "Name", "Price", "catID", "Category" },
                 0);
         categoryAPI tempAPI = new categoryAPI();
         for (product temp : new productAPI().getAllCurrentProducts()) {
@@ -139,13 +128,14 @@ public class mainProducts {
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
             String catName = tempAPI.getNameOfCategory(temp.getCategoryID());
-            model.addRow(new String[] { id, date, name, price, catName });
+            model.addRow(new String[] { id, date, name, price, Integer.toString(temp.getCategoryID()), catName });
         }
         myTable.setDefaultEditor(Object.class, null);
         myTable.setFocusable(true);
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("product_id"));
         myTable.removeColumn(myTable.getColumn("date"));
+        myTable.removeColumn(myTable.getColumn("catID"));
         myTable.getTableHeader().setFont(new Font("Segoe UI", 1, 14));
         myTable.getTableHeader().setBackground(new Color(120, 168, 252));
         myTable.setFillsViewportHeight(true);

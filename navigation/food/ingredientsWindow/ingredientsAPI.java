@@ -179,7 +179,8 @@ public class ingredientsAPI extends abstractManagerDB {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         // NOT WORKING FOR INGREDIENTS WITH NO INGREDIENTS
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = 1) AS b WHERE a.product_id = "
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = "
+                    + theProduct.getId() + ") AS b WHERE a.product_id = "
                     + theProduct.getId() + " AND a.product_ingredients_date = b.temp) AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);

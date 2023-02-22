@@ -58,4 +58,14 @@ public class ingredient {
     public String toString() {
         return name;
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ingredient))
+            return false;
+        ingredient temp = (ingredient) obj;
+        if (temp.getId() == id && date.equals(temp.getDate()))
+            return true;
+        else
+            return false;
+    }
 }

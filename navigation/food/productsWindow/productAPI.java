@@ -286,6 +286,23 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
+    public boolean updateCategory(int productID, int categoryID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE products SET category_id = " + categoryID + " WHERE product_id = " + productID
+                    + " AND active = true;";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public void updateActive(int productID, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE products SET active = " + active + " WHERE product_id = " + productID;
@@ -382,7 +399,8 @@ public class productAPI extends abstractManagerDB {
             removeProductIngredientsToday(productID);
         while (!stackIDs.empty() && !stackAmounts.empty()) {
             String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            addIngredients(productID, stackIDs.pop(), dateToday, stackAmounts.pop()); // HAVE TO DO QUANTITY TOO
+            if (!addIngredients(productID, stackIDs.pop(), dateToday, stackAmounts.pop()))
+                return false;
         }
         return true;
     }

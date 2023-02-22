@@ -26,7 +26,7 @@ public class allergen {
         if (!(obj instanceof allergen))
             return false;
         allergen temp = (allergen) obj;
-        if (temp.getId() == id && temp.getName().equals(name))
+        if (temp.getId() == id)
             return true;
         else
             return false;
