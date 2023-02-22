@@ -23,11 +23,11 @@ public class menuAPI extends abstractManagerDB {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int menuID = rs.getInt("menu_id");
+                    int catID = rs.getInt("category_id");
                     String date = rs.getString("menu_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    boolean active = rs.getBoolean("active");
-                    tempList.add(new menu(menuID, date, name, price, active));
+                    tempList.add(new menu(menuID, catID, date, name, price, true));
                 }
                 connection.close();
                 return tempList;
@@ -64,19 +64,20 @@ public class menuAPI extends abstractManagerDB {
         return null;
     }
 
-    public menu addMenu(String date, String name, float price, boolean active) {
+    public menu addMenu(String date, int catID, String name, float price, boolean active) {
         int menuID = getLastMenuID() + 1;
-        return addMenu(menuID, date, name, price, active);
+        return addMenu(menuID, catID, date, name, price, active);
     }
 
-    private menu addMenu(int ID, String date, String name, float price, boolean active) {
+    private menu addMenu(int ID, int catID, String date, String name, float price, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO menus VALUES (" + ID + ", '" + date + "', '" + name + "', " + price
+            String query = "INSERT INTO menus VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
+                    + price
                     + ", " + active + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new menu(ID, date, name, price, active);
+                return new menu(ID, catID, date, name, price, active);
             } catch (Exception e) {
                 System.out.println(e);
                 return null;

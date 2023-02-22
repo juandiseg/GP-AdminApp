@@ -1,8 +1,6 @@
 package navigation;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -13,7 +11,7 @@ import javax.swing.JPanel;
 import navigation.administration.*;
 import navigation.food.*;
 
-public class mainMenu extends JFrame {
+public class dashboard extends JFrame {
 
         private JPanel homePanel = new JPanel();
         private JLabel homeLabel = new JLabel("Home");
@@ -35,7 +33,7 @@ public class mainMenu extends JFrame {
         private JLabel welcomeLabel = new JLabel();
         private JLabel clickRole1 = new JLabel();
 
-        public mainMenu() {
+        public dashboard() {
                 initComponents();
         }
 

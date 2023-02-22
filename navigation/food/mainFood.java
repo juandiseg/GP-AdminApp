@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import navigation.food.allergensWindow.mainAllergen;
 import navigation.food.categoryWindow.mainCategory;
 import navigation.food.ingredientsWindow.mainIngredients;
+import navigation.food.menuWindow.mainMenu;
 import navigation.food.productsWindow.mainProducts;
 import navigation.food.providersWindow.mainProvider;
 
@@ -422,10 +423,10 @@ public class mainFood {
                                 resetColor(categoriesPanel);
                                 resetColor(allergensPanel);
                                 clicked = true;
-                                // playground.removeAll();
-                                // new main_employeesWindow(playground);
-                                // playground.revalidate();
-                                // playground.repaint();
+                                playground.removeAll();
+                                new mainMenu(playground);
+                                playground.revalidate();
+                                playground.repaint();
                         }
 
                         public void mousePressed(MouseEvent e) {
