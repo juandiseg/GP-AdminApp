@@ -10,7 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class mainMenu {
+public class mainMenus {
 
     private JLabel clickProduct = new JLabel("Double-Click on menu to edit it");
     private JButton addProductButton = new JButton("Add Menu");
@@ -19,7 +19,7 @@ public class mainMenu {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainMenu(JPanel playground) {
+    public mainMenus(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

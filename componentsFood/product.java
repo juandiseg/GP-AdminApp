@@ -44,4 +44,14 @@ public class product {
     public String toString() {
         return name;
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof product))
+            return false;
+        product temp = (product) obj;
+        if (date.equals(temp.date) && id == temp.id)
+            return true;
+        else
+            return false;
+    }
 }
