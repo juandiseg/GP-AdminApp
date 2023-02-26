@@ -6,11 +6,15 @@ import java.awt.event.MouseListener;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import jnafilechooser.api.JnaFileChooser;
 import navigation.administration.employeeSection.mainEmployees;
+import navigation.administration.reports_Window.generateReport;
 import navigation.administration.roleSection.mainRole;
 import navigation.administration.shifts_Window.mainShifts;
 
@@ -34,11 +38,11 @@ public class mainAdmin {
 
         private JPanel topLeftAux = new JPanel();
 
-        public mainAdmin(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
+        public mainAdmin(JFrame theFrame, JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
                 initComp3(playground);
-                addActionListeners(playground);
+                addActionListeners(playground, theFrame);
         }
 
         public void initComp2(JPanel leftAuxPanel, JPanel jPanel4, JLabel date) {
@@ -314,7 +318,7 @@ public class mainAdmin {
                                                 .addGap(0, 630, Short.MAX_VALUE));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addActionListeners(JPanel playground, JFrame theFrame) {
                 employeesPanel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 
@@ -402,6 +406,29 @@ public class mainAdmin {
                                 resetColor(rolesPanel);
                                 clicked = true;
                                 playground.removeAll();
+                                new generateReport(theFrame, playground);
+
+                                // JnaFileChooser chooser = new JnaFileChooser();
+                                // chooser.setMode(JnaFileChooser.Mode.Directories);
+                                // boolean action = chooser.showOpenDialog(theFrame);
+                                // if (action)
+                                // System.out.println(chooser.getSelectedFile());
+
+                                // JFileChooser chooser;
+                                // chooser = new JFileChooser();
+                                // chooser.setCurrentDirectory(new java.io.File("."));
+                                // chooser.setTitle("ola");
+                                // chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                                //
+                                // disable the "All files" option.
+                                //
+                                // chooser.setAcceptAllFileFilterUsed(false);
+                                //
+                                // + chooser.getCurrentDirectory());
+                                // System.out.println("getSelectedFile() : "
+                                // + chooser.getSelectedFile());
+                                //
+                                // }
                                 playground.revalidate();
                                 playground.repaint();
                                 // initComp2();

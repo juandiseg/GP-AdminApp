@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public abstract class iReportable {
-    
+
     private Workbook workbook = new XSSFWorkbook();
     private DataFormat format;
     public static CellStyle currencyStyle;
@@ -16,7 +16,7 @@ public abstract class iReportable {
     public static CellStyle timeStyle;
     private Font boldFont = workbook.createFont();
 
-    public iReportable(){
+    public iReportable() {
         format = workbook.createDataFormat();
         currencyStyle = workbook.createCellStyle();
         boldStyle = workbook.createCellStyle();
@@ -30,9 +30,9 @@ public abstract class iReportable {
         timeStyle.setDataFormat(format.getFormat("HH:MM"));
     }
 
-    public abstract void generateReport(String from, String to) throws Exception;
+    public abstract void generateReport(String from, String to, String folderPath) throws Exception;
 
-    public Workbook getWorkbook(){
+    public Workbook getWorkbook() {
         return workbook;
     }
 

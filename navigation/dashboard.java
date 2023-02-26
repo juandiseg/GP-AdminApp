@@ -356,6 +356,7 @@ public class dashboard extends JFrame {
         }
 
         private void addActionListeners() {
+                JFrame tempFrame = this;
                 administrationLabel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 
@@ -366,7 +367,7 @@ public class dashboard extends JFrame {
                                 clicked = true;
                                 playground.removeAll();
                                 leftAuxPanel.removeAll();
-                                new mainAdmin(leftAuxPanel, playground, jPanel4, date);
+                                new mainAdmin(tempFrame, leftAuxPanel, playground, jPanel4, date);
                                 playground.revalidate();
                                 leftAuxPanel.revalidate();
                                 playground.repaint();
