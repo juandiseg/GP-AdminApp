@@ -474,7 +474,6 @@ public class addMenus {
                                         successLabel.setText(
                                                         "Error. You must specify the amount used of each product.");
                                         successLabel.setVisible(true);
-
                                         return;
                                 }
                                 String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -485,10 +484,9 @@ public class addMenus {
                                 menu newMenu = new menuAPI().addMenu(date, catID, name, price, true);
 
                                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                        int ingredientID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                                        int productID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
                                         Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 3));
-                                        if ((!new productAPI().addIngredients(newMenu.getId(), ingredientID, date,
-                                                        qty))) {
+                                        if ((!new menuAPI().addProducts(newMenu.getId(), productID, date, qty))) {
                                                 successLabel.setText(
                                                                 "Something went wrong while adding \"" + name + "\".");
                                                 successLabel.setVisible(true);

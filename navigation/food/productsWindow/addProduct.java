@@ -481,11 +481,13 @@ public class addProduct {
                                 boolean ingredientEmpty = modelSelected.getRowCount() == 0;
                                 if (namePlaceholder || pricePlaceholder || ingredientEmpty) {
                                         successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
                                         return;
                                 }
                                 if (ingredientsQuantityNotSpecified()) {
                                         successLabel.setText(
                                                         "Error. You must specify the amount used of each ingredient.");
+                                        successLabel.setVisible(true);
                                         return;
                                 }
                                 String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -502,6 +504,7 @@ public class addProduct {
                                         new productAPI().addIngredients(productID, ingredientID, date, qty);
                                 }
                                 successLabel.setText("Product \"" + name + "\" was successfully added.");
+                                successLabel.setVisible(true);
                         }
 
                         public void mousePressed(MouseEvent e) {
