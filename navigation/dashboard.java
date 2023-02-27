@@ -1,14 +1,16 @@
 package navigation;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import componentsFood.currentShiftEmployee;
 import navigation.administration.*;
+import navigation.administration.shifts_Window.shiftsAPI;
 import navigation.food.*;
 
 public class dashboard extends JFrame {
@@ -32,6 +34,16 @@ public class dashboard extends JFrame {
         private JPanel staticButtonsPanel = new JPanel();
         private JLabel welcomeLabel = new JLabel();
         private JLabel clickRole1 = new JLabel();
+        private JPanel jPanel1 = new JPanel();
+        private JPanel jPanel2 = new JPanel();
+        private JPanel jPanel3 = new JPanel();
+        private JPanel jPanel5 = new JPanel();
+        private JPanel jPanel6 = new JPanel();
+        private JScrollPane ordersPane = new JScrollPane();
+        private JScrollPane employeesPane = new JScrollPane();
+        private JLabel jLabel1 = new JLabel();
+        private JLabel jLabel2 = new JLabel();
+        private JLabel jLabel3 = new JLabel();
 
         public dashboard() {
                 initComponents();
@@ -330,16 +342,214 @@ public class dashboard extends JFrame {
         }
 
         private void initComp3() {
+                setTables();
                 playground.setBackground(new java.awt.Color(255, 255, 255));
+                playground.setPreferredSize(new java.awt.Dimension(870, 619));
+
+                jPanel6.setBackground(new java.awt.Color(120, 168, 252));
+                jPanel6.setPreferredSize(new java.awt.Dimension(868, 4));
+                jPanel6.setRequestFocusEnabled(false);
+
+                javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+                jPanel6.setLayout(jPanel6Layout);
+                jPanel6Layout.setHorizontalGroup(
+                                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+                jPanel6Layout.setVerticalGroup(
+                                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+
+                ordersPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+                jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                jLabel1.setText("LAST 10 ORDERS");
+
+                jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                jLabel2.setText("CURRENTLY WORKING EMPLOYEES");
+
+                jPanel1.setBackground(new java.awt.Color(120, 168, 252));
+                jPanel1.setPreferredSize(new java.awt.Dimension(2, 0));
+
+                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                jPanel1.setLayout(jPanel1Layout);
+                jPanel1Layout.setHorizontalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 2, Short.MAX_VALUE));
+                jPanel1Layout.setVerticalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+                jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 3, true));
+
+                jPanel5.setBackground(new java.awt.Color(204, 204, 204));
+
+                jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                jLabel3.setText("OVERVIEW");
+
+                javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+                jPanel5.setLayout(jPanel5Layout);
+                jPanel5Layout.setHorizontalGroup(
+                                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(jLabel3,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                452,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+                jPanel5Layout.setVerticalGroup(
+                                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, 31,
+                                                                Short.MAX_VALUE));
+
+                javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+                jPanel3.setLayout(jPanel3Layout);
+                jPanel3Layout.setHorizontalGroup(
+                                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+                jPanel3Layout.setVerticalGroup(
+                                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 264, Short.MAX_VALUE));
+
+                javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+                jPanel2.setLayout(jPanel2Layout);
+                jPanel2Layout.setHorizontalGroup(
+                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout
+                                                                .createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(jPanel3,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addContainerGap()));
+                jPanel2Layout.setVerticalGroup(
+                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addComponent(jPanel5,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jPanel3,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addContainerGap()));
 
                 javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
                                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 870, Short.MAX_VALUE));
+                                                .addGroup(playgroundLayout.createSequentialGroup()
+                                                                .addGap(14, 14, 14)
+                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(jPanel6,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                856, Short.MAX_VALUE)
+                                                                                .addGroup(playgroundLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addGroup(playgroundLayout
+                                                                                                                .createParallelGroup(
+                                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                                false)
+                                                                                                                .addGroup(playgroundLayout
+                                                                                                                                .createSequentialGroup()
+                                                                                                                                .addGroup(playgroundLayout
+                                                                                                                                                .createParallelGroup(
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                                                                false)
+                                                                                                                                                .addComponent(jLabel2,
+                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                444,
+                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                .addComponent(employeesPane,
+                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                444,
+                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                                .addGap(26, 26, 26)
+                                                                                                                                .addComponent(jLabel1,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                370,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                .addGroup(playgroundLayout
+                                                                                                                                .createSequentialGroup()
+                                                                                                                                .addComponent(jPanel1,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                .addPreferredGap(
+                                                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                                                .addComponent(ordersPane,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                370,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                .addComponent(jPanel2,
+                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                Short.MAX_VALUE))
+                                                                                                .addContainerGap(16,
+                                                                                                                Short.MAX_VALUE)))));
                 playgroundLayout.setVerticalGroup(
                                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 630, Short.MAX_VALUE));
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout
+                                                                .createSequentialGroup()
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addComponent(jPanel2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(jLabel1)
+                                                                                .addComponent(jLabel2))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addGroup(playgroundLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addGroup(playgroundLayout
+                                                                                                                .createParallelGroup(
+                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                false)
+                                                                                                                .addGroup(playgroundLayout
+                                                                                                                                .createSequentialGroup()
+                                                                                                                                .addComponent(ordersPane,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                240,
+                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                .addPreferredGap(
+                                                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                                                                                                .addGroup(playgroundLayout
+                                                                                                                                .createSequentialGroup()
+                                                                                                                                .addComponent(jPanel1,
+                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                239,
+                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                .addGap(7, 7, 7)))
+                                                                                                .addComponent(jPanel6,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                5,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                .addComponent(employeesPane,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                239,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addContainerGap()));
 
                 getContentPane().add(playground, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, 870, 630));
                 pack();
@@ -449,6 +659,7 @@ public class dashboard extends JFrame {
                                 leftAuxPanel.repaint();
                                 playground.removeAll();
                                 initComp2();
+                                initComp3();
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -484,4 +695,50 @@ public class dashboard extends JFrame {
         private void resetColor(JPanel panel) {
                 panel.setBackground(new Color(23, 35, 51));
         }
+
+        private void setTables() {
+                JTable tableEmployees = new JTable();
+                JTable tableOrders = new JTable();
+                DefaultTableModel modelEmployees = new DefaultTableModel(
+                                new String[] { "Name", "Role", "Salary", "Weekly Hours", "In-Time", "Out-Time" },
+                                0);
+
+                DefaultTableModel modelOrders = new DefaultTableModel(
+                                new String[] { "Time", "Subtotal", "Taxes", "Payment Method" }, 0);
+
+                shiftsAPI managerDB = new shiftsAPI();
+                for (currentShiftEmployee temp : managerDB.getCurrentlyWorkingEmployees()) {
+                        String name = temp.getName();
+                        String role = temp.getRole();
+                        String salary = temp.getSalary();
+                        String weeklyHours = temp.getWeeklyHours();
+                        String timeIn = temp.getTimeIn();
+                        String timeOut = temp.getTimeout();
+                        modelEmployees.addRow(new String[] { name, role, salary, weeklyHours, timeIn, timeOut });
+                }
+
+                tableEmployees.setModel(modelEmployees);
+                tableOrders.setModel(modelOrders);
+                employeesPane.setViewportView(tableEmployees);
+                ordersPane.setViewportView(tableOrders);
+                tableEmployees.setDefaultEditor(Object.class, null);
+                tableOrders.setDefaultEditor(Object.class, null);
+                tableLookPretty(tableEmployees);
+                tableLookPretty(tableOrders);
+        }
+
+        private void tableLookPretty(JTable theTable) {
+                theTable.setFocusable(true);
+                theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
+                theTable.getTableHeader().setBackground(new Color(120, 168, 252));
+                theTable.setFillsViewportHeight(true);
+                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+                theTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+                Dimension temp = new Dimension(20, 1);
+                theTable.setIntercellSpacing(temp);
+                theTable.setRowHeight(theTable.getRowHeight() + 10);
+        }
+
 }

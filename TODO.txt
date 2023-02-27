@@ -1,6 +1,7 @@
 TO DO:
 ------------------
 DATABASE            Change all values that reference money to support another decimal.
+*.java              Check for repeated values in DB.
 add*.java           Returns when trying to add if ANY of the fields is empty.
 edit*.java          Returns whem trying to add if ALL of the fields are empty.
 
