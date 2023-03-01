@@ -880,7 +880,6 @@ public class dashboard extends JFrame {
                 timeTimeLabel.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
                 timeTimeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
                 timeTimeLabel.setText(Integer.toString(new dashboardsAPI().getAvgOrderTimeToday()).concat(" min."));
-
                 timeIconLabel.setIcon(new javax.swing.ImageIcon(
                                 "C:\\Users\\Juan Diego\\Desktop\\netbeansss\\guiProjectTEST\\src\\stopwatch.png")); // NOI18N
 
