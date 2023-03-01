@@ -31,9 +31,10 @@ public class expensesReportGenerator extends iReportable {
         theSheet.createRow(row).createCell(1).setCellValue("PRODUCT EXPENSES");
         row += 2;
         row = productHeaders(theSheet, row);
-        ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(theSheet, from, to);
+        ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
         ArrayList<ArrayList<productIngredients>> lLMenus = new reportsAPI().getAllProductIngredientsFromMenus(from, to);
         ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
+        System.out.println(combination.size());
         return printProductSales(theSheet, combination, row);
     }
 
@@ -120,14 +121,16 @@ public class expensesReportGenerator extends iReportable {
         Stack<Integer> productTotals = new Stack<Integer>();
         for (ArrayList<productIngredients> bigTemp : listList) {
             for (productIngredients temp : bigTemp) {
+                System.out.println("here");
                 if (temp.getNumberSoldProducts() != 0 || temp.getNumberSoldMenus() != 0) {
+                    int originalRow = row;
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
+                    System.out.println(temp.getIngredientsDate());
                     tempRow.createCell(2)
                             .setCellValue(managerDB.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
                     tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
                     tempRow.createCell(4).setCellValue(temp.getNumberSoldMenus());
-                    int originalRow = row;
                     for (int i = 0; i < temp.getIngredients().size(); i++) {
                         ingredient tempIngr = temp.getIngredients().get(i);
                         tempIngr.getProviderID();
@@ -140,16 +143,19 @@ public class expensesReportGenerator extends iReportable {
                         cell8.setCellValue(temp.getQuantity().get(i));
                         cell8.setCellStyle(iReportable.roundingStyle);
                         Cell cell9 = tempRow.createCell(9);
-                        cell9.setCellFormula("(D" + (originalRow + 1) + "+E" + (originalRow + 1) + ")/G" + (row + 1)
+                        cell9.setCellFormula("(D" + (originalRow + 1) + "+E" + (originalRow + 1) +
+                                ")/G" + (row + 1)
                                 + "*H" + (row + 1) + "*I" + (row + 1));
                         cell9.setCellStyle(iReportable.currencyStyle);
                         row++;
                         tempRow = sheet.createRow(row);
                     }
                     tempRow = sheet.createRow(row);
-                    tempRow.createCell(9).setCellFormula("SUM(J" + (originalRow + 1) + ":J" + (row) + ")");
+                    tempRow.createCell(9).setCellFormula("SUM(J" + (originalRow + 1) + ":J" +
+                            (row) + ")");
                     tempRow.getCell(9).setCellStyle(iReportable.boldStyle);
                     productTotals.add(row + 1);
+
                     row += 2;
                 }
             }
@@ -183,7 +189,7 @@ public class expensesReportGenerator extends iReportable {
         return ++row;
     }
 
-    private ArrayList<ArrayList<productIngredients>> generateProductSales(Sheet sheet, String from, String to) {
+    private ArrayList<ArrayList<productIngredients>> generateProductSales(String from, String to) {
         reportsAPI managerDB = new reportsAPI();
         ArrayList<ArrayList<productIngredients>> productIngredientsLists = managerDB
                 .getAllProductIngredientsFromProducts();
@@ -197,9 +203,8 @@ public class expensesReportGenerator extends iReportable {
                     tempNext = bigTemp.get(i + 1);
                     nextDate = tempNext.getIngredientsDate();
                 }
-                int amountSold = managerDB.getNumberSoldProduct(temp.getProductID(), temp.getIngredientsDate(),
-                        nextDate, from, to);
-                temp.setNumberSoldProducts(amountSold);
+                System.out.println(temp.getProductID() + ", and date :" + temp.getProductDate());
+                temp.setNumberSoldProducts(managerDB.getNumberSoldProduct(temp, nextDate, from, to));
             }
         }
         return productIngredientsLists;

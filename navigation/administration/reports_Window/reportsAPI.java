@@ -146,21 +146,20 @@ public class reportsAPI extends abstractManagerDB {
         return name;
     }
 
-    public int getNumberSoldProduct(int productID, String currentDate, String nextDate, String from, String to) {
+    public int getNumberSoldProduct(productIngredients product, String nextDate, String from, String to) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= '"
-                    + currentDate + "'";
-            if (!nextDate.equals("")) {
-                query = query.concat(" AND date < '" + nextDate + "'");
-            }
-            query = query.concat(" AND date >= '" + from + "' AND date <= '" + to + "' AND product_id = " + productID
-                    + " AND product_date = '" + currentDate + "'");
+            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
+            if (!nextDate.equals(""))
+                query = query.concat(" date BETWEEN '" + product.getProductDate() + "' AND '" + nextDate + "'");
+            else
+                query = query.concat(" date >= '" + product.getProductDate() + "'");
+            query = query.concat(
+                    " AND date BETWEEN '" + from + "' AND '" + to + "' AND product_id = " + product.getProductID());
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 int amount = 0;
-                if (rs.next()) {
+                if (rs.next())
                     amount = rs.getInt("SUM(quantity)");
-                }
                 connection.close();
                 return amount;
             } catch (Exception e) {
@@ -210,7 +209,6 @@ public class reportsAPI extends abstractManagerDB {
                     int ID = rs.getInt("product_id");
                     String ingredientsDate = rs.getString("product_ingredients_date");
                     String productDate = rs.getString("product_date");
-
                     if (lastID == ID) {
                         tempList.add(new productIngredients(ID, productDate, ingredientsDate));
                     } else {
@@ -234,7 +232,8 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from, String to) {
+    public ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from,
+            String to) {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= '"
@@ -277,11 +276,12 @@ public class reportsAPI extends abstractManagerDB {
 
     public void addIngredientsToProductIngredients(productIngredients productIngr) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredientQuantity, ingredients.* FROM (SELECT ingredient_id, MAX(product_ingredients_date) as max_date FROM products_ingredients WHERE product_id = "
-                    + productIngr.getProductID() + " AND product_ingredients_date <= '"
+            String query = "SELECT ingredients.*, subsubq.ingredientQuantity FROM ingredients, (SELECT subq.ingredient_id, MAX(ingredients_date) AS dates, subq.ingredientQuantity FROM (SELECT ingredient_id, ingredientQuantity FROM products_ingredients WHERE product_id = "
+                    + productIngr.getProductID()
+                    + " AND product_ingredients_date = '" + productIngr.getIngredientsDate()
+                    + "') AS subq LEFT JOIN ingredients ON subq.ingredient_id = ingredients.ingredient_id WHERE ingredients_date <= '"
                     + productIngr.getIngredientsDate()
-                    + "' GROUP BY ingredient_id) subq JOIN products_ingredients ON subq.ingredient_id = products_ingredients.ingredient_id AND subq.max_date = products_ingredients.product_ingredients_date JOIN ingredients ON products_ingredients.ingredient_id = ingredients.ingredient_id AND subq.max_date = ingredients.ingredients_date WHERE product_id = "
-                    + productIngr.getProductID() + " ORDER BY ingredients.name;";
+                    + "' GROUP BY ingredients.ingredient_id) AS subsubq WHERE subsubq.ingredient_id = ingredients.ingredient_id AND subsubq.dates = ingredients_date;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
