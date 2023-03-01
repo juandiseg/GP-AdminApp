@@ -4,19 +4,27 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.xml.transform.Templates;
 
 import org.jfree.chart.*;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
 
 import navigation.dashboardsAPI;
 import navigation.administration.employeeSection.mainEmployees;
 import navigation.administration.reports_Window.generateReport;
 import navigation.administration.roleSection.mainRole;
 import navigation.administration.shifts_Window.mainShifts;
+import navigation.dashboardsAPI.tuple;
 
 public class mainAdmin {
 
@@ -416,7 +424,7 @@ public class mainAdmin {
 
                 employeesLabelDash.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 employeesLabelDash.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                employeesLabelDash.setText("EMPLOYEE DISTRIBUTION");
+                employeesLabelDash.setText("EMPLOYEE ROLE DISTRIBUTION");
 
                 javax.swing.GroupLayout headEmployeesPanelLayout = new javax.swing.GroupLayout(headEmployeesPanel);
                 headEmployeesPanel.setLayout(headEmployeesPanelLayout);
@@ -688,7 +696,9 @@ public class mainAdmin {
                                                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE)));
                 setGraphSales(7);
-
+                setGraphExpenses(7);
+                setGraphDistribution();
+                setGraphScheduledHours(false);
         }
 
         private void addActionListeners(JPanel playground, JFrame theFrame) {
@@ -869,6 +879,52 @@ public class mainAdmin {
                                         clicked = false;
                         }
                 });
+                employeesHourTuggleButton.addMouseListener(new MouseListener() {
+                        public void mouseClicked(MouseEvent e) {
+                                if (employeesHourTuggleButton.getText().equals("Last Week")) {
+                                        employeesHourTuggleButton.setText("Today");
+                                        setGraphScheduledHours(true);
+                                } else {
+                                        employeesHourTuggleButton.setText("Last Week");
+                                        setGraphScheduledHours(false);
+                                }
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        public void mouseExited(MouseEvent e) {
+                        }
+                });
+                salesTuggleButton.addMouseListener(new MouseListener() {
+                        public void mouseClicked(MouseEvent e) {
+                                if (salesTuggleButton.getText().equals("Last 14 days")) {
+                                        salesTuggleButton.setText("Last Week");
+                                        setGraphSales(14);
+                                } else {
+                                        salesTuggleButton.setText("Last 14 days");
+                                        setGraphSales(7);
+                                }
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        public void mouseExited(MouseEvent e) {
+                        }
+                });
         }
 
         private void setColor(JPanel panel) {
@@ -894,7 +950,7 @@ public class mainAdmin {
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
-                                datos, PlotOrientation.VERTICAL, true, true, false);
+                                datos, PlotOrientation.VERTICAL, false, true, false);
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setMinimumSize(new Dimension(387, 234));
@@ -905,7 +961,6 @@ public class mainAdmin {
                 salesContentPanel.add(pan, BorderLayout.CENTER);
                 salesContentPanel.revalidate();
                 salesContentPanel.repaint();
-                setGraphExpenses(7);
         }
 
         private void setGraphExpenses(int goal) {
@@ -924,7 +979,7 @@ public class mainAdmin {
 
                 JFreeChart barChart = ChartFactory.createBarChart("Expenses in Last " + goal + " Days", null,
                                 "Expenses (€)",
-                                datos, PlotOrientation.VERTICAL, true, true, false);
+                                datos, PlotOrientation.VERTICAL, false, true, false);
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setMinimumSize(new Dimension(387, 234));
@@ -939,29 +994,57 @@ public class mainAdmin {
 
         private void setGraphDistribution() {
                 emploeesContentPanel.removeAll();
-                DefaultCategoryDataset datos = new DefaultCategoryDataset();
+                DefaultPieDataset dataset = new DefaultPieDataset();
                 dashboardsAPI dbAPI = new dashboardsAPI();
-                String date = "";
-                for (int i = goal - 1; i > -1; i--) {
-                        if (goal == 7)
-                                date = LocalDate.now().minus(i, ChronoUnit.DAYS)
-                                                .format(DateTimeFormatter.ofPattern("dd-MM"));
-                        else
-                                date = Integer.toString(-i);
-                        datos.setValue(dbAPI.getSalesOnDay(i), "Expenses", date);
+                for (tuple temp : dbAPI.getEmployeeCategoryPercentagesToday())
+                        dataset.setValue(temp.roleName, temp.percentage);
+                JFreeChart pieChart = ChartFactory.createPieChart("Today", dataset, false,
+                                true, false);
+                ChartPanel panel = new ChartPanel(pieChart);
+                panel.setMouseWheelEnabled(false);
+                panel.setMinimumSize(new Dimension(258, 240));
+                panel.setMaximumSize(new Dimension(258, 240));
+                panel.setPreferredSize(new Dimension(258, 240));
+                emploeesContentPanel.setLayout(new BorderLayout());
+                emploeesContentPanel.add(panel, BorderLayout.CENTER);
+                emploeesContentPanel.revalidate();
+                emploeesContentPanel.repaint();
+        }
+
+        private void setGraphScheduledHours(boolean weekly) {
+                employeesHourContentPanel.removeAll();
+                dashboardsAPI dbAPI = new dashboardsAPI();
+                ArrayList<Double> tempList = new ArrayList<Double>();
+                for (int i = 0; i < 23; i++) {
+                        for (int j = 0; j < dbAPI.getFrequencyOfShift(i, weekly); j++)
+                                tempList.add((double) i);
                 }
 
-                JFreeChart barChart = ChartFactory.createPieChart(date, null, null, 0, false, false, false, null, false,
-                                false);
-                ChartPanel pan = new ChartPanel(barChart);
-                pan.setMouseWheelEnabled(false);
-                pan.setMinimumSize(new Dimension(387, 234));
-                pan.setMaximumSize(new Dimension(387, 234));
-                pan.setPreferredSize(new Dimension(387, 234));
+                double[] target = new double[tempList.size()];
+                for (int i = 0; i < target.length; i++)
+                        target[i] = tempList.get(i).doubleValue();
 
-                expensesContentPanel.setLayout(new BorderLayout());
-                expensesContentPanel.add(pan, BorderLayout.CENTER);
-                expensesContentPanel.revalidate();
-                expensesContentPanel.repaint();
+                HistogramDataset dataset = new HistogramDataset();
+                dataset.setType(HistogramType.FREQUENCY);
+                dataset.addSeries("Hours", target, 24);
+                String title = "Workers per Hour";
+                String yAxis = "Number of Employees";
+                if (weekly) {
+                        title = "Sum of Worked Hours";
+                        yAxis = "Total Worked Hours";
+                }
+                JFreeChart histogram = ChartFactory.createHistogram(title, "Hour of Day",
+                                yAxis, dataset, PlotOrientation.VERTICAL, false, false, false);
+
+                histogram.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+                ChartPanel panel = new ChartPanel(histogram);
+                panel.setMouseWheelEnabled(false);
+                panel.setMinimumSize(new Dimension(258, 240));
+                panel.setMaximumSize(new Dimension(258, 240));
+                panel.setPreferredSize(new Dimension(258, 240));
+                employeesHourContentPanel.setLayout(new BorderLayout());
+                employeesHourContentPanel.add(panel, BorderLayout.CENTER);
+                employeesHourContentPanel.revalidate();
+                employeesHourContentPanel.repaint();
         }
 }

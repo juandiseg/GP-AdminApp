@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.spi.RootLogger;
+
 import componentsFood.orderView;
 import componentsFood.product;
+import componentsFood.role;
 import util.abstractManagerDB;
 
 public class dashboardsAPI extends abstractManagerDB {
@@ -168,6 +171,63 @@ public class dashboardsAPI extends abstractManagerDB {
                 return null;
             } catch (Exception e) {
                 return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public class tuple {
+        public int percentage;
+        public String roleName;
+
+        public tuple(int percentage, String roleName) {
+            this.percentage = percentage;
+            this.roleName = roleName;
+        }
+    }
+
+    public ArrayList<tuple> getEmployeeCategoryPercentagesToday() {
+        ArrayList<tuple> tempList = new ArrayList<tuple>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT SUM(SUBTIME(end_shift,start_shift)) AS totalTime, role_name FROM employees_schedule NATURAL JOIN employees NATURAL JOIN roles WHERE shift_date = CURDATE() GROUP BY role_name;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int percentage = rs.getInt("totalTime");
+                    String roleName = rs.getString("role_name");
+                    tempList.add(new tuple(percentage, roleName));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public int getFrequencyOfShift(int hour, boolean weekly) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String shift_date = "shift_date = CURDATE()";
+            if (weekly)
+                shift_date = "shift_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()";
+            String query = "SELECT COUNT(shift_date) as frequency FROM employees_schedule WHERE " + shift_date
+                    + " AND start_shift <= '"
+                    + hour + ":59' AND end_shift >= '"
+                    + (hour + 1) + ":00';";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                int frequency = -1;
+                if (rs.next())
+                    frequency = rs.getInt("frequency");
+                connection.close();
+                return frequency;
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
