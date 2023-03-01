@@ -490,9 +490,14 @@ public class addProduct {
                                         successLabel.setVisible(true);
                                         return;
                                 }
+                                String name = nameTextField.getText();
+                                if (new productAPI().isNameTaken(name)) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
                                 String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                String name = nameTextField.getText();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
                                 product newProduct = new productAPI().addProduct(date, catID, name, price);

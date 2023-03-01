@@ -3,8 +3,6 @@ package navigation.administration.shifts_Window;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -14,7 +12,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.employee;
-import componentsFood.shift;
 import navigation.administration.employeeSection.employeesAPI;
 import navigation.administration.roleSection.rolesAPI;
 
@@ -539,7 +536,6 @@ public class addShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (dateTextField.getText().isEmpty()) {
                                         dateTextField.setForeground(Color.GRAY);
@@ -557,7 +553,6 @@ public class addShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (startShiftTextField.getText().isEmpty()) {
                                         startShiftTextField.setForeground(Color.GRAY);
@@ -575,7 +570,6 @@ public class addShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (endShiftTextField.getText().isEmpty()) {
                                         endShiftTextField.setForeground(Color.GRAY);

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -18,11 +17,9 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 
-import componentsFood.productIngredients;
 import navigation.dashboardsAPI;
 import navigation.administration.employeeSection.mainEmployees;
 import navigation.administration.reports_Window.generateReport;
-import navigation.administration.reports_Window.reportsAPI;
 import navigation.administration.roleSection.mainRole;
 import navigation.administration.shifts_Window.mainShifts;
 import navigation.dashboardsAPI.tuple;
@@ -926,6 +923,29 @@ public class mainAdmin {
                         public void mouseExited(MouseEvent e) {
                         }
                 });
+                expensesTuggleButton.addMouseListener(new MouseListener() {
+                        public void mouseClicked(MouseEvent e) {
+                                if (expensesTuggleButton.getText().equals("Last 14 days")) {
+                                        expensesTuggleButton.setText("Last Week");
+                                        setGraphExpenses(14);
+                                } else {
+                                        expensesTuggleButton.setText("Last 14 days");
+                                        setGraphExpenses(7);
+                                }
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        public void mouseExited(MouseEvent e) {
+                        }
+                });
         }
 
         private void setColor(JPanel panel) {
@@ -964,25 +984,22 @@ public class mainAdmin {
                 salesContentPanel.repaint();
         }
 
-        private int getExpensesFromList(ArrayList<ArrayList<productIngredients>> combination) {
-
-                return 0;
-        }
-
         private void setGraphExpenses(int goal) {
                 expensesContentPanel.removeAll();
                 DefaultCategoryDataset datos = new DefaultCategoryDataset();
+                dashboardsAPI dbManager = new dashboardsAPI();
                 String date = "";
                 for (int i = goal - 1; i > -1; i--) {
-                        date = LocalDate.now().minus(i, ChronoUnit.DAYS)
-                                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        ArrayList<ArrayList<productIngredients>> combination = listOfSoldProducts(date, date);
-                        datos.setValue(getExpensesFromList(combination), "Expenses",
-                                        LocalDate.now().minus(i, ChronoUnit.DAYS)
-                                                        .format(DateTimeFormatter.ofPattern("dd-MM")));
+
+                        if (goal == 7 || i == goal - 1 || i == 0)
+                                date = LocalDate.now().minus(i, ChronoUnit.DAYS)
+                                                .format(DateTimeFormatter.ofPattern("dd-MM"));
+                        else
+                                date = Integer.toString(-i);
+                        datos.setValue(dbManager.expensesSalaryDaily(i), "Expenses", date);
                 }
 
-                JFreeChart barChart = ChartFactory.createBarChart("Expenses in Last " + goal + " Days", null,
+                JFreeChart barChart = ChartFactory.createBarChart("Employees Expenses in Last " + goal + " Days", null,
                                 "Expenses (€)",
                                 datos, PlotOrientation.VERTICAL, false, true, false);
                 ChartPanel pan = new ChartPanel(barChart);
@@ -995,70 +1012,6 @@ public class mainAdmin {
                 expensesContentPanel.add(pan, BorderLayout.CENTER);
                 expensesContentPanel.revalidate();
                 expensesContentPanel.repaint();
-        }
-
-        private ArrayList<ArrayList<productIngredients>> listOfSoldProducts(String from, String to) {
-                ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
-                ArrayList<ArrayList<productIngredients>> lLMenus = new reportsAPI()
-                                .getAllProductIngredientsFromMenus(from, to);
-                return combineListOfLists(lLProducts, lLMenus);
-        }
-
-        private ArrayList<ArrayList<productIngredients>> generateProductSales(String from, String to) {
-                reportsAPI managerDB = new reportsAPI();
-                ArrayList<ArrayList<productIngredients>> productIngredientsLists = managerDB
-                                .getAllProductIngredientsFromProducts();
-                for (ArrayList<productIngredients> bigTemp : productIngredientsLists) {
-                        for (int i = 0; i < bigTemp.size(); i++) {
-                                productIngredients temp = bigTemp.get(i);
-                                managerDB.addIngredientsToProductIngredients(temp);
-                                productIngredients tempNext = null;
-                                String nextDate = "";
-                                if (i + 1 < bigTemp.size()) {
-                                        tempNext = bigTemp.get(i + 1);
-                                        nextDate = tempNext.getIngredientsDate();
-                                }
-                                int amountSold = managerDB.getNumberSoldProduct(temp, nextDate, from, to);
-                                temp.setNumberSoldProducts(amountSold);
-                        }
-                }
-                return productIngredientsLists;
-        }
-
-        private ArrayList<ArrayList<productIngredients>> combineListOfLists(ArrayList<ArrayList<productIngredients>> a,
-                        ArrayList<ArrayList<productIngredients>> b) {
-                for (ArrayList<productIngredients> tempA : a) {
-                        Iterator<ArrayList<productIngredients>> bIter = b.iterator();
-                        while (bIter.hasNext()) {
-                                ArrayList<productIngredients> tempB = bIter.next();
-                                if (tempA.get(0).getProductID() == tempB.get(0).getProductID()) {
-                                        Iterator<productIngredients> smallTempBIter = tempB.iterator();
-                                        while (smallTempBIter.hasNext()) {
-                                                productIngredients smallTempB = smallTempBIter.next();
-                                                boolean isFound = false;
-                                                for (productIngredients smallTempA : tempA) {
-                                                        if (smallTempA.getProductDate()
-                                                                        .equals(smallTempB.getProductDate())) {
-                                                                smallTempA.setNumberSoldMenus(
-                                                                                smallTempB.getNumberSoldMenus());
-                                                                smallTempBIter.remove();
-                                                                isFound = true;
-                                                                break;
-                                                        }
-                                                }
-                                                if (!isFound) {
-                                                        tempA.add(smallTempB);
-                                                        smallTempBIter.remove();
-                                                }
-                                        }
-                                        if (tempB.isEmpty()) {
-                                                bIter.remove();
-                                        }
-                                }
-                        }
-                }
-                a.addAll(b);
-                return a;
         }
 
         private void setGraphDistribution() {

@@ -1,7 +1,6 @@
 package navigation.food.menuWindow;
 
 import componentsFood.menu;
-import componentsFood.product;
 
 import navigation.food.categoryWindow.categoryAPI;
 

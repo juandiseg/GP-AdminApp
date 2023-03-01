@@ -2,23 +2,18 @@ package navigation.food.menuWindow;
 
 import javax.swing.table.*;
 
-import org.apache.commons.collections4.map.Flat3Map;
-
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-import navigation.food.ingredientsWindow.ingredientsAPI;
 import navigation.food.productsWindow.productAPI;
 import navigation.food.categoryWindow.categoryAPI;
-import componentsFood.ingredient;
 import componentsFood.menu;
 import componentsFood.category;
 import componentsFood.product;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class addMenus {
 
@@ -476,9 +471,14 @@ public class addMenus {
                                         successLabel.setVisible(true);
                                         return;
                                 }
+                                String name = nameTextField.getText();
+                                if (new menuAPI().isNameTaken(name)) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
                                 String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                String name = nameTextField.getText();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
                                 menu newMenu = new menuAPI().addMenu(date, catID, name, price, true);

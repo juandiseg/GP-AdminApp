@@ -7,11 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import org.apache.log4j.spi.RootLogger;
-
 import componentsFood.orderView;
 import componentsFood.product;
-import componentsFood.role;
 import util.abstractManagerDB;
 
 public class dashboardsAPI extends abstractManagerDB {
@@ -228,6 +225,26 @@ public class dashboardsAPI extends abstractManagerDB {
             } catch (Exception e) {
                 System.out.println(e);
                 return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public float expensesSalaryDaily(int daysBack) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT SUM(TIME_TO_SEC(SUBTIME(end_shift, start_shift))/3600*salary) AS expenses FROM employees_schedule NATURAL JOIN employees WHERE shift_date = SUBDATE(CURDATE(), INTERVAL "
+                    + daysBack + " DAY);";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                int expenses = 0;
+                if (rs.next())
+                    expenses = rs.getInt("expenses");
+                connection.close();
+                return expenses;
+            } catch (Exception e) {
+                System.out.println(e);
+                return 0;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

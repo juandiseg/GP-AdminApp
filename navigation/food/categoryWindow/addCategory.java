@@ -277,6 +277,11 @@ public class addCategory {
                                         return;
                                 }
                                 String name = nameTextField.getText();
+                                if (theManagerDB.isNameTaken(name)) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
                                 Boolean type = typeJoggle.getText().equals("Product Category");
                                 if (theManagerDB.addCategory(name, type)) {
                                         successLabel.setText("The category '" + name + "' was successfully added.");

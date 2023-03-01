@@ -2,8 +2,6 @@ package navigation.administration.shifts_Window;
 
 import javax.swing.table.*;
 
-import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
-
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.text.ParseException;
@@ -204,10 +202,9 @@ public class mainShifts {
                     try {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
-                        LocalDate today = LocalDate.now();
                         LocalDate fromShift = LocalDate.parse((String) model.getValueAt(myTable.getSelectedRow(), 3),
                                 DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        if (today.isAfter(fromShift)) {
+                        if (LocalDate.now().isAfter(fromShift)) {
                             JOptionPane.showMessageDialog(playground,
                                     "You can't change a shift which has occured past today.", "ERROR",
                                     JOptionPane.ERROR_MESSAGE);

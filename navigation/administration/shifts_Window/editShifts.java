@@ -3,13 +3,9 @@ package navigation.administration.shifts_Window;
 import javax.swing.table.*;
 import java.awt.event.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.*;
 import java.awt.*;
@@ -489,10 +485,9 @@ public class editShifts {
                                                 theManagerDB.updateEndTime(temp, newEnd);
                                 }
                                 if (!datePlaceholder) {
-                                        LocalDate today = LocalDate.now();
                                         LocalDate newShiftDate = LocalDate.parse(newDate,
                                                         DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                                        if (newShiftDate.isBefore(today)) {
+                                        if (newShiftDate.isBefore(LocalDate.now())) {
                                                 JOptionPane.showMessageDialog(playground,
                                                                 "You can't change a shift's date to the past.", "ERROR",
                                                                 JOptionPane.ERROR_MESSAGE);
@@ -586,7 +581,7 @@ public class editShifts {
                         }
                 });
                 dateTextField.addFocusListener(new FocusListener() {
-                        @Override
+
                         public void focusGained(FocusEvent e) {
                                 if (dateTextField.getText().equals(theShift.getDate())) {
                                         dateTextField.setText("");
@@ -595,7 +590,6 @@ public class editShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (dateTextField.getText().isEmpty()) {
                                         dateTextField.setForeground(Color.GRAY);
@@ -605,7 +599,7 @@ public class editShifts {
                         }
                 });
                 startShiftTextField.addFocusListener(new FocusListener() {
-                        @Override
+
                         public void focusGained(FocusEvent e) {
                                 if (startShiftTextField.getText().equals(theShift.getStartTime().substring(0, 5))) {
                                         startShiftTextField.setText("");
@@ -614,7 +608,6 @@ public class editShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (startShiftTextField.getText().isEmpty()) {
                                         startShiftTextField.setForeground(Color.GRAY);
@@ -624,7 +617,7 @@ public class editShifts {
                         }
                 });
                 endShiftTextField.addFocusListener(new FocusListener() {
-                        @Override
+
                         public void focusGained(FocusEvent e) {
                                 if (endShiftTextField.getText().equals(theShift.getEndTime().substring(0, 5))) {
                                         endShiftTextField.setText("");
@@ -633,7 +626,6 @@ public class editShifts {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (endShiftTextField.getText().isEmpty()) {
                                         endShiftTextField.setForeground(Color.GRAY);

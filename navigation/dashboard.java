@@ -1,11 +1,8 @@
 package navigation;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +10,6 @@ import java.time.temporal.ChronoUnit;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -24,7 +20,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import componentsFood.currentShiftEmployee;
 import componentsFood.orderView;
 import navigation.administration.*;
-import navigation.administration.reports_Window.reportsAPI;
 import navigation.administration.shifts_Window.shiftsAPI;
 import navigation.food.*;
 
@@ -52,11 +47,9 @@ public class dashboard extends JFrame {
         private JScrollPane ordersPane = new JScrollPane();
         private JScrollPane employeesPane = new JScrollPane();
 
-        private JLabel overviewLabel = new JLabel();
         private JLabel employeesLabel = new JLabel();
         private JLabel ordersLabel = new JLabel();
 
-        private JLabel priceMoneyLabel = new JLabel();
         private JLabel priceIconLabel = new JLabel();
         private JLabel priceTitleLabel = new JLabel();
         private JLabel timeTimeLabel = new JLabel();
@@ -64,24 +57,16 @@ public class dashboard extends JFrame {
         private JLabel timeTitleLabel = new JLabel();
 
         private JPanel timePanel = new JPanel();
-        private JPanel salesPanelBackground = new JPanel();
         private JPanel timePanelBackground = new JPanel();
 
-        private JPanel overviewPanel = new JPanel();
-        private JPanel headOverviewPanel = new JPanel();
         private JPanel headOrdersPanel = new JPanel();
         private JPanel headEmployeesPanel = new JPanel();
-        private JPanel overviewContentsPanel = new JPanel();
 
         private JPanel employeesPanel = new JPanel();
         private JPanel ordersPanel = new JPanel();
 
         private JPanel salesPanel = new JPanel();
 
-        private JTable tableEmployees = new JTable();
-        private JTable tableOrders = new JTable();
-
-        private JPanel administrationPanel1 = new JPanel();
         private JPanel bsMonthPanel = new JPanel();
         private JPanel bsMonthPanelBackground = new JPanel();
         private JLabel bsMonthProductLabel = new JLabel();
@@ -94,28 +79,13 @@ public class dashboard extends JFrame {
         private JPanel bsWeekPanelBackground = new JPanel();
         private JLabel bsWeekProductLabel = new JLabel();
         private JLabel bsWeekTitlePanel = new JLabel();
-        private JLabel employeeesLabel = new JLabel();
-        private JPanel employeeesPanel = new JPanel();
-        private JPanel employeesAux = new JPanel();
-        private JPanel headMenuSalesPanel1 = new JPanel();
         private JPanel headSalesPanel = new JPanel();
-        private JLabel menuSalesLabel1 = new JLabel();
-        private JPanel menuSalesPanel1 = new JPanel();
         private JPanel pricePanel = new JPanel();
         private JPanel pricePanelBackground = new JPanel();
         private JLabel pricePriceLabel = new JLabel();
-        private JPanel reportsAux = new JPanel();
-        private JLabel reportsLabel = new JLabel();
-        private JPanel reportsPanel = new JPanel();
-        private JPanel rolesAux = new JPanel();
-        private JLabel rolesLabel = new JLabel();
-        private JPanel rolesPanel = new JPanel();
         private JPanel salesContentPanel = new JPanel();
         private JLabel salesLabel = new JLabel();
-        private javax.swing.JToggleButton salesTuggleButton = new JToggleButton();
-        private JPanel shiftsAux = new JPanel();
-        private JLabel shiftsLabel = new JLabel();
-        private JPanel shiftsPanel = new JPanel();
+        private JToggleButton salesTuggleButton = new JToggleButton();
 
         public dashboard() {
                 initComponents();

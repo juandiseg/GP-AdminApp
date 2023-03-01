@@ -1,8 +1,6 @@
 package navigation.food.productsWindow;
 
 import java.awt.event.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -612,6 +610,11 @@ public class editProduct {
                                 String name = theCurrentProduct.getName();
                                 if (!namePlaceholder) {
                                         name = nameTextField.getText();
+                                        if (managerDB.isNameTaken(name)) {
+                                                successLabel.setText("Error. The given name is already taken.");
+                                                successLabel.setVisible(true);
+                                                return;
+                                        }
                                         if (!managerDB.updateProductName(theCurrentProduct.getId(), name))
                                                 error = true;
                                 }

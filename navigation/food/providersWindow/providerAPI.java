@@ -192,4 +192,22 @@ public class providerAPI extends abstractManagerDB {
         }
     }
 
+    public boolean isNameTaken(String name) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM providers WHERE name = " + name;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    connection.close();
+                    return true;
+                }
+                connection.close();
+                return false;
+            } catch (Exception e) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 }

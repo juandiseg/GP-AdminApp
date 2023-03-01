@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
-import componentsFood.role;
 
 import java.awt.event.*;
 

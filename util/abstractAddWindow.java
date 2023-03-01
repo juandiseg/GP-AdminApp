@@ -29,7 +29,6 @@ public abstract class abstractAddWindow extends abstractUpdater {
 
     }
 
-    @Override
     public void addComponents() {
         setBounds();
         addToFrame();

@@ -397,7 +397,6 @@ public class addEmployee {
                 });
                 addEmployeeButton.addMouseListener(new MouseListener() {
 
-                        @Override
                         public void mouseClicked(MouseEvent e) {
                                 if (namePlaceholder || salaryPlaceholder || hoursWeekPlaceholder) {
                                         successLabel.setText("Error. All the required fields must be filled.");
@@ -415,15 +414,11 @@ public class addEmployee {
                                 }
                         }
 
-                        @Override
                         public void mousePressed(MouseEvent e) {
-                                // TODO Auto-generated method stub
 
                         }
 
-                        @Override
                         public void mouseReleased(MouseEvent e) {
-                                // TODO Auto-generated method stub
 
                         }
 
@@ -432,7 +427,6 @@ public class addEmployee {
                                 addEmployeeButton.setForeground(new Color(255, 255, 255));
                         }
 
-                        @Override
                         public void mouseExited(MouseEvent e) {
                                 addEmployeeButton.setBackground(new Color(255, 255, 255));
                                 addEmployeeButton.setForeground(new Color(23, 35, 51));

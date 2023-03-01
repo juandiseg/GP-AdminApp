@@ -330,7 +330,7 @@ public class editRole {
                         }
                 });
                 nameTextField.addFocusListener(new FocusListener() {
-                        @Override
+
                         public void focusGained(FocusEvent e) {
                                 if (nameTextField.getText().equals("Enter new NAME here")) {
                                         nameTextField.setText("");
@@ -339,7 +339,6 @@ public class editRole {
                                 }
                         }
 
-                        @Override
                         public void focusLost(FocusEvent e) {
                                 if (nameTextField.getText().isEmpty()) {
                                         nameTextField.setForeground(Color.GRAY);

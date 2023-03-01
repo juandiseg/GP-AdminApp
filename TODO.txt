@@ -13,3 +13,6 @@ addShifts.java 	    ->	Check for imbedeed shifts and similar entries.
 editEmployees.java	->	Check for shifts referencing that employee in the future.
 editEmployee.java   ->  Show in Combo Box the already picked option first.
 generateReport.java ->  Check dates which make sense.
+
+
+REVISED NAME ADD/EDIT   -> allergens, categories, providers

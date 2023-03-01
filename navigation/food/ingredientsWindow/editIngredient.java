@@ -1,8 +1,6 @@
 package navigation.food.ingredientsWindow;
 
 import java.awt.event.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -13,7 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.allergen;
 import componentsFood.ingredient;
 import componentsFood.provider;
-import componentsFood.role;
 import navigation.food.allergensWindow.allergensAPI;
 import navigation.food.productsWindow.productAPI;
 import navigation.food.providersWindow.providerAPI;
@@ -672,6 +669,11 @@ public class editIngredient {
                                 ingredientsAPI theManagerDB = new ingredientsAPI();
                                 int ingrID = theCurrentIngredient.getId();
                                 boolean error = false;
+                                if (new ingredientsAPI().isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
                                 if (tryEditName(theManagerDB, namePlaceholder, ingrID))
                                         error = true;
                                 if (tryEditPrice(theManagerDB, pricePlaceholder, ingrID))

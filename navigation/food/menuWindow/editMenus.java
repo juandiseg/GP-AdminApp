@@ -1,8 +1,6 @@
 package navigation.food.menuWindow;
 
 import java.awt.event.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -11,11 +9,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.category;
-import componentsFood.ingredient;
 import componentsFood.menu;
 import componentsFood.product;
 import navigation.food.categoryWindow.categoryAPI;
-import navigation.food.ingredientsWindow.ingredientsAPI;
 import navigation.food.productsWindow.productAPI;
 
 import java.awt.*;
@@ -596,6 +592,11 @@ public class editMenus {
                                 String name = theCurrentMenu.getName();
                                 if (!namePlaceholder) {
                                         name = nameTextField.getText();
+                                        if (managerDB.isNameTaken(name)) {
+                                                successLabel.setText("Error. The given name is already taken.");
+                                                successLabel.setVisible(true);
+                                                return;
+                                        }
                                         if (!managerDB.updateMenuName(theCurrentMenu.getId(), name))
                                                 error = true;
                                 }

@@ -415,7 +415,7 @@ public class editEmployee {
 
                 });
                 editEmployeeButton.addMouseListener(new MouseListener() {
-                        @Override
+
                         public void mouseClicked(MouseEvent e) {
                                 int index = roleComboBox.getSelectedIndex();
                                 boolean rolePlaceholder = (roles.get(index).getId() == theEmployee.getRoleID());
@@ -454,7 +454,6 @@ public class editEmployee {
                                 editEmployeeButton.setForeground(new Color(255, 255, 255));
                         }
 
-                        @Override
                         public void mouseExited(MouseEvent e) {
                                 editEmployeeButton.setBackground(new Color(255, 255, 255));
                                 editEmployeeButton.setForeground(new Color(23, 35, 51));

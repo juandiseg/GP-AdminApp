@@ -235,8 +235,13 @@ public class addAllergen {
                                         successLabel.setVisible(true);
                                         return;
                                 }
-                                String name = nameTextField.getText();
                                 allergensAPI theManagerDB = new allergensAPI();
+                                String name = nameTextField.getText();
+                                if (theManagerDB.isNameTaken(name)) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
                                 if (theManagerDB.addAllergen(name)) {
                                         successLabel.setText("'" + name + "' was successfully added.");
                                         successLabel.setVisible(true);
