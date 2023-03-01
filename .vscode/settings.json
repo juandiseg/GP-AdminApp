@@ -61,7 +61,9 @@
       "c:\\Program Files (x86)\\Apache Excel\\insane-RELEASE73.jar",
       "c:\\Program Files (x86)\\Apache Excel\\AbsoluteLayout-RELEASE160.jar",
       "c:\\Users\\Juan Diego\\Desktop\\Lancaster University Leipzig\\2nd Year\\230 - Software Design Studio Project I\\Code\\jna-5.5.0.jar",
-      "c:\\Users\\Juan Diego\\Desktop\\Lancaster University Leipzig\\2nd Year\\230 - Software Design Studio Project I\\Code\\swing-jnafilechooser.jar"
+      "c:\\Users\\Juan Diego\\Desktop\\Lancaster University Leipzig\\2nd Year\\230 - Software Design Studio Project I\\Code\\swing-jnafilechooser.jar",
+      "c:\\Users\\Juan Diego\\Desktop\\Lancaster University Leipzig\\2nd Year\\230 - Software Design Studio Project I\\Code\\jcommon-1.0.23.jar",
+      "c:\\Users\\Juan Diego\\Desktop\\Lancaster University Leipzig\\2nd Year\\230 - Software Design Studio Project I\\Code\\jfreechart-1.0.19.jar"
     ],
     "exclude": [
       "c:\\Program Files (x86)\\Apache Excel\\commons-fileupload-1.4-javadoc.jar",
