@@ -14,6 +14,7 @@ import componentsFood.allergen;
 import componentsFood.provider;
 import navigation.food.allergensWindow.allergensAPI;
 import navigation.food.providersWindow.providerAPI;
+import util.inputFormatting.inputFormatterFactory;
 
 import java.awt.*;
 
@@ -685,34 +686,6 @@ public class addIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                char[] acceptedNumbers = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
-                priceTextField.addKeyListener(new KeyListener() {
-                        public void keyTyped(KeyEvent arg0) {
-                                char k = arg0.getKeyChar();
-                                boolean goodChar = false;
-                                for (char temp : acceptedNumbers) {
-                                        if (k == temp)
-                                                goodChar = true;
-                                }
-                                boolean found = false;
-                                if (k == ',' || k == '.') {
-                                        goodChar = true;
-                                        for (char temp : priceTextField.getText().toCharArray()) {
-                                                if (temp == ',' || temp == '.')
-                                                        found = true;
-                                        }
-                                }
-                                if (!goodChar || found)
-                                        arg0.consume();
-                                if (k == ',')
-                                        arg0.setKeyChar('.');
-                        }
-
-                        public void keyReleased(KeyEvent arg0) {
-                        }
-
-                        public void keyPressed(KeyEvent arg0) {
-                        }
-                });
+                new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(priceTextField);
         }
 }

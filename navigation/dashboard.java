@@ -19,6 +19,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import componentsFood.currentShiftEmployee;
 import componentsFood.orderView;
+import componentsFood.product;
 import navigation.administration.*;
 import navigation.administration.shifts_Window.shiftsAPI;
 import navigation.food.*;
@@ -523,7 +524,11 @@ public class dashboard extends JFrame {
 
                 bsTodayProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsTodayProductLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                bsTodayProductLabel.setText(new dashboardsAPI().getMostSoldProductToday().getName());
+                product todayProd = new dashboardsAPI().getMostSoldProductToday();
+                if (todayProd == null)
+                        bsTodayProductLabel.setText("");
+                else
+                        bsTodayProductLabel.setText(todayProd.getName());
 
                 bsTodayTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
                 bsTodayTitlePanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -642,8 +647,11 @@ public class dashboard extends JFrame {
 
                 bsWeekProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsWeekProductLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                bsWeekProductLabel.setText(new dashboardsAPI().getMostSoldProductWeek().getName());
-
+                product weekProd = new dashboardsAPI().getMostSoldProductWeek();
+                if (weekProd == null)
+                        bsWeekProductLabel.setText("");
+                else
+                        bsWeekProductLabel.setText(weekProd.getName());
                 bsWeekTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
                 bsWeekTitlePanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 bsWeekTitlePanel.setText("BEST SELLER WEEK");
@@ -707,8 +715,11 @@ public class dashboard extends JFrame {
 
                 bsMonthProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsMonthProductLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                bsMonthProductLabel.setText(new dashboardsAPI().getMostSoldProductMonth().getName());
-
+                product monthProd = new dashboardsAPI().getMostSoldProductMonth();
+                if (monthProd == null)
+                        bsMonthProductLabel.setText("");
+                else
+                        bsMonthProductLabel.setText(weekProd.getName());
                 bsMonthTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
                 bsMonthTitlePanel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 bsMonthTitlePanel.setText("BEST SELLER MONTH");

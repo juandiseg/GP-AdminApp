@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.employee;
 import navigation.administration.employeeSection.employeesAPI;
 import navigation.administration.roleSection.rolesAPI;
+import util.inputFormatting.inputFormatterFactory;
 
 import java.awt.*;
 
@@ -84,8 +85,8 @@ public class addShifts {
                 dateLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
                 dateTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                dateTextField.setText("Enter DATE here YYYY-MM-DD");
-                dateTextField.setForeground(Color.gray);
+                dateTextField.setText("DD-MM-YYYY");
+                dateTextField.getCaret().setVisible(false);
 
                 addShiftsButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addShiftsButton.setText("Add Shift(s)");
@@ -457,6 +458,7 @@ public class addShifts {
                 });
                 addRightLeftListeners();
                 addPlaceholderListeners();
+                new inputFormatterFactory().createInputFormatter("DATE").applyFormat(dateTextField);
         }
 
         private void addRightLeftListeners() {
@@ -527,23 +529,6 @@ public class addShifts {
         }
 
         private void addPlaceholderListeners() {
-                dateTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (dateTextField.getText().equals("Enter DATE here YYYY-MM-DD")) {
-                                        dateTextField.setText("");
-                                        dateTextField.setForeground(Color.BLACK);
-                                        datePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (dateTextField.getText().isEmpty()) {
-                                        dateTextField.setForeground(Color.GRAY);
-                                        dateTextField.setText("Enter DATE here YYYY-MM-DD");
-                                        datePlaceholder = true;
-                                }
-                        }
-                });
                 startShiftTextField.addFocusListener(new FocusListener() {
                         public void focusGained(FocusEvent e) {
                                 if (startShiftTextField.getText().equals("Enter START time here HH:MM")) {

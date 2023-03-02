@@ -1041,14 +1041,14 @@ public class mainAdmin {
                         for (int j = 0; j < dbAPI.getFrequencyOfShift(i, weekly); j++)
                                 tempList.add((double) i);
                 }
-
                 double[] target = new double[tempList.size()];
                 for (int i = 0; i < target.length; i++)
                         target[i] = tempList.get(i).doubleValue();
 
                 HistogramDataset dataset = new HistogramDataset();
                 dataset.setType(HistogramType.FREQUENCY);
-                dataset.addSeries("Hours", target, 24);
+                if (target.length != 0)
+                        dataset.addSeries("Hours", target, 24);
                 String title = "Workers per Hour";
                 String yAxis = "Number of Employees";
                 if (weekly) {
