@@ -7,8 +7,8 @@ public class inputFormatterFactory {
             return new priceInputFormatter();
         } else if ("DATE".equals(request)) {
             return new dateInputFormatter();
-        } else if ("ELSE".equals(request)) {
-            return new priceInputFormatter();
+        } else if ("TIME".equals(request)) {
+            return new timeInputFormatter();
         }
         return reportGenerator;
     }

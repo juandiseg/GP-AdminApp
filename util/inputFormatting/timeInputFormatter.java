@@ -8,7 +8,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.AbstractDocument;
 
-public class dateInputFormatter implements iFormatter {
+public class timeInputFormatter implements iFormatter {
 
     public void applyFormat(JTextField theTextField) {
         ((AbstractDocument) theTextField.getDocument()).setDocumentFilter(
@@ -54,31 +54,23 @@ public class dateInputFormatter implements iFormatter {
     }
 
     private int getFirstFreeIndex(String input) {
-        if (input.charAt(0) == 'D')
+        if (input.charAt(0) == 'H')
             return 0;
-        else if (input.charAt(1) == 'D')
+        else if (input.charAt(1) == 'H')
             return 1;
         else if (input.charAt(3) == 'M')
             return 3;
         else if (input.charAt(4) == 'M')
             return 4;
-        else if (input.charAt(6) == 'Y')
-            return 6;
-        else if (input.charAt(7) == 'Y')
-            return 7;
-        else if (input.charAt(8) == 'Y')
-            return 8;
-        else if (input.charAt(9) == 'Y')
-            return 9;
         else
             return -1;
     }
 
     private String moveValuesForward(String input, char newDigit) {
         char[] tempInput = input.toCharArray();
-        int index = getFirstFreeIndex(input);
-        if (index != -1)
-            tempInput[index] = newDigit;
+        int lastIndex = getFirstFreeIndex(input);
+        if (lastIndex != -1)
+            tempInput[lastIndex] = newDigit;
         return new String(tempInput);
     }
 
@@ -88,32 +80,21 @@ public class dateInputFormatter implements iFormatter {
 
         switch (lastIndex) {
             case -1:
-                tempInput[9] = 'Y';
-                return new String(tempInput);
-            case 9:
-                tempInput[8] = 'Y';
-                break;
-            case 8:
-                tempInput[7] = 'Y';
-                break;
-            case 7:
-                tempInput[6] = 'Y';
-                break;
-            case 6:
                 tempInput[4] = 'M';
-                break;
+                return new String(tempInput);
             case 4:
                 tempInput[3] = 'M';
                 break;
             case 3:
-                tempInput[1] = 'D';
+                tempInput[1] = 'H';
                 break;
             case 1:
-                tempInput[0] = 'D';
+                tempInput[0] = 'H';
                 break;
             case 0:
                 return input;
         }
+
         return new String(tempInput);
     }
 }

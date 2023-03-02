@@ -4,6 +4,8 @@ import javax.swing.table.*;
 
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.*;
 
 import navigation.food.productsWindow.productAPI;
@@ -60,19 +62,19 @@ public class addMenus {
         }
 
         private void initComponents(JPanel playground) {
-                playground.setBackground(new java.awt.Color(255, 255, 255));
+                playground.setBackground(new Color(255, 255, 255));
 
                 successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                successLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+                successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
-                successLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                jPanel1.setBackground(new java.awt.Color(120, 168, 252));
+                jPanel1.setBackground(new Color(120, 168, 252));
 
                 nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
-                nameLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 nameTextField.setText("Ex. \"Big Burger Menu\"");
@@ -83,35 +85,35 @@ public class addMenus {
                 addMenuButton.setBackground(new Color(255, 255, 255));
                 addMenuButton.setForeground(new Color(23, 35, 51));
 
-                jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+                jPanel2.setBackground(new Color(0, 0, 0));
 
-                javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+                GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
                 jPanel2.setLayout(jPanel2Layout);
                 jPanel2Layout.setHorizontalGroup(
-                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 8, Short.MAX_VALUE));
                 jPanel2Layout.setVerticalGroup(
-                                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 priceLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                priceLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
-                priceLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 priceTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 priceTextField.setText("Ex. \"17.99\"");
                 priceTextField.setForeground(Color.GRAY);
 
                 categoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                categoryLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 categoryLabel.setText("Choose Category");
-                categoryLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                categoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 productsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                productsLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                productsLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 productsLabel.setText("Select Products");
-                productsLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                productsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 setTables();
 
@@ -125,240 +127,240 @@ public class addMenus {
 
                 setComboBox();
 
-                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
                 jPanel1Layout.setHorizontalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                                                 .addComponent(jPanel2,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                GroupLayout.Alignment.LEADING)
                                                                                 .addGroup(jPanel1Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addGap(56, 56, 56)
                                                                                                 .addGroup(jPanel1Layout
                                                                                                                 .createParallelGroup(
-                                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                                                                                GroupLayout.Alignment.TRAILING)
                                                                                                                 .addGroup(jPanel1Layout
                                                                                                                                 .createParallelGroup(
-                                                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                                                GroupLayout.Alignment.TRAILING,
                                                                                                                                                 false)
                                                                                                                                 .addComponent(priceLabel,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                                                 Short.MAX_VALUE)
                                                                                                                                 .addComponent(nameLabel,
-                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                GroupLayout.Alignment.LEADING,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                                                 165,
                                                                                                                                                 Short.MAX_VALUE)
                                                                                                                                 .addComponent(categoryLabel,
-                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                GroupLayout.Alignment.LEADING,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                                                 Short.MAX_VALUE))
                                                                                                                 .addComponent(productsLabel,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                 165,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                                GroupLayout.PREFERRED_SIZE))
                                                                                                 .addPreferredGap(
-                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                ComponentPlacement.RELATED)
                                                                                                 .addGroup(jPanel1Layout
                                                                                                                 .createParallelGroup(
-                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                GroupLayout.Alignment.LEADING,
                                                                                                                                 false)
                                                                                                                 .addGroup(jPanel1Layout
                                                                                                                                 .createSequentialGroup()
                                                                                                                                 .addComponent(selectButton,
-                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                                 75,
-                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                                                                 .addPreferredGap(
-                                                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                ComponentPlacement.RELATED,
+                                                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                                                 Short.MAX_VALUE)
                                                                                                                                 .addComponent(unselectButton))
                                                                                                                 .addComponent(priceTextField,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                 434,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                                                 .addComponent(nameTextField,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                 434,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                .addGroup(GroupLayout.Alignment.TRAILING,
                                                                                                                                 jPanel1Layout.createSequentialGroup()
                                                                                                                                                 .addComponent(unselectedJScrollPane,
-                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                                                 194,
-                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                                                                                 .addGap(18, 18, 18)
                                                                                                                                                 .addComponent(selectedJScrollPane,
-                                                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                                                 0,
                                                                                                                                                                 Short.MAX_VALUE))
                                                                                                                 .addComponent(categoriesComboBox,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                 434,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                                GroupLayout.PREFERRED_SIZE))
                                                                                                 .addContainerGap(
-                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                 Short.MAX_VALUE))
-                                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                .addGroup(GroupLayout.Alignment.TRAILING,
                                                                                                 jPanel1Layout
                                                                                                                 .createSequentialGroup()
                                                                                                                 .addPreferredGap(
-                                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                ComponentPlacement.RELATED,
+                                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                                 Short.MAX_VALUE)
                                                                                                                 .addComponent(addMenuButton,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                                 200,
-                                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                                                 .addGap(323, 323,
                                                                                                                                 323)))));
                 jPanel1Layout.setVerticalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
+                                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout
                                                                 .createSequentialGroup()
                                                                 .addGap(21, 21, 21)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(nameLabel)
                                                                                 .addComponent(nameTextField,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                 35,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                ComponentPlacement.RELATED)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(priceTextField,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                 35,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                 .addComponent(priceLabel))
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                ComponentPlacement.RELATED)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(categoryLabel)
                                                                                 .addComponent(categoriesComboBox,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                 34,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                                ComponentPlacement.RELATED,
                                                                                 9, Short.MAX_VALUE)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                GroupLayout.Alignment.LEADING)
                                                                                 .addGroup(jPanel1Layout
                                                                                                 .createParallelGroup(
-                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                GroupLayout.Alignment.TRAILING,
                                                                                                                 false)
                                                                                                 .addComponent(selectedJScrollPane,
-                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.Alignment.LEADING,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                 0,
                                                                                                                 Short.MAX_VALUE)
                                                                                                 .addComponent(unselectedJScrollPane,
-                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.Alignment.LEADING,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                 193,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                                                GroupLayout.PREFERRED_SIZE))
                                                                                 .addComponent(productsLabel))
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                ComponentPlacement.RELATED)
                                                                 .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                GroupLayout.Alignment.LEADING)
                                                                                 .addComponent(selectButton)
                                                                                 .addComponent(unselectButton))
                                                                 .addGap(2, 2, 2)
                                                                 .addComponent(addMenuButton,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                 55,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(27, 27, 27))
-                                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                                                .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
-                jPanel3.setBackground(new java.awt.Color(71, 120, 197));
+                jPanel3.setBackground(new Color(71, 120, 197));
 
-                javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+                GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
                 jPanel3.setLayout(jPanel3Layout);
                 jPanel3Layout.setHorizontalGroup(
-                                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 500, Short.MAX_VALUE));
                 jPanel3Layout.setVerticalGroup(
-                                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
                 theProductLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                theProductLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProductLabel.setText("Add Product");
-                theProductLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+                theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new java.awt.Color(71, 120, 197));
+                backButton.setBackground(new Color(71, 120, 197));
                 backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new java.awt.Color(255, 255, 255));
+                backButton.setForeground(new Color(255, 255, 255));
                 backButton.setText("Back");
 
-                javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+                GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
-                                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(playgroundLayout.createSequentialGroup()
                                                                 .addGap(185, 185, 185)
                                                                 .addComponent(jPanel3,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(0, 185, Short.MAX_VALUE))
-                                                .addComponent(theProductLabel, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(theProductLabel, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(playgroundLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addComponent(backButton,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                 200,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                ComponentPlacement.RELATED)
                                                                 .addComponent(successLabel,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE)
                                                                 .addContainerGap()));
                 playgroundLayout.setVerticalGroup(
-                                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout
+                                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout
                                                                 .createSequentialGroup()
                                                                 .addGap(39, 39, 39)
                                                                 .addComponent(theProductLabel)
                                                                 .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                ComponentPlacement.RELATED)
                                                                 .addComponent(jPanel3,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(18, 18, 18)
                                                                 .addComponent(jPanel1,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
                                                                 .addGroup(playgroundLayout
                                                                                 .createParallelGroup(
-                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                GroupLayout.Alignment.LEADING)
                                                                                 .addGroup(playgroundLayout
                                                                                                 .createSequentialGroup()
                                                                                                 .addPreferredGap(
-                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                ComponentPlacement.RELATED,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                 Short.MAX_VALUE)
                                                                                                 .addComponent(successLabel)
                                                                                                 .addGap(79, 79, 79))
@@ -366,11 +368,11 @@ public class addMenus {
                                                                                                 .createSequentialGroup()
                                                                                                 .addGap(18, 18, 18)
                                                                                                 .addComponent(backButton,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
                                                                                                                 55,
-                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                                GroupLayout.PREFERRED_SIZE)
                                                                                                 .addContainerGap(
-                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
                                                                                                                 Short.MAX_VALUE)))));
         }
 

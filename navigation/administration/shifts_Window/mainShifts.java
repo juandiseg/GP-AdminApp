@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.*;
 
 import componentsFood.shift;
@@ -45,124 +47,124 @@ public class mainShifts {
 
     private void initComponents(JPanel playground) {
 
-        playground.setBackground(new java.awt.Color(255, 255, 255));
+        playground.setBackground(new Color(255, 255, 255));
         if (shiftDate)
             sortToggle.setText("Sort by Shift Date");
         else
             sortToggle.setText("Sort by Employee");
 
         fromLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-        fromLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        fromLabel.setHorizontalAlignment(SwingConstants.CENTER);
         fromLabel.setText("From");
-        fromLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        fromLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
         addShiftButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
         addShiftButton.setText("Add Shift");
 
         clickShift.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-        clickShift.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        clickShift.setHorizontalAlignment(SwingConstants.CENTER);
         clickShift.setText("Double-Click on Shift to edit it");
-        clickShift.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        clickShift.setVerticalAlignment(SwingConstants.BOTTOM);
 
         fromTextField.setText(from);
 
         toLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-        toLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        toLabel.setHorizontalAlignment(SwingConstants.CENTER);
         toLabel.setText("To");
-        toLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        toLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
         toTextField.setText(to);
 
         applyButton.setText("Apply");
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-        jPanel1.setPreferredSize(new java.awt.Dimension(2, 0));
+        jPanel1.setBackground(new Color(0, 0, 0));
+        jPanel1.setPreferredSize(new Dimension(2, 0));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 2, Short.MAX_VALUE));
         jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 0, Short.MAX_VALUE));
 
         undertimeButton.setText("Check Undertime");
 
-        javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+        GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
         playgroundLayout.setHorizontalGroup(
-                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(playgroundLayout.createSequentialGroup()
                                 .addGap(94, 94, 94)
                                 .addGroup(playgroundLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addComponent(clickShift)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addPreferredGap(ComponentPlacement.RELATED,
+                                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(fromLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(fromTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(fromTextField, GroupLayout.PREFERRED_SIZE, 88,
+                                                        GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(ComponentPlacement.UNRELATED)
                                                 .addComponent(toLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(toTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(toTextField, GroupLayout.PREFERRED_SIZE, 88,
+                                                        GroupLayout.PREFERRED_SIZE)
                                                 .addGap(12, 12, 12)
-                                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE,
+                                                        GroupLayout.DEFAULT_SIZE,
+                                                        GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(ComponentPlacement.UNRELATED)
                                                 .addComponent(applyButton))
-                                        .addComponent(shiftsJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 682,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(shiftsJScrollPanel, GroupLayout.PREFERRED_SIZE, 682,
+                                                GroupLayout.PREFERRED_SIZE)
                                         .addGroup(playgroundLayout.createSequentialGroup()
-                                                .addComponent(undertimeButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(sortToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 150,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(undertimeButton, GroupLayout.PREFERRED_SIZE,
+                                                        150, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(ComponentPlacement.RELATED,
+                                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(sortToggle, GroupLayout.PREFERRED_SIZE, 150,
+                                                        GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(94, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addShiftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 210,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(addShiftButton, GroupLayout.PREFERRED_SIZE, 210,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(330, 330, 330)));
         playgroundLayout.setVerticalGroup(
-                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
+                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
                                 .addGap(72, 72, 72)
                                 .addGroup(playgroundLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(fromTextField)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                        .addGroup(GroupLayout.Alignment.TRAILING,
                                                 playgroundLayout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(fromLabel)
                                                         .addComponent(clickShift))
-                                        .addComponent(toLabel, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(toTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(toLabel, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout
+                                                .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(toTextField, GroupLayout.PREFERRED_SIZE, 25,
+                                                        GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(applyButton))
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 25,
+                                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 25,
                                                 Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(shiftsJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 371,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(shiftsJScrollPanel, GroupLayout.PREFERRED_SIZE, 371,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
                                 .addGroup(
-                                        playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        playgroundLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                 .addComponent(sortToggle)
                                                 .addComponent(undertimeButton))
                                 .addGap(15, 15, 15)
-                                .addComponent(addShiftButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addShiftButton, GroupLayout.PREFERRED_SIZE, 55,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(57, Short.MAX_VALUE)));
 
         shiftsJScrollPanel.getViewport().setBackground(new Color(245, 245, 245));

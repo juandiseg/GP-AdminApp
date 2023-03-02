@@ -3,6 +3,8 @@ package navigation.administration.roleSection;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 
 public class addRole {
 

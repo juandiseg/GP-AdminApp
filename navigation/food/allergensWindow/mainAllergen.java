@@ -5,11 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,48 +35,48 @@ public class mainAllergen {
     }
 
     private void initComponents(JPanel playground) {
-        playground.setBackground(new java.awt.Color(255, 255, 255));
+        playground.setBackground(new Color(255, 255, 255));
         clickAllergen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        clickAllergen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        clickAllergen.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        clickAllergen.setHorizontalAlignment(SwingConstants.CENTER);
+        clickAllergen.setVerticalAlignment(SwingConstants.BOTTOM);
         addAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         addAllergenButton.setBackground(new Color(23, 35, 51));
         addAllergenButton.setForeground(new Color(255, 255, 255));
 
-        javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+        GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
         playgroundLayout.setHorizontalGroup(
-                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
+                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(rolesJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 694,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rolesJScrollPanel, GroupLayout.PREFERRED_SIZE, 694,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(88, 88, 88))
                         .addGroup(playgroundLayout.createSequentialGroup()
                                 .addGroup(playgroundLayout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(88, 88, 88)
-                                                .addComponent(clickAllergen, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(clickAllergen, GroupLayout.PREFERRED_SIZE,
                                                         707,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        GroupLayout.PREFERRED_SIZE))
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(334, 334, 334)
-                                                .addComponent(addAllergenButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(addAllergenButton, GroupLayout.PREFERRED_SIZE,
+                                                        200, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(75, Short.MAX_VALUE)));
         playgroundLayout.setVerticalGroup(
-                playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
+                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout.createSequentialGroup()
                                 .addGap(58, 58, 58)
-                                .addComponent(clickAllergen, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(clickAllergen, GroupLayout.PREFERRED_SIZE, 35,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30)
-                                .addComponent(rolesJScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 337,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rolesJScrollPanel, GroupLayout.PREFERRED_SIZE, 337,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(addAllergenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addAllergenButton, GroupLayout.PREFERRED_SIZE, 55,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
