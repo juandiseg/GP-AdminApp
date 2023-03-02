@@ -1,4 +1,4 @@
-package navigation.food.menuWindow;
+package navigation.food.menusNav;
 
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,12 +12,13 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.category;
 import componentsFood.menu;
 import componentsFood.product;
-import navigation.food.categoryWindow.categoryAPI;
-import navigation.food.productsWindow.productAPI;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.menuAPI;
+import util.databaseAPIs.productAPI;
 
 import java.awt.*;
 
-public class editMenus {
+public class editMenu {
 
         private JLabel auxProductLabel = new JLabel();
         private JLabel theProductLabel = new JLabel();
@@ -60,7 +61,7 @@ public class editMenus {
 
         private menu theCurrentMenu;
 
-        public editMenus(JPanel playground, menu theCurrentMenu) {
+        public editMenu(JPanel playground, menu theCurrentMenu) {
                 this.theCurrentMenu = theCurrentMenu;
                 initComponents(playground);
                 addActionListeners(playground);

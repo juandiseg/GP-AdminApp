@@ -1,4 +1,4 @@
-package navigation.food.productsWindow;
+package navigation.food.productsNav;
 
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,8 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.category;
 import componentsFood.ingredient;
 import componentsFood.product;
-import navigation.food.categoryWindow.categoryAPI;
-import navigation.food.ingredientsWindow.ingredientsAPI;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.productAPI;
 
 import java.awt.*;
 
@@ -645,8 +646,10 @@ public class editProduct {
                                 if (error) {
                                         successLabel.setText("Something went wrong while updating "
                                                         + theCurrentProduct.getName());
+                                        successLabel.setVisible(true);
                                 } else {
                                         successLabel.setText("\"" + name + "\" has been successfully updated.");
+                                        successLabel.setVisible(true);
                                 }
                                 theCurrentProduct = managerDB.getProduct(theCurrentProduct.getId());
                                 theProductLabel.setText(theCurrentProduct.getName());

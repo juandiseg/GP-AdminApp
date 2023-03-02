@@ -1,6 +1,8 @@
-package navigation.food.providersWindow;
+package navigation.food.providersNav;
 
 import componentsFood.provider;
+import util.databaseAPIs.providerAPI;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -293,7 +295,7 @@ public class editProvider {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainProvider(playground);
+                                new mainProviders(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -381,7 +383,7 @@ public class editProvider {
                                 if (reply == JOptionPane.YES_OPTION) {
                                         if (new providerAPI().deleteProvider(theCurrentProvider.getId())) {
                                                 playground.removeAll();
-                                                new mainProvider(playground);
+                                                new mainProviders(playground);
                                                 playground.revalidate();
                                                 playground.repaint();
                                                 return;

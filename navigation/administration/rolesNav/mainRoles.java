@@ -1,4 +1,4 @@
-package navigation.administration.roleSection;
+package navigation.administration.rolesNav;
 
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -16,10 +16,11 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import componentsFood.role;
+import util.databaseAPIs.rolesAPI;
 
 import java.awt.event.*;
 
-public class mainRole {
+public class mainRoles {
 
     private JLabel clickRole = new JLabel("Double-Click on role to edit it");
     private JButton addRoleButton = new JButton("Add Role");
@@ -28,7 +29,7 @@ public class mainRole {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainRole(JPanel playground) {
+    public mainRoles(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

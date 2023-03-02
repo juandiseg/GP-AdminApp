@@ -1,8 +1,9 @@
-package navigation.administration.employeeSection;
+package navigation.administration.employeesNav;
 
 import componentsFood.employee;
 import componentsFood.role;
-import navigation.administration.roleSection.rolesAPI;
+import util.databaseAPIs.employeesAPI;
+import util.databaseAPIs.rolesAPI;
 
 import java.util.ArrayList;
 import java.awt.event.*;
@@ -467,11 +468,24 @@ public class editEmployee {
                                                                 + " from employees?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        new employeesAPI().setEmployeeUnactive(theEmployee.getId());
-                                        playground.removeAll();
-                                        new mainEmployees(playground);
-                                        playground.revalidate();
-                                        playground.repaint();
+                                        if (new employeesAPI().hasEmployeeFutureShifts(theEmployee)) {
+                                                int response = JOptionPane.showOptionDialog(null,
+                                                                "An employee with future or current shifts assigned cannot be deleted.\nYou can delete all their future shifts or keep the employee.",
+                                                                "Choice",
+                                                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                                                                null,
+                                                                new String[] { "Delete Shifts and Employee",
+                                                                                "Keep Employee" },
+                                                                null);
+                                                if (response == 0) {
+                                                        new employeesAPI().setEmployeeUnactive(theEmployee);
+                                                        playground.removeAll();
+                                                        new mainEmployees(playground);
+                                                        playground.revalidate();
+                                                        playground.repaint();
+                                                        return;
+                                                }
+                                        }
                                 }
                         }
 

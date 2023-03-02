@@ -1,4 +1,4 @@
-package navigation.administration.shifts_Window;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import componentsFood.currentShiftEmployee;
 import componentsFood.employee;
 import componentsFood.shift;
-import util.abstractManagerDB;
 
 public class shiftsAPI extends abstractManagerDB {
 
     // GET "product" objects from database.
 
-    // "id", "Name", "Salary", "Hours per Week", "Role"
     public void addShift(String employeeID, String shiftDate, String startShift, String endShift) {
+        shiftDate = dateInverter.invert(shiftDate);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO employees_schedule VALUES (" + employeeID + ", '" + shiftDate + "', '"
                     + startShift + "', '" + endShift + "', NULL, NULL, NULL)";
@@ -51,6 +50,8 @@ public class shiftsAPI extends abstractManagerDB {
 
     public ArrayList<shift> getShiftsWithinDateSorted(String from, String to, boolean shift_date) {
         ArrayList<shift> tempList = new ArrayList<shift>();
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         String sortingColumn = "employee_id";
         if (!shift_date)
             sortingColumn = "shift_date";
@@ -68,7 +69,8 @@ public class shiftsAPI extends abstractManagerDB {
                     String realEndTime = rs.getString("realtime_out");
                     boolean undertime = rs.getBoolean("undertime");
                     tempList.add(
-                            new shift(employeeID, date, startTime, endTime, realStartTime, realEndTime, undertime));
+                            new shift(employeeID, dateInverter.invert(date), startTime, endTime, realStartTime,
+                                    realEndTime, undertime));
                 }
                 connection.close();
                 return tempList;
@@ -85,6 +87,7 @@ public class shiftsAPI extends abstractManagerDB {
 
     public ArrayList<shift> getAllFutureShiftsUntil(String to) {
         ArrayList<shift> tempList = new ArrayList<shift>();
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date BETWEEN '"
                     + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "' AND '" + to
@@ -100,7 +103,8 @@ public class shiftsAPI extends abstractManagerDB {
                     String realEndTime = rs.getString("realtime_out");
                     boolean undertime = rs.getBoolean("undertime");
                     tempList.add(
-                            new shift(employeeID, date, startTime, endTime, realStartTime, realEndTime, undertime));
+                            new shift(employeeID, dateInverter.invert(date), startTime, endTime, realStartTime,
+                                    realEndTime, undertime));
                 }
                 connection.close();
                 return tempList;
@@ -130,7 +134,8 @@ public class shiftsAPI extends abstractManagerDB {
                     String realEndTime = rs.getString("realtime_out");
                     boolean undertime = rs.getBoolean("undertime");
                     tempList.add(
-                            new shift(employeeID, date, startTime, endTime, realStartTime, realEndTime, undertime));
+                            new shift(employeeID, dateInverter.invert(date), startTime, endTime, realStartTime,
+                                    realEndTime, undertime));
                 }
                 connection.close();
                 return tempList;
@@ -336,13 +341,14 @@ public class shiftsAPI extends abstractManagerDB {
     }
 
     public void updateShiftDate(shift theShift, String newDate) {
+        newDate = dateInverter.invert(newDate);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees_schedule SET shift_date = '" + newDate + "' WHERE employee_id = "
                     + theShift.getEmployeeId() + " AND start_shift = '" + theShift.getStartTime()
                     + "' AND end_shift = '" + theShift.getEndTime() + "';";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
-                theShift.setDate(newDate);
+                theShift.setDate(dateInverter.invert(newDate));
                 connection.close();
             } catch (Exception e) {
                 System.out.println(e);
@@ -423,6 +429,7 @@ public class shiftsAPI extends abstractManagerDB {
     }
 
     public shift getShift(int employeeID, String date, String startShift, String endShift) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees_schedule WHERE employee_id = " + employeeID
                     + " AND shift_date = '" + date + "' AND start_shift = '" + startShift + "' AND end_shift = '"
@@ -437,7 +444,8 @@ public class shiftsAPI extends abstractManagerDB {
                     String realStartTime = rs.getString("realtime_in");
                     String realEndTime = rs.getString("realtime_out");
                     boolean undertime = rs.getBoolean("undertime");
-                    return new shift(ID, shiftDate, startTime, endTime, realStartTime, realEndTime, undertime);
+                    return new shift(ID, dateInverter.invert(shiftDate), startTime, endTime, realStartTime, realEndTime,
+                            undertime);
                 }
                 return null;
             } catch (Exception e) {
@@ -472,10 +480,10 @@ public class shiftsAPI extends abstractManagerDB {
     public void updateEntryTime(shift theShift, String newEntryTime) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees_schedule SET start_shift = '" + newEntryTime + "' WHERE employee_id = "
-                    + theShift.getEmployeeId() + " AND shift_date = '" + theShift.getDate() + "';";
+                    + theShift.getEmployeeId() + " AND shift_date = '" + dateInverter.invert(theShift.getDate()) + "';";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
-                theShift.setStartTime(newEntryTime);
+                theShift.setStartTime(dateInverter.invert(newEntryTime));
                 connection.close();
             } catch (Exception e) {
                 System.out.println(e);
@@ -488,7 +496,7 @@ public class shiftsAPI extends abstractManagerDB {
     public void updateEndTime(shift theShift, String newEndTime) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees_schedule SET end_shift = '" + newEndTime + "' WHERE employee_id = "
-                    + theShift.getEmployeeId() + " AND shift_date = '" + theShift.getDate() + "';";
+                    + theShift.getEmployeeId() + " AND shift_date = '" + dateInverter.invert(theShift.getDate()) + "';";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 theShift.setEndTime(newEndTime);
@@ -504,7 +512,8 @@ public class shiftsAPI extends abstractManagerDB {
     public void deleteShift(shift theShift) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM employees_schedule WHERE employee_id = " + theShift.getEmployeeId()
-                    + " AND shift_date = '" + theShift.getDate() + "' AND start_shift = '" + theShift.getStartTime()
+                    + " AND shift_date = '" + dateInverter.invert(theShift.getDate()) + "' AND start_shift = '"
+                    + theShift.getStartTime()
                     + "' AND end_shift = '" + theShift.getEndTime() + "';";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);

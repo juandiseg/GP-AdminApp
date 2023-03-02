@@ -1,6 +1,8 @@
-package navigation.food.categoryWindow;
+package navigation.food.categoriesNav;
 
 import componentsFood.category;
+import util.databaseAPIs.categoryAPI;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -296,7 +298,7 @@ public class editCategory {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainCategory(playground);
+                                new mainCategories(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -396,7 +398,7 @@ public class editCategory {
                                                 return;
                                         }
                                         playground.removeAll();
-                                        new mainCategory(playground);
+                                        new mainCategories(playground);
                                         playground.revalidate();
                                         playground.repaint();
                                 }

@@ -12,14 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import navigation.food.allergensWindow.mainAllergen;
-import navigation.food.categoryWindow.mainCategory;
-import navigation.food.ingredientsWindow.mainIngredients;
-import navigation.food.menuWindow.mainMenus;
-import navigation.food.productsWindow.mainProducts;
-import navigation.food.providersWindow.mainProvider;
+import navigation.food.allergensNav.mainAllergens;
+import navigation.food.categoriesNav.mainCategories;
+import navigation.food.ingredientsNav.mainIngredients;
+import navigation.food.menusNav.mainMenus;
+import navigation.food.productsNav.mainProducts;
+import navigation.food.providersNav.mainProviders;
 
-public class mainFood {
+public class foodDash {
 
         private JPanel menusPanel = new JPanel();
         private JPanel productsPanel = new JPanel();
@@ -42,7 +42,7 @@ public class mainFood {
         private JPanel categoriesAux = new JPanel();
         private JPanel allergensAux = new JPanel();
 
-        public mainFood(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
+        public foodDash(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
                 addActionListeners(playground);
@@ -536,7 +536,7 @@ public class mainFood {
                                 resetColor(allergensPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new mainProvider(playground);
+                                new mainProviders(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -572,7 +572,7 @@ public class mainFood {
                                 resetColor(allergensPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new mainCategory(playground);
+                                new mainCategories(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -608,7 +608,7 @@ public class mainFood {
                                 resetColor(categoriesPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new mainAllergen(playground);
+                                new mainAllergens(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }

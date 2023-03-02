@@ -1,4 +1,4 @@
-package navigation.food.allergensWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 
 import componentsFood.allergen;
 import componentsFood.ingredient;
-import util.abstractManagerDB;
 
 public class allergensAPI extends abstractManagerDB {
 

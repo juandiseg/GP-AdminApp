@@ -1,7 +1,8 @@
-package navigation.administration.employeeSection;
+package navigation.administration.employeesNav;
 
 import componentsFood.employee;
-import navigation.administration.roleSection.rolesAPI;
+import util.databaseAPIs.employeesAPI;
+import util.databaseAPIs.rolesAPI;
 
 import java.util.ArrayList;
 import javax.swing.table.*;

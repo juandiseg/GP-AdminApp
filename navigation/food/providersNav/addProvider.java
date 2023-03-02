@@ -1,8 +1,10 @@
-package navigation.food.providersWindow;
+package navigation.food.providersNav;
 
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import util.databaseAPIs.providerAPI;
 
 import java.awt.*;
 
@@ -256,7 +258,7 @@ public class addProvider {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainProvider(playground);
+                                new mainProviders(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }

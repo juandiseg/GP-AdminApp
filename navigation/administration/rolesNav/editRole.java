@@ -1,6 +1,8 @@
-package navigation.administration.roleSection;
+package navigation.administration.rolesNav;
 
 import componentsFood.role;
+import util.databaseAPIs.rolesAPI;
+
 import java.awt.event.*;
 import java.awt.Color;
 import java.awt.*;
@@ -241,7 +243,7 @@ public class editRole {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainRole(playground);
+                                new mainRoles(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -307,7 +309,7 @@ public class editRole {
                                         } else {
                                                 theManagerDB.setRolesUnactive(theCurrentRole.getId());
                                                 playground.removeAll();
-                                                new mainRole(playground);
+                                                new mainRoles(playground);
                                                 playground.revalidate();
                                                 playground.repaint();
                                         }

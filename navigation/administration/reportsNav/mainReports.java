@@ -1,14 +1,15 @@
-package navigation.administration.reports_Window;
+package navigation.administration.reportsNav;
 
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import jnafilechooser.api.JnaFileChooser;
+import navigation.administration.reportsNav.reportsGeneration.reportGeneratorFactory;
 
 import java.awt.*;
 
-public class generateReport {
+public class mainReports {
 
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
@@ -30,7 +31,7 @@ public class generateReport {
 
         private JLabel successLabel = new JLabel();
 
-        public generateReport(JFrame theFrame, JPanel playground) {
+        public mainReports(JFrame theFrame, JPanel playground) {
                 initComponents(playground);
                 addActionListeners(theFrame);
         }

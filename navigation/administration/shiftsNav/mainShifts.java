@@ -1,4 +1,4 @@
-package navigation.administration.shifts_Window;
+package navigation.administration.shiftsNav;
 
 import javax.swing.table.*;
 
@@ -14,6 +14,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.*;
 
 import componentsFood.shift;
+import util.databaseAPIs.shiftsAPI;
 
 public class mainShifts {
 
@@ -25,8 +26,8 @@ public class mainShifts {
     private JScrollPane shiftsJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
-    private String from = "2022-06-01";
-    private String to = "2023-06-01";
+    private String from = "01-06-2022";
+    private String to = "01-06-2023";
     private boolean shiftDate;
 
     private JLabel fromLabel = new JLabel();
@@ -205,7 +206,7 @@ public class mainShifts {
                         if (myTable.getValueAt(myTable.getSelectedRow(), 0).toString().equals(""))
                             return;
                         LocalDate fromShift = LocalDate.parse((String) model.getValueAt(myTable.getSelectedRow(), 3),
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                         if (LocalDate.now().isAfter(fromShift)) {
                             JOptionPane.showMessageDialog(playground,
                                     "You can't change a shift which has occured past today.", "ERROR",

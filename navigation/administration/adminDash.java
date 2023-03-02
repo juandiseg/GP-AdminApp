@@ -19,14 +19,14 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 
-import navigation.dashboardsAPI;
-import navigation.administration.employeeSection.mainEmployees;
-import navigation.administration.reports_Window.generateReport;
-import navigation.administration.roleSection.mainRole;
-import navigation.administration.shifts_Window.mainShifts;
-import navigation.dashboardsAPI.tuple;
+import navigation.administration.employeesNav.mainEmployees;
+import navigation.administration.reportsNav.mainReports;
+import navigation.administration.rolesNav.mainRoles;
+import navigation.administration.shiftsNav.mainShifts;
+import util.databaseAPIs.dashboardsAPI;
+import util.databaseAPIs.dashboardsAPI.tuple;
 
-public class mainAdmin {
+public class adminDash {
 
         private JPanel employeesPanel = new JPanel();
         private JPanel employeesAux = new JPanel();
@@ -47,7 +47,7 @@ public class mainAdmin {
 
         private JPanel topLeftAux = new JPanel();
 
-        public mainAdmin(JFrame theFrame, JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
+        public adminDash(JFrame theFrame, JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
                 initComp3(playground);
@@ -750,7 +750,7 @@ public class mainAdmin {
                                 resetColor(rolesPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new mainShifts(playground, "2022-06-01", "2023-06-01", false);
+                                new mainShifts(playground, "01-06-2022", "01-06-2023", false);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -789,7 +789,7 @@ public class mainAdmin {
                                 resetColor(rolesPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new generateReport(theFrame, playground);
+                                new mainReports(theFrame, playground);
 
                                 // JnaFileChooser chooser = new JnaFileChooser();
                                 // chooser.setMode(JnaFileChooser.Mode.Directories);
@@ -850,7 +850,7 @@ public class mainAdmin {
                                 resetColor(reportsPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                new mainRole(playground);
+                                new mainRoles(playground);
                                 playground.revalidate();
                                 playground.repaint();
                                 // initComp2();

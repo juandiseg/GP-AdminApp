@@ -1,4 +1,4 @@
-package navigation.food.productsWindow;
+package navigation.food.productsNav;
 
 import javax.swing.table.*;
 import java.awt.event.*;
@@ -7,8 +7,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
 
-import navigation.food.ingredientsWindow.ingredientsAPI;
-import navigation.food.categoryWindow.categoryAPI;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.productAPI;
 import componentsFood.ingredient;
 import componentsFood.category;
 import componentsFood.product;
@@ -498,7 +499,7 @@ public class addProduct {
                                         successLabel.setVisible(true);
                                         return;
                                 }
-                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 

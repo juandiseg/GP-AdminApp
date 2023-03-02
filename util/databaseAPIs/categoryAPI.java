@@ -1,4 +1,4 @@
-package navigation.food.categoryWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.category;
-import util.abstractManagerDB;
 
 public class categoryAPI extends abstractManagerDB {
 

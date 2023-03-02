@@ -1,4 +1,4 @@
-package navigation.administration.reports_Window;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,6 @@ import componentsFood.menu;
 import componentsFood.product;
 import componentsFood.productIngredients;
 import componentsFood.shift;
-import util.abstractManagerDB;
 
 public class reportsAPI extends abstractManagerDB {
 
@@ -34,13 +33,13 @@ public class reportsAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
                     if (lastID == ID) {
-                        temp.add(new product(ID, catID, date, name, price, active));
+                        temp.add(new product(ID, catID, dateInverter.invert(date), name, price, active));
                     } else {
                         if (!temp.isEmpty())
                             listOfLists.add(temp);
                         temp = new ArrayList<product>();
                         lastID = ID;
-                        temp.add(new product(ID, catID, date, name, price, active));
+                        temp.add(new product(ID, catID, dateInverter.invert(date), name, price, active));
                     }
                 }
                 if (!temp.isEmpty())
@@ -72,13 +71,13 @@ public class reportsAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
                     if (lastID == ID) {
-                        temp.add(new menu(ID, catID, date, name, price, active));
+                        temp.add(new menu(ID, catID, dateInverter.invert(date), name, price, active));
                     } else {
                         if (!temp.isEmpty())
                             listOfLists.add(temp);
                         temp = new ArrayList<menu>();
                         lastID = ID;
-                        temp.add(new menu(ID, catID, date, name, price, active));
+                        temp.add(new menu(ID, catID, dateInverter.invert(date), name, price, active));
                     }
                 }
                 if (!temp.isEmpty())
@@ -95,14 +94,16 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public int getNumberSoldProduct(product current, product next, String from, String to) {
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= '"
-                    + current.getDate() + "'";
+                    + dateInverter.invert(current.getDate()) + "'";
             if (next != null) {
-                query = query.concat(" AND date < '" + next.getDate() + "'");
+                query = query.concat(" AND date < '" + dateInverter.invert(next.getDate()) + "'");
             }
             query = query.concat(" AND date >= '" + from + "' AND date <= '" + to + "' AND product_id = "
-                    + current.getId() + " AND product_date = '" + current.getDate() + "'");
+                    + current.getId() + " AND product_date = '" + dateInverter.invert(current.getDate()) + "'");
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 int amount = 0;
@@ -122,6 +123,7 @@ public class reportsAPI extends abstractManagerDB {
 
     public String getNameOfProduct(int prodID, String date) {
         String name = "";
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT name FROM products WHERE product_id = " + prodID + " AND product_date = '" + date
                     + "'";
@@ -142,6 +144,8 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public int getNumberSoldProduct(productIngredients product, String nextDate, String from, String to) {
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
             if (!nextDate.equals(""))
@@ -167,14 +171,16 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public int getNumberSoldMenu(menu current, menu next, String from, String to) {
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_menus NATURAL JOIN orders_summary NATURAL JOIN menus WHERE date >= '"
-                    + current.getDate() + "'";
+                    + dateInverter.invert(current.getDate()) + "'";
             if (next != null) {
-                query = query.concat(" AND date < '" + next.getDate() + "'");
+                query = query.concat(" AND date < '" + dateInverter.invert(next.getDate()) + "'");
             }
             query = query.concat(" AND date >= '" + from + "' AND date <= '" + to + "' AND menu_id = " + current.getId()
-                    + " AND menu_date = '" + current.getDate() + "'");
+                    + " AND menu_date = '" + dateInverter.invert(current.getDate()) + "'");
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 int amount = 0;
@@ -205,13 +211,13 @@ public class reportsAPI extends abstractManagerDB {
                     String ingredientsDate = rs.getString("product_ingredients_date");
                     String productDate = rs.getString("product_date");
                     if (lastID == ID) {
-                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
+                        tempList.add(new productIngredients(ID, dateInverter.invert(productDate), ingredientsDate));
                     } else {
                         if (!tempList.isEmpty())
                             listOfLists.add(tempList);
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
-                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
+                        tempList.add(new productIngredients(ID, dateInverter.invert(productDate), ingredientsDate));
                     }
                 }
                 if (!tempList.isEmpty())
@@ -230,6 +236,8 @@ public class reportsAPI extends abstractManagerDB {
     public ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from,
             String to) {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= '"
                     + from + "' AND date <= '" + to
@@ -243,7 +251,8 @@ public class reportsAPI extends abstractManagerDB {
                     String ingredientsDate = rs.getString("dateIngredients");
                     String productDate = rs.getString("dateProducts");
                     if (lastID == ID) {
-                        productIngredients temp = new productIngredients(ID, productDate, ingredientsDate);
+                        productIngredients temp = new productIngredients(ID, dateInverter.invert(productDate),
+                                dateInverter.invert(ingredientsDate));
                         temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
                         tempList.add(temp);
                     } else {
@@ -251,7 +260,8 @@ public class reportsAPI extends abstractManagerDB {
                             listOfLists.add(tempList);
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
-                        productIngredients temp = new productIngredients(ID, productDate, ingredientsDate);
+                        productIngredients temp = new productIngredients(ID, dateInverter.invert(productDate),
+                                dateInverter.invert(ingredientsDate));
                         temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
                         tempList.add(temp);
                     }
@@ -325,6 +335,8 @@ public class reportsAPI extends abstractManagerDB {
 
     public ArrayList<employee> getAllEmployeesAndShifts(String from, String to) {
         ArrayList<employee> tempList = new ArrayList<employee>();
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= '" + from
                     + "' AND shift_date <= '" + to + "' ORDER BY employee_id, shift_date, start_shift, role_id;";
@@ -346,7 +358,7 @@ public class reportsAPI extends abstractManagerDB {
                     String date = rs.getString("shift_date");
                     String startTime = rs.getString("start_shift");
                     String endTime = rs.getString("end_shift");
-                    temp.addShift(new shift(temp.getId(), date, startTime, endTime));
+                    temp.addShift(new shift(temp.getId(), dateInverter.invert(date), startTime, endTime));
                 }
                 if (temp.getId() != -1)
                     tempList.add(temp);

@@ -1,7 +1,8 @@
-package navigation.food.ingredientsWindow;
+package navigation.food.ingredientsNav;
 
 import componentsFood.ingredient;
-import navigation.food.providersWindow.providerAPI;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.providerAPI;
 
 import javax.swing.table.*;
 import java.awt.event.*;

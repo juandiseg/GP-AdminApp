@@ -1,4 +1,4 @@
-package navigation.administration.shifts_Window;
+package navigation.administration.shiftsNav;
 
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
@@ -11,8 +11,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.employee;
-import navigation.administration.employeeSection.employeesAPI;
-import navigation.administration.roleSection.rolesAPI;
+import util.databaseAPIs.employeesAPI;
+import util.databaseAPIs.rolesAPI;
+import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 
@@ -383,6 +384,25 @@ public class addShifts {
                 unselectedJScrollPane.setBackground(new Color(245, 245, 245));
         }
 
+        private boolean fieldsFilled() {
+                char[] tempDate = dateTextField.getText().toCharArray();
+                for (char temp : tempDate) {
+                        if (temp == 'D' || temp == 'M' || temp == 'Y')
+                                return false;
+                }
+                char[] tempStart = startShiftTextField.getText().toCharArray();
+                for (char temp : tempStart) {
+                        if (temp == 'H' || temp == 'M')
+                                return false;
+                }
+                char[] tempEnd = endShiftTextField.getText().toCharArray();
+                for (char temp : tempEnd) {
+                        if (temp == 'H' || temp == 'M')
+                                return false;
+                }
+                return true;
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -410,7 +430,7 @@ public class addShifts {
                         // check inputs and add check shifts not imbeded. This is having a 10:00 - 18:00
                         // and also a 13:00-15:00 on the same day
                         public void mouseClicked(MouseEvent e) {
-                                if (datePlaceholder || startPlaceholder || endPlaceholder) {
+                                if (!fieldsFilled()) {
                                         successLabel.setText("Please fill all requested fields.");
                                         successLabel.setVisible(true);
                                         return;
@@ -418,7 +438,7 @@ public class addShifts {
                                 String date = dateTextField.getText();
                                 LocalDate today = LocalDate.now();
                                 LocalDate localDateNew = LocalDate.parse(date,
-                                                DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                                 if (localDateNew.isBefore(today)) {
                                         JOptionPane.showMessageDialog(playground,
                                                         "You can't add a shift that occured in the past.", "ERROR",

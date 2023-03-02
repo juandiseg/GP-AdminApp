@@ -1,4 +1,4 @@
-package navigation.food.categoryWindow;
+package navigation.food.categoriesNav;
 
 import java.awt.Font;
 import java.awt.Color;
@@ -17,10 +17,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.category;
+import util.databaseAPIs.categoryAPI;
 
 import java.awt.event.*;
 
-public class mainCategory {
+public class mainCategories {
 
     private JLabel clickCategory = new JLabel("Double-Click on category to edit it");
     private JButton addCategoryButton = new JButton("Add Category");
@@ -29,7 +30,7 @@ public class mainCategory {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainCategory(JPanel playground) {
+    public mainCategories(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

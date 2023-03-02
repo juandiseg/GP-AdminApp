@@ -1,4 +1,4 @@
-package navigation.food.allergensWindow;
+package navigation.food.allergensNav;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,10 +16,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
+import util.databaseAPIs.allergensAPI;
 
 import java.awt.event.*;
 
-public class mainAllergen {
+public class mainAllergens {
 
     private JLabel clickAllergen = new JLabel("Double-Click on allergen to edit it");
     private JButton addAllergenButton = new JButton("Add Allergen");
@@ -28,7 +29,7 @@ public class mainAllergen {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainAllergen(JPanel playground) {
+    public mainAllergens(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

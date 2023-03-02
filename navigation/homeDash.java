@@ -23,10 +23,11 @@ import componentsFood.currentShiftEmployee;
 import componentsFood.orderView;
 import componentsFood.product;
 import navigation.administration.*;
-import navigation.administration.shifts_Window.shiftsAPI;
 import navigation.food.*;
+import util.databaseAPIs.dashboardsAPI;
+import util.databaseAPIs.shiftsAPI;
 
-public class dashboard extends JFrame {
+public class homeDash extends JFrame {
 
         private JPanel homePanel = new JPanel();
         private JLabel homeLabel = new JLabel("Home");
@@ -90,7 +91,7 @@ public class dashboard extends JFrame {
         private JLabel salesLabel = new JLabel();
         private JToggleButton salesTuggleButton = new JToggleButton();
 
-        public dashboard() {
+        public homeDash() {
                 initComponents();
         }
 
@@ -1105,7 +1106,7 @@ public class dashboard extends JFrame {
                                 clicked = true;
                                 playground.removeAll();
                                 leftAuxPanel.removeAll();
-                                new mainAdmin(tempFrame, leftAuxPanel, playground, jPanel4, date);
+                                new adminDash(tempFrame, leftAuxPanel, playground, jPanel4, date);
                                 playground.revalidate();
                                 leftAuxPanel.revalidate();
                                 playground.repaint();
@@ -1145,7 +1146,7 @@ public class dashboard extends JFrame {
                                 clicked = true;
                                 playground.removeAll();
                                 leftAuxPanel.removeAll();
-                                new mainFood(leftAuxPanel, playground, jPanel4, date);
+                                new foodDash(leftAuxPanel, playground, jPanel4, date);
                                 playground.revalidate();
                                 leftAuxPanel.revalidate();
                                 playground.repaint();

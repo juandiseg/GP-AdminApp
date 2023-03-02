@@ -1,4 +1,4 @@
-package navigation.food.menuWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import componentsFood.menu;
-import util.abstractManagerDB;
 
 public class menuAPI extends abstractManagerDB {
 
@@ -27,7 +26,7 @@ public class menuAPI extends abstractManagerDB {
                     String date = rs.getString("menu_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    tempList.add(new menu(menuID, catID, date, name, price, true));
+                    tempList.add(new menu(menuID, catID, dateInverter.invert(date), name, price, true));
                 }
                 connection.close();
                 return tempList;
@@ -53,7 +52,7 @@ public class menuAPI extends abstractManagerDB {
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
                     boolean active = rs.getBoolean("active");
-                    return new menu(ID, catID, date, name, price, active);
+                    return new menu(ID, catID, dateInverter.invert(date), name, price, active);
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -71,6 +70,7 @@ public class menuAPI extends abstractManagerDB {
     }
 
     private menu addMenu(int ID, int catID, String date, String name, float price, boolean active) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
                     + price
@@ -78,7 +78,7 @@ public class menuAPI extends abstractManagerDB {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new menu(ID, catID, date, name, price, active);
+                return new menu(ID, catID, dateInverter.invert(date), name, price, active);
             } catch (Exception e) {
                 System.out.println(e);
                 return null;
@@ -109,6 +109,7 @@ public class menuAPI extends abstractManagerDB {
     }
 
     public boolean addProducts(int menuID, int productID, String date, Float quantity) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus_products VALUES (" + menuID + ", " + productID + ", '" + date
                     + "', " + quantity + ")";
@@ -183,13 +184,13 @@ public class menuAPI extends abstractManagerDB {
             return;
         menu tempMenu = getMenu(theMenu.getId());
         setMenuIDUnactive(theMenu.getId());
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         addMenu(theMenu.getId(), theMenu.getCategoryID(), dateToday, tempMenu.getName(), tempMenu.getPrice(), true);
     }
 
     private boolean isLastMenuEntryToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT menu_date FROM menus WHERE menu_id = " + theMenu.getId() + " AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
@@ -231,7 +232,7 @@ public class menuAPI extends abstractManagerDB {
         if (areProductEntriesToday(theMenu))
             removeMenuProductsToday(theMenu);
         while (!stackIDs.empty() && !stackAmounts.empty()) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             addProducts(theMenu.getId(), stackIDs.pop(), dateToday, stackAmounts.pop());
         }
         return true;
@@ -239,7 +240,7 @@ public class menuAPI extends abstractManagerDB {
 
     private boolean areProductEntriesToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = " + theMenu.getId()
                     + " ORDER BY menu_products_date DESC LIMIT 1;";
             try (Statement stmt = connection.createStatement()) {
@@ -267,7 +268,7 @@ public class menuAPI extends abstractManagerDB {
     // REMOVE "product" from database.
     private void removeMenuProductsToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "DELETE FROM menus_products WHERE menu_id = " + theMenu.getId() +
                     " AND menu_products_date = '" + dateToday + "'";
             try (Statement stmt = connection.createStatement()) {

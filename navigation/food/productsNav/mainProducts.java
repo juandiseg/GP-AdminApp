@@ -1,8 +1,9 @@
-package navigation.food.productsWindow;
+package navigation.food.productsNav;
 
 import componentsFood.product;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.productAPI;
 
-import navigation.food.categoryWindow.categoryAPI;
 import javax.swing.table.*;
 import java.awt.event.*;
 import javax.swing.*;

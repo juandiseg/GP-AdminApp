@@ -1,4 +1,4 @@
-package navigation.food.ingredientsWindow;
+package navigation.food.ingredientsNav;
 
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,9 +12,10 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.allergen;
 import componentsFood.ingredient;
 import componentsFood.provider;
-import navigation.food.allergensWindow.allergensAPI;
-import navigation.food.productsWindow.productAPI;
-import navigation.food.providersWindow.providerAPI;
+import util.databaseAPIs.allergensAPI;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.productAPI;
+import util.databaseAPIs.providerAPI;
 
 import java.awt.*;
 
@@ -670,7 +671,7 @@ public class editIngredient {
                                 ingredientsAPI theManagerDB = new ingredientsAPI();
                                 int ingrID = theCurrentIngredient.getId();
                                 boolean error = false;
-                                if (new ingredientsAPI().isNameTaken(nameTextField.getText())) {
+                                if (new ingredientsAPI().isNameTaken(nameTextField.getText()) && !namePlaceholder) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return;

@@ -1,9 +1,7 @@
-package navigation.administration.reports_Window;
+package navigation.administration.reportsNav.reportsGeneration;
 
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
-
-import util.iReportable;
 
 public class generalReportGenerator extends iReportable {
 

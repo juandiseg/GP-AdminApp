@@ -1,4 +1,4 @@
-package navigation;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import componentsFood.orderView;
 import componentsFood.product;
-import util.abstractManagerDB;
 
 public class dashboardsAPI extends abstractManagerDB {
 
@@ -112,7 +111,7 @@ public class dashboardsAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     Boolean active = rs.getBoolean("active");
                     connection.close();
-                    return new product(id, catID, date, name, price, active);
+                    return new product(id, catID, dateInverter.invert(date), name, price, active);
                 }
                 connection.close();
                 return null;
@@ -137,7 +136,7 @@ public class dashboardsAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     Boolean active = rs.getBoolean("active");
                     connection.close();
-                    return new product(id, catID, date, name, price, active);
+                    return new product(id, catID, dateInverter.invert(date), name, price, active);
                 }
                 connection.close();
                 return null;
@@ -162,7 +161,7 @@ public class dashboardsAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     Boolean active = rs.getBoolean("active");
                     connection.close();
-                    return new product(id, catID, date, name, price, active);
+                    return new product(id, catID, dateInverter.invert(date), name, price, active);
                 }
                 connection.close();
                 return null;

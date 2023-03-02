@@ -1,4 +1,4 @@
-package navigation.food.productsWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import componentsFood.menu;
 import componentsFood.product;
-import util.abstractManagerDB;
 
 public class productAPI extends abstractManagerDB {
 
@@ -30,7 +29,7 @@ public class productAPI extends abstractManagerDB {
                     String date = rs.getString("product_date");
                     String name = rs.getString("name");
                     float price = rs.getFloat("price");
-                    tempList.add(new product(ID, catID, date, name, price, true));
+                    tempList.add(new product(ID, catID, dateInverter.invert(date), name, price, true));
                 }
                 tempList = checkRepeatedProducts(tempList);
                 connection.close();
@@ -73,9 +72,9 @@ public class productAPI extends abstractManagerDB {
         int goal = theList.size();
         for (int i = 0; i < goal - 1; i++) {
             if (theList.get(i).getId() == theList.get(i + 1).getId()) {
-                LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate date1 = LocalDate.parse(theList.get(i).getDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 LocalDate date2 = LocalDate.parse(theList.get(i + 1).getDate(),
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 if (date1.isBefore(date2)) {
                     theList.remove(i);
                     goal--;
@@ -195,6 +194,7 @@ public class productAPI extends abstractManagerDB {
     }
 
     private product addProduct(int ID, int catID, String date, String name, float price, boolean active) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO products VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
                     + price
@@ -202,7 +202,7 @@ public class productAPI extends abstractManagerDB {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new product(ID, catID, date, name, price, active);
+                return new product(ID, catID, dateInverter.invert(date), name, price, active);
             } catch (Exception e) {
                 System.out.println(e);
                 return null;
@@ -233,6 +233,7 @@ public class productAPI extends abstractManagerDB {
     }
 
     public boolean addIngredients(int productID, int ingredientID, String date, float quantity) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO products_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
                     + "', " + quantity + ")";
@@ -322,7 +323,7 @@ public class productAPI extends abstractManagerDB {
             return;
         product tempProduct = getProduct(productID);
         setProductIDUnactive(productID);
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         addProduct(productID, tempProduct.getCategoryID(), dateToday, tempProduct.getName(), tempProduct.getPrice(),
                 true);
     }
@@ -343,7 +344,7 @@ public class productAPI extends abstractManagerDB {
 
     private boolean isLastProductEntryToday(int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT product_date FROM products WHERE product_id = " + productID + " AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
@@ -369,7 +370,7 @@ public class productAPI extends abstractManagerDB {
 
     public boolean isProductIngredientDateToday(int product_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT MAX(products_ingredients_date) FROM products_ingredients WHERE product_id = "
                     + product_id + ";";
             try (Statement stmt = connection.createStatement()) {
@@ -395,10 +396,11 @@ public class productAPI extends abstractManagerDB {
     }
 
     public boolean updateIngredients(int productID, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
-        if (areIngredientEntriesToday(productID))
+        if (areIngredientEntriesToday(productID)) {
             removeProductIngredientsToday(productID);
+        }
         while (!stackIDs.empty() && !stackAmounts.empty()) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             if (!addIngredients(productID, stackIDs.pop(), dateToday, stackAmounts.pop()))
                 return false;
         }
@@ -510,7 +512,7 @@ public class productAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM products WHERE name = " + name;
+            String query = "SELECT * FROM products WHERE name = '" + name + "' AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
@@ -520,6 +522,7 @@ public class productAPI extends abstractManagerDB {
                 connection.close();
                 return false;
             } catch (Exception e) {
+                System.out.println(e);
                 return true;
             }
         } catch (SQLException e) {

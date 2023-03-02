@@ -1,15 +1,13 @@
-package navigation.administration.reports_Window;
-
-import util.iReportable;
+package navigation.administration.reportsNav.reportsGeneration;
 
 public class reportGeneratorFactory {
-    public iReportable createReportGenerator(String request){
+    public iReportable createReportGenerator(String request) {
         iReportable reportGenerator = null;
-        if("SALES".equals(request)){
+        if ("SALES".equals(request)) {
             return new salesReportGenerator();
-        } else if ("EXPENSES".equals(request)){
+        } else if ("EXPENSES".equals(request)) {
             return new expensesReportGenerator();
-        } else if("GENERAL".equals(request)){
+        } else if ("GENERAL".equals(request)) {
             return new generalReportGenerator();
         }
         return reportGenerator;

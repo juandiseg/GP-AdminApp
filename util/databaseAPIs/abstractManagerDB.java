@@ -1,4 +1,4 @@
-package util;
+package util.databaseAPIs;
 
 public class abstractManagerDB {
     private final String url = "jdbc:mysql://localhost:3306/beatneat";

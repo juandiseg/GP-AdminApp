@@ -1,6 +1,8 @@
-package navigation.food.allergensWindow;
+package navigation.food.allergensNav;
 
 import componentsFood.allergen;
+import util.databaseAPIs.allergensAPI;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -247,7 +249,7 @@ public class editAllergen {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainAllergen(playground);
+                                new mainAllergens(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -322,7 +324,7 @@ public class editAllergen {
                                                                 JOptionPane.ERROR_MESSAGE);
                                         }
                                         playground.removeAll();
-                                        new mainAllergen(playground);
+                                        new mainAllergens(playground);
                                         playground.revalidate();
                                         playground.repaint();
                                 }

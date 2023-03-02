@@ -1,4 +1,4 @@
-package navigation.administration.shifts_Window;
+package navigation.administration.shiftsNav;
 
 import javax.swing.table.*;
 import java.awt.event.*;
@@ -13,6 +13,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.*;
 
 import componentsFood.shift;
+import util.databaseAPIs.shiftsAPI;
 
 public class editShifts {
 
@@ -488,7 +489,7 @@ public class editShifts {
                                 }
                                 if (!datePlaceholder) {
                                         LocalDate newShiftDate = LocalDate.parse(newDate,
-                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                                         if (newShiftDate.isBefore(LocalDate.now())) {
                                                 JOptionPane.showMessageDialog(playground,
                                                                 "You can't change a shift's date to the past.", "ERROR",

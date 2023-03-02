@@ -1,7 +1,10 @@
-package navigation.administration.roleSection;
+package navigation.administration.rolesNav;
 
 import java.awt.event.*;
 import javax.swing.*;
+
+import util.databaseAPIs.rolesAPI;
+
 import java.awt.*;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -210,7 +213,7 @@ public class addRole {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
-                                new mainRole(playground);
+                                new mainRoles(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }

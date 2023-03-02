@@ -1,8 +1,8 @@
-package navigation.food.menuWindow;
+package navigation.food.menusNav;
 
 import componentsFood.menu;
-
-import navigation.food.categoryWindow.categoryAPI;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.menuAPI;
 
 import javax.swing.table.*;
 import java.awt.event.*;
@@ -74,7 +74,7 @@ public class mainMenus {
         addProductButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 playground.removeAll();
-                new addMenus(playground);
+                new addMenu(playground);
                 playground.revalidate();
                 playground.repaint();
             }
@@ -107,7 +107,7 @@ public class mainMenus {
                         String name = (String) model.getValueAt(myTable.getSelectedRow(), 3);
                         Float price = Float.parseFloat((String) model.getValueAt(myTable.getSelectedRow(), 4));
                         playground.removeAll();
-                        new editMenus(playground, new menu(ID, catID, date, name, price, true));
+                        new editMenu(playground, new menu(ID, catID, date, name, price, true));
                         playground.repaint();
                         playground.revalidate();
                     } catch (IndexOutOfBoundsException e) {

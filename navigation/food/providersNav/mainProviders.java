@@ -1,12 +1,14 @@
-package navigation.food.providersWindow;
+package navigation.food.providersNav;
 
 import componentsFood.provider;
+import util.databaseAPIs.providerAPI;
+
 import javax.swing.table.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class mainProvider {
+public class mainProviders {
 
     private JLabel clickProvider = new JLabel("Double-Click on provider to edit it");
     private JButton addProviderButton = new JButton("Add Provider");
@@ -15,7 +17,7 @@ public class mainProvider {
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private DefaultTableModel model;
 
-    public mainProvider(JPanel playground) {
+    public mainProviders(JPanel playground) {
         initComponents(playground);
         populateTable();
         addActionListeners(playground);

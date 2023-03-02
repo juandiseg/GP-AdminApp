@@ -1,4 +1,4 @@
-package navigation.food.providersWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.provider;
-import util.abstractManagerDB;
 
 public class providerAPI extends abstractManagerDB {
 

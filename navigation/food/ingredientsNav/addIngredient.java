@@ -1,4 +1,4 @@
-package navigation.food.ingredientsWindow;
+package navigation.food.ingredientsNav;
 
 import java.awt.event.*;
 import java.time.LocalDate;
@@ -13,8 +13,9 @@ import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
 import componentsFood.provider;
-import navigation.food.allergensWindow.allergensAPI;
-import navigation.food.providersWindow.providerAPI;
+import util.databaseAPIs.allergensAPI;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.providerAPI;
 import util.inputFormatting.inputFormatterFactory;
 
 import java.awt.*;
@@ -533,7 +534,7 @@ public class addIngredient {
                                 String quantity = quantityTextField.getText();
                                 int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
                                 boolean inventory = inventoryToggle.getText().equals("Yes");
-                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
                                 int ingredientID = new ingredientsAPI().addIngredient(providerID, date, name,
                                                 Float.parseFloat(price),

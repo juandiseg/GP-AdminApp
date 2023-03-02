@@ -1,4 +1,4 @@
-package navigation.food.ingredientsWindow;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import componentsFood.ingredient;
 import componentsFood.product;
-import util.abstractManagerDB;
 
 public class ingredientsAPI extends abstractManagerDB {
 
@@ -89,7 +88,8 @@ public class ingredientsAPI extends abstractManagerDB {
                     float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
-                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                    tempList.add(new ingredient(ID, providerID, dateInverter.invert(date), name, price, amount,
+                            in_inventory, active));
                 }
                 connection.close();
                 return tempList;
@@ -162,7 +162,8 @@ public class ingredientsAPI extends abstractManagerDB {
                     float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
-                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
+                    tempList.add(new ingredient(ID, providerID, dateInverter.invert(date), name, price, amount,
+                            in_inventory, active));
                 }
                 connection.close();
                 return tempList;
@@ -237,6 +238,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     private int addIngredient(int ingrID, int provID, String date, String name, float price, float amount,
             boolean in_inventory) {
+        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", '" + date + "', '" + name
                     + "', " + price + ", " + amount + ", " + in_inventory + ", " + true + ");";
@@ -389,14 +391,14 @@ public class ingredientsAPI extends abstractManagerDB {
         }
         ingredient temp = getIngredient(ingredientID);
         setEntriesIngredientInactive(ingredientID);
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         addIngredient(temp.getId(), temp.getProviderID(), dateToday, temp.getName(), temp.getPrice(), temp.getAmount(),
                 temp.getInInventory());
     }
 
     private boolean isLastIngredientEntryToday(int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT MAX(ingredients_date) FROM ingredients WHERE ingredient_id = " + ingredientID;
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);

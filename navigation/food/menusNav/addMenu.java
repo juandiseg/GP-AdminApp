@@ -1,4 +1,4 @@
-package navigation.food.menuWindow;
+package navigation.food.menusNav;
 
 import javax.swing.table.*;
 
@@ -8,8 +8,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
 
-import navigation.food.productsWindow.productAPI;
-import navigation.food.categoryWindow.categoryAPI;
+import util.databaseAPIs.categoryAPI;
+import util.databaseAPIs.menuAPI;
+import util.databaseAPIs.productAPI;
 import componentsFood.menu;
 import componentsFood.category;
 import componentsFood.product;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class addMenus {
+public class addMenu {
 
         private JLabel theProductLabel = new JLabel();
 
@@ -56,7 +57,7 @@ public class addMenus {
 
         private ArrayList<category> categories = new categoryAPI().getMenuCategories();
 
-        public addMenus(JPanel playground) {
+        public addMenu(JPanel playground) {
                 initComponents(playground);
                 addActionListeners(playground);
         }
@@ -479,7 +480,7 @@ public class addMenus {
                                         successLabel.setVisible(true);
                                         return;
                                 }
-                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 

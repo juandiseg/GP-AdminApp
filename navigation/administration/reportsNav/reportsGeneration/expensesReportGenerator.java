@@ -1,4 +1,4 @@
-package navigation.administration.reports_Window;
+package navigation.administration.reportsNav.reportsGeneration;
 
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
@@ -6,7 +6,8 @@ import componentsFood.productIngredients;
 import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.shift;
-import util.iReportable;
+import util.databaseAPIs.reportsAPI;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;

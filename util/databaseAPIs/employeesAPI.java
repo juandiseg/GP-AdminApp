@@ -1,4 +1,4 @@
-package navigation.administration.employeeSection;
+package util.databaseAPIs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import componentsFood.employee;
-
-import util.abstractManagerDB;
 
 public class employeesAPI extends abstractManagerDB {
 
@@ -184,16 +182,51 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public void setEmployeeUnactive(int employeeID) {
+    public void setEmployeeUnactive(employee theEmployee) {
         String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET active = false, inactive_since = '" + dateToday
-                    + "' WHERE employee_id = " + employeeID;
+                    + "' WHERE employee_id = " + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
             } catch (Exception e) {
                 System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+        deleteFutureShifts(theEmployee);
+    }
+
+    public void deleteFutureShifts(employee theEmployee) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "DELETE FROM employees_schedule WHERE employee_id = " + theEmployee.getId()
+                    + " AND shift_date >= CURDATE();";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean hasEmployeeFutureShifts(employee theEmployee) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = 0 AND shift_date >= CURDATE();";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    connection.close();
+                    return true;
+                }
+                return false;
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
