@@ -1,5 +1,6 @@
 package util.inputFormatting;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -115,5 +116,14 @@ public class dateInputFormatter implements iFormatter {
                 return input;
         }
         return new String(tempInput);
+    }
+
+    public boolean isFilled(JTextField theTextField) {
+        char[] tempDate = theTextField.getText().toCharArray();
+        for (char temp : tempDate) {
+            if (temp == 'D' || temp == 'M' || temp == 'Y')
+                return false;
+        }
+        return true;
     }
 }

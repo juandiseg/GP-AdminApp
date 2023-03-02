@@ -11,7 +11,6 @@ public class priceInputFormatter implements iFormatter {
         theTextField.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
                 char k = arg0.getKeyChar();
-                boolean isNumber = false;
                 int dotIndex = -1;
 
                 int indexTemp = 0;
@@ -21,27 +20,32 @@ public class priceInputFormatter implements iFormatter {
                     indexTemp++;
                 }
 
-                if (k >= '0' && k <= '9')
-                    isNumber = true;
-
-                if (dotIndex != -1 && theTextField.getSelectionStart() > dotIndex
-                        && theTextField.getText().length() > (dotIndex + 2)) {
-                    arg0.consume();
+                if (k >= '0' && k <= '9') {
+                    if (theTextField.getSelectionStart() >= dotIndex + 3 && dotIndex != -1)
+                        arg0.consume();
                     return;
                 }
 
                 // CHECK HERE AUTOCOMPLETE ZERO BEFORE POINT!!
                 if ((k == ',' || k == '.') && dotIndex == -1) {
+
                     arg0.setKeyChar('.');
-                    if (theTextField.getSelectionStart() == 0) {
-                        theTextField.setText(Integer.toString(0).concat("." + theTextField.getText().substring(0, 2)));
-                        arg0.consume();
-                    }
+                    String beforeDot = theTextField.getText().substring(0, theTextField.getSelectionStart());
+                    String afterDot = theTextField.getText().substring(theTextField.getSelectionStart());
+                    if (afterDot.length() >= 2)
+                        afterDot = afterDot.substring(0, 2);
+                    afterDot = Character.toString('.').concat(afterDot);
+                    String finalText;
+                    if (beforeDot.length() == 0)
+                        finalText = Integer.toString(0).concat(afterDot);
+                    else
+                        finalText = beforeDot.concat(afterDot);
+                    arg0.consume();
+                    theTextField.setText(finalText);
                     return;
                 }
 
-                if (!isNumber)
-                    arg0.consume();
+                arg0.consume();
 
             }
 
@@ -50,7 +54,12 @@ public class priceInputFormatter implements iFormatter {
 
             public void keyPressed(KeyEvent arg0) {
             }
+
         });
+    }
+
+    public boolean isFilled(JTextField theTextField) {
+        return !theTextField.getText().isEmpty();
     }
 
 }

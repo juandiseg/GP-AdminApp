@@ -51,10 +51,6 @@ public class addShifts {
         private DefaultTableModel modelEmployees;
         private DefaultTableModel modelSelected;
 
-        private boolean datePlaceholder = true;
-        private boolean startPlaceholder = true;
-        private boolean endPlaceholder = true;
-
         private String from;
         private String to;
         private boolean shiftDate;
@@ -384,25 +380,6 @@ public class addShifts {
                 unselectedJScrollPane.setBackground(new Color(245, 245, 245));
         }
 
-        private boolean fieldsFilled() {
-                char[] tempDate = dateTextField.getText().toCharArray();
-                for (char temp : tempDate) {
-                        if (temp == 'D' || temp == 'M' || temp == 'Y')
-                                return false;
-                }
-                char[] tempStart = startShiftTextField.getText().toCharArray();
-                for (char temp : tempStart) {
-                        if (temp == 'H' || temp == 'M')
-                                return false;
-                }
-                char[] tempEnd = endShiftTextField.getText().toCharArray();
-                for (char temp : tempEnd) {
-                        if (temp == 'H' || temp == 'M')
-                                return false;
-                }
-                return true;
-        }
-
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -430,7 +407,11 @@ public class addShifts {
                         // check inputs and add check shifts not imbeded. This is having a 10:00 - 18:00
                         // and also a 13:00-15:00 on the same day
                         public void mouseClicked(MouseEvent e) {
-                                if (!fieldsFilled()) {
+                                iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
+                                iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
+                                if (!dateFormatter.isFilled(dateTextField)
+                                                || !timeFormatter.isFilled(startShiftTextField)
+                                                || !timeFormatter.isFilled(endShiftTextField)) {
                                         successLabel.setText("Please fill all requested fields.");
                                         successLabel.setVisible(true);
                                         return;

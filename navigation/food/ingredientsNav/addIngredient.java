@@ -16,6 +16,7 @@ import componentsFood.provider;
 import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.providerAPI;
+import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 
 import java.awt.*;
@@ -625,6 +626,9 @@ public class addIngredient {
                                 }
                         }
                 });
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+                numericFormatter.applyFormat(priceTextField);
+                numericFormatter.applyFormat(quantityTextField);
                 inventoryToggle.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                                 if (inventoryToggle.getText().equals("Yes"))
@@ -688,6 +692,5 @@ public class addIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(priceTextField);
         }
 }

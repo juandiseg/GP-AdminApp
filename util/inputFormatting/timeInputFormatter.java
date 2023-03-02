@@ -97,4 +97,13 @@ public class timeInputFormatter implements iFormatter {
 
         return new String(tempInput);
     }
+
+    public boolean isFilled(JTextField theTextField) {
+        char[] tempStart = theTextField.getText().toCharArray();
+        for (char temp : tempStart) {
+            if (temp == 'H' || temp == 'M')
+                return false;
+        }
+        return true;
+    }
 }

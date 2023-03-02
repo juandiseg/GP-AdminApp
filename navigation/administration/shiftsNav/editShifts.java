@@ -14,6 +14,8 @@ import java.awt.*;
 
 import componentsFood.shift;
 import util.databaseAPIs.shiftsAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
 
 public class editShifts {
 
@@ -50,9 +52,6 @@ public class editShifts {
         private DefaultTableModel modelEmployees;
         private DefaultTableModel modelSelected;
 
-        private boolean datePlaceholder = true;
-        private boolean startPlaceholder = true;
-        private boolean endPlaceholder = true;
         private boolean shiftDate;
 
         private shift theShift;
@@ -465,11 +464,21 @@ public class editShifts {
                 });
                 editShiftsButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (datePlaceholder && startPlaceholder && endPlaceholder)
+
+                                iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
+                                iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
+                                if (!dateFormatter.isFilled(dateTextField)
+                                                || !timeFormatter.isFilled(startShiftTextField)
+                                                || !timeFormatter.isFilled(endShiftTextField)) {
+                                        successLabel.setText("Error. A field has wrongful input.");
+                                        successLabel.setVisible(true);
                                         return;
+                                }
+
                                 String newDate = dateTextField.getText();
                                 String newStart = startShiftTextField.getText();
                                 String newEnd = endShiftTextField.getText();
+
                                 ArrayList<shift> listShifts = new ArrayList<shift>();
                                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                                         int id = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
@@ -479,25 +488,21 @@ public class editShifts {
                                         listShifts.add(new shift(id, date, startTime, endTime));
                                 }
                                 shiftsAPI theManagerDB = new shiftsAPI();
-                                if (!startPlaceholder) {
+                                for (shift temp : listShifts)
+                                        theManagerDB.updateEntryTime(temp, newStart);
+                                for (shift temp : listShifts)
+                                        theManagerDB.updateEndTime(temp, newEnd);
+
+                                // DO APPROPIATE CHECKING
+                                LocalDate newShiftDate = LocalDate.parse(newDate,
+                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                if (newShiftDate.isBefore(LocalDate.now())) {
+                                        JOptionPane.showMessageDialog(playground,
+                                                        "You can't change a shift's date to the past.", "ERROR",
+                                                        JOptionPane.ERROR_MESSAGE);
+                                } else {
                                         for (shift temp : listShifts)
-                                                theManagerDB.updateEntryTime(temp, newStart);
-                                }
-                                if (!endPlaceholder) {
-                                        for (shift temp : listShifts)
-                                                theManagerDB.updateEndTime(temp, newEnd);
-                                }
-                                if (!datePlaceholder) {
-                                        LocalDate newShiftDate = LocalDate.parse(newDate,
-                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                                        if (newShiftDate.isBefore(LocalDate.now())) {
-                                                JOptionPane.showMessageDialog(playground,
-                                                                "You can't change a shift's date to the past.", "ERROR",
-                                                                JOptionPane.ERROR_MESSAGE);
-                                        } else {
-                                                for (shift temp : listShifts)
-                                                        theManagerDB.updateShiftDate(temp, newDate);
-                                        }
+                                                theManagerDB.updateShiftDate(temp, newDate);
                                 }
                                 playground.removeAll();
                                 new mainShifts(playground, from, to, shiftDate);
@@ -583,60 +588,10 @@ public class editShifts {
                                 unselectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                dateTextField.addFocusListener(new FocusListener() {
-
-                        public void focusGained(FocusEvent e) {
-                                if (dateTextField.getText().equals(theShift.getDate())) {
-                                        dateTextField.setText("");
-                                        dateTextField.setForeground(Color.BLACK);
-                                        datePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (dateTextField.getText().isEmpty()) {
-                                        dateTextField.setForeground(Color.GRAY);
-                                        dateTextField.setText(theShift.getDate());
-                                        datePlaceholder = true;
-                                }
-                        }
-                });
-                startShiftTextField.addFocusListener(new FocusListener() {
-
-                        public void focusGained(FocusEvent e) {
-                                if (startShiftTextField.getText().equals(theShift.getStartTime().substring(0, 5))) {
-                                        startShiftTextField.setText("");
-                                        startShiftTextField.setForeground(Color.BLACK);
-                                        startPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (startShiftTextField.getText().isEmpty()) {
-                                        startShiftTextField.setForeground(Color.GRAY);
-                                        startShiftTextField.setText(theShift.getStartTime().substring(0, 5));
-                                        startPlaceholder = true;
-                                }
-                        }
-                });
-                endShiftTextField.addFocusListener(new FocusListener() {
-
-                        public void focusGained(FocusEvent e) {
-                                if (endShiftTextField.getText().equals(theShift.getEndTime().substring(0, 5))) {
-                                        endShiftTextField.setText("");
-                                        endShiftTextField.setForeground(Color.BLACK);
-                                        endPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (endShiftTextField.getText().isEmpty()) {
-                                        endShiftTextField.setForeground(Color.GRAY);
-                                        endShiftTextField.setText(theShift.getEndTime().substring(0, 5));
-                                        endPlaceholder = true;
-                                }
-                        }
-                });
+                new inputFormatterFactory().createInputFormatter("DATE").applyFormat(dateTextField);
+                iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
+                timeFormatter.applyFormat(startShiftTextField);
+                timeFormatter.applyFormat(endShiftTextField);
         }
 
         private void setTables(String from, String to, boolean shiftDate) {
