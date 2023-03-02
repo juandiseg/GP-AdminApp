@@ -19,3 +19,17 @@ editEmployees.java	->	Check for shifts referencing that employee in the future.
 editEmployee.java   ->  Show in Combo Box the already picked option first.
 
 generateReport.java ->  Check dates which make sense.
+
+
+TESTING
+----------------------------------------------------------------------------------------------------------------
+    15% --> Interface. Technical Part (input restrictions) & Usability Testing.
+    85% --> Database - Many requests incoming into the DB (), record delay.
+        |
+    85% |-> backend - performance, reaction times, double-prove calculations. 
+
+j unit test - >> backend
+unit testing -> testing a single component
+integration testing -> testing how mutilple components interact
+manual testing probably good for interface.
+automatic testing probably good for back-end stuff.

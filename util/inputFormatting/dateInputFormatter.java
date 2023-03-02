@@ -4,49 +4,51 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
-
-import org.apache.poi.ss.formula.atp.Switch;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.AbstractDocument;
 
 public class dateInputFormatter implements iFormatter {
 
     public void applyFormat(JTextField theTextField) {
+        ((AbstractDocument) theTextField.getDocument()).setDocumentFilter(
+                new DocumentFilter() {
+                    public void remove(DocumentFilter.FilterBypass fb, int i, int i1)
+                            throws BadLocationException {
+                    }
+                });
         theTextField.addKeyListener(new KeyListener() {
-            boolean backSpace = false;
-            boolean space = false;
+            boolean delete = false;
 
             public void keyTyped(KeyEvent arg0) {
-                if (!space && !backSpace) {
-                    char k = arg0.getKeyChar();
-                    if (!(k >= '0' && k <= '9'))
-                        arg0.consume();
-                    int indx = getLastTypedIndex(theTextField.getText());
-                    String newInput = moveValues(theTextField.getText(), k, indx);
+                if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
                     arg0.consume();
-                    theTextField.setText(newInput);
                     return;
-                } else if (backSpace) {
-                    System.out.println("here");
-                    arg0 = null;
-                    backSpace = false;
-                } else {
+                } else if (delete) {
+                    String newInput = moveValuesBackwards(theTextField.getText());
+                    theTextField.setText(newInput);
                     arg0.consume();
-                    space = false;
+                    delete = false;
+                    return;
                 }
+
+                char k = arg0.getKeyChar();
+                if (!(k >= '0' && k <= '9')) {
+                    arg0.consume();
+                    return;
+                }
+                String newInput = moveValuesForward(theTextField.getText(), k);
+                arg0.consume();
+                theTextField.setText(newInput);
+                return;
             }
 
             public void keyReleased(KeyEvent arg0) {
             }
 
             public void keyPressed(KeyEvent arg0) {
-                switch (arg0.getKeyCode()) {
-                    case KeyEvent.VK_BACK_SPACE:
-                        backSpace = true;
-                        return;
-                    case KeyEvent.VK_SPACE:
-                        space = true;
-                        return;
-                }
-
+                if (arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                    delete = true;
             }
         });
     }
@@ -72,12 +74,12 @@ public class dateInputFormatter implements iFormatter {
             return -1;
     }
 
-    private String moveValues(String input, char newDigit, int lastIndex) {
+    private String moveValuesForward(String input, char newDigit) {
         char[] tempInput = input.toCharArray();
+        int lastIndex = getLastTypedIndex(input);
         if (lastIndex == -1) {
             return input;
         } else {
-
             if (lastIndex <= 0)
                 tempInput[0] = tempInput[1];
             if (lastIndex <= 1)
@@ -96,7 +98,44 @@ public class dateInputFormatter implements iFormatter {
                 tempInput[8] = tempInput[9];
         }
         tempInput[9] = newDigit;
-        System.out.println(new String(tempInput));
+        return new String(tempInput);
+    }
+
+    private String moveValuesBackwards(String input) {
+        char[] tempInput = input.toCharArray();
+        int lastIndex = getLastTypedIndex(input);
+
+        if (lastIndex == -1) {
+            tempInput[0] = 'D';
+            return new String(tempInput);
+        }
+
+        if (lastIndex <= 9)
+            tempInput[9] = tempInput[8];
+        if (lastIndex <= 8)
+            tempInput[8] = tempInput[7];
+        if (lastIndex <= 7)
+            tempInput[7] = tempInput[6];
+
+        if (lastIndex <= 6) {
+            if (tempInput[4] != 'M')
+                tempInput[6] = tempInput[4];
+            else
+                tempInput[6] = 'Y';
+        }
+
+        if (lastIndex <= 4)
+            tempInput[4] = tempInput[3];
+
+        if (lastIndex <= 3) {
+            if (tempInput[1] != 'D')
+                tempInput[3] = tempInput[1];
+            else
+                tempInput[3] = 'M';
+        }
+        if (lastIndex <= 1)
+            tempInput[1] = tempInput[0];
+        tempInput[0] = 'D';
         return new String(tempInput);
     }
 }
