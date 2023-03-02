@@ -103,7 +103,7 @@ public class providerAPI extends abstractManagerDB {
 
     private int getLastProvID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT provider_id FROM beatneat.providers ORDER BY provider_id DESC LIMIT 1;";
+            String query = "SELECT provider_id FROM providers ORDER BY provider_id DESC LIMIT 1;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

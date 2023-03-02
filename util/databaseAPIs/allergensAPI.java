@@ -157,7 +157,7 @@ public class allergensAPI extends abstractManagerDB {
 
     private int getLastAllergenID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT allergen_id FROM beatneat.allergens ORDER BY allergen_id DESC LIMIT 1;";
+            String query = "SELECT allergen_id FROM allergens ORDER BY allergen_id DESC LIMIT 1;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
