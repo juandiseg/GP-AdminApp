@@ -4,6 +4,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import util.databaseAPIs.rolesAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
 import java.awt.Color;
@@ -20,7 +23,7 @@ public class addRole {
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
-        private boolean placeholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
 
@@ -235,7 +238,7 @@ public class addRole {
                         public void mouseClicked(MouseEvent e) {
                                 rolesAPI theManagerDB = new rolesAPI();
                                 String name = nameTextField.getText();
-                                if (name.isEmpty() || placeholder)
+                                if (namePlaceholder.getValue())
                                         return;
                                 if (theManagerDB.addRole(name)) {
                                         successLabel.setText("'" + name + "' Successfully added !");
@@ -262,22 +265,12 @@ public class addRole {
                                 addRoleButton.setForeground(new Color(23, 35, 51));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Enter NAME here")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        placeholder = false;
-                                }
-                        }
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Enter NAME here");
-                                        placeholder = true;
-                                }
-                        }
-                });
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new addTextFieldFListener();
+                inputListener.applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder);
+
         }
 }

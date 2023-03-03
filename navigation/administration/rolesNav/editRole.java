@@ -2,9 +2,11 @@ package navigation.administration.rolesNav;
 
 import componentsFood.role;
 import util.databaseAPIs.rolesAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.event.*;
-import java.awt.Color;
 import java.awt.*;
 import javax.swing.*;
 
@@ -22,7 +24,7 @@ public class editRole {
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
-        private boolean placeholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
         private role theCurrentRole;
@@ -266,15 +268,18 @@ public class editRole {
                         public void mouseClicked(MouseEvent e) {
                                 rolesAPI theManagerDB = new rolesAPI();
                                 String name = nameTextField.getText();
-                                if (name.isEmpty() || placeholder)
+                                if (namePlaceholder.getValue())
                                         return;
-                                theManagerDB.updateRoleName(theCurrentRole.getId(), name);
-                                theCurrentRole = theManagerDB.getRole(theCurrentRole.getId());
-                                successLabel.setText("'" + theCurrentRole.getName() + "' Successfully Updated !");
+                                if (!theManagerDB.updateRoleName(theCurrentRole.getId(), name)) {
+                                        successLabel.setText("Something went wrong while editting '"
+                                                        + theCurrentRole.getName() + "'.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
+                                successLabel.setText("The role '"
+                                                + nameTextField.getName() + "' was successfully updated.");
                                 successLabel.setVisible(true);
-                                editRoleLabel.setText(theCurrentRole.getName());
-                                editRoleLabel.revalidate();
-                                editRoleLabel.repaint();
+                                updatePlaceholders();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -332,23 +337,18 @@ public class editRole {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
+                applyGenericListeners();
+        }
 
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Enter new NAME here")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        placeholder = false;
-                                }
-                        }
+        private void applyGenericListeners() {
+                iTextFieldListener textListener = new editTextFieldFListener();
+                textListener.applyListenerTextField(nameTextField, theCurrentRole.getName(), namePlaceholder);
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Enter new NAME here");
-                                        placeholder = true;
-                                }
-                        }
-                });
+        private void updatePlaceholders() {
+                theCurrentRole = new rolesAPI().getRole(theCurrentRole.getId());
+                namePlaceholder.setValue(true);
+                nameTextField.setText(theCurrentRole.getName());
+                applyGenericListeners();
         }
 }

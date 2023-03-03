@@ -5,7 +5,7 @@ import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.iToggleListener;
-import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 import util.listenersFormatting.edit.editToggleAction;
 
 import java.awt.event.*;
@@ -424,7 +424,7 @@ public class editCategory {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener textListener = new editTextFListener();
+                iTextFieldListener textListener = new editTextFieldFListener();
                 textListener.applyListenerTextField(nameTextField, theCurrentCategory.getName(), namePlaceholder);
 
                 iToggleListener toggleListener = new editToggleAction();

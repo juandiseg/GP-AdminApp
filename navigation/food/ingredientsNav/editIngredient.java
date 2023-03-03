@@ -3,8 +3,7 @@ package navigation.food.ingredientsNav;
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.edit.editPriceFListener;
-import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 import util.listenersFormatting.edit.editToggleAction;
 import util.inputFormatting.iFormatter;
 
@@ -809,14 +808,13 @@ public class editIngredient {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener numericListener = new editPriceFListener();
-                iTextFieldListener textListener = new editTextFListener();
+                iTextFieldListener textListener = new editTextFieldFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
 
                 textListener.applyListenerTextField(nameTextField, theCurrentIngredient.getName(), namePlaceholder);
-                numericListener.applyListenerTextField(priceTextField, Float.toString(theCurrentIngredient.getPrice()),
+                textListener.applyListenerTextField(priceTextField, Float.toString(theCurrentIngredient.getPrice()),
                                 pricePlaceholder);
-                numericListener.applyListenerTextField(quantityTextField,
+                textListener.applyListenerTextField(quantityTextField,
                                 Float.toString(theCurrentIngredient.getAmount()),
                                 quantityPlaceholder);
 

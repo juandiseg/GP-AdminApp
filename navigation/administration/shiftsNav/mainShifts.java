@@ -15,6 +15,11 @@ import java.awt.*;
 
 import componentsFood.shift;
 import util.databaseAPIs.shiftsAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editDateTFFListener;
 
 public class mainShifts {
 
@@ -34,6 +39,9 @@ public class mainShifts {
     private JLabel toLabel = new JLabel();
     private JTextField fromTextField = new JTextField();
     private JTextField toTextField = new JTextField();
+    private booleanWrapper fromPlaceholder = new booleanWrapper(true);
+    private booleanWrapper toPlaceholder = new booleanWrapper(true);
+
     private JPanel jPanel1 = new JPanel();
     private JToggleButton sortToggle = new JToggleButton();
 
@@ -312,6 +320,17 @@ public class mainShifts {
             public void mouseExited(MouseEvent e) {
             }
         });
+        applyGenericListeners();
+    }
+
+    private void applyGenericListeners() {
+        iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
+        dateFormatter.applyFormat(fromTextField);
+        dateFormatter.applyFormat(toTextField);
+
+        iTextFieldListener textListener = new editDateTFFListener();
+        textListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder);
+        textListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder);
     }
 
     private void renewTable() {

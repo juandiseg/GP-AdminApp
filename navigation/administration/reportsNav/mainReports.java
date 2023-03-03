@@ -6,6 +6,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import jnafilechooser.api.JnaFileChooser;
 import navigation.administration.reportsNav.reportsGeneration.reportGeneratorFactory;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addTextFieldFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.*;
 
@@ -26,8 +32,8 @@ public class mainReports {
 
         private JButton generateButton = new JButton();
 
-        private boolean fromPlaceholder = true;
-        private boolean toPlaceholder = true;
+        private booleanWrapper fromPlaceholder = new booleanWrapper(true);
+        private booleanWrapper toPlaceholder = new booleanWrapper(true);
 
         private JLabel successLabel = new JLabel();
 
@@ -55,7 +61,7 @@ public class mainReports {
                 fromLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 fromTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                fromTextField.setText("YYYY-MM-DD");
+                fromTextField.setText("DD-MM-YYYY");
                 fromTextField.setForeground(Color.GRAY);
 
                 generateButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -81,7 +87,7 @@ public class mainReports {
                 toLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 toTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                toTextField.setText("YYYY-MM-DD");
+                toTextField.setText("DD-MM-YYYY");
                 toTextField.setForeground(Color.GRAY);
 
                 comboLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -259,43 +265,9 @@ public class mainReports {
         }
 
         private void addActionListeners(JFrame theFrame) {
-                fromTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (fromPlaceholder) {
-                                        fromTextField.setText("");
-                                        fromTextField.setForeground(Color.BLACK);
-                                        fromPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (fromTextField.getText().isEmpty()) {
-                                        fromTextField.setForeground(Color.GRAY);
-                                        fromTextField.setText("YYYY-MM-DD");
-                                        fromPlaceholder = true;
-                                }
-                        }
-                });
-                toTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (toPlaceholder) {
-                                        toTextField.setText("");
-                                        toTextField.setForeground(Color.BLACK);
-                                        toPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (toTextField.getText().isEmpty()) {
-                                        toTextField.setForeground(Color.GRAY);
-                                        toTextField.setText("YYYY-MM-DD");
-                                        toPlaceholder = true;
-                                }
-                        }
-                });
                 generateButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (fromPlaceholder || toPlaceholder) {
+                                if (fromPlaceholder.getValue() || toPlaceholder.getValue()) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         successLabel.setVisible(true);
                                         return;
@@ -372,6 +344,18 @@ public class mainReports {
                                 generateButton.setForeground(new Color(23, 35, 51));
                         }
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new editTextFieldFListener();
+                inputListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder);
+                inputListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder);
+
+                iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
+                dateFormatter.applyFormat(fromTextField);
+                dateFormatter.applyFormat(toTextField);
+
         }
 
         private void setComboBox() {

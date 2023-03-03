@@ -16,6 +16,10 @@ import util.databaseAPIs.rolesAPI;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editDateTFFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.*;
 
@@ -30,6 +34,10 @@ public class addShifts {
         private JTextField dateTextField = new JTextField();
         private JTextField startShiftTextField = new JTextField();
         private JTextField endShiftTextField = new JTextField();
+
+        private booleanWrapper datePlaceholder = new booleanWrapper(true);
+        private booleanWrapper startPlaceholder = new booleanWrapper(true);
+        private booleanWrapper endPlaceholder = new booleanWrapper(true);
 
         private JButton addShiftsButton = new JButton();
         private JButton backButton = new JButton();
@@ -83,7 +91,7 @@ public class addShifts {
 
                 dateTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 dateTextField.setText("DD-MM-YYYY");
-                dateTextField.getCaret().setVisible(false);
+                dateTextField.setForeground(Color.GRAY);
 
                 addShiftsButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addShiftsButton.setText("Add Shift(s)");
@@ -104,10 +112,12 @@ public class addShifts {
                 startShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 startShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 startShiftLabel.setText("Start Shift");
+
                 startShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 startShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 startShiftTextField.setText("HH:MM");
+                startShiftTextField.setForeground(Color.GRAY);
 
                 endShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 endShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -116,6 +126,7 @@ public class addShifts {
 
                 endShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 endShiftTextField.setText("HH:MM");
+                endShiftTextField.setForeground(Color.GRAY);
 
                 selectEmployeesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 selectEmployeesLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -456,11 +467,20 @@ public class addShifts {
                         }
                 });
                 addRightLeftListeners();
+                applyGenericListeners();
+
+        }
+
+        private void applyGenericListeners() {
                 new inputFormatterFactory().createInputFormatter("DATE").applyFormat(dateTextField);
                 iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
                 timeFormatter.applyFormat(startShiftTextField);
                 timeFormatter.applyFormat(endShiftTextField);
 
+                iTextFieldListener textListener = new editDateTFFListener();
+                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder);
+                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder);
+                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder);
         }
 
         private void addRightLeftListeners() {

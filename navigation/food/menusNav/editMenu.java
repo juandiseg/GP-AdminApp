@@ -19,8 +19,7 @@ import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.edit.editPriceFListener;
-import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.*;
 
@@ -771,11 +770,10 @@ public class editMenu {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener numericListener = new editPriceFListener();
-                iTextFieldListener textListener = new editTextFListener();
+                iTextFieldListener textListener = new editTextFieldFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
                 textListener.applyListenerTextField(nameTextField, theCurrentMenu.getName(), namePlaceholder);
-                numericListener.applyListenerTextField(priceTextField, Float.toString(theCurrentMenu.getPrice()),
+                textListener.applyListenerTextField(priceTextField, Float.toString(theCurrentMenu.getPrice()),
                                 pricePlaceholder);
                 numericFormatter.applyFormat(priceTextField);
         }

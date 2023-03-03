@@ -34,6 +34,8 @@ ADD LISTENERS!!
 
 ADD FORMATTER TO TABLES!
 
+CHECKER FOR INPUT HOURS AND DATES!
+
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

@@ -4,7 +4,7 @@ import componentsFood.provider;
 import util.databaseAPIs.providerAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -423,7 +423,7 @@ public class editProvider {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener textListener = new editTextFListener();
+                iTextFieldListener textListener = new editTextFieldFListener();
                 textListener.applyListenerTextField(nameTextField, theCurrentProvider.getName(), namePlaceholder);
                 textListener.applyListenerTextField(emailTextField, theCurrentProvider.getEmail(), emailPlaceholder);
         }

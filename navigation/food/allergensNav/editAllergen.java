@@ -4,7 +4,7 @@ import componentsFood.allergen;
 import util.databaseAPIs.allergensAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -359,7 +359,7 @@ public class editAllergen {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener textListener = new editTextFListener();
+                iTextFieldListener textListener = new editTextFieldFListener();
                 textListener.applyListenerTextField(nameTextField, theCurrentAllergen.getName(), namePlaceholder);
         }
 }

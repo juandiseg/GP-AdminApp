@@ -1,8 +1,9 @@
 package util.inputFormatting;
 
+import javax.swing.JTextField;
+
 public class inputFormatterFactory {
     public iFormatter createInputFormatter(String request) {
-        iFormatter reportGenerator = null;
         if ("PRICE".equals(request)) {
             return new priceInputFormatter();
         } else if ("DATE".equals(request)) {
@@ -10,6 +11,17 @@ public class inputFormatterFactory {
         } else if ("TIME".equals(request)) {
             return new timeInputFormatter();
         }
-        return reportGenerator;
+        return new dummyFormatter();
+    }
+
+    private class dummyFormatter implements iFormatter {
+
+        public void applyFormat(JTextField theTextField) {
+        }
+
+        public boolean isFilled(JTextField theTextField) {
+            return false;
+        }
+
     }
 }

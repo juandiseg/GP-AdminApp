@@ -9,17 +9,20 @@ import javax.swing.JTextField;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 
-public class editPriceFListener implements iTextFieldListener {
+public class editTextFieldFListener implements iTextFieldListener {
 
-    public void applyListenerTextField(JTextField theTextField, String theString, booleanWrapper placeholder) {
+    public void applyListenerTextField(JTextField theTextField, String theString,
+            booleanWrapper placeholder) {
         for (FocusListener temp : theTextField.getFocusListeners()) {
             if (temp.toString().startsWith("util.listeners"))
                 theTextField.removeFocusListener(temp);
         }
         theTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                theTextField.setForeground(Color.BLACK);
-                placeholder.setValue(false);
+                if (theTextField.getText().equals(theString)) {
+                    theTextField.setForeground(Color.BLACK);
+                    placeholder.setValue(false);
+                }
             }
 
             public void focusLost(FocusEvent e) {
@@ -31,5 +34,4 @@ public class editPriceFListener implements iTextFieldListener {
             }
         });
     }
-
 }

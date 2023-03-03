@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.role;
+import util.listenersFormatting.booleanWrapper;
 
 public class rolesAPI extends abstractManagerDB {
 
@@ -93,14 +94,16 @@ public class rolesAPI extends abstractManagerDB {
         }
     }
 
-    public void updateRoleName(int roleID, String newName) {
+    public boolean updateRoleName(int roleID, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE roles SET role_name = '" + newName + "' WHERE role_id = " + roleID;
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

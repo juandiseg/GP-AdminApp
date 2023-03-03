@@ -16,6 +16,9 @@ import componentsFood.shift;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editDateTFFListener;
 
 public class editShifts {
 
@@ -26,6 +29,10 @@ public class editShifts {
         private JTextField dateTextField = new JTextField();
         private JTextField startShiftTextField = new JTextField();
         private JTextField endShiftTextField = new JTextField();
+
+        private booleanWrapper datePlaceholder = new booleanWrapper(true);
+        private booleanWrapper startPlaceholder = new booleanWrapper(true);
+        private booleanWrapper endPlaceholder = new booleanWrapper(true);
 
         private JButton backButton = new JButton();
         private JButton deleteButton = new JButton();
@@ -588,10 +595,19 @@ public class editShifts {
                                 unselectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
                 new inputFormatterFactory().createInputFormatter("DATE").applyFormat(dateTextField);
                 iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
                 timeFormatter.applyFormat(startShiftTextField);
                 timeFormatter.applyFormat(endShiftTextField);
+
+                iTextFieldListener textListener = new editDateTFFListener();
+                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder);
+                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder);
+                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder);
         }
 
         private void setTables(String from, String to, boolean shiftDate) {

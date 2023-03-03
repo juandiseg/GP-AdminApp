@@ -3,10 +3,18 @@ package navigation.administration.employeesNav;
 import componentsFood.role;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.util.ArrayList;
 import java.awt.event.*;
 import javax.swing.*;
+
+import org.apache.commons.math3.ml.neuralnet.twod.util.QuantizationError;
+
 import java.awt.*;
 
 public class addEmployee {
@@ -29,9 +37,9 @@ public class addEmployee {
         private JButton addEmployeeButton = new JButton();
         private JButton backButton = new JButton();
 
-        private boolean namePlaceholder = true;
-        private boolean salaryPlaceholder = true;
-        private boolean hoursWeekPlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper salaryPlaceholder = new booleanWrapper(true);
+        private booleanWrapper hoursWeekPlaceholder = new booleanWrapper(true);
 
         private ArrayList<role> roles = new rolesAPI().getAllRoles();
         private JLabel successLabel = new JLabel();
@@ -319,57 +327,6 @@ public class addEmployee {
         }
 
         private void addActionListeners(JPanel playground) {
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Ex: 'John Schdmit'")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Ex: 'John Schdmit'");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                salaryTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (salaryTextField.getText().equals("Ex: '14'")) {
-                                        salaryTextField.setText("");
-                                        salaryTextField.setForeground(Color.BLACK);
-                                        salaryPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (salaryTextField.getText().isEmpty()) {
-                                        salaryTextField.setForeground(Color.GRAY);
-                                        salaryTextField.setText("Ex: '14'");
-                                        salaryPlaceholder = true;
-                                }
-                        }
-                });
-                hoursWeekTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (hoursWeekTextField.getText().equals("Ex: '22:00'")) {
-                                        hoursWeekTextField.setText("");
-                                        hoursWeekTextField.setForeground(Color.BLACK);
-                                        hoursWeekPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (hoursWeekTextField.getText().isEmpty()) {
-                                        hoursWeekTextField.setForeground(Color.GRAY);
-                                        hoursWeekTextField.setText("Ex: '22:00'");
-                                        hoursWeekPlaceholder = true;
-                                }
-                        }
-                });
                 backButton.addMouseListener(new MouseListener() {
 
                         public void mouseClicked(MouseEvent e) {
@@ -399,7 +356,8 @@ public class addEmployee {
                 addEmployeeButton.addMouseListener(new MouseListener() {
 
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder || salaryPlaceholder || hoursWeekPlaceholder) {
+                                if (namePlaceholder.getValue() || salaryPlaceholder.getValue()
+                                                || hoursWeekPlaceholder.getValue()) {
                                         successLabel.setText("Error. All the required fields must be filled.");
                                         successLabel.setVisible(true);
                                         return;
@@ -434,5 +392,16 @@ public class addEmployee {
                         }
 
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new addTextFieldFListener();
+                inputListener.applyListenerTextField(nameTextField, "Ex: 'John Schdmit'", namePlaceholder);
+                inputListener.applyListenerTextField(salaryTextField, "Ex: '14'", salaryPlaceholder);
+                inputListener.applyListenerTextField(hoursWeekTextField, "Ex: '22:00'", hoursWeekPlaceholder);
+
+                new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(salaryTextField);
+                new inputFormatterFactory().createInputFormatter("TIME").applyFormat(hoursWeekTextField);
         }
 }
