@@ -17,9 +17,6 @@ import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.add.addTextFieldFListener;
 import componentsFood.ingredient;
 import componentsFood.category;
-import componentsFood.product;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Stack;
 

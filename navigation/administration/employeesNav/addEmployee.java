@@ -42,6 +42,8 @@ public class addEmployee {
         private ArrayList<role> roles = new rolesAPI().getAllRoles();
         private JLabel successLabel = new JLabel();
 
+        private employeesAPI theManagerDB = new employeesAPI();
+
         public addEmployee(JPanel playground) {
                 initComponents(playground);
                 addActionListeners(playground);
@@ -324,6 +326,32 @@ public class addEmployee {
                 roleComboBox.setBackground(Color.WHITE);
         }
 
+        private boolean valuesArePlaceholders() {
+                boolean arePlaceholders = (namePlaceholder.getValue() || salaryPlaceholder.getValue()
+                                || hoursWeekPlaceholder.getValue());
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return arePlaceholders;
+        }
+
+        private boolean areInputsInvalid() {
+                return false;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                Float salary = Float.parseFloat(salaryTextField.getText());
+                String hoursWeek = hoursWeekTextField.getText();
+                int roleID = roles.get(roleComboBox.getSelectedIndex()).getId();
+                if (theManagerDB.addEmployee(name, salary, hoursWeek, roleID))
+                        successLabel.setText("The employee '" + name + "' has been successfully added.");
+                else
+                        successLabel.setText("Error. Impossible to connect to database.");
+                successLabel.setVisible(true);
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
 
@@ -354,21 +382,11 @@ public class addEmployee {
                 addEmployeeButton.addMouseListener(new MouseListener() {
 
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder.getValue() || salaryPlaceholder.getValue()
-                                                || hoursWeekPlaceholder.getValue()) {
-                                        successLabel.setText("Error. All the required fields must be filled.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                String name = nameTextField.getText();
-                                Float salary = Float.parseFloat(salaryTextField.getText());
-                                String hoursWeek = hoursWeekTextField.getText();
-                                int roleID = roles.get(roleComboBox.getSelectedIndex()).getId();
-                                if (new employeesAPI().addEmployee(name, salary, hoursWeek, roleID)) {
-                                        successLabel.setText(
-                                                        "The employee '" + name + "' has been successfully added.");
-                                        successLabel.setVisible(true);
-                                }
+                                if (areInputsInvalid())
+                                        return;
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {

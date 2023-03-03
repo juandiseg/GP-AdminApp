@@ -3,6 +3,7 @@ package navigation.administration.shiftsNav;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Stack;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
@@ -61,6 +62,8 @@ public class addShifts {
         private String from;
         private String to;
         private boolean shiftDate;
+
+        private shiftsAPI theManagerDB = new shiftsAPI();
 
         public addShifts(JPanel playground, String from, String to, boolean shiftDate) {
                 this.from = from;
@@ -390,6 +393,57 @@ public class addShifts {
                 unselectedJScrollPane.setBackground(new Color(245, 245, 245));
         }
 
+        private boolean valuesArePlaceholders() {
+                boolean arePlaceholders = (datePlaceholder.getValue() || startPlaceholder.getValue()
+                                || endPlaceholder.getValue());
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                        return arePlaceholders;
+                }
+                arePlaceholders = modelSelected.getRowCount() == 0;
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must select at least one employee.");
+                        successLabel.setVisible(true);
+                        return true;
+                }
+                return false;
+        }
+
+        private boolean areInputsInvalid() {
+                String date = dateTextField.getText();
+                LocalDate today = LocalDate.now();
+                LocalDate localDateNew = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                if (localDateNew.isBefore(today)) {
+                        successLabel.setText("ERROR. You can't add a shift that occured in the past.");
+                        successLabel.setVisible(true);
+                        return true;
+                }
+                // CHECK IMBEDED DATES
+                return false;
+        }
+
+        private boolean addFoodComponent() {
+                String date = dateTextField.getText();
+                String startShift = startShiftTextField.getText();
+                String endShift = endShiftTextField.getText();
+
+                Stack<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
+
+                if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
+                        return true;
+                successLabel.setText("Error. Something went wrong while adding shifts.");
+                successLabel.setVisible(true);
+                return false;
+        }
+
+        private Stack<Integer> getSelectedEmployeeIDs() {
+                Stack<Integer> selectedEmployees = new Stack<Integer>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++)
+                        selectedEmployees.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                return selectedEmployees;
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -414,35 +468,13 @@ public class addShifts {
                         }
                 });
                 addShiftsButton.addMouseListener(new MouseListener() {
-                        // check inputs and add check shifts not imbeded. This is having a 10:00 - 18:00
-                        // and also a 13:00-15:00 on the same day
                         public void mouseClicked(MouseEvent e) {
-                                iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
-                                iFormatter timeFormatter = new inputFormatterFactory().createInputFormatter("TIME");
-                                if (!dateFormatter.isFilled(dateTextField)
-                                                || !timeFormatter.isFilled(startShiftTextField)
-                                                || !timeFormatter.isFilled(endShiftTextField)) {
-                                        successLabel.setText("Please fill all requested fields.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                String date = dateTextField.getText();
-                                LocalDate today = LocalDate.now();
-                                LocalDate localDateNew = LocalDate.parse(date,
-                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                                if (localDateNew.isBefore(today)) {
-                                        JOptionPane.showMessageDialog(playground,
-                                                        "You can't add a shift that occured in the past.", "ERROR",
-                                                        JOptionPane.ERROR_MESSAGE);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                String startShift = startShiftTextField.getText();
-                                String endShift = endShiftTextField.getText();
-                                shiftsAPI theManagerDB = new shiftsAPI();
-                                for (int i = 0; i < tableSelected.getRowCount(); i++) {
-                                        String employeeID = (String) modelSelected.getValueAt(i, 0);
-                                        theManagerDB.addShift(employeeID, date, startShift, endShift);
-                                }
+                                if (!addFoodComponent())
+                                        return;
                                 playground.removeAll();
                                 new mainShifts(playground, from, to, shiftDate);
                                 playground.revalidate();

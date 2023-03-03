@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import componentsFood.currentShiftEmployee;
 import componentsFood.employee;
@@ -18,7 +19,7 @@ public class shiftsAPI extends abstractManagerDB {
 
     // GET "product" objects from database.
 
-    public void addShift(String employeeID, String shiftDate, String startShift, String endShift) {
+    public boolean addShift(String employeeID, String shiftDate, String startShift, String endShift) {
         shiftDate = dateInverter.invert(shiftDate);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO employees_schedule VALUES (" + employeeID + ", '" + shiftDate + "', '"
@@ -26,11 +27,33 @@ public class shiftsAPI extends abstractManagerDB {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean addShifts(Stack<Integer> employeeID, String shiftDate, String startShift, String endShift) {
+        shiftDate = dateInverter.invert(shiftDate);
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            while (!employeeID.isEmpty()) {
+                String query = "INSERT INTO employees_schedule VALUES (" + employeeID.pop() + ", '" + shiftDate + "', '"
+                        + startShift + "', '" + endShift + "', NULL, NULL, NULL)";
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate(query);
+                } catch (Exception a) {
+                    System.out.println(a);
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
         }
     }
 

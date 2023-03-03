@@ -26,6 +26,7 @@ public class addRole {
         private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
+        private rolesAPI theManagerDB = new rolesAPI();
 
         public addRole(JPanel playground) {
                 initComponents(playground);
@@ -211,6 +212,33 @@ public class addRole {
                                                                 .addContainerGap()));
         }
 
+        private boolean valuesArePlaceholders() {
+                boolean isPlaceholder = namePlaceholder.getValue() == true;
+                if (isPlaceholder) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return isPlaceholder;
+        }
+
+        private boolean areInputsInvalid() {
+                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                if (error) {
+                        successLabel.setText("Error. The given name is already in use.");
+                        successLabel.setVisible(true);
+                }
+                return error;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                if (theManagerDB.addRole(name))
+                        successLabel.setText("\"" + name + "\" was successfully added.");
+                else
+                        successLabel.setText("Error. Impossible to connect to database.");
+                successLabel.setVisible(true);
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -236,17 +264,11 @@ public class addRole {
                 });
                 addRoleButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                rolesAPI theManagerDB = new rolesAPI();
-                                String name = nameTextField.getText();
-                                if (namePlaceholder.getValue())
+                                if (valuesArePlaceholders())
                                         return;
-                                if (theManagerDB.addRole(name)) {
-                                        successLabel.setText("'" + name + "' Successfully added !");
-                                        successLabel.setVisible(true);
-                                } else {
-                                        successLabel.setText("Something went wrong when adding '" + name + "'.");
-                                        successLabel.setVisible(true);
-                                }
+                                if (areInputsInvalid())
+                                        return;
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {
