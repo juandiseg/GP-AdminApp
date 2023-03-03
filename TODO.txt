@@ -32,6 +32,8 @@ WHEN DELETING IN CASCADE CHECK IF SOMEHING IS LEFT WITH NO INGREDIENTS/PRODUCTS 
 
 ADD LISTENERS!!
 
+ADD FORMATTER TO TABLES!
+
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

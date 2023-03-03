@@ -822,7 +822,7 @@ public class editIngredient {
 
                 numericFormatter.applyFormat(priceTextField);
                 numericFormatter.applyFormat(quantityTextField);
-                new editToggleAction().applyListenerTextField(inventoryToggle, "Yes", "No",
+                new editToggleAction().applyActionListenerToggle(inventoryToggle, "Yes", "No",
                                 theCurrentIngredient.getInInventory());
         }
 

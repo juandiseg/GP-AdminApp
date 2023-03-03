@@ -430,7 +430,8 @@ public class editCategory {
                 iToggleListener toggleListener = new editToggleAction();
                 String ifTrue = "Product Category";
                 String ifFalse = "Menu Category";
-                toggleListener.applyListenerTextField(typeToggle, ifTrue, ifFalse, theCurrentCategory.getIsProduct());
+                toggleListener.applyActionListenerToggle(typeToggle, ifTrue, ifFalse,
+                                theCurrentCategory.getIsProduct());
         }
 
         private void renewPlaceholders() {

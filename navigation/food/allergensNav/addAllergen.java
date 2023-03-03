@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.databaseAPIs.allergensAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
 
@@ -20,7 +22,7 @@ public class addAllergen {
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
-        private boolean namePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
 
@@ -234,7 +236,7 @@ public class addAllergen {
                 });
                 addAllergenButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder) {
+                                if (namePlaceholder.getValue()) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         successLabel.setVisible(true);
                                         return;
@@ -272,22 +274,10 @@ public class addAllergen {
                                 addAllergenButton.setForeground(new Color(23, 35, 51));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Enter NAME here")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Enter NAME here");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
+        private void applyGenericListeners() {
+                new addTextFieldFListener().applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder);
         }
 }

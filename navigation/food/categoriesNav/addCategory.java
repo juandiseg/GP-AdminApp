@@ -5,6 +5,10 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.databaseAPIs.categoryAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addJToggleAListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
 
@@ -25,7 +29,7 @@ public class addCategory {
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
-        private boolean namePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         public addCategory(JPanel playground) {
                 initComponents(playground);
@@ -275,7 +279,7 @@ public class addCategory {
                 addCategoryButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 categoryAPI theManagerDB = new categoryAPI();
-                                if (namePlaceholder) {
+                                if (namePlaceholder.getValue()) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         successLabel.setVisible(true);
                                         return;
@@ -311,30 +315,12 @@ public class addCategory {
                                 addCategoryButton.setForeground(new Color(23, 35, 51));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Ex. 'Peanuts'")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Ex. 'Peanuts'");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                typeJoggle.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                if (typeJoggle.getText().equals("Menu Category"))
-                                        typeJoggle.setText("Product Category");
-                                else
-                                        typeJoggle.setText("Menu Category");
-                        }
-                });
+        private void applyGenericListeners() {
+                new addTextFieldFListener().applyListenerTextField(nameTextField, "Ex. 'Konsum'", namePlaceholder);
+                new addJToggleAListener().applyActionListenerToggle(typeJoggle, "Menu Category", "Product Category",
+                                true);
         }
 }

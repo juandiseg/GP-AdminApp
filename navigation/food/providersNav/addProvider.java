@@ -5,6 +5,9 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.databaseAPIs.providerAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
 
@@ -18,8 +21,8 @@ public class addProvider {
 
         private JTextField nameTextField = new JTextField();
         private JTextField emailTextField = new JTextField();
-        private boolean namePlaceholder = true;
-        private boolean emailPlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper emailPlaceholder = new booleanWrapper(true);
 
         private JButton addProviderButton = new JButton();
         private JButton backButton = new JButton();
@@ -279,7 +282,7 @@ public class addProvider {
                 });
                 addProviderButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder || emailPlaceholder) {
+                                if (namePlaceholder.getValue() || emailPlaceholder.getValue()) {
                                         successLabel.setText(
                                                         "To add a category you must specify a name and email for it.");
                                         successLabel.setVisible(true);
@@ -317,39 +320,12 @@ public class addProvider {
                                 addProviderButton.setForeground(new Color(23, 35, 51));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Ex. 'Konsum'")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Ex. 'Konsum'");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                emailTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (emailTextField.getText().equals("Ex. 'provider@konsum.de'")) {
-                                        emailTextField.setText("");
-                                        emailTextField.setForeground(Color.BLACK);
-                                        emailPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (emailTextField.getText().isEmpty()) {
-                                        emailTextField.setForeground(Color.GRAY);
-                                        emailTextField.setText("Ex. 'provider@konsum.de'");
-                                        emailPlaceholder = true;
-                                }
-                        }
-                });
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new addTextFieldFListener();
+                inputListener.applyListenerTextField(nameTextField, "Ex. 'Konsum'", namePlaceholder);
+                inputListener.applyListenerTextField(emailTextField, "Ex. 'provider@konsum.de'", emailPlaceholder);
         }
 }

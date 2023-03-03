@@ -21,7 +21,6 @@ import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editPriceFListener;
 import util.listenersFormatting.edit.editTextFListener;
-import util.listenersFormatting.edit.editToggleAction;
 
 import java.awt.*;
 

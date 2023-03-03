@@ -10,6 +10,11 @@ import java.awt.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.productAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 import componentsFood.ingredient;
 import componentsFood.category;
 import componentsFood.product;
@@ -29,8 +34,8 @@ public class addProduct {
         private JTextField nameTextField = new JTextField();
         private JTextField priceTextField = new JTextField();
 
-        private boolean namePlaceholder = true;
-        private boolean pricePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper pricePlaceholder = new booleanWrapper(true);
 
         private JComboBox<String> categoriesComboBox = new JComboBox<String>();
 
@@ -482,7 +487,7 @@ public class addProduct {
                 addProductButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 boolean ingredientEmpty = modelSelected.getRowCount() == 0;
-                                if (namePlaceholder || pricePlaceholder || ingredientEmpty) {
+                                if (namePlaceholder.getValue() || pricePlaceholder.getValue() || ingredientEmpty) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         successLabel.setVisible(true);
                                         return;
@@ -529,40 +534,6 @@ public class addProduct {
                         public void mouseExited(MouseEvent e) {
                                 addProductButton.setBackground(new Color(255, 255, 255));
                                 addProductButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Ex. \"Burguer\"")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Ex. \"Burguer\"");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                priceTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (priceTextField.getText().equals("Ex. \"9.99\"")) {
-                                        priceTextField.setText("");
-                                        priceTextField.setForeground(Color.BLACK);
-                                        pricePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (priceTextField.getText().isEmpty()) {
-                                        priceTextField.setForeground(Color.GRAY);
-                                        priceTextField.setText("Ex. \"9.99\"");
-                                        pricePlaceholder = true;
-                                }
                         }
                 });
                 unselectButton.addMouseListener(new MouseListener() {
@@ -636,6 +607,15 @@ public class addProduct {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new addTextFieldFListener();
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+                inputListener.applyListenerTextField(nameTextField, "Ex. \"Burguer\"", namePlaceholder);
+                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder);
+                numericFormatter.applyFormat(priceTextField);
         }
 
         private boolean ingredientsQuantityNotSpecified() {

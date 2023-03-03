@@ -18,6 +18,10 @@ import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.providerAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.add.addJToggleAListener;
+import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
 
@@ -35,9 +39,9 @@ public class addIngredient {
         private JTextField nameTextField = new JTextField();
         private JTextField priceTextField = new JTextField();
         private JTextField quantityTextField = new JTextField();
-        private boolean namePlaceholder = true;
-        private boolean pricePlaceholder = true;
-        private boolean quantityPlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper pricePlaceholder = new booleanWrapper(true);
+        private booleanWrapper quantityPlaceholder = new booleanWrapper(true);
         private JComboBox<String> providerComboBox = new JComboBox<String>();
         private JToggleButton inventoryToggle = new JToggleButton();
 
@@ -521,7 +525,8 @@ public class addIngredient {
                 });
                 addIngredientButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder || pricePlaceholder || quantityPlaceholder) {
+                                if (namePlaceholder.getValue() || pricePlaceholder.getValue()
+                                                || quantityPlaceholder.getValue()) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         return;
                                 }
@@ -575,70 +580,6 @@ public class addIngredient {
                                 addIngredientButton.setForeground(new Color(23, 35, 51));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Ex. \"Ground Beef\"")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Ex. \"Ground Beef\"");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                priceTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (priceTextField.getText().equals("Ex. \"9.99\"")) {
-                                        priceTextField.setText("");
-                                        priceTextField.setForeground(Color.BLACK);
-                                        pricePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (priceTextField.getText().isEmpty()) {
-                                        priceTextField.setForeground(Color.GRAY);
-                                        priceTextField.setText("Ex. \"9.99\"");
-                                        pricePlaceholder = true;
-                                }
-                        }
-                });
-                quantityTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (quantityTextField.getText().equals("Ex. \"1\"")) {
-                                        quantityTextField.setText("");
-                                        quantityTextField.setForeground(Color.BLACK);
-                                        quantityPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (quantityTextField.getText().isEmpty()) {
-                                        quantityTextField.setForeground(Color.GRAY);
-                                        quantityTextField.setText("Ex. \"1\"");
-                                        quantityPlaceholder = true;
-                                }
-                        }
-                });
-                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
-                numericFormatter.applyFormat(priceTextField);
-                numericFormatter.applyFormat(quantityTextField);
-
-                inventoryToggle.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                if (inventoryToggle.getText().equals("Yes"))
-                                        inventoryToggle.setText("No");
-                                else
-                                        inventoryToggle.setText("Yes");
-                        }
-                });
-
                 unselectButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int row = tableSelected.getSelectedRow();
@@ -694,5 +635,19 @@ public class addIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                applyGenericListeners();
         }
+
+        private void applyGenericListeners() {
+                iTextFieldListener inputListener = new addTextFieldFListener();
+                inputListener.applyListenerTextField(nameTextField, "Ex. \"Ground Beef\"", namePlaceholder);
+                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder);
+                inputListener.applyListenerTextField(quantityTextField, "Ex. \"1\"", quantityPlaceholder);
+                new addJToggleAListener().applyActionListenerToggle(inventoryToggle, "Yes", "No", false);
+
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+                numericFormatter.applyFormat(priceTextField);
+                numericFormatter.applyFormat(quantityTextField);
+        }
+
 }
