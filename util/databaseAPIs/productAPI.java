@@ -165,7 +165,7 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    private boolean isProductContainedInMenu(int menuID, int productID) {
+    private boolean isProductContainedInMenu(int menuID, Integer productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_id FROM menus_products WHERE menu_id = " + menuID + " AND product_id = "
                     + productID
@@ -251,11 +251,10 @@ public class productAPI extends abstractManagerDB {
     }
 
     // UPDATE something "product" related in database.
-    public boolean updateProductName(int productID, String name) {
+    public boolean updateProductName(product theProduct, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products AS p, (SELECT MAX(product_date) AS product_date FROM products WHERE product_id = "
-                    + productID + ") AS temp SET p.name = '" + name
-                    + "' WHERE p.product_date = temp.product_date AND p.product_id = " + productID + ";";
+            String query = "UPDATE products SET name = '" + name + "' WHERE product_id = " + theProduct.getId()
+                    + " AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -269,11 +268,12 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updatePrice(int productID, float productPrice) {
-        fixProductDate(productID);
+    public boolean updatePrice(product theProduct, float productPrice) {
+        fixProductDate(theProduct);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products SET price = " + productPrice + " WHERE product_id = " + productID
-                    + " AND active = true;";
+            String query = "UPDATE products SET price = " + productPrice + " WHERE product_id = " + theProduct.getId()
+                    + " AND active = true AND product_date = CURDATE();";
+            System.out.println(query);
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -287,9 +287,10 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateCategory(int productID, int categoryID) {
+    public boolean updateCategory(product theProduct, int categoryID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products SET category_id = " + categoryID + " WHERE product_id = " + productID
+            String query = "UPDATE products SET category_id = " + categoryID + " WHERE product_id = "
+                    + theProduct.getId()
                     + " AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
@@ -318,19 +319,18 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    private void fixProductDate(int productID) {
-        if (isLastProductEntryToday(productID))
+    private void fixProductDate(product theProduct) {
+        if (isLastProductEntryToday(theProduct))
             return;
-        product tempProduct = getProduct(productID);
-        setProductIDUnactive(productID);
+        setProductIDUnactive(theProduct);
         String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        addProduct(productID, tempProduct.getCategoryID(), dateToday, tempProduct.getName(), tempProduct.getPrice(),
-                true);
+        addProduct(theProduct.getId(), theProduct.getCategoryID(), dateToday, theProduct.getName(),
+                theProduct.getPrice(), true);
     }
 
-    public void setProductIDUnactive(int productID) {
+    public void setProductIDUnactive(product theProduct) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products SET active = false WHERE product_id = " + productID;
+            String query = "UPDATE products SET active = false WHERE product_id = " + theProduct.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -342,19 +342,15 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    private boolean isLastProductEntryToday(int productID) {
+    private boolean isLastProductEntryToday(product theProduct) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String query = "SELECT product_date FROM products WHERE product_id = " + productID + " AND active = true;";
+            String query = "SELECT * FROM products WHERE product_id = " + theProduct.getId()
+                    + " AND product_date = CURDATE() AND active = true;";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("product_date");
                     connection.close();
-                    if (dateToday.equals(dateDB))
-                        return true;
-                    else
-                        return false;
+                    return true;
                 } else {
                     connection.close();
                     return false;
@@ -409,18 +405,12 @@ public class productAPI extends abstractManagerDB {
 
     private boolean areIngredientEntriesToday(int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String query = "SELECT product_ingredients_date FROM products_ingredients WHERE product_id = " + productID
-                    + " ORDER BY product_ingredients_date DESC LIMIT 1;";
+            String query = "SELECT * FROM products_ingredients WHERE product_id = 14 AND product_ingredients_date = CURDATE()";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("product_ingredients_date");
                     connection.close();
-                    if (dateToday.equals(dateDB))
-                        return true;
-                    else
-                        return false;
+                    return true;
                 } else {
                     connection.close();
                     return false;
@@ -437,9 +427,8 @@ public class productAPI extends abstractManagerDB {
     // REMOVE "product" from database.
     private void removeProductIngredientsToday(int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String query = "DELETE FROM products_ingredients WHERE product_id = " + productID
-                    + " AND product_ingredients_date = '" + dateToday + "';";
+                    + " AND product_ingredients_date = CURDATE();";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -492,11 +481,12 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public void deleteProductsInMenu(int menuID, int productID) {
-        if (!isProductContainedInMenu(menuID, productID))
+    public void deleteProductsInMenu(int menuID, product theProduct) {
+        if (!isProductContainedInMenu(menuID, theProduct.getId()))
             return;
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM menus_products WHERE menu_id = " + menuID + " AND product_id = " + productID
+            String query = "DELETE FROM menus_products WHERE menu_id = " + menuID + " AND product_id = "
+                    + theProduct.getId()
                     + " AND menu_products_date IN (SELECT * FROM (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = "
                     + menuID + ") AS x)";
             try (Statement stmt = connection.createStatement()) {

@@ -182,25 +182,20 @@ public class menuAPI extends abstractManagerDB {
     private void fixMenuDate(menu theMenu) {
         if (isLastMenuEntryToday(theMenu))
             return;
-        menu tempMenu = getMenu(theMenu.getId());
         setMenuIDUnactive(theMenu.getId());
         String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        addMenu(theMenu.getId(), theMenu.getCategoryID(), dateToday, tempMenu.getName(), tempMenu.getPrice(), true);
+        addMenu(theMenu.getId(), theMenu.getCategoryID(), dateToday, theMenu.getName(), theMenu.getPrice(), true);
     }
 
     private boolean isLastMenuEntryToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String query = "SELECT menu_date FROM menus WHERE menu_id = " + theMenu.getId() + " AND active = true;";
+            String query = "SELECT * FROM menus WHERE menu_id = " + theMenu.getId()
+                    + " AND menu_date = CURDATE() AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("menu_date");
                     connection.close();
-                    if (dateToday.equals(dateDB)) {
-                        return true;
-                    } else
-                        return false;
+                    return true;
                 } else {
                     connection.close();
                     return false;
@@ -240,18 +235,13 @@ public class menuAPI extends abstractManagerDB {
 
     private boolean areProductEntriesToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = " + theMenu.getId()
-                    + " ORDER BY menu_products_date DESC LIMIT 1;";
+                    + " AND menu_products_date = CURDATE()";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
-                    String dateDB = rs.getString("menu_products_date");
                     connection.close();
-                    if (dateToday.equals(dateDB))
-                        return true;
-                    else
-                        return false;
+                    return true;
                 } else {
                     connection.close();
                     return false;
@@ -268,9 +258,8 @@ public class menuAPI extends abstractManagerDB {
     // REMOVE "product" from database.
     private void removeMenuProductsToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String query = "DELETE FROM menus_products WHERE menu_id = " + theMenu.getId() +
-                    " AND menu_products_date = '" + dateToday + "'";
+                    " AND menu_products_date = CURDATE()";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -299,7 +288,7 @@ public class menuAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM menus WHERE name = " + name;
+            String query = "SELECT * FROM menus WHERE name = '" + name + "' AND active = TRUE";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

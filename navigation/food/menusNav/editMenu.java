@@ -15,6 +15,12 @@ import componentsFood.product;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.menuAPI;
 import util.databaseAPIs.productAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editPriceFListener;
+import util.listenersFormatting.edit.editTextFListener;
 
 import java.awt.*;
 
@@ -31,8 +37,8 @@ public class editMenu {
         private JTextField nameTextField = new JTextField();
         private JTextField priceTextField = new JTextField();
 
-        private boolean namePlaceholder = true;
-        private boolean pricePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper pricePlaceholder = new booleanWrapper(true);
 
         private JComboBox<String> categoriesComboBox = new JComboBox<String>();
 
@@ -501,7 +507,6 @@ public class editMenu {
                 ArrayList<product> tempList = managerDB.getSelectedProductsInMenu(theCurrentMenu);
                 ArrayList<product> listSelected = new ArrayList<product>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                        // int id, int categoryID, String date, String name, float price, boolean active
                         int prodID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
                         int catID = Integer.parseInt((String) modelSelected.getValueAt(i, 1));
                         String date = (String) modelSelected.getValueAt(i, 2);
@@ -536,6 +541,19 @@ public class editMenu {
                 return true;
         }
 
+        private void renewPlaceholders() {
+                theCurrentMenu = new menuAPI().getMenu(theCurrentMenu.getId());
+                theProductLabel.setText(theCurrentMenu.getName());
+                namePlaceholder.setValue(true);
+                pricePlaceholder.setValue(true);
+                nameTextField.setText(theCurrentMenu.getName());
+                nameTextField.setForeground(Color.GRAY);
+                priceTextField.setText(Float.toString(theCurrentMenu.getPrice()));
+                priceTextField.setForeground(Color.GRAY);
+                setComboBox();
+                applyGenericListeners();
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -567,7 +585,8 @@ public class editMenu {
                                 boolean ingredientEmpty = modelSelected.getRowCount() == 0;
                                 boolean productPlaceholder = isProductPlaceholder();
 
-                                if (ingredientEmpty || (namePlaceholder && pricePlaceholder && categoryPlaceholder
+                                if (ingredientEmpty || (namePlaceholder.getValue() && pricePlaceholder.getValue()
+                                                && categoryPlaceholder
                                                 && productPlaceholder)) {
                                         if (ingredientEmpty) {
                                                 successLabel.setText(
@@ -592,7 +611,7 @@ public class editMenu {
                                 menuAPI managerDB = new menuAPI();
                                 boolean error = false;
                                 String name = theCurrentMenu.getName();
-                                if (!namePlaceholder) {
+                                if (!namePlaceholder.getValue()) {
                                         name = nameTextField.getText();
                                         if (managerDB.isNameTaken(name)) {
                                                 successLabel.setText("Error. The given name is already taken.");
@@ -601,8 +620,10 @@ public class editMenu {
                                         }
                                         if (!managerDB.updateMenuName(theCurrentMenu.getId(), name))
                                                 error = true;
+                                        else
+                                                theCurrentMenu = managerDB.getMenu(theCurrentMenu.getId());
                                 }
-                                if (!pricePlaceholder) {
+                                if (!pricePlaceholder.getValue()) {
                                         Float price = Float.parseFloat(priceTextField.getText());
                                         if (!managerDB.updatePrice(theCurrentMenu, price))
                                                 error = true;
@@ -631,13 +652,7 @@ public class editMenu {
                                         successLabel.setText("\"" + name + "\" has been successfully updated.");
                                 }
                                 successLabel.setVisible(true);
-                                theCurrentMenu = managerDB.getMenu(theCurrentMenu.getId());
-                                theProductLabel.setText(theCurrentMenu.getName());
-                                nameTextField.setText(theCurrentMenu.getName());
-                                nameTextField.setForeground(Color.GRAY);
-                                priceTextField.setText(Float.toString(theCurrentMenu.getPrice()));
-                                priceTextField.setForeground(Color.GRAY);
-                                setComboBox();
+                                renewPlaceholders();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -654,40 +669,6 @@ public class editMenu {
                         public void mouseExited(MouseEvent e) {
                                 editProductButton.setBackground(new Color(255, 255, 255));
                                 editProductButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals(theCurrentMenu.getName())) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText(theCurrentMenu.getName());
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                priceTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (priceTextField.getText().equals(Float.toString(theCurrentMenu.getPrice()))) {
-                                        priceTextField.setText("");
-                                        priceTextField.setForeground(Color.BLACK);
-                                        pricePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (priceTextField.getText().isEmpty()) {
-                                        priceTextField.setForeground(Color.GRAY);
-                                        priceTextField.setText(Float.toString(theCurrentMenu.getPrice()));
-                                        pricePlaceholder = true;
-                                }
                         }
                 });
                 unselectButton.addMouseListener(new MouseListener() {
@@ -786,6 +767,17 @@ public class editMenu {
                         }
 
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iTextFieldListener numericListener = new editPriceFListener();
+                iTextFieldListener textListener = new editTextFListener();
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+                textListener.applyListenerTextField(nameTextField, theCurrentMenu.getName(), namePlaceholder);
+                numericListener.applyListenerTextField(priceTextField, Float.toString(theCurrentMenu.getPrice()),
+                                pricePlaceholder);
+                numericFormatter.applyFormat(priceTextField);
         }
 
         private boolean ingredientsQuantityNotSpecified() {

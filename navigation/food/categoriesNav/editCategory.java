@@ -2,6 +2,11 @@ package navigation.food.categoriesNav;
 
 import componentsFood.category;
 import util.databaseAPIs.categoryAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.iToggleListener;
+import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editToggleAction;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -26,9 +31,9 @@ public class editCategory {
         private JButton backButton = new JButton();
         private JButton deleteButton = new JButton();
 
-        private boolean namePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
-        private JToggleButton typeJoggle = new JToggleButton();
+        private JToggleButton typeToggle = new JToggleButton();
 
         private JTextField nameTextField = new JTextField();
         private category theCurrentCategory;
@@ -37,6 +42,7 @@ public class editCategory {
                 this.theCurrentCategory = theCurrentCategory;
                 initComponents(playground);
                 addActionListeners(playground);
+
         }
 
         private void initComponents(JPanel playground) {
@@ -81,13 +87,13 @@ public class editCategory {
                 typeLabel.setText("Type");
                 typeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                typeJoggle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                typeToggle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 String category = "Menu Category";
                 if (theCurrentCategory.getIsProduct())
                         category = "Product Category";
-                typeJoggle.setText(category);
-                typeJoggle.setBackground(new Color(255, 255, 255));
-                typeJoggle.setForeground(new Color(23, 35, 51));
+                typeToggle.setText(category);
+                typeToggle.setBackground(new Color(255, 255, 255));
+                typeToggle.setForeground(Color.GRAY);
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -123,7 +129,7 @@ public class editCategory {
                                                                                                                 .createParallelGroup(
                                                                                                                                 GroupLayout.Alignment.LEADING,
                                                                                                                                 false)
-                                                                                                                .addComponent(typeJoggle,
+                                                                                                                .addComponent(typeToggle,
                                                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                                                 434,
                                                                                                                                 Short.MAX_VALUE)
@@ -163,7 +169,7 @@ public class editCategory {
                                                                                                 GroupLayout.Alignment.LEADING,
                                                                                                 false)
                                                                                 .addComponent(typeLabel)
-                                                                                .addComponent(typeJoggle,
+                                                                                .addComponent(typeToggle,
                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                 35,
                                                                                                 Short.MAX_VALUE))
@@ -322,7 +328,7 @@ public class editCategory {
                                 String originalType = "Menu Category";
                                 if (theCurrentCategory.getIsProduct())
                                         originalType = "Product Category";
-                                if (namePlaceholder && typeJoggle.getText().equals(originalType)) {
+                                if (namePlaceholder.getValue() && typeToggle.getText().equals(originalType)) {
                                         successLabel.setText(
                                                         "At least one of the fields must be modified to edit the category.");
                                         successLabel.setVisible(true);
@@ -330,7 +336,7 @@ public class editCategory {
                                 }
                                 categoryAPI theManagerDB = new categoryAPI();
                                 boolean successfulUpdate = true;
-                                if (!namePlaceholder) {
+                                if (!namePlaceholder.getValue()) {
                                         String name = nameTextField.getText();
                                         if (theManagerDB.isNameTaken(name)) {
                                                 successLabel.setText("Error. The given name is already taken.");
@@ -339,8 +345,8 @@ public class editCategory {
                                         }
                                         successfulUpdate = theManagerDB.updateName(theCurrentCategory.getId(), name);
                                 }
-                                if (!typeJoggle.getText().equals(originalType)) {
-                                        Boolean isProduct = typeJoggle.getText().equals("Product Category");
+                                if (!typeToggle.getText().equals(originalType)) {
+                                        Boolean isProduct = typeToggle.getText().equals("Product Category");
                                         if (theManagerDB.updateType(theCurrentCategory.getId(), isProduct) == false) {
                                                 JOptionPane.showMessageDialog(playground,
                                                                 "To edit a category's type this one must not be assigned to any products/menus.\nPlease check that before editting.",
@@ -349,22 +355,16 @@ public class editCategory {
                                         } else
                                                 successfulUpdate = true;
                                 }
-                                if (successfulUpdate)
+                                if (successfulUpdate) {
+
                                         successLabel.setText(
                                                         "The category '" + theCurrentCategory.getName()
                                                                         + "' has been successfully updated.");
-                                else
+                                        renewPlaceholders();
+                                } else
                                         successLabel.setText("Something went wrong while updating the category.");
                                 successLabel.setVisible(true);
 
-                                theCurrentCategory = theManagerDB.getCategory(theCurrentCategory.getId());
-                                theCategoryLabel.setText(theCurrentCategory.getName());
-                                nameTextField.setText(theCurrentCategory.getName());
-                                nameTextField.setForeground(Color.GRAY);
-                                String category = "Menu Category";
-                                if (theCurrentCategory.getIsProduct())
-                                        category = "Product Category";
-                                typeJoggle.setText(category);
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -420,31 +420,25 @@ public class editCategory {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
+                applyGenericListeners();
+        }
 
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals(theCurrentCategory.getName())) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+        private void applyGenericListeners() {
+                iTextFieldListener textListener = new editTextFListener();
+                textListener.applyListenerTextField(nameTextField, theCurrentCategory.getName(), namePlaceholder);
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText(theCurrentCategory.getName());
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                typeJoggle.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                if (typeJoggle.getText().equals("Menu Category"))
-                                        typeJoggle.setText("Product Category");
-                                else
-                                        typeJoggle.setText("Menu Category");
-                        }
-                });
+                iToggleListener toggleListener = new editToggleAction();
+                String ifTrue = "Product Category";
+                String ifFalse = "Menu Category";
+                toggleListener.applyListenerTextField(typeToggle, ifTrue, ifFalse, theCurrentCategory.getIsProduct());
+        }
+
+        private void renewPlaceholders() {
+                namePlaceholder.setValue(true);
+                theCurrentCategory = new categoryAPI().getCategory(theCurrentCategory.getId());
+                theCategoryLabel.setText(theCurrentCategory.getName());
+                nameTextField.setForeground(Color.GRAY);
+                typeToggle.setForeground(Color.GRAY);
+                applyGenericListeners();
         }
 }

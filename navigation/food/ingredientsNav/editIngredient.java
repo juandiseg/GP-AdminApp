@@ -2,9 +2,10 @@ package navigation.food.ingredientsNav;
 
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
-import util.listenersFormatting.iListener;
+import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editPriceFListener;
 import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editToggleAction;
 import util.inputFormatting.iFormatter;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -749,23 +750,6 @@ public class editIngredient {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                inventoryToggle.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                if (inventoryToggle.getText().equals("Yes")) {
-                                        if (theCurrentIngredient.getInInventory() == true)
-                                                inventoryToggle.setForeground(Color.BLACK);
-                                        else
-                                                inventoryToggle.setForeground(Color.GRAY);
-                                        inventoryToggle.setText("No");
-                                } else {
-                                        if (theCurrentIngredient.getInInventory() == false)
-                                                inventoryToggle.setForeground(Color.BLACK);
-                                        else
-                                                inventoryToggle.setForeground(Color.GRAY);
-                                        inventoryToggle.setText("Yes");
-                                }
-                        }
-                });
                 unselectButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int row = tableSelected.getSelectedRow();
@@ -825,8 +809,8 @@ public class editIngredient {
         }
 
         private void applyGenericListeners() {
-                iListener numericListener = new editPriceFListener();
-                iListener textListener = new editTextFListener();
+                iTextFieldListener numericListener = new editPriceFListener();
+                iTextFieldListener textListener = new editTextFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
 
                 textListener.applyListenerTextField(nameTextField, theCurrentIngredient.getName(), namePlaceholder);
@@ -838,6 +822,8 @@ public class editIngredient {
 
                 numericFormatter.applyFormat(priceTextField);
                 numericFormatter.applyFormat(quantityTextField);
+                new editToggleAction().applyListenerTextField(inventoryToggle, "Yes", "No",
+                                theCurrentIngredient.getInInventory());
         }
 
         private void deleteAllAssociatedToIngredientID(int ingredientID) {

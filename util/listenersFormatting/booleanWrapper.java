@@ -5,7 +5,7 @@ public class booleanWrapper {
     protected boolean theValue;
 
     public booleanWrapper(boolean value) {
-        value = theValue;
+        theValue = value;
     }
 
     public boolean getValue() {

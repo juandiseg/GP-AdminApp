@@ -2,6 +2,9 @@ package navigation.food.allergensNav;
 
 import componentsFood.allergen;
 import util.databaseAPIs.allergensAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editTextFListener;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -25,7 +28,7 @@ public class editAllergen {
         private JButton backButton = new JButton();
         private JButton deleteButton = new JButton();
 
-        private boolean namePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
         private allergen theCurrentAllergen;
@@ -54,7 +57,7 @@ public class editAllergen {
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Enter new NAME here");
+                nameTextField.setText(theCurrentAllergen.getName());
                 nameTextField.setForeground(Color.gray);
 
                 editAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -271,7 +274,7 @@ public class editAllergen {
                 editAllergenButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 String name = nameTextField.getText();
-                                if (namePlaceholder) {
+                                if (namePlaceholder.getValue()) {
                                         successLabel.setText(
                                                         "You must assign a new name in order to edit an allergen.");
                                         successLabel.setVisible(true);
@@ -285,14 +288,12 @@ public class editAllergen {
                                 }
                                 if (theManagerDB.editAllergen(theCurrentAllergen, name)) {
                                         successLabel.setText("'" + name + "' has been successfully updated.");
-                                        successLabel.setVisible(true);
-                                        theCurrentAllergen = new allergensAPI().getAllergen(theCurrentAllergen.getId());
-                                        editAllergenLabel.setText(theCurrentAllergen.getName());
+                                        renewPlaceholders();
                                 } else {
                                         successLabel.setText("Something went wrong while updating "
                                                         + theCurrentAllergen.getName());
-                                        successLabel.setVisible(true);
                                 }
+                                successLabel.setVisible(true);
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -346,23 +347,19 @@ public class editAllergen {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
+                applyGenericListeners();
+        }
 
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals("Enter new NAME here")) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+        private void renewPlaceholders() {
+                theCurrentAllergen = new allergensAPI().getAllergen(theCurrentAllergen.getId());
+                namePlaceholder.setValue(true);
+                editAllergenLabel.setText(theCurrentAllergen.getName());
+                nameTextField.setForeground(Color.GRAY);
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText("Enter new NAME here");
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
+        private void applyGenericListeners() {
+                iTextFieldListener textListener = new editTextFListener();
+                textListener.applyListenerTextField(nameTextField, theCurrentAllergen.getName(), namePlaceholder);
         }
 }

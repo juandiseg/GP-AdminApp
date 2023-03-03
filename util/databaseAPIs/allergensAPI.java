@@ -231,7 +231,7 @@ public class allergensAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM allergens WHERE name = " + name;
+            String query = "SELECT * FROM allergens WHERE name = '" + name + "'";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

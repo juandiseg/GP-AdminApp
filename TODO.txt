@@ -26,6 +26,12 @@ CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
 
 CHANGE DB TO SUPPORT MORE DECIMAL PLACES
 
+EASU BACK BUTTON IMPLEMENTATION
+
+WHEN DELETING IN CASCADE CHECK IF SOMEHING IS LEFT WITH NO INGREDIENTS/PRODUCTS AND DELETE IT.
+
+ADD LISTENERS!!
+
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

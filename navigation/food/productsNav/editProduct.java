@@ -15,6 +15,13 @@ import componentsFood.product;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.productAPI;
+import util.inputFormatting.iFormatter;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editPriceFListener;
+import util.listenersFormatting.edit.editTextFListener;
+import util.listenersFormatting.edit.editToggleAction;
 
 import java.awt.*;
 
@@ -31,8 +38,8 @@ public class editProduct {
         private JTextField nameTextField = new JTextField();
         private JTextField priceTextField = new JTextField();
 
-        private boolean namePlaceholder = true;
-        private boolean pricePlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper pricePlaceholder = new booleanWrapper(true);
 
         private JComboBox<String> categoriesComboBox = new JComboBox<String>();
 
@@ -590,44 +597,51 @@ public class editProduct {
                                 boolean ingredientEmpty = modelSelected.getRowCount() == 0;
                                 boolean ingredientPlaceholder = isIngredientPlaceholder();
 
-                                if (ingredientEmpty || (namePlaceholder && pricePlaceholder && categoryPlaceholder
+                                if (ingredientEmpty || (namePlaceholder.getValue() && pricePlaceholder.getValue()
+                                                && categoryPlaceholder
                                                 && ingredientPlaceholder)) {
                                         if (ingredientEmpty) {
                                                 successLabel.setText(
                                                                 "Error. A product must be made up of ingredients.");
+                                                successLabel.setVisible(true);
                                                 return;
                                         }
 
                                         successLabel.setText(
                                                         "Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
                                         return;
                                 }
                                 if (ingredientsQuantityNotSpecified()) {
                                         successLabel.setText(
                                                         "Error. You must specify the amount used of each ingredient.");
+                                        successLabel.setVisible(true);
                                         return;
                                 }
                                 productAPI managerDB = new productAPI();
                                 boolean error = false;
                                 String name = theCurrentProduct.getName();
-                                if (!namePlaceholder) {
+                                if (!namePlaceholder.getValue()) {
                                         name = nameTextField.getText();
                                         if (managerDB.isNameTaken(name)) {
                                                 successLabel.setText("Error. The given name is already taken.");
                                                 successLabel.setVisible(true);
                                                 return;
                                         }
-                                        if (!managerDB.updateProductName(theCurrentProduct.getId(), name))
+                                        if (!managerDB.updateProductName(theCurrentProduct, name))
                                                 error = true;
+                                        else
+                                                theCurrentProduct = new productAPI()
+                                                                .getProduct(theCurrentProduct.getId());
                                 }
-                                if (!pricePlaceholder) {
+                                if (!pricePlaceholder.getValue()) {
                                         Float price = Float.parseFloat(priceTextField.getText());
-                                        if (!managerDB.updatePrice(theCurrentProduct.getId(), price))
+                                        if (!managerDB.updatePrice(theCurrentProduct, price))
                                                 error = true;
                                 }
                                 if (!categoryPlaceholder) {
                                         int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                        if (!managerDB.updateCategory(theCurrentProduct.getId(), catID))
+                                        if (!managerDB.updateCategory(theCurrentProduct, catID))
                                                 error = true;
                                 }
                                 if (!ingredientPlaceholder) {
@@ -651,14 +665,7 @@ public class editProduct {
                                         successLabel.setText("\"" + name + "\" has been successfully updated.");
                                         successLabel.setVisible(true);
                                 }
-                                theCurrentProduct = managerDB.getProduct(theCurrentProduct.getId());
-                                theProductLabel.setText(theCurrentProduct.getName());
-                                nameTextField.setText(theCurrentProduct.getName());
-                                nameTextField.setForeground(Color.GRAY);
-                                priceTextField.setText(Float.toString(theCurrentProduct.getPrice()));
-                                priceTextField.setForeground(Color.GRAY);
-                                setComboBox();
-
+                                renewPlaceholders();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -675,40 +682,6 @@ public class editProduct {
                         public void mouseExited(MouseEvent e) {
                                 editProductButton.setBackground(new Color(255, 255, 255));
                                 editProductButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals(theCurrentProduct.getName())) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText(theCurrentProduct.getName());
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                priceTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (priceTextField.getText().equals(Float.toString(theCurrentProduct.getPrice()))) {
-                                        priceTextField.setText("");
-                                        priceTextField.setForeground(Color.BLACK);
-                                        pricePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (priceTextField.getText().isEmpty()) {
-                                        priceTextField.setForeground(Color.GRAY);
-                                        priceTextField.setText(Float.toString(theCurrentProduct.getPrice()));
-                                        pricePlaceholder = true;
-                                }
                         }
                 });
                 unselectButton.addMouseListener(new MouseListener() {
@@ -795,11 +768,10 @@ public class editProduct {
                                                         "Choice",
                                                         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                                                         options, options[0]);
-                                        int productID = theCurrentProduct.getId();
                                         if (response == 0) {
-                                                deleteMenusAssociatedToProductID(productID);
+                                                deleteMenusAssociatedToProductID();
                                         } else if (response == 1) {
-                                                deleteProductsFromMenus(productID);
+                                                deleteProductsFromMenus();
                                         } else
                                                 return;
                                         playground.removeAll();
@@ -822,22 +794,46 @@ public class editProduct {
                         }
 
                 });
+                applyGenericListeners();
         }
 
-        private void deleteMenusAssociatedToProductID(int productID) {
+        private void renewPlaceholders() {
+                theCurrentProduct = new productAPI().getProduct(theCurrentProduct.getId());
+                theProductLabel.setText(theCurrentProduct.getName());
+                namePlaceholder.setValue(true);
+                pricePlaceholder.setValue(true);
+                nameTextField.setText(theCurrentProduct.getName());
+                nameTextField.setForeground(Color.GRAY);
+                priceTextField.setText(Float.toString(theCurrentProduct.getPrice()));
+                priceTextField.setForeground(Color.GRAY);
+                setComboBox();
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iTextFieldListener numericListener = new editPriceFListener();
+                iTextFieldListener textListener = new editTextFListener();
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+                textListener.applyListenerTextField(nameTextField, theCurrentProduct.getName(), namePlaceholder);
+                numericListener.applyListenerTextField(priceTextField, Float.toString(theCurrentProduct.getPrice()),
+                                pricePlaceholder);
+                numericFormatter.applyFormat(priceTextField);
+        }
+
+        private void deleteMenusAssociatedToProductID() {
                 productAPI managerDB = new productAPI();
                 Stack<Integer> stackMenuIDs = managerDB.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        managerDB.deleteMenuWithProduct(stackMenuIDs.pop(), productID);
-                managerDB.updateActive(productID, false);
+                        managerDB.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
+                managerDB.updateActive(theCurrentProduct.getId(), false);
         }
 
-        private void deleteProductsFromMenus(int productID) {
+        private void deleteProductsFromMenus() {
                 productAPI managerDB = new productAPI();
                 Stack<Integer> stackMenuIDs = managerDB.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        managerDB.deleteProductsInMenu(stackMenuIDs.pop(), productID);
-                managerDB.updateActive(productID, false);
+                        managerDB.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
+                managerDB.updateActive(theCurrentProduct.getId(), false);
         }
 
         private boolean ingredientsQuantityNotSpecified() {

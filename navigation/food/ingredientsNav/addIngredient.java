@@ -629,6 +629,7 @@ public class addIngredient {
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
                 numericFormatter.applyFormat(priceTextField);
                 numericFormatter.applyFormat(quantityTextField);
+
                 inventoryToggle.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                                 if (inventoryToggle.getText().equals("Yes"))
@@ -637,6 +638,7 @@ public class addIngredient {
                                         inventoryToggle.setText("Yes");
                         }
                 });
+
                 unselectButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int row = tableSelected.getSelectedRow();

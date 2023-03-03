@@ -2,6 +2,9 @@ package navigation.food.providersNav;
 
 import componentsFood.provider;
 import util.databaseAPIs.providerAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editTextFListener;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -26,8 +29,8 @@ public class editProvider {
         private JButton backButton = new JButton();
         private JButton deleteButton = new JButton();
 
-        private boolean namePlaceholder = true;
-        private boolean emailPlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper emailPlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
         private JTextField emailTextField = new JTextField();
@@ -316,7 +319,7 @@ public class editProvider {
                 });
                 editProviderButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder && emailPlaceholder) {
+                                if (namePlaceholder.getValue() && emailPlaceholder.getValue()) {
                                         successLabel.setText(
                                                         "At least one of the fields must be modified to edit a provider.");
                                         successLabel.setVisible(true);
@@ -325,7 +328,7 @@ public class editProvider {
                                 providerAPI theManagerDB = new providerAPI();
                                 boolean successfulUpdate = true;
 
-                                if (!namePlaceholder) {
+                                if (!namePlaceholder.getValue()) {
                                         String name = nameTextField.getText();
                                         if (theManagerDB.isNameTaken(name)) {
                                                 successLabel.setText("Error. The given name is already taken.");
@@ -334,7 +337,7 @@ public class editProvider {
                                         }
                                         successfulUpdate = theManagerDB.updateName(theCurrentProvider.getId(), name);
                                 }
-                                if (!emailPlaceholder) {
+                                if (!emailPlaceholder.getValue()) {
                                         if (!successfulUpdate)
                                                 successfulUpdate = theManagerDB.updateEmail(theCurrentProvider.getId(),
                                                                 emailTextField.getText());
@@ -344,18 +347,12 @@ public class editProvider {
                                 }
                                 if (successfulUpdate)
                                         successLabel.setText(
-                                                        "The provider '" + theCurrentProvider.getName()
+                                                        "The provider '" + nameTextField.getText()
                                                                         + "' has been successfully updated.");
                                 else
                                         successLabel.setText("Something went wrong while updating the provider.");
                                 successLabel.setVisible(true);
-
-                                theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
-                                theProviderLabel.setText(theCurrentProvider.getName());
-                                nameTextField.setText(theCurrentProvider.getName());
-                                nameTextField.setForeground(Color.GRAY);
-                                emailTextField.setText(theCurrentProvider.getEmail());
-                                emailTextField.setForeground(Color.GRAY);
+                                renewPlaceholders();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -410,41 +407,24 @@ public class editProvider {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
+                applyGenericListeners();
+        }
 
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals(theCurrentProvider.getName())) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
+        private void renewPlaceholders() {
+                namePlaceholder.setValue(true);
+                emailPlaceholder.setValue(true);
+                theCurrentProvider = new providerAPI().getProvider(theCurrentProvider.getId());
+                theProviderLabel.setText(theCurrentProvider.getName());
+                nameTextField.setText(theCurrentProvider.getName());
+                nameTextField.setForeground(Color.GRAY);
+                emailTextField.setText(theCurrentProvider.getEmail());
+                emailTextField.setForeground(Color.GRAY);
+                applyGenericListeners();
+        }
 
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText(theCurrentProvider.getName());
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                emailTextField.addFocusListener(new FocusListener() {
-
-                        public void focusGained(FocusEvent e) {
-                                if (emailTextField.getText().equals(theCurrentProvider.getEmail())) {
-                                        emailTextField.setText("");
-                                        emailTextField.setForeground(Color.BLACK);
-                                        emailPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (emailTextField.getText().isEmpty()) {
-                                        emailTextField.setForeground(Color.GRAY);
-                                        emailTextField.setText(theCurrentProvider.getEmail());
-                                        emailPlaceholder = true;
-                                }
-                        }
-                });
+        private void applyGenericListeners() {
+                iTextFieldListener textListener = new editTextFListener();
+                textListener.applyListenerTextField(nameTextField, theCurrentProvider.getName(), namePlaceholder);
+                textListener.applyListenerTextField(emailTextField, theCurrentProvider.getEmail(), emailPlaceholder);
         }
 }

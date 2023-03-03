@@ -298,7 +298,7 @@ public class categoryAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM categories WHERE category_name = " + name;
+            String query = "SELECT * FROM categories WHERE category_name = '" + name + "'";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

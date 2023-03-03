@@ -7,9 +7,9 @@ import java.awt.Color;
 import javax.swing.JTextField;
 
 import util.listenersFormatting.booleanWrapper;
-import util.listenersFormatting.iListener;
+import util.listenersFormatting.iTextFieldListener;
 
-public class editTextFListener implements iListener {
+public class editTextFListener implements iTextFieldListener {
 
     public void applyListenerTextField(JTextField theTextField, String theString,
             booleanWrapper placeholder) {
