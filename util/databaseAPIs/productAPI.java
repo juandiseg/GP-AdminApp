@@ -188,24 +188,23 @@ public class productAPI extends abstractManagerDB {
     }
 
     // ADD "product" to database.
-    public product addProduct(String date, int catID, String name, float price) {
+    public int addProduct(int catID, String name, float price) {
         int productID = getLastProductID() + 1;
-        return addProduct(productID, catID, date, name, price, true);
+        return addProduct(productID, catID, name, price, true);
     }
 
-    private product addProduct(int ID, int catID, String date, String name, float price, boolean active) {
-        date = dateInverter.invert(date);
+    private int addProduct(int ID, int catID, String name, float price, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO products VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
+            String query = "INSERT INTO products VALUES (" + ID + ", " + catID + ", CURDATE(), '" + name + "', "
                     + price
                     + ", " + active + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new product(ID, catID, dateInverter.invert(date), name, price, active);
+                return ID;
             } catch (Exception e) {
                 System.out.println(e);
-                return null;
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -232,16 +231,17 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addIngredients(int productID, int ingredientID, String date, float quantity) {
-        date = dateInverter.invert(date);
+    public boolean addIngredients(int productID, Stack<Integer> ingredientIDs, Stack<Float> quantities) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO products_ingredients VALUES (" + productID + ", " + ingredientID + ", '" + date
-                    + "', " + quantity + ")";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-            } catch (Exception a) {
-                System.out.println(a);
-                return false;
+            while (!ingredientIDs.isEmpty()) {
+                String query = "INSERT INTO products_ingredients VALUES (" + productID + ", " + ingredientIDs.pop()
+                        + ", CURDATE(), " + quantities.pop() + ")";
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate(query);
+                } catch (Exception a) {
+                    System.out.println(a);
+                    return false;
+                }
             }
             return true;
         } catch (SQLException e) {
@@ -323,8 +323,7 @@ public class productAPI extends abstractManagerDB {
         if (isLastProductEntryToday(theProduct))
             return;
         setProductIDUnactive(theProduct);
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        addProduct(theProduct.getId(), theProduct.getCategoryID(), dateToday, theProduct.getName(),
+        addProduct(theProduct.getId(), theProduct.getCategoryID(), theProduct.getName(),
                 theProduct.getPrice(), true);
     }
 
@@ -395,12 +394,7 @@ public class productAPI extends abstractManagerDB {
         if (areIngredientEntriesToday(productID)) {
             removeProductIngredientsToday(productID);
         }
-        while (!stackIDs.empty() && !stackAmounts.empty()) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            if (!addIngredients(productID, stackIDs.pop(), dateToday, stackAmounts.pop()))
-                return false;
-        }
-        return true;
+        return addIngredients(productID, stackIDs, stackAmounts);
     }
 
     private boolean areIngredientEntriesToday(int productID) {

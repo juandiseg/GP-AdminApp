@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.role;
-import util.listenersFormatting.booleanWrapper;
 
 public class rolesAPI extends abstractManagerDB {
 

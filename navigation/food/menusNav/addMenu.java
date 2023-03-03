@@ -22,6 +22,7 @@ import componentsFood.product;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class addMenu {
 
@@ -59,6 +60,8 @@ public class addMenu {
         private JPanel jPanel1 = new JPanel();
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
+
+        private menuAPI theManagerDB = new menuAPI();
 
         private ArrayList<category> categories = new categoryAPI().getMenuCategories();
 
@@ -441,6 +444,69 @@ public class addMenu {
                 categoriesComboBox.setBackground(Color.WHITE);
         }
 
+        private boolean valuesArePlaceholders() {
+                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
+                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
+                                || ingredientEmpty);
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return arePlaceholders;
+        }
+
+        private boolean areInputsInvalid() {
+                if (productsQuantityNotSpecified()) {
+                        successLabel.setText(
+                                        "Error. You must specify the amount used of each product.");
+                        successLabel.setVisible(true);
+                        return true;
+                }
+                String name = nameTextField.getText();
+                if (theManagerDB.isNameTaken(name)) {
+                        successLabel.setText("Error. The given name is already taken.");
+                        successLabel.setVisible(true);
+                        return true;
+                }
+                return false;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
+                Float price = Float.parseFloat(priceTextField.getText());
+
+                int menuID = theManagerDB.addMenu(catID, name, price, true);
+                if (menuID == -1) {
+                        successLabel.setText("Error. Impossible to connect to database.");
+                        successLabel.setVisible(true);
+                        return;
+                }
+
+                Stack<Integer> selectedProductIDs = getSelectedProductIDs();
+                Stack<Float> selectedProductQtys = getSelectedProductQtys();
+                if (theManagerDB.addProducts(menuID, selectedProductIDs, selectedProductQtys))
+                        successLabel.setText("The menu \"" + name + "\" was added successfully.");
+                else
+                        successLabel.setText("Error. Something went wrong while adding products.");
+                successLabel.setVisible(true);
+
+        }
+
+        private Stack<Integer> getSelectedProductIDs() {
+                Stack<Integer> selectedProducts = new Stack<Integer>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++)
+                        selectedProducts.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                return selectedProducts;
+        }
+
+        private Stack<Float> getSelectedProductQtys() {
+                Stack<Float> selectedProducts = new Stack<Float>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++)
+                        selectedProducts.push(Float.parseFloat((String) modelSelected.getValueAt(i, 3)));
+                return selectedProducts;
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -466,43 +532,11 @@ public class addMenu {
                 });
                 addMenuButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
-                                if (namePlaceholder.getValue() || pricePlaceholder.getValue() || ingredientEmpty) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-
-                                if (productsQuantityNotSpecified()) {
-                                        successLabel.setText(
-                                                        "Error. You must specify the amount used of each product.");
-                                        successLabel.setVisible(true);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                String name = nameTextField.getText();
-                                if (new menuAPI().isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                                int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                Float price = Float.parseFloat(priceTextField.getText());
-
-                                menu newMenu = new menuAPI().addMenu(date, catID, name, price, true);
-
-                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                        int productID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                                        Float qty = Float.parseFloat((String) modelSelected.getValueAt(i, 3));
-                                        if ((!new menuAPI().addProducts(newMenu.getId(), productID, date, qty))) {
-                                                successLabel.setText(
-                                                                "Something went wrong while adding \"" + name + "\".");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-                                }
-                                successLabel.setText("Menu \"" + name + "\" was successfully added.");
-                                successLabel.setVisible(true);
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {

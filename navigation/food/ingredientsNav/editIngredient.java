@@ -658,12 +658,10 @@ public class editIngredient {
                                         }
                                 }
                                 if (!allergenPlaceholder && !error) {
-                                        Stack<allergen> stackAller = new Stack<>();
-                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                                int tempID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                                                String name = (String) modelSelected.getValueAt(i, 1);
-                                                stackAller.push(new allergen(tempID, name));
-                                        }
+                                        Stack<Integer> stackAller = new Stack<>();
+                                        for (int i = 0; i < modelSelected.getRowCount(); i++)
+                                                stackAller.push(Integer
+                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
                                         if (!new allergensAPI().editAlergensOfIngredient(stackAller, ingrID)) {
                                                 successLabel.setText("Error. Could not update to the given allergens.");
                                                 error = true;

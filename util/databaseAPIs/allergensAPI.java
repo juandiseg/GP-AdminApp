@@ -8,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import javax.swing.JOptionPane;
-
 import componentsFood.allergen;
 import componentsFood.ingredient;
 
@@ -110,15 +108,6 @@ public class allergensAPI extends abstractManagerDB {
     // ADD "allergen" to database.
     public boolean addAllergen(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String queryTest = "SELECT * FROM allergens WHERE name LIKE '%" + name + "%' LIMIT 1";
-            try (Statement stmt1 = connection.createStatement()) {
-                ResultSet rs = stmt1.executeQuery(queryTest);
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(null, "There is a similar entry with that name.", "Error",
-                            JOptionPane.WARNING_MESSAGE);
-                    return false;
-                }
-            }
             int allergenID = getLastAllergenID() + 1;
             String query = "INSERT INTO allergens VALUES (" + allergenID + ", '" + name + "');";
             try (Statement stmt = connection.createStatement()) {
@@ -134,11 +123,10 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
+    public boolean addAlergensOfIngredient(Stack<Integer> stackSelected, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             while (!stackSelected.isEmpty()) {
-                allergen temp = stackSelected.pop();
-                String query = "INSERT INTO ingredients_allergens VALUES (" + ingredientID + ", '" + temp.getId()
+                String query = "INSERT INTO ingredients_allergens VALUES (" + ingredientID + ", '" + stackSelected.pop()
                         + "');";
                 try (Statement stmt = connection.createStatement()) {
                     stmt.executeUpdate(query);
@@ -191,7 +179,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean editAlergensOfIngredient(Stack<allergen> stackSelected, int ingredientID) {
+    public boolean editAlergensOfIngredient(Stack<Integer> stackSelected, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = " + ingredientID;
             try (Statement stmt = connection.createStatement()) {

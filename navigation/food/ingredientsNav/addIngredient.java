@@ -65,6 +65,8 @@ public class addIngredient {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
+        private ingredientsAPI theManagerDB = new ingredientsAPI();
+
         private ArrayList<provider> providers = new providerAPI().getAllActiveProviders();
 
         public addIngredient(JPanel playground) {
@@ -500,6 +502,55 @@ public class addIngredient {
                 providerComboBox.setBackground(Color.WHITE);
         }
 
+        private boolean valuesArePlaceholders() {
+                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
+                                || quantityPlaceholder.getValue());
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return arePlaceholders;
+        }
+
+        private boolean areInputsInvalid() {
+                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                if (error) {
+                        successLabel.setText("Error. The given name is already in use.");
+                        successLabel.setVisible(true);
+                }
+                return error;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                Float price = Float.parseFloat(priceTextField.getText());
+                Float quantity = Float.parseFloat(quantityTextField.getText());
+                int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
+                boolean inventory = inventoryToggle.getText().equals("Yes");
+
+                int ingredientID = theManagerDB.addIngredient(providerID, name, price, quantity, inventory);
+                if (ingredientID == -1) {
+                        successLabel.setText("Error. Impossible to connect to database.");
+                        successLabel.setVisible(true);
+                        return;
+                }
+
+                Stack<Integer> selectedAllergens = getSelectedAllergenIDs();
+
+                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID))
+                        successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
+                else
+                        successLabel.setText("Error. Something went wrong while adding allergens.");
+                successLabel.setVisible(true);
+        }
+
+        private Stack<Integer> getSelectedAllergenIDs() {
+                Stack<Integer> selectedAllergens = new Stack<Integer>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++)
+                        selectedAllergens.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                return selectedAllergens;
+        }
+
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -525,43 +576,11 @@ public class addIngredient {
                 });
                 addIngredientButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder.getValue() || pricePlaceholder.getValue()
-                                                || quantityPlaceholder.getValue()) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                String name = nameTextField.getText();
-                                if (new ingredientsAPI().isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                String price = priceTextField.getText();
-                                String quantity = quantityTextField.getText();
-                                int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
-                                boolean inventory = inventoryToggle.getText().equals("Yes");
-                                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-
-                                int ingredientID = new ingredientsAPI().addIngredient(providerID, date, name,
-                                                Float.parseFloat(price),
-                                                Float.parseFloat(quantity), inventory);
-                                if (ingredientID == -1) {
-                                        successLabel.setText(
-                                                        "Error. Something went wrong while adding the ingredient.");
-                                        return;
-                                }
-                                Stack<allergen> selectedAllergens = new Stack<allergen>();
-                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                        int ID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                                        String allerName = (String) modelSelected.getValueAt(i, 1);
-                                        selectedAllergens.push(new allergen(ID, allerName));
-                                }
-                                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID)) {
-                                        successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
-                                        return;
-                                }
-                                successLabel.setText("Error. Something went wrong when adding the \"" + name
-                                                + "\"'s allergens.");
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {

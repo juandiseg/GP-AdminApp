@@ -12,6 +12,8 @@ import java.awt.*;
 
 public class addAllergen {
 
+        private allergensAPI theManagerDB = new allergensAPI();
+
         private JLabel addAllergenLabel = new JLabel();
         private JLabel nameLabel = new JLabel();
         private JLabel successLabel = new JLabel();
@@ -236,26 +238,11 @@ public class addAllergen {
                 });
                 addAllergenButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder.getValue()) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                allergensAPI theManagerDB = new allergensAPI();
-                                String name = nameTextField.getText();
-                                if (theManagerDB.isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                if (theManagerDB.addAllergen(name)) {
-                                        successLabel.setText("'" + name + "' was successfully added.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                successLabel.setText("Error. Something went wrong while connecting to the database.");
-                                successLabel.setVisible(true);
-                                return;
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -275,6 +262,34 @@ public class addAllergen {
                         }
                 });
                 applyGenericListeners();
+        }
+
+        private boolean valuesArePlaceholders() {
+                boolean isPlaceholder = namePlaceholder.getValue() == true;
+                if (isPlaceholder) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return isPlaceholder;
+        }
+
+        private boolean areInputsInvalid() {
+                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                if (error) {
+                        successLabel.setText("Error. The given name is already in use.");
+                        successLabel.setVisible(true);
+                }
+                return error;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                if (theManagerDB.addAllergen(name))
+                        successLabel.setText("\"" + name + "\" was successfully added.");
+                else
+                        successLabel.setText("Error. Impossible to connect to database.");
+
+                successLabel.setVisible(true);
         }
 
         private void applyGenericListeners() {

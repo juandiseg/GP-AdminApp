@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -64,24 +62,23 @@ public class menuAPI extends abstractManagerDB {
         return null;
     }
 
-    public menu addMenu(String date, int catID, String name, float price, boolean active) {
+    public int addMenu(int catID, String name, float price, boolean active) {
         int menuID = getLastMenuID() + 1;
-        return addMenu(menuID, catID, date, name, price, active);
+        return addMenu(menuID, catID, name, price, active);
     }
 
-    private menu addMenu(int ID, int catID, String date, String name, float price, boolean active) {
-        date = dateInverter.invert(date);
+    private int addMenu(int ID, int catID, String name, float price, boolean active) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO menus VALUES (" + ID + ", " + catID + ", '" + date + "', '" + name + "', "
+            String query = "INSERT INTO menus VALUES (" + ID + ", " + catID + ", CURDATE(), '" + name + "', "
                     + price
                     + ", " + active + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
-                return new menu(ID, catID, dateInverter.invert(date), name, price, active);
+                return ID;
             } catch (Exception e) {
                 System.out.println(e);
-                return null;
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -108,16 +105,18 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addProducts(int menuID, int productID, String date, Float quantity) {
-        date = dateInverter.invert(date);
+    public boolean addProducts(int menuID, Stack<Integer> productIDs, Stack<Float> quantities) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO menus_products VALUES (" + menuID + ", " + productID + ", '" + date
-                    + "', " + quantity + ")";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-            } catch (Exception a) {
-                System.out.println(a);
-                return false;
+            while (!productIDs.isEmpty()) {
+                String query = "INSERT INTO menus_products VALUES (" + menuID + ", " + productIDs.pop()
+                        + ", CURDATE(), "
+                        + quantities.pop() + ")";
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate(query);
+                } catch (Exception a) {
+                    System.out.println(a);
+                    return false;
+                }
             }
             return true;
         } catch (SQLException e) {
@@ -183,8 +182,7 @@ public class menuAPI extends abstractManagerDB {
         if (isLastMenuEntryToday(theMenu))
             return;
         setMenuIDUnactive(theMenu.getId());
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        addMenu(theMenu.getId(), theMenu.getCategoryID(), dateToday, theMenu.getName(), theMenu.getPrice(), true);
+        addMenu(theMenu.getId(), theMenu.getCategoryID(), theMenu.getName(), theMenu.getPrice(), true);
     }
 
     private boolean isLastMenuEntryToday(menu theMenu) {
@@ -226,10 +224,8 @@ public class menuAPI extends abstractManagerDB {
     public boolean updateProducts(menu theMenu, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
         if (areProductEntriesToday(theMenu))
             removeMenuProductsToday(theMenu);
-        while (!stackIDs.empty() && !stackAmounts.empty()) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            addProducts(theMenu.getId(), stackIDs.pop(), dateToday, stackAmounts.pop());
-        }
+        while (!stackIDs.empty() && !stackAmounts.empty())
+            addProducts(theMenu.getId(), stackIDs, stackAmounts);
         return true;
     }
 

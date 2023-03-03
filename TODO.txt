@@ -36,6 +36,8 @@ ADD FORMATTER TO TABLES!
 
 CHECKER FOR INPUT HOURS AND DATES!
 
+CHECK FOR ' AND " IN STRINGS IN JTextField(s) 
+
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

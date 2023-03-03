@@ -3,17 +3,15 @@ package navigation.administration.employeesNav;
 import componentsFood.role;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
-import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.add.addTextFieldFListener;
+import util.listenersFormatting.edit.editDateTFFListener;
 
 import java.util.ArrayList;
 import java.awt.event.*;
 import javax.swing.*;
-
-import org.apache.commons.math3.ml.neuralnet.twod.util.QuantizationError;
 
 import java.awt.*;
 
@@ -111,7 +109,7 @@ public class addEmployee {
                 setComboBox();
 
                 hoursWeekTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                hoursWeekTextField.setText("Ex: '22:00'");
+                hoursWeekTextField.setText("HH:MM");
                 hoursWeekTextField.setForeground(Color.GRAY);
 
                 GroupLayout fillingPanelLayout = new GroupLayout(fillingPanel);
@@ -399,7 +397,7 @@ public class addEmployee {
                 iTextFieldListener inputListener = new addTextFieldFListener();
                 inputListener.applyListenerTextField(nameTextField, "Ex: 'John Schdmit'", namePlaceholder);
                 inputListener.applyListenerTextField(salaryTextField, "Ex: '14'", salaryPlaceholder);
-                inputListener.applyListenerTextField(hoursWeekTextField, "Ex: '22:00'", hoursWeekPlaceholder);
+                new editDateTFFListener().applyListenerTextField(hoursWeekTextField, "HH:MM", hoursWeekPlaceholder);
 
                 new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(salaryTextField);
                 new inputFormatterFactory().createInputFormatter("TIME").applyFormat(hoursWeekTextField);

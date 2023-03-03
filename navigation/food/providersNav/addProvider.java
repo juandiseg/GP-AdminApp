@@ -31,6 +31,8 @@ public class addProvider {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
+        private providerAPI theManagerDB = new providerAPI();
+
         public addProvider(JPanel playground) {
                 initComponents(playground);
                 addActionListeners(playground);
@@ -282,26 +284,11 @@ public class addProvider {
                 });
                 addProviderButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                if (namePlaceholder.getValue() || emailPlaceholder.getValue()) {
-                                        successLabel.setText(
-                                                        "To add a category you must specify a name and email for it.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                providerAPI theManagerDB = new providerAPI();
-                                String name = nameTextField.getText();
-                                if (theManagerDB.isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                String email = emailTextField.getText();
-                                if (theManagerDB.addProvider(name, email))
-                                        successLabel.setText("Provider: \"" + name + "\" was successfully added.");
-                                else
-                                        successLabel.setText(
-                                                        "Something went wrong while adding \"" + name + "\".");
-                                successLabel.setVisible(true);
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -321,6 +308,34 @@ public class addProvider {
                         }
                 });
                 applyGenericListeners();
+        }
+
+        private boolean valuesArePlaceholders() {
+                boolean arePlaceholders = (namePlaceholder.getValue() || emailPlaceholder.getValue());
+                if (arePlaceholders) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return arePlaceholders;
+        }
+
+        private boolean areInputsInvalid() {
+                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                if (error) {
+                        successLabel.setText("Error. The given name is already in use.");
+                        successLabel.setVisible(true);
+                }
+                return error;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                String email = emailTextField.getText();
+                if (theManagerDB.addProvider(name, email))
+                        successLabel.setText("\"" + name + "\" was successfully added.");
+                else
+                        successLabel.setText("Error. Impossible to connect to database.");
+                successLabel.setVisible(true);
         }
 
         private void applyGenericListeners() {

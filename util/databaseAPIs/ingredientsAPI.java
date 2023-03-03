@@ -231,16 +231,15 @@ public class ingredientsAPI extends abstractManagerDB {
 
     // ADD "ingredient" to database.
 
-    public int addIngredient(int provID, String date, String name, float price, float amount, boolean in_inventory) {
+    public int addIngredient(int provID, String name, float price, float amount, boolean in_inventory) {
         int ingrID = getLastIngredientID() + 1;
-        return addIngredient(ingrID, provID, date, name, price, amount, in_inventory);
+        return addIngredient(ingrID, provID, name, price, amount, in_inventory);
     }
 
-    private int addIngredient(int ingrID, int provID, String date, String name, float price, float amount,
+    private int addIngredient(int ingrID, int provID, String name, float price, float amount,
             boolean in_inventory) {
-        date = dateInverter.invert(date);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", '" + date + "', '" + name
+            String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", CURDATE(), '" + name
                     + "', " + price + ", " + amount + ", " + in_inventory + ", " + true + ");";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
@@ -390,8 +389,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
         ingredient temp = getIngredient(ingredientID);
         setEntriesIngredientInactive(ingredientID);
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        addIngredient(temp.getId(), temp.getProviderID(), dateToday, temp.getName(), temp.getPrice(), temp.getAmount(),
+        addIngredient(temp.getId(), temp.getProviderID(), temp.getName(), temp.getPrice(), temp.getAmount(),
                 temp.getInInventory());
     }
 

@@ -6,7 +6,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
-import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.add.addJToggleAListener;
 import util.listenersFormatting.add.addTextFieldFListener;
 
@@ -30,6 +29,8 @@ public class addCategory {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
         private booleanWrapper namePlaceholder = new booleanWrapper(true);
+
+        private categoryAPI theManagerDB = new categoryAPI();
 
         public addCategory(JPanel playground) {
                 initComponents(playground);
@@ -278,25 +279,11 @@ public class addCategory {
                 });
                 addCategoryButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
-                                categoryAPI theManagerDB = new categoryAPI();
-                                if (namePlaceholder.getValue()) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
-                                        successLabel.setVisible(true);
+                                if (valuesArePlaceholders())
                                         return;
-                                }
-                                String name = nameTextField.getText();
-                                if (theManagerDB.isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
+                                if (areInputsInvalid())
                                         return;
-                                }
-                                Boolean type = typeJoggle.getText().equals("Product Category");
-                                if (theManagerDB.addCategory(name, type)) {
-                                        successLabel.setText("The category '" + name + "' was successfully added.");
-                                } else {
-                                        successLabel.setText("Something went wrong adding the specified category.");
-                                }
-                                successLabel.setVisible(true);
+                                addFoodComponent();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -316,6 +303,34 @@ public class addCategory {
                         }
                 });
                 applyGenericListeners();
+        }
+
+        private boolean valuesArePlaceholders() {
+                boolean isPlaceholder = namePlaceholder.getValue() == true;
+                if (isPlaceholder) {
+                        successLabel.setText("Error. You must fill all the given fields.");
+                        successLabel.setVisible(true);
+                }
+                return isPlaceholder;
+        }
+
+        private boolean areInputsInvalid() {
+                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                if (error) {
+                        successLabel.setText("Error. The given name is already in use.");
+                        successLabel.setVisible(true);
+                }
+                return error;
+        }
+
+        private void addFoodComponent() {
+                String name = nameTextField.getText();
+                Boolean categoryType = typeJoggle.getText().equals("Product Category");
+                if (theManagerDB.addCategory(name, categoryType))
+                        successLabel.setText("\"" + name + "\" was successfully added.");
+                else
+                        successLabel.setText("Error. Impossible to connect to database.");
+                successLabel.setVisible(true);
         }
 
         private void applyGenericListeners() {

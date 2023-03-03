@@ -10,7 +10,6 @@ import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.add.addTextFieldFListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.awt.*;
