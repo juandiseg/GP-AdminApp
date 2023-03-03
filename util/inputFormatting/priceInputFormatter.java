@@ -26,7 +26,6 @@ public class priceInputFormatter implements iFormatter {
                     return;
                 }
 
-                // CHECK HERE AUTOCOMPLETE ZERO BEFORE POINT!!
                 if ((k == ',' || k == '.') && dotIndex == -1) {
 
                     arg0.setKeyChar('.');

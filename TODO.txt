@@ -18,6 +18,13 @@ editEmployees.java	->	Check for shifts referencing that employee in the future.
 
 generateReport.java ->  Check dates which make sense.
 
+CHECK FOR UPDATES WHICH REQUIRE DOUBLE CHECKING IF THE LAST ENTRY IS FROM TODAY.
+
+CHECK REPEATED NAME CHECKERS FOR ACTIVE STATUS
+
+CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
+
+CHANGE DB TO SUPPORT MORE DECIMAL PLACES
 
 TESTING
 ----------------------------------------------------------------------------------------------------------------

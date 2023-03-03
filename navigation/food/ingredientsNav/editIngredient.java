@@ -1,23 +1,30 @@
 package navigation.food.ingredientsNav;
 
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Stack;
+import util.inputFormatting.inputFormatterFactory;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iListener;
+import util.listenersFormatting.edit.editPriceFListener;
+import util.listenersFormatting.edit.editTextFListener;
+import util.inputFormatting.iFormatter;
 
-import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 
-import componentsFood.allergen;
-import componentsFood.ingredient;
-import componentsFood.provider;
-import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.ingredientsAPI;
-import util.databaseAPIs.productAPI;
+import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.providerAPI;
+import util.databaseAPIs.productAPI;
 
+import java.util.ArrayList;
+import java.awt.event.*;
+import java.util.Stack;
 import java.awt.*;
+
+import componentsFood.ingredient;
+import componentsFood.allergen;
+import componentsFood.provider;
 
 public class editIngredient {
 
@@ -34,9 +41,9 @@ public class editIngredient {
         private JTextField nameTextField = new JTextField();
         private JTextField priceTextField = new JTextField();
         private JTextField quantityTextField = new JTextField();
-        private boolean namePlaceholder = true;
-        private boolean pricePlaceholder = true;
-        private boolean quantityPlaceholder = true;
+        private booleanWrapper namePlaceholder = new booleanWrapper(true);
+        private booleanWrapper pricePlaceholder = new booleanWrapper(true);
+        private booleanWrapper quantityPlaceholder = new booleanWrapper(true);
         private JComboBox<String> providerComboBox = new JComboBox<String>();
         private JToggleButton inventoryToggle = new JToggleButton();
 
@@ -68,7 +75,7 @@ public class editIngredient {
         public editIngredient(JPanel playground, ingredient theCurrentIngredient) {
                 this.theCurrentIngredient = theCurrentIngredient;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -150,7 +157,7 @@ public class editIngredient {
                 if (!theCurrentIngredient.getInInventory())
                         inventoryToggle.setText("No");
                 inventoryToggle.setBackground(new Color(255, 255, 255));
-                inventoryToggle.setForeground(new Color(23, 35, 51));
+                inventoryToggle.setForeground(Color.GRAY);
 
                 allergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 allergenLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -502,18 +509,15 @@ public class editIngredient {
                 }
                 tableAllergens.setModel(modelAllergens);
                 tableSelected.setModel(modelSelected);
-                tableAllergens.removeColumn(tableAllergens.getColumn("id"));
-                tableSelected.removeColumn(tableSelected.getColumn("id"));
                 unselectedJScrollPane.setViewportView(tableAllergens);
                 selectedJScrollPane.setViewportView(tableSelected);
-                tableAllergens.setDefaultEditor(Object.class, null);
-                tableSelected.setDefaultEditor(Object.class, null);
                 tableLookPretty(tableAllergens);
                 tableLookPretty(tableSelected);
         }
 
         private void tableLookPretty(JTable theTable) {
                 theTable.setDefaultEditor(Object.class, null);
+                theTable.removeColumn(theTable.getColumn("id"));
                 theTable.setFocusable(true);
                 theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
                 theTable.getTableHeader().setBackground(new Color(120, 168, 252));
@@ -564,77 +568,25 @@ public class editIngredient {
                 return true;
         }
 
-        private boolean tryEditAllergen(boolean isPlaceholder, int ingrID) {
-                if (!isPlaceholder) {
-                        Stack<allergen> stackAller = new Stack<>();
-                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                int tempID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                                String name = (String) modelSelected.getValueAt(i, 1);
-                                stackAller.push(new allergen(tempID, name));
-                        }
-                        if (new allergensAPI().editAlergensOfIngredient(stackAller, ingrID))
-                                return false;
-                        return true;
-                }
-                return false;
-        }
-
-        private boolean tryEditToggle(ingredientsAPI dbManager, boolean isPlaceholder, int ingrID) {
-                if (!isPlaceholder) {
-                        if (dbManager.updateInInventory(ingrID, !theCurrentIngredient.getInInventory()))
-                                return false;
-                        return true;
-                }
-                return false;
-        }
-
-        private boolean tryEditQuantity(ingredientsAPI dbManager, boolean isPlaceholder, int ingrID) {
-                if (!quantityPlaceholder) {
-                        Float quantity = Float.parseFloat(quantityTextField.getText());
-                        if (dbManager.updateAmount(ingrID, quantity))
-                                return false;
-                        return true;
-                }
-                return false;
-        }
-
-        private boolean tryEditPrice(ingredientsAPI dbManager, boolean isPlaceholder, int ingrID) {
-                if (!pricePlaceholder) {
-                        Float price = Float.parseFloat(priceTextField.getText());
-                        if (dbManager.updatePrice(ingrID, price))
-                                return false;
-                        return true;
-                }
-                return false;
-        }
-
-        private boolean tryEditName(ingredientsAPI dbManager, boolean isPlaceholder, int ingrID) {
-                if (!namePlaceholder) {
-                        if (dbManager.updateName(ingrID, nameTextField.getText()))
-                                return false;
-                        return true;
-                }
-                return false;
-        }
-
-        private void renewIngredient() {
+        private void renewPlaceholders() {
                 theCurrentIngredient = new ingredientsAPI().getIngredient(theCurrentIngredient.getId());
                 theIngredientLabel.setText(theCurrentIngredient.getName());
                 nameTextField.setText(theCurrentIngredient.getName());
                 nameTextField.setForeground(Color.GRAY);
-                namePlaceholder = true;
+                namePlaceholder.setValue(true);
                 priceTextField.setText(Float.toString(theCurrentIngredient.getPrice()));
                 priceTextField.setForeground(Color.GRAY);
-                pricePlaceholder = true;
+                pricePlaceholder.setValue(true);
                 quantityTextField.setText(Float.toString(theCurrentIngredient.getAmount()));
                 quantityTextField.setForeground(Color.GRAY);
-                quantityPlaceholder = true;
-
+                quantityPlaceholder.setValue(true);
+                inventoryToggle.setForeground(Color.GRAY);
                 providerComboBox.removeAllItems();
                 setComboBox();
+                applyGenericListeners();
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 playground.removeAll();
@@ -663,7 +615,8 @@ public class editIngredient {
                                 boolean togglePlaceholder = theCurrentIngredient.getInInventory() == inventoryToggle
                                                 .getText().equals("Yes");
                                 boolean allergenPlaceholder = isAllergenPlaceholder();
-                                if (namePlaceholder && pricePlaceholder && quantityPlaceholder && providerPlaceholder
+                                if (namePlaceholder.getValue() && pricePlaceholder.getValue()
+                                                && quantityPlaceholder.getValue() && providerPlaceholder
                                                 && togglePlaceholder && allergenPlaceholder) {
                                         successLabel.setText("Error. You must fill all the given fields.");
                                         return;
@@ -671,27 +624,64 @@ public class editIngredient {
                                 ingredientsAPI theManagerDB = new ingredientsAPI();
                                 int ingrID = theCurrentIngredient.getId();
                                 boolean error = false;
-                                if (new ingredientsAPI().isNameTaken(nameTextField.getText()) && !namePlaceholder) {
+                                if (new ingredientsAPI().isNameTaken(nameTextField.getText())
+                                                && !namePlaceholder.getValue()) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return;
                                 }
-                                if (tryEditName(theManagerDB, namePlaceholder, ingrID))
-                                        error = true;
-                                if (tryEditPrice(theManagerDB, pricePlaceholder, ingrID))
-                                        error = true;
-                                if (tryEditQuantity(theManagerDB, quantityPlaceholder, ingrID))
-                                        error = true;
-                                if (tryEditToggle(theManagerDB, togglePlaceholder, ingrID))
-                                        error = true;
-                                if (tryEditAllergen(allergenPlaceholder, ingrID))
-                                        error = true;
-                                if (error) {
-                                        successLabel.setText("ERROR. Something went wrong during the update.");
-                                } else
+                                if (!namePlaceholder.getValue()) {
+                                        if (!theManagerDB.updateName(ingrID, nameTextField.getText())) {
+                                                successLabel.setText("Error. Could not update to the given name.");
+                                                error = true;
+                                        }
+                                }
+                                if (!pricePlaceholder.getValue() && !error) {
+                                        Float price = Float.parseFloat(priceTextField.getText());
+                                        if (!theManagerDB.updatePrice(ingrID, price)) {
+                                                successLabel.setText("Error. Could not update to the given price.");
+                                                error = true;
+                                        }
+                                }
+                                if (!quantityPlaceholder.getValue() && !error) {
+                                        Float quantity = Float.parseFloat(quantityTextField.getText());
+                                        if (!theManagerDB.updateAmount(ingrID, quantity)) {
+                                                successLabel.setText("Error. Could not update to the given quantity.");
+                                                error = true;
+                                        }
+                                }
+                                if (!togglePlaceholder && !error) {
+                                        if (!theManagerDB.updateInInventory(ingrID,
+                                                        !theCurrentIngredient.getInInventory())) {
+                                                successLabel.setText("Error. Could not update inventory status.");
+                                                error = true;
+                                        }
+                                }
+                                if (!allergenPlaceholder && !error) {
+                                        Stack<allergen> stackAller = new Stack<>();
+                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                                int tempID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                                                String name = (String) modelSelected.getValueAt(i, 1);
+                                                stackAller.push(new allergen(tempID, name));
+                                        }
+                                        if (!new allergensAPI().editAlergensOfIngredient(stackAller, ingrID)) {
+                                                successLabel.setText("Error. Could not update to the given allergens.");
+                                                error = true;
+                                        }
+                                }
+                                if (!providerPlaceholder && !error) {
+                                        int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
+                                        if (!theManagerDB.updateProvider(ingrID, providerID)) {
+                                                successLabel.setText(
+                                                                "Error. Could not update to the specified provider.");
+                                                error = true;
+                                        }
+                                }
+                                if (!error)
                                         successLabel.setText("\"" + theCurrentIngredient.getName()
                                                         + "\" was successfully updated.");
-                                renewIngredient();
+                                successLabel.setVisible(true);
+                                renewPlaceholders();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -759,64 +749,21 @@ public class editIngredient {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                nameTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (nameTextField.getText().equals(theCurrentIngredient.getName())) {
-                                        nameTextField.setText("");
-                                        nameTextField.setForeground(Color.BLACK);
-                                        namePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (nameTextField.getText().isEmpty()) {
-                                        nameTextField.setForeground(Color.GRAY);
-                                        nameTextField.setText(theCurrentIngredient.getName());
-                                        namePlaceholder = true;
-                                }
-                        }
-                });
-                priceTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (priceTextField.getText().equals(Float.toString(theCurrentIngredient.getPrice()))) {
-                                        priceTextField.setText("");
-                                        priceTextField.setForeground(Color.BLACK);
-                                        pricePlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (priceTextField.getText().isEmpty()) {
-                                        priceTextField.setForeground(Color.GRAY);
-                                        priceTextField.setText(Float.toString(theCurrentIngredient.getPrice()));
-                                        pricePlaceholder = true;
-                                }
-                        }
-                });
-                quantityTextField.addFocusListener(new FocusListener() {
-                        public void focusGained(FocusEvent e) {
-                                if (quantityTextField.getText()
-                                                .equals(Float.toString(theCurrentIngredient.getAmount()))) {
-                                        quantityTextField.setText("");
-                                        quantityTextField.setForeground(Color.BLACK);
-                                        quantityPlaceholder = false;
-                                }
-                        }
-
-                        public void focusLost(FocusEvent e) {
-                                if (quantityTextField.getText().isEmpty()) {
-                                        quantityTextField.setForeground(Color.GRAY);
-                                        quantityTextField.setText(Float.toString(theCurrentIngredient.getAmount()));
-                                        quantityPlaceholder = true;
-                                }
-                        }
-                });
                 inventoryToggle.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                                if (inventoryToggle.getText().equals("Yes"))
+                                if (inventoryToggle.getText().equals("Yes")) {
+                                        if (theCurrentIngredient.getInInventory() == true)
+                                                inventoryToggle.setForeground(Color.BLACK);
+                                        else
+                                                inventoryToggle.setForeground(Color.GRAY);
                                         inventoryToggle.setText("No");
-                                else
+                                } else {
+                                        if (theCurrentIngredient.getInInventory() == false)
+                                                inventoryToggle.setForeground(Color.BLACK);
+                                        else
+                                                inventoryToggle.setForeground(Color.GRAY);
                                         inventoryToggle.setText("Yes");
+                                }
                         }
                 });
                 unselectButton.addMouseListener(new MouseListener() {
@@ -874,6 +821,23 @@ public class editIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                applyGenericListeners();
+        }
+
+        private void applyGenericListeners() {
+                iListener numericListener = new editPriceFListener();
+                iListener textListener = new editTextFListener();
+                iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
+
+                textListener.applyListenerTextField(nameTextField, theCurrentIngredient.getName(), namePlaceholder);
+                numericListener.applyListenerTextField(priceTextField, Float.toString(theCurrentIngredient.getPrice()),
+                                pricePlaceholder);
+                numericListener.applyListenerTextField(quantityTextField,
+                                Float.toString(theCurrentIngredient.getAmount()),
+                                quantityPlaceholder);
+
+                numericFormatter.applyFormat(priceTextField);
+                numericFormatter.applyFormat(quantityTextField);
         }
 
         private void deleteAllAssociatedToIngredientID(int ingredientID) {

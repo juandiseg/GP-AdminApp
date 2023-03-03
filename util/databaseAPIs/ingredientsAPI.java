@@ -331,7 +331,6 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean updatePrice(int ingredientID, float newPrice) {
         fixIngredientDate(ingredientID);
-        System.out.println("here");
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET price = " + newPrice
                     + " WHERE active = true AND ingredient_id = " + ingredientID;
@@ -398,7 +397,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     private boolean isLastIngredientEntryToday(int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String query = "SELECT MAX(ingredients_date) FROM ingredients WHERE ingredient_id = " + ingredientID;
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
@@ -508,7 +507,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE name = " + name;
+            String query = "SELECT * FROM ingredients WHERE name = '" + name + "' AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
