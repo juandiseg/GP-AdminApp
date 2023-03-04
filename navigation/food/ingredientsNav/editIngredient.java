@@ -604,9 +604,9 @@ public class editIngredient {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 
@@ -619,7 +619,7 @@ public class editIngredient {
                 backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableAllergens.getSelectedRow();

@@ -1,6 +1,5 @@
 package navigation.food.providersNav;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -254,7 +253,7 @@ public class addProvider {
 
         private void addActionListeners(JPanel playground) {
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 

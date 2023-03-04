@@ -277,7 +277,7 @@ public class editRole {
                         }
                 });
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 

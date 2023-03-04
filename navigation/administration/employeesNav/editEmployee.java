@@ -382,7 +382,7 @@ public class editEmployee {
                         }
                 });
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 

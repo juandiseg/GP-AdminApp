@@ -1,6 +1,5 @@
 package navigation.food.categoriesNav;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -248,7 +247,7 @@ public class addCategory {
 
         private void addActionListeners(JPanel playground) {
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 

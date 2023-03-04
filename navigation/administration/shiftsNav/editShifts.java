@@ -439,13 +439,13 @@ public class editShifts {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
                 editButton(playground);
                 applyGenericListeners();
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableEmployees.getSelectedRow();

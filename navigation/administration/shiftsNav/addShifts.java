@@ -389,11 +389,11 @@ public class addShifts {
         private void addActionListeners(JPanel playground) {
                 backButton(playground);
                 addButton(playground);
-                selectionButtons(playground);
+                selectionButtons();
                 applyGenericListeners();
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableEmployees.getSelectedRow();

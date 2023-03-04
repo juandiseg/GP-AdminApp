@@ -333,7 +333,7 @@ public class editCategory {
                         }
                 });
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 

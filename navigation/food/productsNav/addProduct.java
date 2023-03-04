@@ -1,7 +1,6 @@
 package navigation.food.productsNav;
 
 import javax.swing.table.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -461,9 +460,9 @@ public class addProduct {
         }
 
         private void addActionListeners(JPanel playground) {
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 
@@ -476,7 +475,7 @@ public class addProduct {
                 backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
-        private void addButton(JPanel playGround) {
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean ingredientEmpty = modelSelected.getRowCount() == 0;
@@ -530,7 +529,7 @@ public class addProduct {
                 addButtonFormatter.formatAddButton(addProductButton, new addMethodsHolder());
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableIngredients.getSelectedRow();

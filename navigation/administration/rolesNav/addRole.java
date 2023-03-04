@@ -1,6 +1,5 @@
 package navigation.administration.rolesNav;
 
-import java.awt.event.*;
 import javax.swing.*;
 
 import util.buttonFormatters.*;
@@ -205,7 +204,7 @@ public class addRole {
 
         private void addActionListeners(JPanel playground) {
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 

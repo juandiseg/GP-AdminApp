@@ -326,7 +326,7 @@ public class editProvider {
                         }
                 });
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 

@@ -1,6 +1,5 @@
 package navigation.food.productsNav;
 
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -312,11 +311,6 @@ public class editProduct {
                 theProductLabel.setText(theCurrentProduct.getName());
                 theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                deleteButton.setBackground(new Color(255, 102, 102));
-                deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                deleteButton.setForeground(new Color(255, 255, 255));
-                deleteButton.setText("Delete");
-
                 GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
@@ -550,52 +544,57 @@ public class editProduct {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+                selectionButtons();
+                backButton(playground);
+                editButton(null);
+                deleteButton(playground);
+                applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = true;
                                 int reply = JOptionPane.showConfirmDialog(null,
                                                 "Are you sure you want to delete this Product?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        String[] options = new String[] { "Delete Menus", "Keep Menus without Products",
-                                                        "Cancel" };
-                                        int response = JOptionPane.showOptionDialog(null,
-                                                        "Do you want to delete the menus that use this product, or keep them without the product?",
-                                                        "Choice",
-                                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-                                                        options, options[0]);
-                                        if (response == 0) {
-                                                deleteMenusAssociatedToProductID();
-                                        } else if (response == 1) {
-                                                deleteProductsFromMenus();
-                                        } else
-                                                return;
-                                        playground.removeAll();
-                                        new mainProducts(playground);
-                                        playground.revalidate();
-                                        playground.repaint();
+                                        return neededToChoose;
                                 }
+                                return !neededToChoose;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void chooseAmongOptions() {
+                                String[] options = new String[] { "Delete Menus", "Keep Menus without Products",
+                                                "Cancel" };
+                                int response = JOptionPane.showOptionDialog(null,
+                                                "Do you want to delete the menus that use this product, or keep them without the product?",
+                                                "Choice",
+                                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                                                options, options[0]);
+                                if (response == 0) {
+                                        deleteMenusAssociatedToProductID();
+                                } else if (response == 1) {
+                                        deleteProductsFromMenus();
+                                } else
+                                        return;
+
+                                playground.removeAll();
+                                new mainProducts(playground);
+                                playground.revalidate();
+                                playground.repaint();
                         }
 
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-
-                });
-                selectionButtons(playground);
-                backButton(playground);
-                editButton(playground);
-                applyGenericListeners();
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableIngredients.getSelectedRow();

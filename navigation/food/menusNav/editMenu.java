@@ -490,6 +490,7 @@ public class editMenu {
                 productAPI managerDB = new productAPI();
                 ArrayList<product> tempList = managerDB.getSelectedProductsInMenu(theCurrentMenu);
                 ArrayList<product> listSelected = new ArrayList<product>();
+
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                         int prodID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
                         int catID = Integer.parseInt((String) modelSelected.getValueAt(i, 1));
@@ -559,9 +560,9 @@ public class editMenu {
                         }
 
                 });
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 
@@ -674,18 +675,30 @@ public class editMenu {
                 editButtonFormatter.formatEditButton(editMenuButton, new editMethodsHolder());
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
+                        /*
+                         * modelProducts = new DefaultTableModel(
+                         * new String[] { "product_id", "category_id", "date", "Name", "Price",
+                         * "Quantity" },
+                         * 0);
+                         * modelSelected = new DefaultTableModel(
+                         * new String[] { "product_id", "category_id", "date", "Name", "Price",
+                         * "Quantity" },
+                         * 0);
+                         */
                         public void doSelection() {
                                 int row = tableProducts.getSelectedRow();
                                 if (row == -1)
                                         return;
                                 String prodID = (String) modelProducts.getValueAt(row, 0);
-                                String name = (String) modelProducts.getValueAt(row, 1);
-                                String price = (String) modelProducts.getValueAt(row, 2);
-                                String qty = (String) modelProducts.getValueAt(row, 3);
+                                String catID = (String) modelProducts.getValueAt(row, 1);
+                                String date = (String) modelProducts.getValueAt(row, 2);
+                                String name = (String) modelProducts.getValueAt(row, 3);
+                                String price = (String) modelProducts.getValueAt(row, 4);
+                                String qty = (String) modelProducts.getValueAt(row, 5);
                                 modelProducts.removeRow(row);
-                                modelSelected.addRow(new String[] { prodID, name, price, qty });
+                                modelSelected.addRow(new String[] { prodID, catID, date, name, price, qty });
                         }
                 }
                 selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
@@ -695,11 +708,13 @@ public class editMenu {
                                 if (row == -1)
                                         return;
                                 String prodID = (String) modelSelected.getValueAt(row, 0);
-                                String name = (String) modelSelected.getValueAt(row, 1);
-                                String price = (String) modelSelected.getValueAt(row, 2);
-                                String qty = (String) modelSelected.getValueAt(row, 3);
+                                String catID = (String) modelSelected.getValueAt(row, 1);
+                                String date = (String) modelSelected.getValueAt(row, 2);
+                                String name = (String) modelSelected.getValueAt(row, 3);
+                                String price = (String) modelSelected.getValueAt(row, 4);
+                                String qty = (String) modelSelected.getValueAt(row, 5);
                                 modelSelected.removeRow(row);
-                                modelProducts.addRow(new String[] { prodID, name, price, qty });
+                                modelProducts.addRow(new String[] { prodID, catID, date, name, price, qty });
                         }
                 }
                 selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);

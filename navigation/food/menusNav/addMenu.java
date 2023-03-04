@@ -2,7 +2,6 @@ package navigation.food.menusNav;
 
 import javax.swing.table.*;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -375,10 +374,10 @@ public class addMenu {
                         };
                 };
                 modelProducts = new DefaultTableModel(
-                                new String[] { "product_id", "Name", "Price", "Amount" },
+                                new String[] { "product_id", "Name", "Price", "Quantity" },
                                 0);
                 modelSelected = new DefaultTableModel(
-                                new String[] { "product_id", "Name", "Price", "Amount" },
+                                new String[] { "product_id", "Name", "Price", "Quantity" },
                                 0);
 
                 for (product tempProduct : new productAPI().getAllCurrentProducts()) {
@@ -392,7 +391,7 @@ public class addMenu {
                 tableSelected.setModel(modelSelected);
                 tableSelected.removeColumn(tableSelected.getColumn("product_id"));
                 tableProducts.removeColumn(tableProducts.getColumn("product_id"));
-                tableProducts.removeColumn(tableProducts.getColumn("Amount"));
+                tableProducts.removeColumn(tableProducts.getColumn("Quantity"));
                 unselectedJScrollPane.setViewportView(tableProducts);
                 selectedJScrollPane.setViewportView(tableSelected);
                 tableProducts.setDefaultEditor(Object.class, null);
@@ -441,13 +440,13 @@ public class addMenu {
         }
 
         private void addActionListeners(JPanel playground) {
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableProducts.getSelectedRow();

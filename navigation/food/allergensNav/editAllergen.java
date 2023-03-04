@@ -279,7 +279,7 @@ public class editAllergen {
                         }
                 });
                 backButton(playground);
-                editButton(playground);
+                editButton(null);
                 applyGenericListeners();
         }
 

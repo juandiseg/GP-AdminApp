@@ -1,6 +1,5 @@
 package navigation.food.ingredientsNav;
 
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -493,13 +492,13 @@ public class addIngredient {
         }
 
         private void addActionListeners(JPanel playground) {
-                selectionButtons(playground);
+                selectionButtons();
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 
-        private void selectionButtons(JPanel playground) {
+        private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
                         public void doSelection() {
                                 int row = tableAllergens.getSelectedRow();

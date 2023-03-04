@@ -1,6 +1,5 @@
 package navigation.food.allergensNav;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -208,7 +207,7 @@ public class addAllergen {
 
         private void addActionListeners(JPanel playground) {
                 backButton(playground);
-                addButton(playground);
+                addButton(null);
                 applyGenericListeners();
         }
 
