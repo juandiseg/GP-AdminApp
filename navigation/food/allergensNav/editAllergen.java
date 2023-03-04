@@ -1,8 +1,7 @@
 package navigation.food.allergensNav;
 
 import componentsFood.allergen;
-import util.buttonFormatters.editButtonFormatter;
-import util.buttonFormatters.iEditButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.allergensAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -63,10 +62,7 @@ public class editAllergen {
                 nameTextField.setText(theCurrentAllergen.getName());
                 nameTextField.setForeground(Color.gray);
 
-                editAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editAllergenButton.setText("Edit Allergen");
-                editAllergenButton.setBackground(new Color(255, 255, 255));
-                editAllergenButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(Color.black);
 
@@ -147,11 +143,6 @@ public class editAllergen {
                 deleteButton.setBackground(new Color(255, 102, 102));
                 deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
-
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
 
                 editAllergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 editAllergenLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -252,28 +243,6 @@ public class editAllergen {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainAllergens(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -309,8 +278,18 @@ public class editAllergen {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                backButton(playground);
                 editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainAllergens(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void editButton(JPanel playground) {
@@ -357,7 +336,7 @@ public class editAllergen {
                                 applyGenericListeners();
                         }
                 }
-                new editButtonFormatter().formatEditButton(editAllergenButton, new editMethodsHolder());
+                editButtonFormatter.formatEditButton(editAllergenButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {

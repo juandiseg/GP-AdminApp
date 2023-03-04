@@ -1,8 +1,7 @@
 package navigation.food.categoriesNav;
 
 import componentsFood.category;
-import util.buttonFormatters.editButtonFormatter;
-import util.buttonFormatters.iEditButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -69,10 +68,7 @@ public class editCategory {
                 nameTextField.setText(theCurrentCategory.getName());
                 nameTextField.setForeground(Color.GRAY);
 
-                editCategoryButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editCategoryButton.setText("Edit Category");
-                editCategoryButton.setBackground(new Color(255, 255, 255));
-                editCategoryButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -200,11 +196,6 @@ public class editCategory {
                 deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 theCategoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 theCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theCategoryLabel.setText(theCurrentCategory.getName());
@@ -304,28 +295,6 @@ public class editCategory {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainCategories(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -363,8 +332,18 @@ public class editCategory {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                backButton(playground);
                 editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainCategories(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void editButton(JPanel playground) {
@@ -426,7 +405,7 @@ public class editCategory {
                                 applyGenericListeners();
                         }
                 }
-                new editButtonFormatter().formatEditButton(editCategoryButton, new editMethodsHolder());
+                editButtonFormatter.formatEditButton(editCategoryButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {

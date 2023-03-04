@@ -126,56 +126,65 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public void updateEmployeeName(int employeeID, String name) {
+    public boolean updateEmployeeName(employee theEmployee, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET name = '" + name + "' WHERE employee_id = " + employeeID;
+            String query = "UPDATE employees SET name = '" + name + "' WHERE employee_id = " + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public void updateEmployeeSalary(int employeeID, float salary) {
+    public boolean updateEmployeeSalary(employee theEmployee, float salary) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET salary = " + salary + " WHERE employee_id = " + employeeID;
+            String query = "UPDATE employees SET salary = " + salary + " WHERE employee_id = " + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public void updateEmployeeHoursWeek(int employeeID, String hoursWeek) {
+    public boolean updateEmployeeHoursWeek(employee theEmployee, String hoursWeek) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET hours_a_week = '" + hoursWeek + "' WHERE employee_id = " + employeeID;
+            String query = "UPDATE employees SET hours_a_week = '" + hoursWeek + "' WHERE employee_id = "
+                    + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public void updateEmployeeRole(int employeeID, int roleID) {
+    public boolean updateEmployeeRole(employee theEmployee, int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET role_id = " + roleID + " WHERE employee_id = " + employeeID;
+            String query = "UPDATE employees SET role_id = " + roleID + " WHERE employee_id = " + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
+                return true;
             } catch (Exception e) {
                 System.out.println(e);
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.category;
 import componentsFood.ingredient;
 import componentsFood.product;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.productAPI;
@@ -65,6 +66,7 @@ public class editProduct {
         private ArrayList<category> categories = new categoryAPI().getProductCategories();
 
         private product theCurrentProduct;
+        private productAPI theManagerDB = new productAPI();
 
         public editProduct(JPanel playground, product theCurrentProduct) {
                 this.theCurrentProduct = theCurrentProduct;
@@ -93,10 +95,7 @@ public class editProduct {
                 nameTextField.setText(theCurrentProduct.getName());
                 nameTextField.setForeground(Color.GRAY);
 
-                editProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editProductButton.setText("Edit Product");
-                editProductButton.setBackground(new Color(255, 255, 255));
-                editProductButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -131,14 +130,6 @@ public class editProduct {
                 setTables();
 
                 setComboBox();
-
-                selectButton.setText("Select");
-                selectButton.setBackground(new Color(23, 35, 51));
-                selectButton.setForeground(new Color(255, 255, 255));
-
-                unselectButton.setText("Unselect");
-                unselectButton.setBackground(new Color(23, 35, 51));
-                unselectButton.setForeground(new Color(255, 255, 255));
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -316,12 +307,6 @@ public class editProduct {
                 auxProductLabel.setToolTipText("");
                 auxProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-                backButton.setToolTipText("");
-
                 theProductLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProductLabel.setText(theCurrentProduct.getName());
@@ -438,8 +423,8 @@ public class editProduct {
                                                 "active", "Quantity" },
                                 0);
 
-                ingredientsAPI managerDB = new ingredientsAPI();
-                for (ingredient tempIngredient : managerDB.getNonSelectedIngredientsInProduct(theCurrentProduct)) {
+                ingredientsAPI theManagerDB = new ingredientsAPI();
+                for (ingredient tempIngredient : theManagerDB.getNonSelectedIngredientsInProduct(theCurrentProduct)) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
                         String date = tempIngredient.getDate();
@@ -453,7 +438,7 @@ public class editProduct {
                                         "Yes", "Fill Here" });
                 }
 
-                for (ingredient tempIngredient : managerDB.getSelectedIngredientsInProduct(theCurrentProduct)) {
+                for (ingredient tempIngredient : theManagerDB.getSelectedIngredientsInProduct(theCurrentProduct)) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
                         String date = tempIngredient.getDate();
@@ -466,7 +451,7 @@ public class editProduct {
                         String active = "No";
                         if (tempIngredient.getActive())
                                 active = "Yes";
-                        float tempAmount = managerDB.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+                        float tempAmount = theManagerDB.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
                                         tempIngredient.getId());
                         modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory,
                                         active, Float.toString(tempAmount) });
@@ -523,8 +508,8 @@ public class editProduct {
         }
 
         private boolean isIngredientPlaceholder() {
-                ingredientsAPI managerDB = new ingredientsAPI();
-                ArrayList<ingredient> tempList = managerDB.getSelectedIngredientsInProduct(theCurrentProduct);
+                ingredientsAPI theManagerDB = new ingredientsAPI();
+                ArrayList<ingredient> tempList = theManagerDB.getSelectedIngredientsInProduct(theCurrentProduct);
                 ArrayList<ingredient> listSelected = new ArrayList<ingredient>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                         int tempID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
@@ -548,7 +533,7 @@ public class editProduct {
                         for (int i = 0; i < modelSelected.getRowCount(); i++) {
                                 if (Integer.parseInt((String) modelSelected.getValueAt(i, 0)) == temp.getId()) {
                                         try {
-                                                float tempAmount = managerDB.getAmountOfIngredientInProduct(
+                                                float tempAmount = theManagerDB.getAmountOfIngredientInProduct(
                                                                 theCurrentProduct.getId(), temp.getId());
                                                 if (Float.parseFloat((String) modelSelected.getValueAt(i,
                                                                 8)) != tempAmount) {
@@ -565,194 +550,6 @@ public class editProduct {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainProducts(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                editProductButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-
-                                boolean categoryPlaceholder = categories.get(categoriesComboBox.getSelectedIndex())
-                                                .getId() == theCurrentProduct.getCategoryID();
-                                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
-                                boolean ingredientPlaceholder = isIngredientPlaceholder();
-
-                                if (ingredientEmpty || (namePlaceholder.getValue() && pricePlaceholder.getValue()
-                                                && categoryPlaceholder
-                                                && ingredientPlaceholder)) {
-                                        if (ingredientEmpty) {
-                                                successLabel.setText(
-                                                                "Error. A product must be made up of ingredients.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-
-                                        successLabel.setText(
-                                                        "Error. You must fill all the given fields.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                if (ingredientsQuantityNotSpecified()) {
-                                        successLabel.setText(
-                                                        "Error. You must specify the amount used of each ingredient.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                productAPI managerDB = new productAPI();
-                                boolean error = false;
-                                String name = theCurrentProduct.getName();
-                                if (!namePlaceholder.getValue()) {
-                                        name = nameTextField.getText();
-                                        if (managerDB.isNameTaken(name)) {
-                                                successLabel.setText("Error. The given name is already taken.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-                                        if (!managerDB.updateProductName(theCurrentProduct, name))
-                                                error = true;
-                                        else
-                                                theCurrentProduct = new productAPI()
-                                                                .getProduct(theCurrentProduct.getId());
-                                }
-                                if (!pricePlaceholder.getValue()) {
-                                        Float price = Float.parseFloat(priceTextField.getText());
-                                        if (!managerDB.updatePrice(theCurrentProduct, price))
-                                                error = true;
-                                }
-                                if (!categoryPlaceholder) {
-                                        int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                        if (!managerDB.updateCategory(theCurrentProduct, catID))
-                                                error = true;
-                                }
-                                if (!ingredientPlaceholder) {
-                                        int productID = theCurrentProduct.getId();
-                                        Stack<Integer> stackIDs = new Stack<Integer>();
-                                        Stack<Float> stackQtys = new Stack<Float>();
-                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                                stackIDs.push(Integer
-                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
-                                                stackQtys.push(Float
-                                                                .parseFloat((String) modelSelected.getValueAt(i, 8)));
-                                        }
-                                        if (!managerDB.updateIngredients(productID, stackIDs, stackQtys))
-                                                error = true;
-                                }
-                                if (error) {
-                                        successLabel.setText("Something went wrong while updating "
-                                                        + theCurrentProduct.getName());
-                                        successLabel.setVisible(true);
-                                } else {
-                                        successLabel.setText("\"" + name + "\" has been successfully updated.");
-                                        successLabel.setVisible(true);
-                                }
-                                renewPlaceholders();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editProductButton.setBackground(new Color(23, 35, 51));
-                                editProductButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editProductButton.setBackground(new Color(255, 255, 255));
-                                editProductButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
-                unselectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableSelected.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String ingID = (String) modelSelected.getValueAt(row, 0);
-                                String provID = (String) modelSelected.getValueAt(row, 1);
-                                String date = (String) modelSelected.getValueAt(row, 2);
-                                String name = (String) modelSelected.getValueAt(row, 3);
-                                String price = (String) modelSelected.getValueAt(row, 4);
-                                String amount = (String) modelSelected.getValueAt(row, 5);
-                                String in_inventory = (String) modelSelected.getValueAt(row, 6);
-                                String active = (String) modelSelected.getValueAt(row, 7);
-                                String quantity = (String) modelSelected.getValueAt(row, 8);
-                                modelSelected.removeRow(row);
-                                modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount,
-                                                in_inventory, active, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                unselectButton.setBackground(new Color(255, 255, 255));
-                                unselectButton.setForeground(new Color(23, 35, 51));
-
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                unselectButton.setBackground(new Color(23, 35, 51));
-                                unselectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                selectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableIngredients.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String ingID = (String) modelIngredients.getValueAt(row, 0);
-                                String provID = (String) modelIngredients.getValueAt(row, 1);
-                                String date = (String) modelIngredients.getValueAt(row, 2);
-                                String name = (String) modelIngredients.getValueAt(row, 3);
-                                String price = (String) modelIngredients.getValueAt(row, 4);
-                                String amount = (String) modelIngredients.getValueAt(row, 5);
-                                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
-                                String active = (String) modelIngredients.getValueAt(row, 7);
-                                String quantity = (String) modelIngredients.getValueAt(row, 8);
-                                modelIngredients.removeRow(row);
-                                modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount,
-                                                in_inventory, active, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                selectButton.setBackground(new Color(255, 255, 255));
-                                selectButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                selectButton.setBackground(new Color(23, 35, 51));
-                                selectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -792,14 +589,76 @@ public class editProduct {
                         }
 
                 });
+                selectionButtons(playground);
+                backButton(playground);
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void selectionButtons(JPanel playground) {
+                class selectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableIngredients.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String ingID = (String) modelIngredients.getValueAt(row, 0);
+                                String provID = (String) modelIngredients.getValueAt(row, 1);
+                                String date = (String) modelIngredients.getValueAt(row, 2);
+                                String name = (String) modelIngredients.getValueAt(row, 3);
+                                String price = (String) modelIngredients.getValueAt(row, 4);
+                                String amount = (String) modelIngredients.getValueAt(row, 5);
+                                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
+                                String active = (String) modelIngredients.getValueAt(row, 7);
+                                String quantity = (String) modelIngredients.getValueAt(row, 8);
+                                modelIngredients.removeRow(row);
+                                modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount,
+                                                in_inventory, active, quantity });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
+                class unselectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableSelected.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String ingID = (String) modelSelected.getValueAt(row, 0);
+                                String provID = (String) modelSelected.getValueAt(row, 1);
+                                String date = (String) modelSelected.getValueAt(row, 2);
+                                String name = (String) modelSelected.getValueAt(row, 3);
+                                String price = (String) modelSelected.getValueAt(row, 4);
+                                String amount = (String) modelSelected.getValueAt(row, 5);
+                                String in_inventory = (String) modelSelected.getValueAt(row, 6);
+                                String active = (String) modelSelected.getValueAt(row, 7);
+                                String quantity = (String) modelSelected.getValueAt(row, 8);
+                                modelSelected.removeRow(row);
+                                modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount,
+                                                in_inventory, active, quantity });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainProducts(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void editButton(JPanel playground) {
                 class editMethodsHolder implements iEditButton {
-                        public boolean valuesArePlaceholders() {
+                        private boolean categoryPlaceholder;
+                        private boolean ingredientPlaceholder;
 
-                                if (namePlaceholder.getValue() && emailPlaceholder.getValue()) {
+                        public boolean valuesArePlaceholders() {
+                                categoryPlaceholder = categories.get(categoriesComboBox.getSelectedIndex())
+                                                .getId() == theCurrentProduct.getCategoryID();
+                                ingredientPlaceholder = isIngredientPlaceholder();
+
+                                if (namePlaceholder.getValue() && pricePlaceholder.getValue() && categoryPlaceholder
+                                                && ingredientPlaceholder) {
                                         successLabel.setText("Error. You must modify at least one field.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -808,63 +667,83 @@ public class editProduct {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                boolean ingredientsEmpty = modelSelected.getRowCount() == 0;
+
+                                if (!namePlaceholder.getValue()
+                                                && theManagerDB.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
                                 }
-                                if (!emailPlaceholder.getValue() && (!emailTextField.getText().contains("@")
-                                                || emailTextField.getText().length() < 3)) {
-                                        successLabel.setText("Error. The given email is invalid.");
+
+                                if (ingredientsEmpty) {
+                                        successLabel.setText("Error. A product needs to be made up of ingredients.");
                                         successLabel.setVisible(true);
                                         return true;
                                 }
+
+                                if (ingredientsQuantityNotSpecified() && !ingredientPlaceholder) {
+                                        successLabel.setText(
+                                                        "Error. You must specify the amount used of each ingredient.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
                                 return false;
                         }
 
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
-                                if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentProvider,
+                                if (!namePlaceholder.getValue()) {
+                                        successfulUpdate = theManagerDB.updateName(theCurrentProduct,
                                                         nameTextField.getText());
-                                if (!emailPlaceholder.getValue() && successfulUpdate)
-                                        successfulUpdate = theManagerDB.updateEmail(theCurrentProvider,
-                                                        emailTextField.getText());
+                                        theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
+                                }
+
+                                if (!pricePlaceholder.getValue()) {
+                                        Float price = Float.parseFloat(priceTextField.getText());
+                                        successfulUpdate = theManagerDB.updatePrice(theCurrentProduct, price);
+                                }
+
+                                if (!categoryPlaceholder) {
+                                        int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
+                                        successfulUpdate = theManagerDB.updateCategory(theCurrentProduct, catID);
+                                }
+
+                                if (!ingredientPlaceholder) {
+                                        Stack<Integer> stackIDs = new Stack<Integer>();
+                                        Stack<Float> stackQtys = new Stack<Float>();
+                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                                stackIDs.push(Integer
+                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
+                                                stackQtys.push(Float
+                                                                .parseFloat((String) modelSelected.getValueAt(i, 8)));
+                                        }
+                                        successfulUpdate = theManagerDB.updateIngredients(theCurrentProduct.getId(),
+                                                        stackIDs, stackQtys);
+                                }
+
                                 if (successfulUpdate)
-                                        successLabel.setText("The provider \"" + nameTextField.getText()
+                                        successLabel.setText("The product \"" + nameTextField.getText()
                                                         + "\" was successfully updated.");
                                 else
-                                        successLabel.setText("Something went wrong while updating the provider.");
+                                        successLabel.setText("Something went wrong while updating the product.");
                                 successLabel.setVisible(true);
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+                                theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
 
                                 namePlaceholder.setValue(true);
-                                emailPlaceholder.setValue(true);
+                                pricePlaceholder.setValue(true);
 
-                                theProviderLabel.setText(theCurrentProvider.getName());
                                 nameTextField.setForeground(Color.GRAY);
-                                emailTextField.setForeground(Color.GRAY);
-
+                                priceTextField.setForeground(Color.GRAY);
+                                setComboBox();
                                 applyGenericListeners();
                         }
                 }
-                new editButtonFormatter().formatEditButton(editProviderButton, new editMethodsHolder());
-        }
-
-        private void renewPlaceholders() {
-                theCurrentProduct = new productAPI().getProduct(theCurrentProduct.getId());
-                theProductLabel.setText(theCurrentProduct.getName());
-                namePlaceholder.setValue(true);
-                pricePlaceholder.setValue(true);
-                nameTextField.setText(theCurrentProduct.getName());
-                nameTextField.setForeground(Color.GRAY);
-                priceTextField.setText(Float.toString(theCurrentProduct.getPrice()));
-                priceTextField.setForeground(Color.GRAY);
-                setComboBox();
-                applyGenericListeners();
+                editButtonFormatter.formatEditButton(editProductButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {
@@ -877,19 +756,19 @@ public class editProduct {
         }
 
         private void deleteMenusAssociatedToProductID() {
-                productAPI managerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = managerDB.getAllActiveMenuIDs();
+                productAPI theManagerDB = new productAPI();
+                Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        managerDB.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
-                managerDB.updateActive(theCurrentProduct.getId(), false);
+                        theManagerDB.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
+                theManagerDB.updateActive(theCurrentProduct.getId(), false);
         }
 
         private void deleteProductsFromMenus() {
-                productAPI managerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = managerDB.getAllActiveMenuIDs();
+                productAPI theManagerDB = new productAPI();
+                Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        managerDB.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
-                managerDB.updateActive(theCurrentProduct.getId(), false);
+                        theManagerDB.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
+                theManagerDB.updateActive(theCurrentProduct.getId(), false);
         }
 
         private boolean ingredientsQuantityNotSpecified() {

@@ -1,6 +1,8 @@
 package navigation.administration.rolesNav;
 
 import componentsFood.role;
+import util.buttonFormatters.*;
+import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.rolesAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -28,6 +30,7 @@ public class editRole {
 
         private JTextField nameTextField = new JTextField();
         private role theCurrentRole;
+        private rolesAPI theManagerDB = new rolesAPI();
 
         public editRole(JPanel playground, role theCurrentRole) {
                 this.theCurrentRole = theCurrentRole;
@@ -57,10 +60,7 @@ public class editRole {
                 nameTextField.setText("Enter new NAME here");
                 nameTextField.setForeground(Color.GRAY);
 
-                editRoleButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 editRoleButton.setText("Edit Role");
-                editRoleButton.setBackground(new Color(255, 255, 255));
-                editRoleButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -141,11 +141,6 @@ public class editRole {
                 deleteButton.setBackground(new Color(255, 102, 102));
                 deleteButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
-
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
 
                 editRoleLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 editRoleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -242,62 +237,6 @@ public class editRole {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainRoles(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                editRoleButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                rolesAPI theManagerDB = new rolesAPI();
-                                String name = nameTextField.getText();
-                                if (namePlaceholder.getValue())
-                                        return;
-                                if (!theManagerDB.updateRoleName(theCurrentRole.getId(), name)) {
-                                        successLabel.setText("Something went wrong while editting '"
-                                                        + theCurrentRole.getName() + "'.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                successLabel.setText("The role '"
-                                                + nameTextField.getName() + "' was successfully updated.");
-                                successLabel.setVisible(true);
-                                updatePlaceholders();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editRoleButton.setBackground(new Color(23, 35, 51));
-                                editRoleButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editRoleButton.setBackground(new Color(255, 255, 255));
-                                editRoleButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 rolesAPI theManagerDB = new rolesAPI();
@@ -337,7 +276,67 @@ public class editRole {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                backButton(playground);
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainRoles(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+        }
+
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+                        public boolean valuesArePlaceholders() {
+                                if (namePlaceholder.getValue()) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateName(theCurrentRole,
+                                                        nameTextField.getText());
+
+                                if (successfulUpdate)
+                                        successLabel.setText("The role \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the role.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentRole = theManagerDB.getRole(theCurrentRole.getId());
+
+                                namePlaceholder.setValue(true);
+
+                                editRoleButton.setText(theCurrentRole.getName());
+                                nameTextField.setForeground(Color.GRAY);
+
+                                applyGenericListeners();
+                        }
+                }
+                editButtonFormatter.formatEditButton(editRoleButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {
@@ -345,10 +344,4 @@ public class editRole {
                 textListener.applyListenerTextField(nameTextField, theCurrentRole.getName(), namePlaceholder);
         }
 
-        private void updatePlaceholders() {
-                theCurrentRole = new rolesAPI().getRole(theCurrentRole.getId());
-                namePlaceholder.setValue(true);
-                nameTextField.setText(theCurrentRole.getName());
-                applyGenericListeners();
-        }
 }

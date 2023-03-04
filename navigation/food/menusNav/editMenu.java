@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import componentsFood.category;
 import componentsFood.menu;
 import componentsFood.product;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.menuAPI;
 import util.databaseAPIs.productAPI;
@@ -54,7 +55,7 @@ public class editMenu {
 
         private JLabel successLabel = new JLabel();
 
-        private JButton editProductButton = new JButton();
+        private JButton editMenuButton = new JButton();
         private JButton backButton = new JButton();
         private JButton deleteButton = new JButton();
 
@@ -65,6 +66,7 @@ public class editMenu {
         private ArrayList<category> categories = new categoryAPI().getMenuCategories();
 
         private menu theCurrentMenu;
+        private menuAPI theManagerDB = new menuAPI();
 
         public editMenu(JPanel playground, menu theCurrentMenu) {
                 this.theCurrentMenu = theCurrentMenu;
@@ -93,10 +95,7 @@ public class editMenu {
                 nameTextField.setText(theCurrentMenu.getName());
                 nameTextField.setForeground(Color.GRAY);
 
-                editProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                editProductButton.setText("Edit Product");
-                editProductButton.setBackground(new Color(255, 255, 255));
-                editProductButton.setForeground(new Color(23, 35, 51));
+                editMenuButton.setText("Edit Product");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -131,14 +130,6 @@ public class editMenu {
                 setTables();
 
                 setComboBox();
-
-                selectButton.setText("Select");
-                selectButton.setBackground(new Color(23, 35, 51));
-                selectButton.setForeground(new Color(255, 255, 255));
-
-                unselectButton.setText("Unselect");
-                unselectButton.setBackground(new Color(23, 35, 51));
-                unselectButton.setForeground(new Color(255, 255, 255));
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -228,7 +219,7 @@ public class editMenu {
                                                                                                                                 ComponentPlacement.RELATED,
                                                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                                                 Short.MAX_VALUE)
-                                                                                                                .addComponent(editProductButton,
+                                                                                                                .addComponent(editMenuButton,
                                                                                                                                 GroupLayout.PREFERRED_SIZE,
                                                                                                                                 200,
                                                                                                                                 GroupLayout.PREFERRED_SIZE)
@@ -291,7 +282,7 @@ public class editMenu {
                                                                                 .addComponent(selectButton)
                                                                                 .addComponent(unselectButton))
                                                                 .addGap(2, 2, 2)
-                                                                .addComponent(editProductButton,
+                                                                .addComponent(editMenuButton,
                                                                                 GroupLayout.PREFERRED_SIZE,
                                                                                 55,
                                                                                 GroupLayout.PREFERRED_SIZE)
@@ -315,12 +306,6 @@ public class editMenu {
                 auxProductLabel.setText("Product to edit:");
                 auxProductLabel.setToolTipText("");
                 auxProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-                backButton.setToolTipText("");
 
                 theProductLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -540,199 +525,7 @@ public class editMenu {
                 return true;
         }
 
-        private void renewPlaceholders() {
-                theCurrentMenu = new menuAPI().getMenu(theCurrentMenu.getId());
-                theProductLabel.setText(theCurrentMenu.getName());
-                namePlaceholder.setValue(true);
-                pricePlaceholder.setValue(true);
-                nameTextField.setText(theCurrentMenu.getName());
-                nameTextField.setForeground(Color.GRAY);
-                priceTextField.setText(Float.toString(theCurrentMenu.getPrice()));
-                priceTextField.setForeground(Color.GRAY);
-                setComboBox();
-                applyGenericListeners();
-        }
-
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainMenus(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                editProductButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-
-                                boolean categoryPlaceholder = categories.get(categoriesComboBox.getSelectedIndex())
-                                                .getId() == theCurrentMenu.getCategoryID();
-                                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
-                                boolean productPlaceholder = isProductPlaceholder();
-
-                                if (ingredientEmpty || (namePlaceholder.getValue() && pricePlaceholder.getValue()
-                                                && categoryPlaceholder
-                                                && productPlaceholder)) {
-                                        if (ingredientEmpty) {
-                                                successLabel.setText(
-                                                                "Error. A menu must have products.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-
-                                        successLabel.setText(
-                                                        "Error. You must alter at least one of the given fields.");
-                                        successLabel.setVisible(true);
-
-                                        return;
-                                }
-                                if (ingredientsQuantityNotSpecified()) {
-                                        successLabel.setText(
-                                                        "Error. You must specify the amount used of each product.");
-                                        successLabel.setVisible(true);
-
-                                        return;
-                                }
-                                menuAPI managerDB = new menuAPI();
-                                boolean error = false;
-                                String name = theCurrentMenu.getName();
-                                if (!namePlaceholder.getValue()) {
-                                        name = nameTextField.getText();
-                                        if (managerDB.isNameTaken(name)) {
-                                                successLabel.setText("Error. The given name is already taken.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-                                        if (!managerDB.updateMenuName(theCurrentMenu.getId(), name))
-                                                error = true;
-                                        else
-                                                theCurrentMenu = managerDB.getMenu(theCurrentMenu.getId());
-                                }
-                                if (!pricePlaceholder.getValue()) {
-                                        Float price = Float.parseFloat(priceTextField.getText());
-                                        if (!managerDB.updatePrice(theCurrentMenu, price))
-                                                error = true;
-                                }
-                                if (!categoryPlaceholder) {
-                                        int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                        if (!managerDB.updateCategory(theCurrentMenu, catID))
-                                                error = true;
-                                }
-                                if (!productPlaceholder) {
-                                        Stack<Integer> stackIDs = new Stack<Integer>();
-                                        Stack<Float> stackQtys = new Stack<Float>();
-                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                                stackIDs.push(Integer
-                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
-                                                stackQtys.push(Float
-                                                                .parseFloat((String) modelSelected.getValueAt(i, 5)));
-                                        }
-                                        if (!managerDB.updateProducts(theCurrentMenu, stackIDs, stackQtys))
-                                                error = true;
-                                }
-                                if (error) {
-                                        successLabel.setText("Something went wrong while updating "
-                                                        + theCurrentMenu.getName());
-                                } else {
-                                        successLabel.setText("\"" + name + "\" has been successfully updated.");
-                                }
-                                successLabel.setVisible(true);
-                                renewPlaceholders();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editProductButton.setBackground(new Color(23, 35, 51));
-                                editProductButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editProductButton.setBackground(new Color(255, 255, 255));
-                                editProductButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
-                unselectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableSelected.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String productID = (String) modelSelected.getValueAt(row, 0);
-                                String catID = (String) modelSelected.getValueAt(row, 1);
-                                String date = (String) modelSelected.getValueAt(row, 2);
-                                String name = (String) modelSelected.getValueAt(row, 3);
-                                String price = (String) modelSelected.getValueAt(row, 4);
-                                String quantity = (String) modelSelected.getValueAt(row, 5);
-                                modelSelected.removeRow(row);
-                                modelProducts.addRow(new String[] { productID, catID, date, name, price, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                unselectButton.setBackground(new Color(255, 255, 255));
-                                unselectButton.setForeground(new Color(23, 35, 51));
-
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                unselectButton.setBackground(new Color(23, 35, 51));
-                                unselectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                selectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableProducts.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String productID = (String) modelProducts.getValueAt(row, 0);
-                                String catID = (String) modelProducts.getValueAt(row, 1);
-                                String date = (String) modelProducts.getValueAt(row, 2);
-                                String name = (String) modelProducts.getValueAt(row, 3);
-                                String price = (String) modelProducts.getValueAt(row, 4);
-                                String quantity = (String) modelProducts.getValueAt(row, 5);
-                                modelProducts.removeRow(row);
-                                modelSelected.addRow(new String[] { productID, catID, date, name, price, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                selectButton.setBackground(new Color(255, 255, 255));
-                                selectButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                selectButton.setBackground(new Color(23, 35, 51));
-                                selectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -766,7 +559,150 @@ public class editMenu {
                         }
 
                 });
+                selectionButtons(playground);
+                backButton(playground);
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainMenus(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+        }
+
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+                        private boolean categoryPlaceholder;
+                        private boolean productPlaceholder;
+
+                        public boolean valuesArePlaceholders() {
+                                categoryPlaceholder = categories.get(categoriesComboBox.getSelectedIndex())
+                                                .getId() == theCurrentMenu.getCategoryID();
+                                productPlaceholder = isProductPlaceholder();
+
+                                if (namePlaceholder.getValue() && pricePlaceholder.getValue() && categoryPlaceholder
+                                                && productPlaceholder) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                boolean productsEmpty = modelSelected.getRowCount() == 0;
+
+                                if (!namePlaceholder.getValue()
+                                                && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                if (productsEmpty) {
+                                        successLabel.setText("Error. A menu needs to be made up of products.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                if (productsQuantityNotSpecified() && !productPlaceholder) {
+                                        successLabel.setText(
+                                                        "Error. You must specify the amount used of each product.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+                                if (!namePlaceholder.getValue()) {
+                                        successfulUpdate = theManagerDB.updateName(theCurrentMenu,
+                                                        nameTextField.getText());
+                                        theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
+                                }
+
+                                if (!pricePlaceholder.getValue()) {
+                                        Float price = Float.parseFloat(priceTextField.getText());
+                                        successfulUpdate = theManagerDB.updatePrice(theCurrentMenu, price);
+                                }
+
+                                if (!categoryPlaceholder) {
+                                        int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
+                                        successfulUpdate = theManagerDB.updateCategory(theCurrentMenu, catID);
+                                }
+
+                                if (!productPlaceholder) {
+                                        Stack<Integer> stackIDs = new Stack<Integer>();
+                                        Stack<Float> stackQtys = new Stack<Float>();
+                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                                stackIDs.push(Integer
+                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
+                                                stackQtys.push(Float
+                                                                .parseFloat((String) modelSelected.getValueAt(i, 5)));
+                                        }
+                                        successfulUpdate = theManagerDB.updateProducts(theCurrentMenu, stackIDs,
+                                                        stackQtys);
+                                }
+
+                                if (successfulUpdate)
+                                        successLabel.setText("The menu \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the menu.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
+
+                                namePlaceholder.setValue(true);
+                                pricePlaceholder.setValue(true);
+
+                                nameTextField.setForeground(Color.GRAY);
+                                priceTextField.setForeground(Color.GRAY);
+
+                                setComboBox();
+                                applyGenericListeners();
+                        }
+                }
+                editButtonFormatter.formatEditButton(editMenuButton, new editMethodsHolder());
+        }
+
+        private void selectionButtons(JPanel playground) {
+                class selectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableProducts.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String prodID = (String) modelProducts.getValueAt(row, 0);
+                                String name = (String) modelProducts.getValueAt(row, 1);
+                                String price = (String) modelProducts.getValueAt(row, 2);
+                                String qty = (String) modelProducts.getValueAt(row, 3);
+                                modelProducts.removeRow(row);
+                                modelSelected.addRow(new String[] { prodID, name, price, qty });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
+                class unselectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableSelected.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String prodID = (String) modelSelected.getValueAt(row, 0);
+                                String name = (String) modelSelected.getValueAt(row, 1);
+                                String price = (String) modelSelected.getValueAt(row, 2);
+                                String qty = (String) modelSelected.getValueAt(row, 3);
+                                modelSelected.removeRow(row);
+                                modelProducts.addRow(new String[] { prodID, name, price, qty });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);
         }
 
         private void applyGenericListeners() {
@@ -778,7 +714,7 @@ public class editMenu {
                 numericFormatter.applyFormat(priceTextField);
         }
 
-        private boolean ingredientsQuantityNotSpecified() {
+        private boolean productsQuantityNotSpecified() {
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                         String temp = (String) modelSelected.getValueAt(i, 5);
                         if (temp.isEmpty())

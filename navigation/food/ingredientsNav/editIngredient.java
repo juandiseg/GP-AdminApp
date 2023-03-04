@@ -13,8 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 import util.databaseAPIs.ingredientsAPI;
-import util.buttonFormatters.editButtonFormatter;
-import util.buttonFormatters.iEditButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.providerAPI;
 import util.databaseAPIs.productAPI;
@@ -118,14 +117,6 @@ public class editIngredient {
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                selectButton.setText("Select");
-                selectButton.setBackground(new Color(23, 35, 51));
-                selectButton.setForeground(new Color(255, 255, 255));
-
-                unselectButton.setText("Unselect");
-                unselectButton.setBackground(new Color(23, 35, 51));
-                unselectButton.setForeground(new Color(255, 255, 255));
-
                 priceTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
                 priceTextField.setText(Float.toString(theCurrentIngredient.getPrice()));
                 priceTextField.setForeground(Color.GRAY);
@@ -167,10 +158,7 @@ public class editIngredient {
                 allergenLabel.setText("Select Allergens");
                 allergenLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                editIngredientButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editIngredientButton.setText("Edit Ingredient");
-                editIngredientButton.setBackground(new Color(255, 255, 255));
-                editIngredientButton.setForeground(new Color(23, 35, 51));
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -390,11 +378,6 @@ public class editIngredient {
                 theIngredientLabel.setText(theCurrentIngredient.getName());
                 theIngredientLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 deleteButton.setBackground(new Color(255, 102, 102));
                 deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
@@ -572,28 +555,6 @@ public class editIngredient {
         }
 
         private void addListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainIngredients(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
 
@@ -643,36 +604,24 @@ public class editIngredient {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
-                unselectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableSelected.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String ID = (String) modelSelected.getValueAt(row, 0);
-                                String name = (String) modelSelected.getValueAt(row, 1);
-                                modelSelected.removeRow(row);
-                                modelAllergens.addRow(new String[] { ID, name });
-                        }
+                selectionButtons(playground);
+                backButton(playground);
+                editButton(playground);
+                applyGenericListeners();
+        }
 
-                        public void mousePressed(MouseEvent e) {
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainIngredients(playground);
                         }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+        }
 
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                unselectButton.setBackground(new Color(255, 255, 255));
-                                unselectButton.setForeground(new Color(23, 35, 51));
-
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                unselectButton.setBackground(new Color(23, 35, 51));
-                                unselectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                selectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+        private void selectionButtons(JPanel playground) {
+                class selectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
                                 int row = tableAllergens.getSelectedRow();
                                 if (row == -1)
                                         return;
@@ -681,25 +630,20 @@ public class editIngredient {
                                 modelAllergens.removeRow(row);
                                 modelSelected.addRow(new String[] { ID, name });
                         }
-
-                        public void mousePressed(MouseEvent e) {
+                }
+                selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
+                class unselectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableSelected.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String ID = (String) modelSelected.getValueAt(row, 0);
+                                String name = (String) modelSelected.getValueAt(row, 1);
+                                modelSelected.removeRow(row);
+                                modelAllergens.addRow(new String[] { ID, name });
                         }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                selectButton.setBackground(new Color(255, 255, 255));
-                                selectButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                selectButton.setBackground(new Color(23, 35, 51));
-                                selectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                editButton(playground);
-                applyGenericListeners();
+                }
+                selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);
         }
 
         private void editButton(JPanel playground) {
@@ -791,7 +735,7 @@ public class editIngredient {
                                 applyGenericListeners();
                         }
                 }
-                new editButtonFormatter().formatEditButton(editIngredientButton, new editMethodsHolder());
+                editButtonFormatter.formatEditButton(editIngredientButton, new editMethodsHolder());
         }
 
         private Stack<Integer> getSelectedAllergensIDs() {

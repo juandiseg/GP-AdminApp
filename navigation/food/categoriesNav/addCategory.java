@@ -4,8 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.add.addJToggleAListener;
@@ -60,10 +59,7 @@ public class addCategory {
                 nameTextField.setText("Ex. 'Peanuts'");
                 nameTextField.setForeground(Color.GRAY);
 
-                addCategoryButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addCategoryButton.setText("Add Category");
-                addCategoryButton.setBackground(new Color(255, 255, 255));
-                addCategoryButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -181,12 +177,6 @@ public class addCategory {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-                backButton.setBackground(new Color(71, 120, 197));
-
                 addCategoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 addCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 addCategoryLabel.setText("Add Category");
@@ -257,30 +247,18 @@ public class addCategory {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainCategories(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainCategories(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -315,7 +293,7 @@ public class addCategory {
                         }
 
                 }
-                new addButtonFormatter().formatAddButton(addCategoryButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addCategoryButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

@@ -93,9 +93,9 @@ public class rolesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateRoleName(int roleID, String newName) {
+    public boolean updateName(role theRole, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE roles SET role_name = '" + newName + "' WHERE role_id = " + roleID;
+            String query = "UPDATE roles SET role_name = '" + newName + "' WHERE role_id = " + theRole.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

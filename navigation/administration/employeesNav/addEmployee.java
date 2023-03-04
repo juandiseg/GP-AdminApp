@@ -1,8 +1,8 @@
 package navigation.administration.employeesNav;
 
 import componentsFood.role;
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import navigation.administration.rolesNav.mainRoles;
+import util.buttonFormatters.*;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.inputFormatting.inputFormatterFactory;
@@ -75,10 +75,7 @@ public class addEmployee {
                 nameTextField.setText("Ex: 'John Schdmit'");
                 nameTextField.setForeground(Color.GRAY);
 
-                addEmployeeButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 addEmployeeButton.setText("Add Employee");
-                addEmployeeButton.setBackground(new Color(255, 255, 255));
-                addEmployeeButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -250,11 +247,6 @@ public class addEmployee {
                 theEmployeeLabel.setText("Add Employee");
                 theEmployeeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
@@ -329,34 +321,18 @@ public class addEmployee {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainEmployees(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-
-                });
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainEmployees(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -390,7 +366,7 @@ public class addEmployee {
                         }
 
                 }
-                new addButtonFormatter().formatAddButton(addEmployeeButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addEmployeeButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

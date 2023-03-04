@@ -4,8 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.providerAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -62,10 +61,7 @@ public class addProvider {
                 nameTextField.setText("Ex. 'Konsum'");
                 nameTextField.setForeground(Color.GRAY);
 
-                addProviderButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addProviderButton.setText("Add Provider");
-                addProviderButton.setBackground(new Color(255, 255, 255));
-                addProviderButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -185,11 +181,6 @@ public class addProvider {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 providerLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 providerLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 providerLabel.setText("Add Provider");
@@ -262,30 +253,18 @@ public class addProvider {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainProviders(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainProviders(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -319,7 +298,7 @@ public class addProvider {
                                 return false;
                         }
                 }
-                new addButtonFormatter().formatAddButton(addProviderButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addProviderButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

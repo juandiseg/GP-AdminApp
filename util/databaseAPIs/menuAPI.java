@@ -125,11 +125,11 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateMenuName(int menuID, String name) {
+    public boolean updateName(menu theMenu, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus AS m, (SELECT MAX(menu_date) AS menu_date FROM menus WHERE menu_id = "
-                    + menuID + ") AS temp SET m.name = '" + name
-                    + "' WHERE m.menu_date = temp.menu_date AND m.menu_id = " + menuID + ";";
+                    + theMenu.getId() + ") AS temp SET m.name = '" + name
+                    + "' WHERE m.menu_date = temp.menu_date AND m.menu_id = " + theMenu.getId() + ";";
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

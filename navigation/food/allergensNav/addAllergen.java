@@ -5,8 +5,7 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import util.listenersFormatting.add.addTextFieldFListener;
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.allergensAPI;
 import util.listenersFormatting.booleanWrapper;
 
@@ -57,10 +56,7 @@ public class addAllergen {
                 nameTextField.setText("Enter NAME here");
                 nameTextField.setForeground(Color.gray);
 
-                addAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addAllergenButton.setText("Add Allergen");
-                addAllergenButton.setBackground(new Color(255, 255, 255));
-                addAllergenButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -138,11 +134,6 @@ public class addAllergen {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 addAllergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 addAllergenLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 addAllergenLabel.setText("Add Allergen");
@@ -216,30 +207,18 @@ public class addAllergen {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainAllergens(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainAllergens(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -274,7 +253,7 @@ public class addAllergen {
                         }
 
                 }
-                new addButtonFormatter().formatAddButton(addAllergenButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addAllergenButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

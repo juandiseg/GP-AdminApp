@@ -3,15 +3,13 @@ package navigation.administration.rolesNav;
 import java.awt.event.*;
 import javax.swing.*;
 
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.rolesAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.add.addTextFieldFListener;
 
 import java.awt.*;
-import java.awt.Color;
 
 public class addRole {
 
@@ -45,8 +43,6 @@ public class addRole {
                 successLabel.setText("returns the user status over their request");
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
                 successLabel.setVisible(false);
-                addRoleButton.setBackground(new Color(255, 255, 255));
-                addRoleButton.setForeground(new Color(23, 35, 51));
                 jPanel1.setBackground(new Color(120, 168, 252));
                 jPanel1.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(DebugGraphics.NONE_OPTION);
@@ -58,7 +54,6 @@ public class addRole {
 
                 nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
 
-                addRoleButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 addRoleButton.setText("Add Role");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -137,12 +132,6 @@ public class addRole {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-                backButton.setBackground(new Color(71, 120, 197));
-
                 addRoleLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 addRoleLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 addRoleLabel.setText("Add Role");
@@ -215,30 +204,18 @@ public class addRole {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainRoles(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainRoles(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -272,7 +249,7 @@ public class addRole {
                         }
 
                 }
-                new addButtonFormatter().formatAddButton(addRoleButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addRoleButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

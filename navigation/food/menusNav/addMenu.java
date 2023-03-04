@@ -8,8 +8,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
 
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.menuAPI;
 import util.databaseAPIs.productAPI;
@@ -88,10 +87,7 @@ public class addMenu {
                 nameTextField.setText("Ex. \"Big Burger Menu\"");
                 nameTextField.setForeground(Color.GRAY);
 
-                addMenuButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addMenuButton.setText("Add Menu");
-                addMenuButton.setBackground(new Color(255, 255, 255));
-                addMenuButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -124,14 +120,6 @@ public class addMenu {
                 productsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 setTables();
-
-                selectButton.setText("Select");
-                selectButton.setBackground(new Color(23, 35, 51));
-                selectButton.setForeground(new Color(255, 255, 255));
-
-                unselectButton.setText("Unselect");
-                unselectButton.setBackground(new Color(23, 35, 51));
-                unselectButton.setForeground(new Color(255, 255, 255));
 
                 setComboBox();
 
@@ -311,11 +299,6 @@ public class addMenu {
                 theProductLabel.setText("Add Product");
                 theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
@@ -458,60 +441,15 @@ public class addMenu {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainMenus(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
+                selectionButtons(playground);
+                backButton(playground);
+                addButton(playground);
+                applyGenericListeners();
+        }
 
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                unselectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableSelected.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String prodID = (String) modelSelected.getValueAt(row, 0);
-                                String name = (String) modelSelected.getValueAt(row, 1);
-                                String price = (String) modelSelected.getValueAt(row, 2);
-                                String qty = (String) modelSelected.getValueAt(row, 3);
-                                modelSelected.removeRow(row);
-                                modelProducts.addRow(new String[] { prodID, name, price, qty });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                unselectButton.setBackground(new Color(255, 255, 255));
-                                unselectButton.setForeground(new Color(23, 35, 51));
-
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                unselectButton.setBackground(new Color(23, 35, 51));
-                                unselectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                selectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+        private void selectionButtons(JPanel playground) {
+                class selectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
                                 int row = tableProducts.getSelectedRow();
                                 if (row == -1)
                                         return;
@@ -522,25 +460,31 @@ public class addMenu {
                                 modelProducts.removeRow(row);
                                 modelSelected.addRow(new String[] { prodID, name, price, qty });
                         }
-
-                        public void mousePressed(MouseEvent e) {
+                }
+                selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
+                class unselectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableSelected.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String prodID = (String) modelSelected.getValueAt(row, 0);
+                                String name = (String) modelSelected.getValueAt(row, 1);
+                                String price = (String) modelSelected.getValueAt(row, 2);
+                                String qty = (String) modelSelected.getValueAt(row, 3);
+                                modelSelected.removeRow(row);
+                                modelProducts.addRow(new String[] { prodID, name, price, qty });
                         }
+                }
+                selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);
+        }
 
-                        public void mouseReleased(MouseEvent e) {
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainMenus(playground);
                         }
-
-                        public void mouseEntered(MouseEvent e) {
-                                selectButton.setBackground(new Color(255, 255, 255));
-                                selectButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                selectButton.setBackground(new Color(23, 35, 51));
-                                selectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                addButton(playground);
-                applyGenericListeners();
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playground) {
@@ -594,7 +538,7 @@ public class addMenu {
                                 return false;
                         }
                 }
-                new addButtonFormatter().formatAddButton(addMenuButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addMenuButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

@@ -2,6 +2,7 @@ package navigation.administration.employeesNav;
 
 import componentsFood.employee;
 import componentsFood.role;
+import util.buttonFormatters.*;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.inputFormatting.inputFormatterFactory;
@@ -45,6 +46,8 @@ public class editEmployee {
 
         private employee theEmployee;
 
+        private employeesAPI theManagerDB = new employeesAPI();
+
         public editEmployee(
                         JPanel playground, employee theEmployee) {
                 this.theEmployee = theEmployee;
@@ -73,10 +76,7 @@ public class editEmployee {
                 nameTextField.setText(theEmployee.getName());
                 nameTextField.setForeground(Color.GRAY);
 
-                editEmployeeButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 editEmployeeButton.setText("Edit Employee");
-                editEmployeeButton.setBackground(new Color(255, 255, 255));
-                editEmployeeButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -246,11 +246,6 @@ public class editEmployee {
                 theEmployeeLabel.setText(theEmployee.getName());
                 theEmployeeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 auxEmployeeLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 auxEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 auxEmployeeLabel.setText("Employe to edit:");
@@ -342,79 +337,6 @@ public class editEmployee {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainEmployees(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-
-                });
-                editEmployeeButton.addMouseListener(new MouseListener() {
-
-                        public void mouseClicked(MouseEvent e) {
-                                int index = roleComboBox.getSelectedIndex();
-                                boolean rolePlaceholder = (roles.get(index).getId() == theEmployee.getRoleID());
-                                if (namePlaceholder.getValue() && salaryPlaceholder.getValue()
-                                                && hoursWeekPlaceholder.getValue() && rolePlaceholder) {
-                                        successLabel.setText("Error. At least one field must be diffeernt.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                employeesAPI theManagerDB = new employeesAPI();
-                                int employeeID = theEmployee.getId();
-                                String name = nameTextField.getText();
-                                if (!namePlaceholder.getValue())
-                                        theManagerDB.updateEmployeeName(employeeID, name);
-                                Float salary = Float.parseFloat(salaryTextField.getText());
-                                if (!salaryPlaceholder.getValue())
-                                        theManagerDB.updateEmployeeSalary(employeeID, salary);
-                                String hoursWeek = hoursWeekTextField.getText();
-                                if (!hoursWeekPlaceholder.getValue())
-                                        theManagerDB.updateEmployeeHoursWeek(employeeID, hoursWeek);
-                                if (!rolePlaceholder)
-                                        theManagerDB.updateEmployeeRole(employeeID,
-                                                        roles.get(roleComboBox.getSelectedIndex()).getId());
-                                updatePlaceholders();
-                                successLabel.setText("The employee '" + name + "' has been successfully editted.");
-                                successLabel.setVisible(true);
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editEmployeeButton.setBackground(new Color(23, 35, 51));
-                                editEmployeeButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editEmployeeButton.setBackground(new Color(255, 255, 255));
-                                editEmployeeButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -459,7 +381,99 @@ public class editEmployee {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                backButton(playground);
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainEmployees(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+        }
+
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+
+                        private boolean rolePlaceholder;
+
+                        public boolean valuesArePlaceholders() {
+
+                                rolePlaceholder = (roles.get(roleComboBox.getSelectedIndex()).getId() == theEmployee
+                                                .getRoleID());
+                                if (namePlaceholder.getValue() && salaryPlaceholder.getValue()
+                                                && hoursWeekPlaceholder.getValue() && rolePlaceholder) {
+                                        successLabel.setText("Error. At least one field must be diffeernt.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateEmployeeName(theEmployee,
+                                                        nameTextField.getText());
+
+                                if (!salaryPlaceholder.getValue()) {
+                                        Float salary = Float.parseFloat(salaryTextField.getText());
+                                        successfulUpdate = theManagerDB.updateEmployeeSalary(theEmployee, salary);
+                                }
+
+                                if (!hoursWeekPlaceholder.getValue()) {
+                                        String hoursWeek = hoursWeekTextField.getText();
+                                        successfulUpdate = theManagerDB.updateEmployeeHoursWeek(theEmployee, hoursWeek);
+                                }
+
+                                if (!rolePlaceholder)
+                                        successfulUpdate = theManagerDB.updateEmployeeRole(theEmployee,
+                                                        roles.get(roleComboBox.getSelectedIndex()).getId());
+
+                                if (successfulUpdate)
+                                        successLabel.setText("The employee \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the employee.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theEmployee = new employeesAPI().getEmployee(theEmployee.getId());
+
+                                namePlaceholder.setValue(true);
+                                salaryPlaceholder.setValue(true);
+                                hoursWeekPlaceholder.setValue(true);
+
+                                theEmployeeLabel.setText(theEmployee.getName());
+                                nameTextField.setForeground(Color.GRAY);
+                                salaryTextField.setForeground(Color.GRAY);
+                                hoursWeekTextField.setForeground(Color.GRAY);
+                                for (int i = 0; i < roles.size(); i++) {
+                                        if (roles.get(i).getId() == theEmployee.getRoleID()) {
+                                                role temp = roles.remove(i);
+                                                roles.add(0, temp);
+                                        }
+                                }
+                                ArrayList<String> tempNames = new ArrayList<>();
+                                for (role temp : roles)
+                                        tempNames.add(temp.getName());
+
+                                String[] namesArr = tempNames.toArray(new String[0]);
+                                roleComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
+
+                                applyGenericListeners();
+                        }
+                }
+                editButtonFormatter.formatEditButton(editEmployeeButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {
@@ -495,30 +509,4 @@ public class editEmployee {
                 roleComboBox.setBackground(Color.WHITE);
         }
 
-        private void updatePlaceholders() {
-                theEmployee = new employeesAPI().getEmployee(theEmployee.getId());
-                namePlaceholder.setValue(true);
-                salaryPlaceholder.setValue(true);
-                hoursWeekPlaceholder.setValue(true);
-                applyGenericListeners();
-                nameTextField.setText(theEmployee.getName());
-                nameTextField.setForeground(Color.GRAY);
-                salaryTextField.setText(theEmployee.getSalary() + "");
-                salaryTextField.setForeground(Color.GRAY);
-                hoursWeekTextField.setText(theEmployee.getHoursWeek().substring(0, 5));
-                hoursWeekTextField.setForeground(Color.GRAY);
-                for (int i = 0; i < roles.size(); i++) {
-                        if (roles.get(i).getId() == theEmployee.getRoleID()) {
-                                role temp = roles.remove(i);
-                                roles.add(0, temp);
-                        }
-                }
-                ArrayList<String> tempNames = new ArrayList<>();
-                for (role temp : roles)
-                        tempNames.add(temp.getName());
-
-                String[] namesArr = tempNames.toArray(new String[0]);
-                roleComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
-                theEmployeeLabel.setText(theEmployee.getName());
-        }
 }

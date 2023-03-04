@@ -7,8 +7,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
 
-import util.buttonFormatters.addButtonFormatter;
-import util.buttonFormatters.iAddButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.productAPI;
@@ -87,10 +86,7 @@ public class addProduct {
                 nameTextField.setText("Ex. \"Burguer\"");
                 nameTextField.setForeground(Color.GRAY);
 
-                addProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addProductButton.setText("Add Product");
-                addProductButton.setBackground(new Color(255, 255, 255));
-                addProductButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -123,14 +119,6 @@ public class addProduct {
                 ingredientsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 setTables();
-
-                selectButton.setText("Select");
-                selectButton.setBackground(new Color(23, 35, 51));
-                selectButton.setForeground(new Color(255, 255, 255));
-
-                unselectButton.setText("Unselect");
-                unselectButton.setBackground(new Color(23, 35, 51));
-                unselectButton.setForeground(new Color(255, 255, 255));
 
                 setComboBox();
 
@@ -310,11 +298,6 @@ public class addProduct {
                 theProductLabel.setText("Add Product");
                 theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
@@ -478,101 +461,19 @@ public class addProduct {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainProducts(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                unselectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableSelected.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String ingID = (String) modelSelected.getValueAt(row, 0);
-                                String provID = (String) modelSelected.getValueAt(row, 1);
-                                String date = (String) modelSelected.getValueAt(row, 2);
-                                String name = (String) modelSelected.getValueAt(row, 3);
-                                String price = (String) modelSelected.getValueAt(row, 4);
-                                String amount = (String) modelSelected.getValueAt(row, 5);
-                                String in_inventory = (String) modelSelected.getValueAt(row, 6);
-                                String active = (String) modelSelected.getValueAt(row, 7);
-                                String quantity = (String) modelSelected.getValueAt(row, 8);
-                                modelSelected.removeRow(row);
-                                modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount,
-                                                in_inventory, active, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                unselectButton.setBackground(new Color(255, 255, 255));
-                                unselectButton.setForeground(new Color(23, 35, 51));
-
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                unselectButton.setBackground(new Color(23, 35, 51));
-                                unselectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                selectButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int row = tableIngredients.getSelectedRow();
-                                if (row == -1)
-                                        return;
-                                String ingID = (String) modelIngredients.getValueAt(row, 0);
-                                String provID = (String) modelIngredients.getValueAt(row, 1);
-                                String date = (String) modelIngredients.getValueAt(row, 2);
-                                String name = (String) modelIngredients.getValueAt(row, 3);
-                                String price = (String) modelIngredients.getValueAt(row, 4);
-                                String amount = (String) modelIngredients.getValueAt(row, 5);
-                                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
-                                String active = (String) modelIngredients.getValueAt(row, 7);
-                                String quantity = (String) modelIngredients.getValueAt(row, 8);
-                                modelIngredients.removeRow(row);
-                                modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount,
-                                                in_inventory, active, quantity });
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                selectButton.setBackground(new Color(255, 255, 255));
-                                selectButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                selectButton.setBackground(new Color(23, 35, 51));
-                                selectButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
+                selectionButtons(playground);
+                backButton(playground);
                 addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainProducts(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void addButton(JPanel playGround) {
@@ -626,7 +527,50 @@ public class addProduct {
                                 return false;
                         }
                 }
-                new addButtonFormatter().formatAddButton(addProductButton, new addMethodsHolder());
+                addButtonFormatter.formatAddButton(addProductButton, new addMethodsHolder());
+        }
+
+        private void selectionButtons(JPanel playground) {
+                class selectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableIngredients.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String ingID = (String) modelIngredients.getValueAt(row, 0);
+                                String provID = (String) modelIngredients.getValueAt(row, 1);
+                                String date = (String) modelIngredients.getValueAt(row, 2);
+                                String name = (String) modelIngredients.getValueAt(row, 3);
+                                String price = (String) modelIngredients.getValueAt(row, 4);
+                                String amount = (String) modelIngredients.getValueAt(row, 5);
+                                String in_inventory = (String) modelIngredients.getValueAt(row, 6);
+                                String active = (String) modelIngredients.getValueAt(row, 7);
+                                String quantity = (String) modelIngredients.getValueAt(row, 8);
+                                modelIngredients.removeRow(row);
+                                modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount,
+                                                in_inventory, active, quantity });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(selectButton, new selectMethodHolder(), true);
+                class unselectMethodHolder implements iSelectionButton {
+                        public void doSelection() {
+                                int row = tableSelected.getSelectedRow();
+                                if (row == -1)
+                                        return;
+                                String ingID = (String) modelSelected.getValueAt(row, 0);
+                                String provID = (String) modelSelected.getValueAt(row, 1);
+                                String date = (String) modelSelected.getValueAt(row, 2);
+                                String name = (String) modelSelected.getValueAt(row, 3);
+                                String price = (String) modelSelected.getValueAt(row, 4);
+                                String amount = (String) modelSelected.getValueAt(row, 5);
+                                String in_inventory = (String) modelSelected.getValueAt(row, 6);
+                                String active = (String) modelSelected.getValueAt(row, 7);
+                                String quantity = (String) modelSelected.getValueAt(row, 8);
+                                modelSelected.removeRow(row);
+                                modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount,
+                                                in_inventory, active, quantity });
+                        }
+                }
+                selectionButtonFormatter.formatSelectionButton(unselectButton, new unselectMethodHolder(), false);
         }
 
         private void applyGenericListeners() {

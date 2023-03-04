@@ -1,8 +1,7 @@
 package navigation.food.providersNav;
 
 import componentsFood.provider;
-import util.buttonFormatters.editButtonFormatter;
-import util.buttonFormatters.iEditButton;
+import util.buttonFormatters.*;
 import util.databaseAPIs.providerAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -67,10 +66,7 @@ public class editProvider {
                 nameTextField.setText(theCurrentProvider.getName());
                 nameTextField.setForeground(Color.GRAY);
 
-                editProviderButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editProviderButton.setText("Edit Provider");
-                editProviderButton.setBackground(new Color(255, 255, 255));
-                editProviderButton.setForeground(new Color(23, 35, 51));
 
                 jPanel2.setBackground(new Color(0, 0, 0));
 
@@ -194,11 +190,6 @@ public class editProvider {
                 deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
 
-                backButton.setBackground(new Color(71, 120, 197));
-                backButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                backButton.setForeground(new Color(255, 255, 255));
-                backButton.setText("Back");
-
                 theProviderLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 theProviderLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProviderLabel.setText(theCurrentProvider.getName());
@@ -298,28 +289,6 @@ public class editProvider {
         }
 
         private void addActionListeners(JPanel playground) {
-                backButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                playground.removeAll();
-                                new mainProviders(playground);
-                                playground.revalidate();
-                                playground.repaint();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                backButton.setBackground(new Color(23, 35, 51));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -356,8 +325,18 @@ public class editProvider {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                backButton(playground);
                 editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void backButton(JPanel playground) {
+                class backMethodHolder extends iBackButton {
+                        public void createNewNavigator() {
+                                new mainProviders(playground);
+                        }
+                }
+                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
         }
 
         private void editButton(JPanel playground) {
@@ -416,7 +395,7 @@ public class editProvider {
                                 applyGenericListeners();
                         }
                 }
-                new editButtonFormatter().formatEditButton(editProviderButton, new editMethodsHolder());
+                editButtonFormatter.formatEditButton(editProviderButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {

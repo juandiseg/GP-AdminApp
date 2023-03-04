@@ -251,7 +251,7 @@ public class productAPI extends abstractManagerDB {
     }
 
     // UPDATE something "product" related in database.
-    public boolean updateProductName(product theProduct, String name) {
+    public boolean updateName(product theProduct, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE products SET name = '" + name + "' WHERE product_id = " + theProduct.getId()
                     + " AND active = true";
