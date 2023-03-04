@@ -4,6 +4,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import util.addButton.addButtonFormatter;
+import util.addButton.iAddButton;
+
 import util.databaseAPIs.providerAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -282,60 +285,38 @@ public class addProvider {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                addProviderButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (valuesArePlaceholders())
-                                        return;
-                                if (areInputsInvalid())
-                                        return;
-                                addFoodComponent();
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean arePlaceholders = (namePlaceholder.getValue() || emailPlaceholder.getValue());
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                }
+                                return arePlaceholders;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public boolean areInputsInvalid() {
+                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                if (error) {
+                                        successLabel.setText("Error. The given name is already in use.");
+                                        successLabel.setVisible(true);
+                                }
+                                return error;
                         }
 
-                        public void mouseReleased(MouseEvent e) {
+                        public boolean addFoodComponent() {
+                                String name = nameTextField.getText();
+                                String email = emailTextField.getText();
+                                if (theManagerDB.addProvider(name, email))
+                                        successLabel.setText("\"" + name + "\" was successfully added.");
+                                else
+                                        successLabel.setText("Error. Impossible to connect to database.");
+                                successLabel.setVisible(true);
+                                return false;
                         }
-
-                        public void mouseEntered(MouseEvent e) {
-                                addProviderButton.setBackground(new Color(23, 35, 51));
-                                addProviderButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                addProviderButton.setBackground(new Color(255, 255, 255));
-                                addProviderButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
+                }
+                new addButtonFormatter().formatAddButton(addProviderButton, new addMethodsHolder());
                 applyGenericListeners();
-        }
-
-        private boolean valuesArePlaceholders() {
-                boolean arePlaceholders = (namePlaceholder.getValue() || emailPlaceholder.getValue());
-                if (arePlaceholders) {
-                        successLabel.setText("Error. You must fill all the given fields.");
-                        successLabel.setVisible(true);
-                }
-                return arePlaceholders;
-        }
-
-        private boolean areInputsInvalid() {
-                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
-                if (error) {
-                        successLabel.setText("Error. The given name is already in use.");
-                        successLabel.setVisible(true);
-                }
-                return error;
-        }
-
-        private void addFoodComponent() {
-                String name = nameTextField.getText();
-                String email = emailTextField.getText();
-                if (theManagerDB.addProvider(name, email))
-                        successLabel.setText("\"" + name + "\" was successfully added.");
-                else
-                        successLabel.setText("Error. Impossible to connect to database.");
-                successLabel.setVisible(true);
         }
 
         private void applyGenericListeners() {

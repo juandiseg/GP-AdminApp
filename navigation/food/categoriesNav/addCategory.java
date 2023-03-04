@@ -8,6 +8,8 @@ import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.add.addJToggleAListener;
 import util.listenersFormatting.add.addTextFieldFListener;
+import util.addButton.addButtonFormatter;
+import util.addButton.iAddButton;
 
 import java.awt.*;
 
@@ -277,60 +279,39 @@ public class addCategory {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                addCategoryButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (valuesArePlaceholders())
-                                        return;
-                                if (areInputsInvalid())
-                                        return;
-                                addFoodComponent();
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean isPlaceholder = namePlaceholder.getValue() == true;
+                                if (isPlaceholder) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                }
+                                return isPlaceholder;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public boolean areInputsInvalid() {
+                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                if (error) {
+                                        successLabel.setText("Error. The given name is already in use.");
+                                        successLabel.setVisible(true);
+                                }
+                                return error;
                         }
 
-                        public void mouseReleased(MouseEvent e) {
+                        public boolean addFoodComponent() {
+                                String name = nameTextField.getText();
+                                Boolean categoryType = typeJoggle.getText().equals("Product Category");
+                                if (theManagerDB.addCategory(name, categoryType))
+                                        successLabel.setText("\"" + name + "\" was successfully added.");
+                                else
+                                        successLabel.setText("Error. Impossible to connect to database.");
+                                successLabel.setVisible(true);
+                                return false;
                         }
 
-                        public void mouseEntered(MouseEvent e) {
-                                addCategoryButton.setBackground(new Color(23, 35, 51));
-                                addCategoryButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                addCategoryButton.setBackground(new Color(255, 255, 255));
-                                addCategoryButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
+                }
+                new addButtonFormatter().formatAddButton(addCategoryButton, new addMethodsHolder());
                 applyGenericListeners();
-        }
-
-        private boolean valuesArePlaceholders() {
-                boolean isPlaceholder = namePlaceholder.getValue() == true;
-                if (isPlaceholder) {
-                        successLabel.setText("Error. You must fill all the given fields.");
-                        successLabel.setVisible(true);
-                }
-                return isPlaceholder;
-        }
-
-        private boolean areInputsInvalid() {
-                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
-                if (error) {
-                        successLabel.setText("Error. The given name is already in use.");
-                        successLabel.setVisible(true);
-                }
-                return error;
-        }
-
-        private void addFoodComponent() {
-                String name = nameTextField.getText();
-                Boolean categoryType = typeJoggle.getText().equals("Product Category");
-                if (theManagerDB.addCategory(name, categoryType))
-                        successLabel.setText("\"" + name + "\" was successfully added.");
-                else
-                        successLabel.setText("Error. Impossible to connect to database.");
-                successLabel.setVisible(true);
         }
 
         private void applyGenericListeners() {

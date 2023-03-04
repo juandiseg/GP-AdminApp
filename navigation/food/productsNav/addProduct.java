@@ -20,6 +20,9 @@ import componentsFood.category;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import util.addButton.addButtonFormatter;
+import util.addButton.iAddButton;
+
 public class addProduct {
 
         private JLabel theProductLabel = new JLabel();
@@ -461,54 +464,6 @@ public class addProduct {
                 categoriesComboBox.setBackground(Color.WHITE);
         }
 
-        private boolean valuesArePlaceholders() {
-                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
-                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
-                                || ingredientEmpty);
-                if (arePlaceholders) {
-                        successLabel.setText("Error. You must fill all the given fields.");
-                        successLabel.setVisible(true);
-                }
-                return arePlaceholders;
-        }
-
-        private boolean areInputsInvalid() {
-                if (ingredientsQuantityNotSpecified()) {
-                        successLabel.setText(
-                                        "Error. You must specify the amount used of each ingredient.");
-                        successLabel.setVisible(true);
-                        return true;
-                }
-                if (theManagerDB.isNameTaken(nameTextField.getText())) {
-                        successLabel.setText("Error. The given name is already taken.");
-                        successLabel.setVisible(true);
-                        return true;
-                }
-                return false;
-        }
-
-        private void addFoodComponent() {
-                String name = nameTextField.getText();
-                int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                Float price = Float.parseFloat(priceTextField.getText());
-
-                int productID = new productAPI().addProduct(catID, name, price);
-                if (productID == -1) {
-                        successLabel.setText("Error. Impossible to connect to database.");
-                        successLabel.setVisible(true);
-                        return;
-                }
-
-                Stack<Integer> selectedIngredientIDs = getSelectedIngredientIDs();
-                Stack<Float> selectedIngredientQtys = getSelectedIngredientQtys();
-                if (theManagerDB.addIngredients(productID, selectedIngredientIDs, selectedIngredientQtys))
-                        successLabel.setText("The product \"" + name + "\" was added successfully.");
-                else
-                        successLabel.setText("Error. Something went wrong while adding ingredients.");
-                successLabel.setVisible(true);
-
-        }
-
         private Stack<Integer> getSelectedIngredientIDs() {
                 Stack<Integer> selectedIngredients = new Stack<Integer>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++)
@@ -546,31 +501,57 @@ public class addProduct {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                addProductButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (valuesArePlaceholders())
-                                        return;
-                                if (areInputsInvalid())
-                                        return;
-                                addFoodComponent();
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean ingredientEmpty = modelSelected.getRowCount() == 0;
+                                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
+                                                || ingredientEmpty);
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                }
+                                return arePlaceholders;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public boolean areInputsInvalid() {
+                                if (ingredientsQuantityNotSpecified()) {
+                                        successLabel.setText(
+                                                        "Error. You must specify the amount used of each ingredient.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                if (theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
                         }
 
-                        public void mouseReleased(MouseEvent e) {
-                        }
+                        public boolean addFoodComponent() {
+                                String name = nameTextField.getText();
+                                int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
+                                Float price = Float.parseFloat(priceTextField.getText());
 
-                        public void mouseEntered(MouseEvent e) {
-                                addProductButton.setBackground(new Color(23, 35, 51));
-                                addProductButton.setForeground(new Color(255, 255, 255));
-                        }
+                                int productID = new productAPI().addProduct(catID, name, price);
+                                if (productID == -1) {
+                                        successLabel.setText("Error. Impossible to connect to database.");
+                                        successLabel.setVisible(true);
+                                        return false;
+                                }
 
-                        public void mouseExited(MouseEvent e) {
-                                addProductButton.setBackground(new Color(255, 255, 255));
-                                addProductButton.setForeground(new Color(23, 35, 51));
+                                Stack<Integer> selectedIngredientIDs = getSelectedIngredientIDs();
+                                Stack<Float> selectedIngredientQtys = getSelectedIngredientQtys();
+                                if (theManagerDB.addIngredients(productID, selectedIngredientIDs,
+                                                selectedIngredientQtys))
+                                        successLabel.setText("The product \"" + name + "\" was added successfully.");
+                                else
+                                        successLabel.setText("Error. Something went wrong while adding ingredients.");
+                                successLabel.setVisible(true);
+                                return false;
                         }
-                });
+                }
+                new addButtonFormatter().formatAddButton(addProductButton, new addMethodsHolder());
                 unselectButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int row = tableSelected.getSelectedRow();

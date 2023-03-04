@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.employee;
+import util.addButton.addButtonFormatter;
+import util.addButton.iAddButton;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.databaseAPIs.shiftsAPI;
@@ -393,62 +395,6 @@ public class addShifts {
                 unselectedJScrollPane.setBackground(new Color(245, 245, 245));
         }
 
-        private boolean valuesArePlaceholders() {
-                boolean arePlaceholders = (datePlaceholder.getValue() || startPlaceholder.getValue()
-                                || endPlaceholder.getValue());
-                if (arePlaceholders) {
-                        successLabel.setText("Error. You must fill all the given fields.");
-                        successLabel.setVisible(true);
-                        return arePlaceholders;
-                }
-                arePlaceholders = modelSelected.getRowCount() == 0;
-                if (arePlaceholders) {
-                        successLabel.setText("Error. You must select at least one employee.");
-                        successLabel.setVisible(true);
-                        return true;
-                }
-                return false;
-        }
-
-        private boolean areInputsInvalid() {
-                String date = dateTextField.getText();
-                LocalDate today = LocalDate.now();
-                LocalDate localDateNew = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                if (localDateNew.isBefore(today)) {
-                        successLabel.setText("ERROR. You can't add a shift that occured in the past.");
-                        successLabel.setVisible(true);
-                        return true;
-                }
-                // CHECK IMBEDED DATES
-                return false;
-        }
-
-        private boolean addFoodComponent() {
-                String date = dateTextField.getText();
-                String startShift = startShiftTextField.getText();
-                String endShift = endShiftTextField.getText();
-                ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
-
-                ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(selectedEmployeesIDs, date,
-                                startShift, endShift);
-                if (employeeNames.size() > 0) {
-                        successLabel.setText(
-                                        "Error. The following employees already have shifts within the given time: ");
-                        for (String temp : employeeNames)
-                                successLabel.setText(successLabel.getText().concat(temp + ", "));
-                        String text = successLabel.getText();
-                        successLabel.setText(text.substring(0, text.length() - 2).concat("."));
-                        successLabel.setVisible(true);
-                        return false;
-                }
-
-                if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
-                        return true;
-                successLabel.setText("Error. Something went wrong while adding shifts.");
-                successLabel.setVisible(true);
-                return false;
-        }
-
         private ArrayList<Integer> getSelectedEmployeeIDs() {
                 ArrayList<Integer> selectedEmployees = new ArrayList<Integer>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++)
@@ -479,36 +425,76 @@ public class addShifts {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                addShiftsButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (valuesArePlaceholders())
-                                        return;
-                                if (areInputsInvalid())
-                                        return;
-                                if (!addFoodComponent())
-                                        return;
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean arePlaceholders = (datePlaceholder.getValue() || startPlaceholder.getValue()
+                                                || endPlaceholder.getValue());
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                        return arePlaceholders;
+                                }
+                                arePlaceholders = modelSelected.getRowCount() == 0;
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must select at least one employee.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                String date = dateTextField.getText();
+                                LocalDate today = LocalDate.now();
+                                LocalDate localDateNew = LocalDate.parse(date,
+                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                if (localDateNew.isBefore(today)) {
+                                        successLabel.setText("ERROR. You can't add a shift that occured in the past.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                // CHECK FOR START AFTER END SHIFT HOURS
+                                // CHECK IMBEDED DATES
+                                return false;
+                        }
+
+                        public boolean addFoodComponent() {
+                                String date = dateTextField.getText();
+                                String startShift = startShiftTextField.getText();
+                                String endShift = endShiftTextField.getText();
+                                ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
+
+                                ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(
+                                                selectedEmployeesIDs, date,
+                                                startShift, endShift);
+                                if (employeeNames.size() > 0) {
+                                        successLabel.setText(
+                                                        "Error. The following employees already have shifts within the given time: ");
+                                        for (String temp : employeeNames)
+                                                successLabel.setText(successLabel.getText().concat(temp + ", "));
+                                        String text = successLabel.getText();
+                                        successLabel.setText(text.substring(0, text.length() - 2).concat("."));
+                                        successLabel.setVisible(true);
+                                        return false;
+                                }
+
+                                if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
+                                        return true;
+                                successLabel.setText("Error. Something went wrong while adding shifts.");
+                                successLabel.setVisible(true);
+                                return false;
+                        }
+
+                        public void extraSteps() {
                                 playground.removeAll();
                                 new mainShifts(playground, from, to, shiftDate);
                                 playground.revalidate();
                                 playground.repaint();
                         }
 
-                        public void mousePressed(MouseEvent e) {
-                        }
+                }
+                new addButtonFormatter().formatAddButton(addShiftsButton, new addMethodsHolder());
 
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                addShiftsButton.setBackground(new Color(23, 35, 51));
-                                addShiftsButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                addShiftsButton.setBackground(new Color(255, 255, 255));
-                                addShiftsButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
                 addRightLeftListeners();
                 applyGenericListeners();
 

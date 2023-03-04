@@ -1,6 +1,8 @@
 package navigation.administration.employeesNav;
 
 import componentsFood.role;
+import util.addButton.addButtonFormatter;
+import util.addButton.iAddButton;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.inputFormatting.inputFormatterFactory;
@@ -326,32 +328,6 @@ public class addEmployee {
                 roleComboBox.setBackground(Color.WHITE);
         }
 
-        private boolean valuesArePlaceholders() {
-                boolean arePlaceholders = (namePlaceholder.getValue() || salaryPlaceholder.getValue()
-                                || hoursWeekPlaceholder.getValue());
-                if (arePlaceholders) {
-                        successLabel.setText("Error. You must fill all the given fields.");
-                        successLabel.setVisible(true);
-                }
-                return arePlaceholders;
-        }
-
-        private boolean areInputsInvalid() {
-                return false;
-        }
-
-        private void addFoodComponent() {
-                String name = nameTextField.getText();
-                Float salary = Float.parseFloat(salaryTextField.getText());
-                String hoursWeek = hoursWeekTextField.getText();
-                int roleID = roles.get(roleComboBox.getSelectedIndex()).getId();
-                if (theManagerDB.addEmployee(name, salary, hoursWeek, roleID))
-                        successLabel.setText("The employee '" + name + "' has been successfully added.");
-                else
-                        successLabel.setText("Error. Impossible to connect to database.");
-                successLabel.setVisible(true);
-        }
-
         private void addActionListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
 
@@ -379,35 +355,38 @@ public class addEmployee {
                         }
 
                 });
-                addEmployeeButton.addMouseListener(new MouseListener() {
-
-                        public void mouseClicked(MouseEvent e) {
-                                if (valuesArePlaceholders())
-                                        return;
-                                if (areInputsInvalid())
-                                        return;
-                                addFoodComponent();
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean arePlaceholders = (namePlaceholder.getValue() || salaryPlaceholder.getValue()
+                                                || hoursWeekPlaceholder.getValue());
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                }
+                                return arePlaceholders;
                         }
 
-                        public void mousePressed(MouseEvent e) {
-
+                        public boolean areInputsInvalid() {
+                                return false;
                         }
 
-                        public void mouseReleased(MouseEvent e) {
-
+                        public boolean addFoodComponent() {
+                                String name = nameTextField.getText();
+                                Float salary = Float.parseFloat(salaryTextField.getText());
+                                String hoursWeek = hoursWeekTextField.getText();
+                                int roleID = roles.get(roleComboBox.getSelectedIndex()).getId();
+                                if (theManagerDB.addEmployee(name, salary, hoursWeek, roleID))
+                                        successLabel.setText(
+                                                        "The employee '" + name + "' has been successfully added.");
+                                else
+                                        successLabel.setText("Error. Impossible to connect to database.");
+                                successLabel.setVisible(true);
+                                return false;
                         }
 
-                        public void mouseEntered(MouseEvent e) {
-                                addEmployeeButton.setBackground(new Color(23, 35, 51));
-                                addEmployeeButton.setForeground(new Color(255, 255, 255));
-                        }
+                }
+                new addButtonFormatter().formatAddButton(addEmployeeButton, new addMethodsHolder());
 
-                        public void mouseExited(MouseEvent e) {
-                                addEmployeeButton.setBackground(new Color(255, 255, 255));
-                                addEmployeeButton.setForeground(new Color(23, 35, 51));
-                        }
-
-                });
                 applyGenericListeners();
         }
 
