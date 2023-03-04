@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import componentsFood.currentShiftEmployee;
 import componentsFood.employee;
@@ -37,11 +36,11 @@ public class shiftsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addShifts(Stack<Integer> employeeID, String shiftDate, String startShift, String endShift) {
+    public boolean addShifts(ArrayList<Integer> employeeID, String shiftDate, String startShift, String endShift) {
         shiftDate = dateInverter.invert(shiftDate);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            while (!employeeID.isEmpty()) {
-                String query = "INSERT INTO employees_schedule VALUES (" + employeeID.pop() + ", '" + shiftDate + "', '"
+            for (Integer tempID : employeeID) {
+                String query = "INSERT INTO employees_schedule VALUES (" + tempID + ", '" + shiftDate + "', '"
                         + startShift + "', '" + endShift + "', NULL, NULL, NULL)";
                 try (Statement stmt = connection.createStatement()) {
                     stmt.executeUpdate(query);
@@ -543,6 +542,36 @@ public class shiftsAPI extends abstractManagerDB {
                 connection.close();
             } catch (Exception e) {
                 System.out.println(e);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public ArrayList<String> getNamesOfEmbededShifts(ArrayList<Integer> employeeIDs, String shiftDate,
+            String startShift, String endShift) {
+        ArrayList<String> employeeNames = new ArrayList<String>();
+        shiftDate = dateInverter.invert(shiftDate);
+        String csEmployeeIDs = "(";
+        for (Integer temp : employeeIDs) {
+            csEmployeeIDs = csEmployeeIDs.concat(Integer.toString(temp)).concat(",");
+        }
+        csEmployeeIDs = csEmployeeIDs.substring(0, csEmployeeIDs.length() - 1);
+        csEmployeeIDs = csEmployeeIDs.concat(")");
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM employees_schedule NATURAL JOIN employees WHERE shift_date = '" + shiftDate
+                    + "' AND (('" + startShift + "' BETWEEN start_shift AND end_shift OR '" + endShift
+                    + "' BETWEEN start_shift AND end_shift) OR ('" + startShift + "' < start_shift AND '" + endShift
+                    + "' > end_shift)) AND employee_id IN " + csEmployeeIDs;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next())
+                    employeeNames.add(rs.getString("name"));
+                connection.close();
+                return employeeNames;
+            } catch (Exception e) {
+                System.out.println(e);
+                return employeeNames;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

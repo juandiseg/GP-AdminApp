@@ -3,7 +3,7 @@ package navigation.administration.shiftsNav;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Stack;
+import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
@@ -427,8 +427,20 @@ public class addShifts {
                 String date = dateTextField.getText();
                 String startShift = startShiftTextField.getText();
                 String endShift = endShiftTextField.getText();
+                ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
 
-                Stack<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
+                ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(selectedEmployeesIDs, date,
+                                startShift, endShift);
+                if (employeeNames.size() > 0) {
+                        successLabel.setText(
+                                        "Error. The following employees already have shifts within the given time: ");
+                        for (String temp : employeeNames)
+                                successLabel.setText(successLabel.getText().concat(temp + ", "));
+                        String text = successLabel.getText();
+                        successLabel.setText(text.substring(0, text.length() - 2).concat("."));
+                        successLabel.setVisible(true);
+                        return false;
+                }
 
                 if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
                         return true;
@@ -437,10 +449,10 @@ public class addShifts {
                 return false;
         }
 
-        private Stack<Integer> getSelectedEmployeeIDs() {
-                Stack<Integer> selectedEmployees = new Stack<Integer>();
+        private ArrayList<Integer> getSelectedEmployeeIDs() {
+                ArrayList<Integer> selectedEmployees = new ArrayList<Integer>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++)
-                        selectedEmployees.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                        selectedEmployees.add(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
                 return selectedEmployees;
         }
 
