@@ -13,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 import util.databaseAPIs.ingredientsAPI;
+import util.buttonFormatters.editButtonFormatter;
+import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.providerAPI;
 import util.databaseAPIs.productAPI;
@@ -71,6 +73,7 @@ public class editIngredient {
         private ArrayList<provider> providers = new providerAPI().getAllActiveProviders();
 
         private ingredient theCurrentIngredient;
+        private ingredientsAPI theManagerDB = new ingredientsAPI();
 
         public editIngredient(JPanel playground, ingredient theCurrentIngredient) {
                 this.theCurrentIngredient = theCurrentIngredient;
@@ -568,24 +571,6 @@ public class editIngredient {
                 return true;
         }
 
-        private void renewPlaceholders() {
-                theCurrentIngredient = new ingredientsAPI().getIngredient(theCurrentIngredient.getId());
-                theIngredientLabel.setText(theCurrentIngredient.getName());
-                nameTextField.setText(theCurrentIngredient.getName());
-                nameTextField.setForeground(Color.GRAY);
-                namePlaceholder.setValue(true);
-                priceTextField.setText(Float.toString(theCurrentIngredient.getPrice()));
-                priceTextField.setForeground(Color.GRAY);
-                pricePlaceholder.setValue(true);
-                quantityTextField.setText(Float.toString(theCurrentIngredient.getAmount()));
-                quantityTextField.setForeground(Color.GRAY);
-                quantityPlaceholder.setValue(true);
-                inventoryToggle.setForeground(Color.GRAY);
-                providerComboBox.removeAllItems();
-                setComboBox();
-                applyGenericListeners();
-        }
-
         private void addListeners(JPanel playground) {
                 backButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
@@ -607,95 +592,6 @@ public class editIngredient {
 
                         public void mouseExited(MouseEvent e) {
                                 backButton.setBackground(new Color(71, 120, 197));
-                        }
-                });
-                editIngredientButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                boolean providerPlaceholder = providerComboBox.getSelectedIndex() == 0;
-                                boolean togglePlaceholder = theCurrentIngredient.getInInventory() == inventoryToggle
-                                                .getText().equals("Yes");
-                                boolean allergenPlaceholder = isAllergenPlaceholder();
-                                if (namePlaceholder.getValue() && pricePlaceholder.getValue()
-                                                && quantityPlaceholder.getValue() && providerPlaceholder
-                                                && togglePlaceholder && allergenPlaceholder) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
-                                        return;
-                                }
-                                ingredientsAPI theManagerDB = new ingredientsAPI();
-                                int ingrID = theCurrentIngredient.getId();
-                                boolean error = false;
-                                if (new ingredientsAPI().isNameTaken(nameTextField.getText())
-                                                && !namePlaceholder.getValue()) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                if (!namePlaceholder.getValue()) {
-                                        if (!theManagerDB.updateName(ingrID, nameTextField.getText())) {
-                                                successLabel.setText("Error. Could not update to the given name.");
-                                                error = true;
-                                        }
-                                }
-                                if (!pricePlaceholder.getValue() && !error) {
-                                        Float price = Float.parseFloat(priceTextField.getText());
-                                        if (!theManagerDB.updatePrice(ingrID, price)) {
-                                                successLabel.setText("Error. Could not update to the given price.");
-                                                error = true;
-                                        }
-                                }
-                                if (!quantityPlaceholder.getValue() && !error) {
-                                        Float quantity = Float.parseFloat(quantityTextField.getText());
-                                        if (!theManagerDB.updateAmount(ingrID, quantity)) {
-                                                successLabel.setText("Error. Could not update to the given quantity.");
-                                                error = true;
-                                        }
-                                }
-                                if (!togglePlaceholder && !error) {
-                                        if (!theManagerDB.updateInInventory(ingrID,
-                                                        !theCurrentIngredient.getInInventory())) {
-                                                successLabel.setText("Error. Could not update inventory status.");
-                                                error = true;
-                                        }
-                                }
-                                if (!allergenPlaceholder && !error) {
-                                        Stack<Integer> stackAller = new Stack<>();
-                                        for (int i = 0; i < modelSelected.getRowCount(); i++)
-                                                stackAller.push(Integer
-                                                                .parseInt((String) modelSelected.getValueAt(i, 0)));
-                                        if (!new allergensAPI().editAlergensOfIngredient(stackAller, ingrID)) {
-                                                successLabel.setText("Error. Could not update to the given allergens.");
-                                                error = true;
-                                        }
-                                }
-                                if (!providerPlaceholder && !error) {
-                                        int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
-                                        if (!theManagerDB.updateProvider(ingrID, providerID)) {
-                                                successLabel.setText(
-                                                                "Error. Could not update to the specified provider.");
-                                                error = true;
-                                        }
-                                }
-                                if (!error)
-                                        successLabel.setText("\"" + theCurrentIngredient.getName()
-                                                        + "\" was successfully updated.");
-                                successLabel.setVisible(true);
-                                renewPlaceholders();
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editIngredientButton.setBackground(new Color(23, 35, 51));
-                                editIngredientButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editIngredientButton.setBackground(new Color(255, 255, 255));
-                                editIngredientButton.setForeground(new Color(23, 35, 51));
                         }
                 });
                 deleteButton.addMouseListener(new MouseListener() {
@@ -802,7 +698,107 @@ public class editIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+
+                        private boolean providerPlaceholder;
+                        private boolean togglePlaceholder;
+                        private boolean allergenPlaceholder;
+
+                        public boolean valuesArePlaceholders() {
+                                providerPlaceholder = providerComboBox.getSelectedIndex() == 0;
+                                togglePlaceholder = theCurrentIngredient.getInInventory() == inventoryToggle
+                                                .getText().equals("Yes");
+                                allergenPlaceholder = isAllergenPlaceholder();
+                                if (namePlaceholder.getValue() && pricePlaceholder.getValue()
+                                                && quantityPlaceholder.getValue() && providerPlaceholder
+                                                && togglePlaceholder && allergenPlaceholder) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateName(theCurrentIngredient,
+                                                        nameTextField.getText());
+
+                                if (!pricePlaceholder.getValue() && successfulUpdate) {
+                                        Float price = Float.parseFloat(priceTextField.getText());
+                                        successfulUpdate = theManagerDB.updatePrice(theCurrentIngredient, price);
+                                }
+
+                                if (!quantityPlaceholder.getValue() && successfulUpdate) {
+                                        Float quantity = Float.parseFloat(quantityTextField.getText());
+                                        successfulUpdate = theManagerDB.updateAmount(theCurrentIngredient, quantity);
+                                }
+
+                                if (!togglePlaceholder && successfulUpdate) {
+                                        successfulUpdate = theManagerDB.updateInInventory(theCurrentIngredient,
+                                                        !theCurrentIngredient.getInInventory());
+                                }
+
+                                if (!allergenPlaceholder && successfulUpdate) {
+                                        Stack<Integer> stackAllergenIDs = getSelectedAllergensIDs();
+                                        successfulUpdate = new allergensAPI().editAlergensOfIngredient(stackAllergenIDs,
+                                                        theCurrentIngredient);
+                                }
+
+                                if (!providerPlaceholder && successfulUpdate) {
+                                        int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
+                                        successfulUpdate = theManagerDB.updateProvider(theCurrentIngredient,
+                                                        providerID);
+                                }
+
+                                if (successfulUpdate)
+                                        successLabel.setText("The category \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the category.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentIngredient = new ingredientsAPI().getIngredient(theCurrentIngredient.getId());
+                                namePlaceholder.setValue(true);
+                                pricePlaceholder.setValue(true);
+                                quantityPlaceholder.setValue(true);
+
+                                theIngredientLabel.setText(theCurrentIngredient.getName());
+                                nameTextField.setForeground(Color.GRAY);
+                                priceTextField.setForeground(Color.GRAY);
+                                quantityTextField.setForeground(Color.GRAY);
+                                inventoryToggle.setForeground(Color.GRAY);
+
+                                providerComboBox.removeAllItems();
+                                setComboBox();
+                                applyGenericListeners();
+                        }
+                }
+                new editButtonFormatter().formatEditButton(editIngredientButton, new editMethodsHolder());
+        }
+
+        private Stack<Integer> getSelectedAllergensIDs() {
+                Stack<Integer> stackAllergenIDs = new Stack<>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++)
+                        stackAllergenIDs.push(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
+                return stackAllergenIDs;
         }
 
         private void applyGenericListeners() {

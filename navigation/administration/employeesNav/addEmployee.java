@@ -1,8 +1,8 @@
 package navigation.administration.employeesNav;
 
 import componentsFood.role;
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.inputFormatting.inputFormatterFactory;
@@ -355,6 +355,11 @@ public class addEmployee {
                         }
 
                 });
+                addButton(playground);
+                applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean arePlaceholders = (namePlaceholder.getValue() || salaryPlaceholder.getValue()
@@ -386,8 +391,6 @@ public class addEmployee {
 
                 }
                 new addButtonFormatter().formatAddButton(addEmployeeButton, new addMethodsHolder());
-
-                applyGenericListeners();
         }
 
         private void applyGenericListeners() {

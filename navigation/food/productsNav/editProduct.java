@@ -795,6 +795,65 @@ public class editProduct {
                 applyGenericListeners();
         }
 
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+                        public boolean valuesArePlaceholders() {
+
+                                if (namePlaceholder.getValue() && emailPlaceholder.getValue()) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                if (!emailPlaceholder.getValue() && (!emailTextField.getText().contains("@")
+                                                || emailTextField.getText().length() < 3)) {
+                                        successLabel.setText("Error. The given email is invalid.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateName(theCurrentProvider,
+                                                        nameTextField.getText());
+                                if (!emailPlaceholder.getValue() && successfulUpdate)
+                                        successfulUpdate = theManagerDB.updateEmail(theCurrentProvider,
+                                                        emailTextField.getText());
+                                if (successfulUpdate)
+                                        successLabel.setText("The provider \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the provider.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+
+                                namePlaceholder.setValue(true);
+                                emailPlaceholder.setValue(true);
+
+                                theProviderLabel.setText(theCurrentProvider.getName());
+                                nameTextField.setForeground(Color.GRAY);
+                                emailTextField.setForeground(Color.GRAY);
+
+                                applyGenericListeners();
+                        }
+                }
+                new editButtonFormatter().formatEditButton(editProviderButton, new editMethodsHolder());
+        }
+
         private void renewPlaceholders() {
                 theCurrentProduct = new productAPI().getProduct(theCurrentProduct.getId());
                 theProductLabel.setText(theCurrentProduct.getName());

@@ -4,9 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
-
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.providerAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -285,6 +284,11 @@ public class addProvider {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
+                addButton(playground);
+                applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean arePlaceholders = (namePlaceholder.getValue() || emailPlaceholder.getValue());
@@ -316,7 +320,6 @@ public class addProvider {
                         }
                 }
                 new addButtonFormatter().formatAddButton(addProviderButton, new addMethodsHolder());
-                applyGenericListeners();
         }
 
         private void applyGenericListeners() {

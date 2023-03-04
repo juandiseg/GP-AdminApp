@@ -1,6 +1,8 @@
 package navigation.food.allergensNav;
 
 import componentsFood.allergen;
+import util.buttonFormatters.editButtonFormatter;
+import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.allergensAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -32,6 +34,7 @@ public class editAllergen {
 
         private JTextField nameTextField = new JTextField();
         private allergen theCurrentAllergen;
+        private allergensAPI theManagerDB = new allergensAPI();
 
         public editAllergen(JPanel playground, allergen theCurrentAllergen) {
                 this.theCurrentAllergen = theCurrentAllergen;
@@ -271,47 +274,6 @@ public class editAllergen {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                editAllergenButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                String name = nameTextField.getText();
-                                if (namePlaceholder.getValue()) {
-                                        successLabel.setText(
-                                                        "You must assign a new name in order to edit an allergen.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                allergensAPI theManagerDB = new allergensAPI();
-                                if (theManagerDB.isNameTaken(name)) {
-                                        successLabel.setText("Error. The given name is already taken.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                if (theManagerDB.editAllergen(theCurrentAllergen, name)) {
-                                        successLabel.setText("'" + name + "' has been successfully updated.");
-                                        renewPlaceholders();
-                                } else {
-                                        successLabel.setText("Something went wrong while updating "
-                                                        + theCurrentAllergen.getName());
-                                }
-                                successLabel.setVisible(true);
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editAllergenButton.setBackground(new Color(23, 35, 51));
-                                editAllergenButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editAllergenButton.setBackground(new Color(255, 255, 255));
-                                editAllergenButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -347,15 +309,55 @@ public class editAllergen {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                editButton(playground);
                 applyGenericListeners();
         }
 
-        private void renewPlaceholders() {
-                theCurrentAllergen = new allergensAPI().getAllergen(theCurrentAllergen.getId());
-                namePlaceholder.setValue(true);
-                editAllergenLabel.setText(theCurrentAllergen.getName());
-                nameTextField.setForeground(Color.GRAY);
-                applyGenericListeners();
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+                        public boolean valuesArePlaceholders() {
+                                if (namePlaceholder.getValue()) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateName(theCurrentAllergen,
+                                                        nameTextField.getText());
+                                if (successfulUpdate)
+                                        successLabel.setText("The allergen \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the allergen.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentAllergen = new allergensAPI().getAllergen(theCurrentAllergen.getId());
+
+                                namePlaceholder.setValue(true);
+
+                                editAllergenLabel.setText(theCurrentAllergen.getName());
+                                nameTextField.setForeground(Color.GRAY);
+
+                                applyGenericListeners();
+                        }
+                }
+                new editButtonFormatter().formatEditButton(editAllergenButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {

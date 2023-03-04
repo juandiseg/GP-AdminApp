@@ -195,11 +195,12 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // UPDATE something "product" related in database.
-    public boolean updateType(int ID, boolean isProduct) {
-        if (checkTypeUpdateable(ID) == false)
+    public boolean updateType(category theCategory, boolean isProduct) {
+        if (checkTypeUpdateable(theCategory) == false)
             return false;
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE categories SET iscategory_product = " + isProduct + " WHERE category_id = " + ID;
+            String query = "UPDATE categories SET iscategory_product = " + isProduct + " WHERE category_id = "
+                    + theCategory.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -213,9 +214,9 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public boolean checkTypeUpdateable(int ID) {
+    public boolean checkTypeUpdateable(category theCategory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM products WHERE category_id = " + ID + " LIMIT 1";
+            String query = "SELECT * FROM products WHERE category_id = " + theCategory.getId() + " LIMIT 1";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
@@ -231,9 +232,10 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateName(int ID, String newName) {
+    public boolean updateName(category theCategory, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE categories SET category_name = '" + newName + "' WHERE category_id = " + ID;
+            String query = "UPDATE categories SET category_name = '" + newName + "' WHERE category_id = "
+                    + theCategory.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();

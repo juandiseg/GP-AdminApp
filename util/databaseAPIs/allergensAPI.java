@@ -163,7 +163,7 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // UPDATE something "allergen" related in database.
-    public boolean editAllergen(allergen theAllergen, String name) {
+    public boolean updateName(allergen theAllergen, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + theAllergen.getId();
             try (Statement stmt = connection.createStatement()) {
@@ -179,16 +179,16 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean editAlergensOfIngredient(Stack<Integer> stackSelected, int ingredientID) {
+    public boolean editAlergensOfIngredient(Stack<Integer> stackSelected, ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = " + ingredientID;
+            String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
             } catch (Exception a) {
                 System.out.println(a);
                 return false;
             }
-            return addAlergensOfIngredient(stackSelected, ingredientID);
+            return addAlergensOfIngredient(stackSelected, theIngredient.getId());
         } catch (SQLException e) {
             System.out.println(e);
             return false;

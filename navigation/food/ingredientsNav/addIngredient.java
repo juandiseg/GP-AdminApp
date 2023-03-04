@@ -9,11 +9,10 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
-
 import componentsFood.allergen;
 import componentsFood.provider;
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.ingredientsAPI;
 import util.databaseAPIs.providerAPI;
@@ -533,53 +532,6 @@ public class addIngredient {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                class addMethodsHolder extends iAddButton {
-                        public boolean valuesArePlaceholders() {
-                                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
-                                                || quantityPlaceholder.getValue());
-                                if (arePlaceholders) {
-                                        successLabel.setText("Error. You must fill all the given fields.");
-                                        successLabel.setVisible(true);
-                                }
-                                return arePlaceholders;
-                        }
-
-                        public boolean areInputsInvalid() {
-                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
-                                if (error) {
-                                        successLabel.setText("Error. The given name is already in use.");
-                                        successLabel.setVisible(true);
-                                }
-                                return error;
-                        }
-
-                        public boolean addFoodComponent() {
-                                String name = nameTextField.getText();
-                                Float price = Float.parseFloat(priceTextField.getText());
-                                Float quantity = Float.parseFloat(quantityTextField.getText());
-                                int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
-                                boolean inventory = inventoryToggle.getText().equals("Yes");
-
-                                int ingredientID = theManagerDB.addIngredient(providerID, name, price, quantity,
-                                                inventory);
-                                if (ingredientID == -1) {
-                                        successLabel.setText("Error. Impossible to connect to database.");
-                                        successLabel.setVisible(true);
-                                        return false;
-                                }
-
-                                Stack<Integer> selectedAllergens = getSelectedAllergenIDs();
-
-                                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID))
-                                        successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
-                                else
-                                        successLabel.setText("Error. Something went wrong while adding allergens.");
-                                successLabel.setVisible(true);
-                                return false;
-                        }
-
-                }
-                new addButtonFormatter().formatAddButton(addIngredientButton, new addMethodsHolder());
                 unselectButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int row = tableSelected.getSelectedRow();
@@ -635,7 +587,58 @@ public class addIngredient {
                                 selectButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                addButton(playground);
                 applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
+                class addMethodsHolder extends iAddButton {
+                        public boolean valuesArePlaceholders() {
+                                boolean arePlaceholders = (namePlaceholder.getValue() || pricePlaceholder.getValue()
+                                                || quantityPlaceholder.getValue());
+                                if (arePlaceholders) {
+                                        successLabel.setText("Error. You must fill all the given fields.");
+                                        successLabel.setVisible(true);
+                                }
+                                return arePlaceholders;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                if (error) {
+                                        successLabel.setText("Error. The given name is already in use.");
+                                        successLabel.setVisible(true);
+                                }
+                                return error;
+                        }
+
+                        public boolean addFoodComponent() {
+                                String name = nameTextField.getText();
+                                Float price = Float.parseFloat(priceTextField.getText());
+                                Float quantity = Float.parseFloat(quantityTextField.getText());
+                                int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
+                                boolean inventory = inventoryToggle.getText().equals("Yes");
+
+                                int ingredientID = theManagerDB.addIngredient(providerID, name, price, quantity,
+                                                inventory);
+                                if (ingredientID == -1) {
+                                        successLabel.setText("Error. Impossible to connect to database.");
+                                        successLabel.setVisible(true);
+                                        return false;
+                                }
+
+                                Stack<Integer> selectedAllergens = getSelectedAllergenIDs();
+
+                                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID))
+                                        successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
+                                else
+                                        successLabel.setText("Error. Something went wrong while adding allergens.");
+                                successLabel.setVisible(true);
+                                return false;
+                        }
+
+                }
+                new addButtonFormatter().formatAddButton(addIngredientButton, new addMethodsHolder());
         }
 
         private void applyGenericListeners() {

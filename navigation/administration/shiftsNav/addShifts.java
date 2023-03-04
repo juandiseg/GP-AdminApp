@@ -12,8 +12,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.employee;
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 import util.databaseAPIs.shiftsAPI;
@@ -425,6 +425,12 @@ public class addShifts {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
+                addButton(playground);
+                addRightLeftListeners();
+                applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean arePlaceholders = (datePlaceholder.getValue() || startPlaceholder.getValue()
@@ -494,10 +500,6 @@ public class addShifts {
 
                 }
                 new addButtonFormatter().formatAddButton(addShiftsButton, new addMethodsHolder());
-
-                addRightLeftListeners();
-                applyGenericListeners();
-
         }
 
         private void applyGenericListeners() {

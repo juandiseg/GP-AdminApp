@@ -1,6 +1,8 @@
 package navigation.food.categoriesNav;
 
 import componentsFood.category;
+import util.buttonFormatters.editButtonFormatter;
+import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.categoryAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -37,6 +39,7 @@ public class editCategory {
 
         private JTextField nameTextField = new JTextField();
         private category theCurrentCategory;
+        private categoryAPI theManagerDB = new categoryAPI();
 
         public editCategory(JPanel playground, category theCurrentCategory) {
                 this.theCurrentCategory = theCurrentCategory;
@@ -323,66 +326,6 @@ public class editCategory {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
-                editCategoryButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                String originalType = "Menu Category";
-                                if (theCurrentCategory.getIsProduct())
-                                        originalType = "Product Category";
-                                if (namePlaceholder.getValue() && typeToggle.getText().equals(originalType)) {
-                                        successLabel.setText(
-                                                        "At least one of the fields must be modified to edit the category.");
-                                        successLabel.setVisible(true);
-                                        return;
-                                }
-                                categoryAPI theManagerDB = new categoryAPI();
-                                boolean successfulUpdate = true;
-                                if (!namePlaceholder.getValue()) {
-                                        String name = nameTextField.getText();
-                                        if (theManagerDB.isNameTaken(name)) {
-                                                successLabel.setText("Error. The given name is already taken.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-                                        successfulUpdate = theManagerDB.updateName(theCurrentCategory.getId(), name);
-                                }
-                                if (!typeToggle.getText().equals(originalType)) {
-                                        Boolean isProduct = typeToggle.getText().equals("Product Category");
-                                        if (theManagerDB.updateType(theCurrentCategory.getId(), isProduct) == false) {
-                                                JOptionPane.showMessageDialog(playground,
-                                                                "To edit a category's type this one must not be assigned to any products/menus.\nPlease check that before editting.",
-                                                                "ERROR", JOptionPane.ERROR_MESSAGE);
-                                                successfulUpdate = false;
-                                        } else
-                                                successfulUpdate = true;
-                                }
-                                if (successfulUpdate) {
-
-                                        successLabel.setText(
-                                                        "The category '" + theCurrentCategory.getName()
-                                                                        + "' has been successfully updated.");
-                                        renewPlaceholders();
-                                } else
-                                        successLabel.setText("Something went wrong while updating the category.");
-                                successLabel.setVisible(true);
-
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                editCategoryButton.setBackground(new Color(23, 35, 51));
-                                editCategoryButton.setForeground(new Color(255, 255, 255));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                editCategoryButton.setBackground(new Color(255, 255, 255));
-                                editCategoryButton.setForeground(new Color(23, 35, 51));
-                        }
-                });
                 deleteButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 int reply = JOptionPane.showConfirmDialog(null,
@@ -420,7 +363,70 @@ public class editCategory {
                                 deleteButton.setForeground(new Color(255, 255, 255));
                         }
                 });
+                editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void editButton(JPanel playground) {
+                class editMethodsHolder implements iEditButton {
+
+                        private String originalType;
+
+                        public boolean valuesArePlaceholders() {
+                                originalType = "Menu Category";
+                                if (theCurrentCategory.getIsProduct())
+                                        originalType = "Product Category";
+
+                                if (namePlaceholder.getValue() && typeToggle.getText().equals(originalType)) {
+                                        successLabel.setText("Error. You must modify at least one field.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean areInputsInvalid() {
+                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                        successLabel.setText("Error. The given name is already taken.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public void editFoodComponent() {
+                                boolean successfulUpdate = true;
+
+                                if (!namePlaceholder.getValue())
+                                        successfulUpdate = theManagerDB.updateName(theCurrentCategory,
+                                                        nameTextField.getText());
+
+                                if (!typeToggle.getText().equals(originalType) && successfulUpdate) {
+                                        Boolean isProduct = typeToggle.getText().equals("Product Category");
+                                        successfulUpdate = theManagerDB.updateType(theCurrentCategory, isProduct);
+                                }
+
+                                if (successfulUpdate)
+                                        successLabel.setText("The category \"" + nameTextField.getText()
+                                                        + "\" was successfully updated.");
+                                else
+                                        successLabel.setText("Something went wrong while updating the category.");
+                                successLabel.setVisible(true);
+                        }
+
+                        public void updatePlaceholders() {
+                                theCurrentCategory = theManagerDB.getCategory(theCurrentCategory.getId());
+
+                                namePlaceholder.setValue(true);
+
+                                theCategoryLabel.setText(theCurrentCategory.getName());
+                                nameTextField.setForeground(Color.GRAY);
+                                typeToggle.setForeground(Color.GRAY);
+
+                                applyGenericListeners();
+                        }
+                }
+                new editButtonFormatter().formatEditButton(editCategoryButton, new editMethodsHolder());
         }
 
         private void applyGenericListeners() {
@@ -434,12 +440,4 @@ public class editCategory {
                                 theCurrentCategory.getIsProduct());
         }
 
-        private void renewPlaceholders() {
-                namePlaceholder.setValue(true);
-                theCurrentCategory = new categoryAPI().getCategory(theCurrentCategory.getId());
-                theCategoryLabel.setText(theCurrentCategory.getName());
-                nameTextField.setForeground(Color.GRAY);
-                typeToggle.setForeground(Color.GRAY);
-                applyGenericListeners();
-        }
 }

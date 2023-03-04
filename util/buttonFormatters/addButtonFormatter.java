@@ -1,4 +1,4 @@
-package util.addButton;
+package util.buttonFormatters;
 
 import java.awt.event.MouseListener;
 import java.awt.Color;

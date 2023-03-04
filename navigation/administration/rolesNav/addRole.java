@@ -3,8 +3,8 @@ package navigation.administration.rolesNav;
 import java.awt.event.*;
 import javax.swing.*;
 
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.rolesAPI;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
@@ -237,6 +237,11 @@ public class addRole {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
+                addButton(playground);
+                applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean isPlaceholder = namePlaceholder.getValue() == true;
@@ -268,7 +273,6 @@ public class addRole {
 
                 }
                 new addButtonFormatter().formatAddButton(addRoleButton, new addMethodsHolder());
-                applyGenericListeners();
         }
 
         private void applyGenericListeners() {

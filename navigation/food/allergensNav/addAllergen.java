@@ -4,9 +4,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import util.addButton.addButtonFormatter;
-import util.addButton.iAddButton;
 import util.listenersFormatting.add.addTextFieldFListener;
+import util.buttonFormatters.addButtonFormatter;
+import util.buttonFormatters.iAddButton;
 import util.databaseAPIs.allergensAPI;
 import util.listenersFormatting.booleanWrapper;
 
@@ -238,6 +238,11 @@ public class addAllergen {
                                 backButton.setBackground(new Color(71, 120, 197));
                         }
                 });
+                addButton(playground);
+                applyGenericListeners();
+        }
+
+        private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
                         public boolean valuesArePlaceholders() {
                                 boolean isPlaceholder = namePlaceholder.getValue() == true;
@@ -270,7 +275,6 @@ public class addAllergen {
 
                 }
                 new addButtonFormatter().formatAddButton(addAllergenButton, new addMethodsHolder());
-                applyGenericListeners();
         }
 
         private void applyGenericListeners() {

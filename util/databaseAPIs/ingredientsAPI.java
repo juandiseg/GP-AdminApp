@@ -276,10 +276,10 @@ public class ingredientsAPI extends abstractManagerDB {
 
     // UPDATE something "ingredient" related in database.
 
-    public boolean updateInInventory(int ingredientID, boolean in_inventory) {
+    public boolean updateInInventory(ingredient theIngredient, boolean in_inventory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET in_inventory = " + in_inventory
-                    + " WHERE active = true AND ingredient_id = " + ingredientID;
+                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -293,10 +293,10 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateName(int ingredientID, String newName) {
+    public boolean updateName(ingredient theIngredient, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET name = '" + newName
-                    + "' WHERE active = true AND ingredient_id = " + ingredientID;
+                    + "' WHERE active = true AND ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -310,11 +310,11 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateProvider(int ingredientID, int newProviderID) {
-        fixIngredientDate(ingredientID);
+    public boolean updateProvider(ingredient theIngredient, int newProviderID) {
+        fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET provider_id = " + newProviderID
-                    + " WHERE active = true AND ingredient_id = " + ingredientID;
+                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -328,11 +328,11 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updatePrice(int ingredientID, float newPrice) {
-        fixIngredientDate(ingredientID);
+    public boolean updatePrice(ingredient theIngredient, float newPrice) {
+        fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET price = " + newPrice
-                    + " WHERE active = true AND ingredient_id = " + ingredientID;
+                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -346,11 +346,11 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateAmount(int ingredientID, float newAmount) {
-        fixIngredientDate(ingredientID);
+    public boolean updateAmount(ingredient theIngredient, float newAmount) {
+        fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET amount = " + newAmount
-                    + " WHERE active = true AND ingredient_id = " + ingredientID;
+                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -383,20 +383,21 @@ public class ingredientsAPI extends abstractManagerDB {
 
     //
 
-    private void fixIngredientDate(int ingredientID) {
-        if (isLastIngredientEntryToday(ingredientID)) {
+    private void fixIngredientDate(ingredient theIngredient) {
+        if (isLastIngredientEntryToday(theIngredient)) {
             return;
         }
-        ingredient temp = getIngredient(ingredientID);
-        setEntriesIngredientInactive(ingredientID);
+        ingredient temp = getIngredient(theIngredient.getId());
+        setEntriesIngredientInactive(temp);
         addIngredient(temp.getId(), temp.getProviderID(), temp.getName(), temp.getPrice(), temp.getAmount(),
                 temp.getInInventory());
     }
 
-    private boolean isLastIngredientEntryToday(int ingredientID) {
+    private boolean isLastIngredientEntryToday(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String query = "SELECT MAX(ingredients_date) FROM ingredients WHERE ingredient_id = " + ingredientID;
+            String query = "SELECT MAX(ingredients_date) FROM ingredients WHERE ingredient_id = "
+                    + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
@@ -419,9 +420,9 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private void setEntriesIngredientInactive(int ingredientID) {
+    private void setEntriesIngredientInactive(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET active = false WHERE ingredient_id = " + ingredientID;
+            String query = "UPDATE ingredients SET active = false WHERE ingredient_id = " + theIngredient.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
