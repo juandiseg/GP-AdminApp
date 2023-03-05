@@ -135,13 +135,13 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addAlergensOfIngredient(Stack<Integer> stackSelected, int ingredientID) {
+    public boolean addAlergensOfIngredient(Stack<Integer> allergenIDs, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients_allergens VALUES (?, ?);";
             ppdStatement = connection.prepareStatement(query);
-            while (!stackSelected.isEmpty()) {
+            while (!allergenIDs.isEmpty()) {
                 ppdStatement.setInt(1, ingredientID);
-                ppdStatement.setInt(2, stackSelected.pop());
+                ppdStatement.setInt(2, allergenIDs.pop());
                 try {
                     ppdStatement.executeUpdate();
                 } catch (Exception SQLTimeoutException) {
@@ -172,7 +172,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateAlergensOfIngredient(Stack<Integer> stackSelected, ingredient theIngredient) {
+    public boolean updateAlergensOfIngredient(Stack<Integer> allergenIDs, ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -182,7 +182,7 @@ public class allergensAPI extends abstractManagerDB {
             } catch (Exception SQLTimeoutException) {
                 return false;
             }
-            return addAlergensOfIngredient(stackSelected, theIngredient.getId());
+            return addAlergensOfIngredient(allergenIDs, theIngredient.getId());
         } catch (SQLException e) {
             return false;
         }

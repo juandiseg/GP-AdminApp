@@ -165,17 +165,16 @@ public class rolesAPI extends abstractManagerDB {
 
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM roles WHERE role_name = '" + name + "' AND unactive IS NULL";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
+            String query = "SELECT * FROM roles WHERE role_name = ? AND unactive IS NULL";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, name);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
                     return true;
-                }
-                connection.close();
                 return false;
-            } catch (Exception e) {
-                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

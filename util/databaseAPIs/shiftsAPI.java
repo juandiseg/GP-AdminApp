@@ -255,33 +255,6 @@ public class shiftsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<currentShiftEmployee> getCurrentlyWorkingEmployees() {
-        ArrayList<currentShiftEmployee> tempList = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
-            String query = "SELECT name, role_name, salary, hours_a_week, start_shift, end_shift FROM employees_schedule NATURAL JOIN employees LEFT JOIN roles ON roles.role_id = employees.role_id WHERE shift_date = '"
-                    + date + "' AND start_shift < '" + time + "' AND end_shift > '" + time + "'";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    String name = rs.getString("name");
-                    String role = rs.getString("role_name");
-                    Float salary = rs.getFloat("salary");
-                    String hoursWeek = rs.getString("hours_a_week");
-                    String startShift = rs.getString("start_shift");
-                    String endShift = rs.getString("end_shift");
-                    tempList.add(new currentShiftEmployee(name, role, salary, hoursWeek, startShift, endShift));
-                }
-                return tempList;
-            } catch (Exception e) {
-                return null;
-            }
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
     public employee getEmployee(int employeeID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees WHERE active = true AND employee_id = " + employeeID;

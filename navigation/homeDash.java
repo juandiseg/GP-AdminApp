@@ -1258,8 +1258,7 @@ public class homeDash extends JFrame {
                 DefaultTableModel modelOrders = new DefaultTableModel(
                                 new String[] { "Time", "Subtotal", "Payment Method" }, 0);
 
-                shiftsAPI managerDB = new shiftsAPI();
-                for (currentShiftEmployee temp : managerDB.getCurrentlyWorkingEmployees()) {
+                for (currentShiftEmployee temp : new dashboardsAPI().getCurrentlyWorkingEmployees()) {
                         String name = temp.getName();
                         String role = temp.getRole();
                         String timeIn = temp.getTimeIn().substring(0, 5);
