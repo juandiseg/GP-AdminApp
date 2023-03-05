@@ -513,7 +513,7 @@ public class addMenu {
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
-                                int menuID = theManagerDB.addMenu(catID, name, price, true);
+                                int menuID = theManagerDB.addMenu(catID, name, price);
                                 if (menuID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
                                         successLabel.setVisible(true);

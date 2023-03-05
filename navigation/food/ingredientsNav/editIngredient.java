@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.menuAPI;
 import util.buttonFormatters.*;
 import util.databaseAPIs.allergensAPI;
 import util.databaseAPIs.providerAPI;
@@ -763,9 +764,9 @@ public class editIngredient {
         private void deleteAllAssociatedToIngredientID(int ingredientID) {
                 productAPI tempAPI = new productAPI();
                 ingredientsAPI theManagerDB = new ingredientsAPI();
-                ArrayList<Integer> productIDs = theManagerDB.getProductsIDWithIngredient(ingredientID);
+                ArrayList<Integer> productIDs = theManagerDB.getProductsIDUsingIngredient(ingredientID);
                 ArrayList<Integer> menuIDs = new ArrayList<Integer>();
-                Stack<Integer> stackMenuIDs = tempAPI.getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
                 while (!stackMenuIDs.isEmpty())
                         menuIDs.add(stackMenuIDs.pop());
                 for (Integer tempProductID : productIDs) {

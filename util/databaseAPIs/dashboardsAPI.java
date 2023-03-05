@@ -14,7 +14,6 @@ import componentsFood.product;
 public class dashboardsAPI extends abstractManagerDB {
 
     // GET data for panels.
-
     public ArrayList<orderView> getLast10OrderViewers() {
         ArrayList<orderView> tempList = new ArrayList<orderView>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -171,7 +170,6 @@ public class dashboardsAPI extends abstractManagerDB {
     }
 
     // GET data for graphs.
-
     public float getSalesOnDay(int minusDays) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(total) as total FROM orders_summary WHERE date = DATE_SUB(CURDATE(), INTERVAL ? DAY);";

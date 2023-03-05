@@ -179,9 +179,8 @@ public class ingredientsAPI extends abstractManagerDB {
             ppdStatement = connection.prepareStatement(query);
             try {
                 ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next()) {
+                if (rs.next())
                     return rs.getInt("employee_id");
-                }
                 return -1;
             } catch (Exception SQLTimeoutException) {
                 return -1;

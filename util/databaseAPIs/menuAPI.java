@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,12 +11,38 @@ import componentsFood.menu;
 
 public class menuAPI extends abstractManagerDB {
 
+    // GET from database.
+    public menu getMenu(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM menus WHERE menu_id = ? ORDER BY menu_date DESC LIMIT 1;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next()) {
+                    int catID = rs.getInt("category_id");
+                    String date = rs.getString("menu_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    boolean active = rs.getBoolean("active");
+                    return new menu(ID, catID, dateInverter.invert(date), name, price, active);
+                }
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public ArrayList<menu> getAllCurrentMenus() {
         ArrayList<menu> tempList = new ArrayList<menu>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM menus WHERE active = 1";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int menuID = rs.getInt("menu_id");
                     int catID = rs.getInt("category_id");
@@ -26,59 +51,27 @@ public class menuAPI extends abstractManagerDB {
                     float price = rs.getFloat("price");
                     tempList.add(new menu(menuID, catID, dateInverter.invert(date), name, price, true));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public menu getMenu(int menuID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM menus WHERE menu_id = " + menuID
-                    + " ORDER BY menu_date DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int ID = rs.getInt("menu_id");
-                    int catID = rs.getInt("category_id");
-                    String date = rs.getString("menu_date");
-                    String name = rs.getString("name");
-                    float price = rs.getFloat("price");
-                    boolean active = rs.getBoolean("active");
-                    return new menu(ID, catID, dateInverter.invert(date), name, price, active);
-                }
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
-        return null;
     }
 
-    public int addMenu(int catID, String name, float price, boolean active) {
-        int menuID = getLastMenuID() + 1;
-        return addMenu(menuID, catID, name, price, active);
-    }
-
-    private int addMenu(int ID, int catID, String name, float price, boolean active) {
+    public Stack<Integer> getAllActiveMenuIDs() {
+        Stack<Integer> tempStack = new Stack<Integer>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO menus VALUES (" + ID + ", " + catID + ", CURDATE(), '" + name + "', "
-                    + price
-                    + ", " + active + ");";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-                return ID;
-            } catch (Exception e) {
-                System.out.println(e);
-                return -1;
+            String query = "SELECT DISTINCT menu_id FROM menus WHERE active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next())
+                    tempStack.add(rs.getInt("menu_id"));
+                return tempStack;
+            } catch (Exception SQLTimeoutException) {
+                return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -88,16 +81,38 @@ public class menuAPI extends abstractManagerDB {
     private int getLastMenuID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_id FROM menus ORDER BY menu_id DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int providerID = rs.getInt("menu_id");
-                    connection.close();
-                    return providerID;
-                }
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getInt("menu_id");
                 return -1;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    // ADD to database.
+    public int addMenu(int catID, String name, float price) {
+        int menuID = getLastMenuID() + 1;
+        return addMenu(menuID, catID, name, price);
+    }
+
+    private int addMenu(int ID, int catID, String name, float price) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO menus VALUES (?, ?, CURDATE(), ?, ?, TRUE);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            ppdStatement.setInt(2, catID);
+            ppdStatement.setString(3, name);
+            ppdStatement.setFloat(4, price);
+            try {
+                ppdStatement.executeUpdate();
+                return ID;
+            } catch (Exception SQLTimeoutException) {
                 return -1;
             }
         } catch (SQLException e) {
@@ -107,35 +122,36 @@ public class menuAPI extends abstractManagerDB {
 
     public boolean addProducts(int menuID, Stack<Integer> productIDs, Stack<Float> quantities) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO menus_products VALUES (?, ?, CURDATE(), ?);";
+            ppdStatement = connection.prepareStatement(query);
             while (!productIDs.isEmpty()) {
-                String query = "INSERT INTO menus_products VALUES (" + menuID + ", " + productIDs.pop()
-                        + ", CURDATE(), "
-                        + quantities.pop() + ")";
-                try (Statement stmt = connection.createStatement()) {
-                    stmt.executeUpdate(query);
-                } catch (Exception a) {
-                    System.out.println(a);
+                ppdStatement.setInt(1, menuID);
+                ppdStatement.setInt(2, productIDs.pop());
+                ppdStatement.setFloat(3, quantities.pop());
+                try {
+                    ppdStatement.executeUpdate();
+                } catch (Exception SQLTimeoutException) {
                     return false;
                 }
             }
             return true;
         } catch (SQLException e) {
-            System.out.println(e);
-            return false;
+            throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
+    // UPDATE in database.
     public boolean updateName(menu theMenu, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE menus AS m, (SELECT MAX(menu_date) AS menu_date FROM menus WHERE menu_id = "
-                    + theMenu.getId() + ") AS temp SET m.name = '" + name
-                    + "' WHERE m.menu_date = temp.menu_date AND m.menu_id = " + theMenu.getId() + ";";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE menus AS m, (SELECT MAX(menu_date) AS menu_date FROM menus WHERE menu_id = ?) AS temp SET m.name = ? WHERE m.menu_date = temp.menu_date AND m.menu_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theMenu.getId());
+            ppdStatement.setString(2, name);
+            ppdStatement.setInt(3, theMenu.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -146,14 +162,14 @@ public class menuAPI extends abstractManagerDB {
     public boolean updatePrice(menu theMenu, float menuPrice) {
         fixMenuDate(theMenu);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE menus SET price = " + menuPrice + " WHERE menu_id = " + theMenu.getId()
-                    + " AND active = true";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE menus SET price = ? WHERE menu_id = ? AND active = true";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setFloat(1, menuPrice);
+            ppdStatement.setInt(2, theMenu.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -163,58 +179,15 @@ public class menuAPI extends abstractManagerDB {
 
     public boolean updateCategory(menu theMenu, int categoryID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE menus SET category_id = " + categoryID + " WHERE menu_id = " + theMenu.getId()
-                    + " AND active = true;";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE menus SET category_id = ? WHERE menu_id = ? AND active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, categoryID);
+            ppdStatement.setInt(2, theMenu.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    private void fixMenuDate(menu theMenu) {
-        if (isLastMenuEntryToday(theMenu))
-            return;
-        setMenuIDUnactive(theMenu.getId());
-        addMenu(theMenu.getId(), theMenu.getCategoryID(), theMenu.getName(), theMenu.getPrice(), true);
-    }
-
-    private boolean isLastMenuEntryToday(menu theMenu) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM menus WHERE menu_id = " + theMenu.getId()
-                    + " AND menu_date = CURDATE() AND active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
-                    return true;
-                } else {
-                    connection.close();
-                    return false;
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public void setMenuIDUnactive(int menuID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE menus SET active = false WHERE menu_id = " + menuID;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -229,56 +202,77 @@ public class menuAPI extends abstractManagerDB {
         return true;
     }
 
-    private boolean areProductEntriesToday(menu theMenu) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = " + theMenu.getId()
-                    + " AND menu_products_date = CURDATE()";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
-                    return true;
-                } else {
-                    connection.close();
-                    return false;
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
+    private void fixMenuDate(menu theMenu) {
+        if (isLastMenuEntryToday(theMenu))
+            return;
+        deleteMenu(theMenu.getId());
+        addMenu(theMenu.getId(), theMenu.getCategoryID(), theMenu.getName(), theMenu.getPrice());
     }
 
-    // REMOVE "product" from database.
+    // REMOVE from database.
     private void removeMenuProductsToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM menus_products WHERE menu_id = " + theMenu.getId() +
-                    " AND menu_products_date = CURDATE()";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
+            String query = "DELETE FROM menus_products WHERE menu_id = ? AND menu_products_date = CURDATE()";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theMenu.getId());
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public boolean deleteMenu(menu theMenu) {
+    public boolean deleteMenu(int menuID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE menus SET active = false WHERE menu_id = " + theMenu.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE menus SET active = false WHERE menu_id = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, menuID);
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
             return false;
+        }
+    }
+
+    // CHECK in database.
+    private boolean isLastMenuEntryToday(menu theMenu) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM menus WHERE menu_id = ? AND menu_date = CURDATE() AND active = true";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theMenu.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private boolean areProductEntriesToday(menu theMenu) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = ? AND menu_products_date = CURDATE()";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theMenu.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
@@ -299,4 +293,5 @@ public class menuAPI extends abstractManagerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
+
 }

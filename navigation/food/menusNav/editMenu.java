@@ -538,7 +538,7 @@ public class editMenu {
                                                 "Are you sure you want to delete this Menu?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        new menuAPI().deleteMenu(theCurrentMenu);
+                                        new menuAPI().deleteMenu(theCurrentMenu.getId());
                                         playground.removeAll();
                                         new mainMenus(playground);
                                         playground.revalidate();

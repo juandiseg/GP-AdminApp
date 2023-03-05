@@ -14,6 +14,7 @@ import componentsFood.product;
 import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.menuAPI;
 import util.databaseAPIs.productAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
@@ -749,7 +750,7 @@ public class editProduct {
 
         private void deleteMenusAssociatedToProductID() {
                 productAPI theManagerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
                         theManagerDB.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
                 theManagerDB.updateActive(theCurrentProduct.getId(), false);
@@ -757,7 +758,7 @@ public class editProduct {
 
         private void deleteProductsFromMenus() {
                 productAPI theManagerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = theManagerDB.getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
                         theManagerDB.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
                 theManagerDB.updateActive(theCurrentProduct.getId(), false);
