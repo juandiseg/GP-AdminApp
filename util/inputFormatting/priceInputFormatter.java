@@ -13,11 +13,25 @@ public class priceInputFormatter implements iFormatter {
             public void keyTyped(KeyEvent arg0) {
                 char k = arg0.getKeyChar();
                 int dotIndex = -1;
+
                 int indexTemp = 0;
                 for (char temp : theTextField.getText().toCharArray()) {
                     if (temp == '.')
                         dotIndex = indexTemp;
                     indexTemp++;
+                }
+
+                if (dotIndex != -1 && theTextField.getText().length() >= 7) {
+                    arg0.consume();
+                    return;
+                }
+
+                if (dotIndex == -1 && theTextField.getText().length() >= 4) {
+                    if (k == ',' || k == '.') {
+                    } else {
+                        arg0.consume();
+                        return;
+                    }
                 }
 
                 if (k >= '0' && k <= '9') {

@@ -3,6 +3,7 @@ package navigation.administration.shiftsNav;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -21,6 +22,8 @@ import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editDateTFFListener;
 
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class addShifts {
 
@@ -428,6 +431,11 @@ public class addShifts {
 
         private void addButton(JPanel playground) {
                 class addMethodsHolder extends iAddButton {
+                        private String date;
+                        private String startShift;
+                        private String endShift;
+                        private ArrayList<Integer> selectedEmployeesIDs;
+
                         public boolean valuesArePlaceholders() {
                                 boolean arePlaceholders = (datePlaceholder.getValue() || startPlaceholder.getValue()
                                                 || endPlaceholder.getValue());
@@ -446,25 +454,34 @@ public class addShifts {
                         }
 
                         public boolean areInputsInvalid() {
-                                String date = dateTextField.getText();
-                                LocalDate today = LocalDate.now();
+                                date = dateTextField.getText();
+                                startShift = startShiftTextField.getText();
+                                endShift = endShiftTextField.getText();
+
                                 LocalDate localDateNew = LocalDate.parse(date,
                                                 DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                                if (localDateNew.isBefore(today)) {
+                                if (localDateNew.isBefore(LocalDate.now())) {
                                         successLabel.setText("ERROR. You can't add a shift that occured in the past.");
                                         successLabel.setVisible(true);
                                         return true;
                                 }
-                                // CHECK FOR START AFTER END SHIFT HOURS
-                                // CHECK IMBEDED DATES
-                                return false;
-                        }
 
-                        public boolean addFoodComponent() {
-                                String date = dateTextField.getText();
-                                String startShift = startShiftTextField.getText();
-                                String endShift = endShiftTextField.getText();
-                                ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
+                                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:MM");
+                                try {
+                                        Date start = timeFormat.parse(startShift);
+                                        Date end = timeFormat.parse(endShift);
+                                        if (start.after(end)) {
+                                                successLabel.setText("ERROR. The shift start must be before the end.");
+                                                successLabel.setVisible(true);
+                                                return true;
+                                        }
+                                } catch (ParseException e) {
+                                        successLabel.setText("ERROR. The given times are unvalid.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                selectedEmployeesIDs = getSelectedEmployeeIDs();
 
                                 ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(
                                                 selectedEmployeesIDs, date,
@@ -479,7 +496,10 @@ public class addShifts {
                                         successLabel.setVisible(true);
                                         return false;
                                 }
+                                return false;
+                        }
 
+                        public boolean addFoodComponent() {
                                 if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
                                         return true;
                                 successLabel.setText("Error. Something went wrong while adding shifts.");
