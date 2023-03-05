@@ -4,71 +4,30 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import componentsFood.employee;
 
 public class employeesAPI extends abstractManagerDB {
 
-    // GET "product" objects from database.
-
-    public boolean addEmployee(String name, float salary, String hoursWeek, int roleID) {
+    // GET from database.
+    public employee getEmployee(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            int employeeID = getLastEmployeeID() + 1;
-            String query = "INSERT INTO employees VALUES (" + employeeID + ", '" + name + "', " + salary + ", '"
-                    + hoursWeek + "', " + roleID + ", true, NULL);";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-                return true;
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    private int getLastEmployeeID() {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT employee_id FROM employees ORDER BY employee_id DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM employees WHERE active = true AND employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next()) {
-                    int providerID = rs.getInt("employee_id");
-                    connection.close();
-                    return providerID;
-                }
-                return -1;
-            } catch (Exception e) {
-                System.out.println(e);
-                return -1;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public ArrayList<employee> getAllCurrentEmployees() {
-        ArrayList<employee> tempList = new ArrayList<employee>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees WHERE active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    int ID = rs.getInt("employee_id");
+                    int employeeID = rs.getInt("employee_id");
                     String name = rs.getString("name");
                     float salary = rs.getFloat("salary");
                     String hoursWeek = rs.getString("hours_a_week");
                     int roleID = rs.getInt("role_id");
-                    tempList.add(new employee(ID, name, salary, hoursWeek, roleID, true));
+                    return new employee(employeeID, name, salary, hoursWeek, roleID, true);
                 }
-                connection.close();
-                return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -78,9 +37,10 @@ public class employeesAPI extends abstractManagerDB {
     public ArrayList<employee> getAllCurrentEmployeesOrdered() {
         ArrayList<employee> tempList = new ArrayList<employee>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees WHERE active = true ORDER BY role_id";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM employees WHERE active = true ORDER BY role_id;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int ID = rs.getInt("employee_id");
                     String name = rs.getString("name");
@@ -89,50 +49,66 @@ public class employeesAPI extends abstractManagerDB {
                     int roleID = rs.getInt("role_id");
                     tempList.add(new employee(ID, name, salary, hoursWeek, roleID, true));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public employee getEmployee(int employeeID) {
+    private int getLastEmployeeID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees WHERE active = true AND employee_id = " + employeeID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT employee_id FROM employees ORDER BY employee_id DESC LIMIT 1;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next()) {
-                    int ID = rs.getInt("employee_id");
-                    String name = rs.getString("name");
-                    float salary = rs.getFloat("salary");
-                    String hoursWeek = rs.getString("hours_a_week");
-                    int roleID = rs.getInt("role_id");
-                    connection.close();
-                    return new employee(ID, name, salary, hoursWeek, roleID, true);
+                    return rs.getInt("employee_id");
                 }
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
+                return -1;
+            } catch (Exception SQLTimeoutException) {
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
+    // ADD to database.
+    public boolean addEmployee(String name, float salary, String hoursWeek, int roleID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            int employeeID = getLastEmployeeID() + 1;
+            String query = "INSERT INTO employees VALUES (?, ?, ?, ?, ?, true, NULL);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, employeeID);
+            ppdStatement.setString(2, name);
+            ppdStatement.setFloat(3, salary);
+            ppdStatement.setString(4, hoursWeek);
+            ppdStatement.setInt(5, roleID);
+            try {
+                ppdStatement.executeUpdate();
+                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    // UPDATE in database.
     public boolean updateEmployeeName(employee theEmployee, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET name = '" + name + "' WHERE employee_id = " + theEmployee.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE employees SET name = ? WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, name);
+            ppdStatement.setInt(2, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -142,13 +118,14 @@ public class employeesAPI extends abstractManagerDB {
 
     public boolean updateEmployeeSalary(employee theEmployee, float salary) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET salary = " + salary + " WHERE employee_id = " + theEmployee.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE employees SET salary = ? WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setFloat(1, salary);
+            ppdStatement.setInt(2, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -158,14 +135,14 @@ public class employeesAPI extends abstractManagerDB {
 
     public boolean updateEmployeeHoursWeek(employee theEmployee, String hoursWeek) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET hours_a_week = '" + hoursWeek + "' WHERE employee_id = "
-                    + theEmployee.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE employees SET hours_a_week = ? WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, hoursWeek);
+            ppdStatement.setInt(2, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -175,13 +152,14 @@ public class employeesAPI extends abstractManagerDB {
 
     public boolean updateEmployeeRole(employee theEmployee, int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET role_id = " + roleID + " WHERE employee_id = " + theEmployee.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE employees SET role_id = ? WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, roleID);
+            ppdStatement.setInt(2, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -189,49 +167,51 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public void setEmployeeUnactive(employee theEmployee) {
+    // DELETE from database.
+    public boolean setEmployeeUnactive(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET active = false, inactive_since = CURDATE() WHERE employee_id = "
-                    + theEmployee.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
+            String query = "UPDATE employees SET active = false, inactive_since = CURDATE() WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
+                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+            return false;
         }
     }
 
-    public void deleteFutureShifts(employee theEmployee) {
+    public boolean deleteFutureShifts(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM employees_schedule WHERE employee_id = " + theEmployee.getId()
-                    + " AND shift_date >= CURDATE();";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
+            String query = "DELETE FROM employees_schedule WHERE employee_id = ? AND shift_date >= CURDATE();";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theEmployee.getId());
+            try {
+                ppdStatement.executeUpdate();
+                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+            return false;
         }
     }
 
+    // CHECK in database.
     public boolean hasEmployeeFutureShifts(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = " + theEmployee.getId()
-                    + " AND shift_date >= CURDATE();";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
+            String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = ? AND shift_date >= CURDATE();";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theEmployee.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
                     return true;
-                }
                 return false;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {

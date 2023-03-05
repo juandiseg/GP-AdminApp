@@ -104,7 +104,7 @@ public class mainEmployees {
     }
 
     private void populateTable() {
-        ArrayList<employee> tempList = new employeesAPI().getAllCurrentEmployees();
+        ArrayList<employee> tempList = new employeesAPI().getAllCurrentEmployeesOrdered();
         model = new DefaultTableModel(new String[] { "employee_id", "Name", "Salary", "Hours / Week", "Role" }, 0);
         for (employee temp : tempList) {
             String id = Integer.toString(temp.getId());
