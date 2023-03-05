@@ -295,46 +295,46 @@ public class editCategory {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+                deleteButton(playground);
+                backButton(playground);
+                editButton(null);
+                applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+                        public boolean thereIsError() {
+                                boolean error = theManagerDB.isCategoryAssigned(theCurrentCategory);
+                                if (error) {
+                                        JOptionPane.showMessageDialog(playground,
+                                                        "A category cannot be deleted if there are products/menus still assigned to it.",
+                                                        "Error",
+                                                        JOptionPane.ERROR_MESSAGE);
+                                }
+                                return error;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
                                 int reply = JOptionPane.showConfirmDialog(null,
-                                                "Are you sure you want to delete " + theCurrentCategory.getName() +
-                                                                "?",
-                                                "Confirmation", JOptionPane.YES_NO_OPTION);
+                                                "Are you sure you want to delete this Category?", "Confirmation",
+                                                JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        if (!new categoryAPI().deleteCategory(theCurrentCategory.getId())) {
-                                                JOptionPane.showMessageDialog(playground,
-                                                                "A category cannot be deleted if there are products/menus still assigned to it.",
-                                                                "Error",
-                                                                JOptionPane.ERROR_MESSAGE);
-                                                return;
-                                        }
+                                        new categoryAPI().deleteCategory(theCurrentCategory);
                                         playground.removeAll();
                                         new mainCategories(playground);
                                         playground.revalidate();
                                         playground.repaint();
+                                        return neededToChoose;
                                 }
+                                return neededToChoose;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void chooseAmongOptions() {
                         }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                backButton(playground);
-                editButton(null);
-                applyGenericListeners();
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void backButton(JPanel playground) {

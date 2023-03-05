@@ -283,9 +283,10 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public boolean deleteCategory(int catID) {
+    public boolean deleteCategory(category theCategory) {
+        deleteCategoryUnactiveReferences(theCategory);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM categories WHERE category_id = " + catID;
+            String query = "DELETE FROM categories WHERE category_id = " + theCategory.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -298,9 +299,47 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
+    private void deleteCategoryUnactiveReferences(category theCategory) {
+        String table = "menus";
+        if (theCategory.getIsProduct())
+            table = "products";
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE " + table + " SET category_id = NULL WHERE category_id = " + theCategory.getId();
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+            } catch (Exception e) {
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories WHERE category_name = '" + name + "'";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    connection.close();
+                    return true;
+                }
+                connection.close();
+                return false;
+            } catch (Exception e) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean isCategoryAssigned(category theCategory) {
+        String table = "menus";
+        if (theCategory.getIsProduct())
+            table = "products";
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM " + table + " WHERE category_id = " + theCategory.getId()
+                    + " AND active = true";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

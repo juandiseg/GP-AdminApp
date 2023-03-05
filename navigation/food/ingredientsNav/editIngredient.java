@@ -555,59 +555,55 @@ public class editIngredient {
         }
 
         private void addListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-
-                                String[] options = new String[] { "Delete Menus/Products", "Keep Menus/Products",
-                                                "Cancel" };
-
-                                int reply = JOptionPane.showConfirmDialog(null,
-                                                "Are you sure you want to delete this Ingredient?", "Confirmation",
-                                                JOptionPane.YES_NO_OPTION);
-                                if (reply == JOptionPane.YES_OPTION) {
-                                        int response = JOptionPane.showOptionDialog(null,
-                                                        "Do you want to delete every menu and product which uses this ingredient, or keep them without the ingredient?",
-                                                        "Choice",
-                                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-                                                        options, options[0]);
-                                        if (response == 0) {
-                                                deleteAllAssociatedToIngredientID(theCurrentIngredient.getId());
-                                                playground.removeAll();
-                                                new mainIngredients(playground);
-                                                playground.revalidate();
-                                                playground.repaint();
-                                                return;
-                                        } else if (response == 1) {
-                                                deleteIngredientsFromProducts(theCurrentIngredient.getId());
-                                                playground.removeAll();
-                                                new mainIngredients(playground);
-                                                playground.revalidate();
-                                                playground.repaint();
-                                                return;
-                                        }
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
+                deleteButton(playground);
                 selectionButtons();
                 backButton(playground);
                 editButton(null);
                 applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                int reply = JOptionPane.showConfirmDialog(null,
+                                                "Are you sure you want to delete this Ingredient?", "Confirmation",
+                                                JOptionPane.YES_NO_OPTION);
+                                if (reply == JOptionPane.YES_OPTION) {
+                                        return false;
+                                }
+                                return true;
+
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
+                                String[] options = new String[] { "Delete Menus/Products", "Keep Menus/Products",
+                                                "Cancel" };
+                                int response = JOptionPane.showOptionDialog(null,
+                                                "Do you want to delete every menu and product which uses this ingredient, or keep them without the ingredient?",
+                                                "Choice",
+                                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                                                options, options[0]);
+                                if (response == 0 || response == 1) {
+                                        if (response == 0)
+                                                deleteAllAssociatedToIngredientID(theCurrentIngredient.getId());
+                                        if (response == 1)
+                                                deleteIngredientsFromProducts(theCurrentIngredient.getId());
+                                        playground.removeAll();
+                                        new mainIngredients(playground);
+                                        playground.revalidate();
+                                        playground.repaint();
+                                        return neededToChoose;
+                                }
+                                return neededToChoose;
+                        }
+
+                        public void chooseAmongOptions() {
+                        }
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void backButton(JPanel playground) {

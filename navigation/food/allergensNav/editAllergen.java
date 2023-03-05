@@ -243,44 +243,40 @@ public class editAllergen {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+                deleteButton(playground);
+                backButton(playground);
+                editButton(null);
+                applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+                        public boolean thereIsError() {
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
                                 int reply = JOptionPane.showConfirmDialog(null,
                                                 "Are you sure you want to delete " + theCurrentAllergen.getName()
                                                                 + " from allergens?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        if (!new allergensAPI().removeAllergen(theCurrentAllergen)) {
-                                                JOptionPane.showMessageDialog(playground, "Something went wrong.",
-                                                                "Error",
-                                                                JOptionPane.ERROR_MESSAGE);
-                                        }
+                                        theManagerDB.removeAllergen(theCurrentAllergen);
                                         playground.removeAll();
                                         new mainAllergens(playground);
                                         playground.revalidate();
                                         playground.repaint();
+                                        return neededToChoose;
                                 }
+                                return neededToChoose;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void chooseAmongOptions() {
                         }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                backButton(playground);
-                editButton(null);
-                applyGenericListeners();
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void backButton(JPanel playground) {

@@ -154,8 +154,6 @@ public class providerAPI extends abstractManagerDB {
     }
 
     public boolean deleteProvider(int ID) {
-        if (isProviderAssigned(ID))
-            return false;
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE providers SET active = false WHERE provider_id = " + ID;
             try (Statement stmt = connection.createStatement()) {
@@ -171,7 +169,7 @@ public class providerAPI extends abstractManagerDB {
         }
     }
 
-    private boolean isProviderAssigned(int ID) {
+    public boolean isProviderAssigned(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM ingredients JOIN providers ON ingredients.provider_id = providers.provider_id WHERE ingredients.provider_id = "
                     + ID + " AND ingredients.active = TRUE";

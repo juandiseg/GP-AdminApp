@@ -527,43 +527,40 @@ public class editMenu {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int reply = JOptionPane.showConfirmDialog(null,
-                                                "Are you sure you want to delete this Menu?",
-                                                "Confirmation", JOptionPane.YES_NO_OPTION);
-                                if (reply == JOptionPane.YES_OPTION) {
-                                        if (new menuAPI().deleteMenu(theCurrentMenu)) {
-                                                playground.removeAll();
-                                                new mainMenus(playground);
-                                                playground.revalidate();
-                                                playground.repaint();
-                                        } else {
-                                                successLabel
-                                                                .setText("Something went wrong while deleting \""
-                                                                                + theCurrentMenu.getName() + "\".");
-                                                successLabel.setVisible(true);
-                                        }
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-
-                });
+                deleteButton(playground);
                 selectionButtons();
                 backButton(playground);
                 editButton(null);
                 applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+                                int reply = JOptionPane.showConfirmDialog(null,
+                                                "Are you sure you want to delete this Menu?",
+                                                "Confirmation", JOptionPane.YES_NO_OPTION);
+                                if (reply == JOptionPane.YES_OPTION) {
+                                        new menuAPI().deleteMenu(theCurrentMenu);
+                                        playground.removeAll();
+                                        new mainMenus(playground);
+                                        playground.revalidate();
+                                        playground.repaint();
+                                }
+                                return neededToChoose;
+                        }
+
+                        public void chooseAmongOptions() {
+                        }
+
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void backButton(JPanel playground) {
@@ -677,16 +674,6 @@ public class editMenu {
 
         private void selectionButtons() {
                 class selectMethodHolder implements iSelectionButton {
-                        /*
-                         * modelProducts = new DefaultTableModel(
-                         * new String[] { "product_id", "category_id", "date", "Name", "Price",
-                         * "Quantity" },
-                         * 0);
-                         * modelSelected = new DefaultTableModel(
-                         * new String[] { "product_id", "category_id", "date", "Name", "Price",
-                         * "Quantity" },
-                         * 0);
-                         */
                         public void doSelection() {
                                 int row = tableProducts.getSelectedRow();
                                 if (row == -1)

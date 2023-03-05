@@ -186,10 +186,6 @@ public class editProvider {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                deleteButton.setBackground(new Color(255, 102, 102));
-                deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                deleteButton.setText("Delete");
-
                 theProviderLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 theProviderLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProviderLabel.setText(theCurrentProvider.getName());
@@ -289,45 +285,47 @@ public class editProvider {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
+                deleteButton(playground);
+                backButton(playground);
+                editButton(null);
+                applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                if (theManagerDB.isProviderAssigned(theCurrentProvider.getId())) {
+                                        JOptionPane.showMessageDialog(playground,
+                                                        "You cannot delete a provider if there is an ingredient assigned to it.",
+                                                        "ERROR", JOptionPane.ERROR_MESSAGE);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
                                 int reply = JOptionPane.showConfirmDialog(null,
                                                 "Are you sure you want to DELETE \"" + theCurrentProvider.getName()
                                                                 + "\"?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        if (new providerAPI().deleteProvider(theCurrentProvider.getId())) {
-                                                playground.removeAll();
-                                                new mainProviders(playground);
-                                                playground.revalidate();
-                                                playground.repaint();
-                                                return;
-                                        }
-                                        JOptionPane.showMessageDialog(playground,
-                                                        "You cannot delete a provider if there is an ingredient assigned to it.",
-                                                        "ERROR", JOptionPane.ERROR_MESSAGE);
+                                        theManagerDB.deleteProvider(theCurrentProvider.getId());
+                                        playground.removeAll();
+                                        new mainProviders(playground);
+                                        playground.revalidate();
+                                        playground.repaint();
                                 }
+                                return neededToChoose;
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void chooseAmongOptions() {
                         }
 
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
-                backButton(playground);
-                editButton(null);
-                applyGenericListeners();
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void backButton(JPanel playground) {
