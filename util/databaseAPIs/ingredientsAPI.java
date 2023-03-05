@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -15,41 +12,14 @@ import componentsFood.product;
 
 public class ingredientsAPI extends abstractManagerDB {
 
-    // GET "ingredient" objects from database.
-
-    public ArrayList<ingredient> getAllIngredients() {
-        ArrayList<ingredient> tempList = new ArrayList<ingredient>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    int ID = rs.getInt("ingredient_id");
-                    int providerID = rs.getInt("provider_id");
-                    String date = rs.getString("ingredients_date");
-                    String name = rs.getString("name");
-                    float price = rs.getFloat("price");
-                    float amount = rs.getFloat("amount");
-                    boolean in_inventory = rs.getBoolean("in_inventory");
-                    boolean active = rs.getBoolean("active");
-                    tempList.add(new ingredient(ID, providerID, date, name, price, amount, in_inventory, active));
-                }
-                connection.close();
-                return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
+    // GET from database.
     public ingredient getIngredient(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID + " AND active = true;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM ingredients WHERE ingredient_id = ? AND active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next()) {
                     int prov_id = rs.getInt("provider_id");
                     String date = rs.getString("ingredients_date");
@@ -58,14 +28,47 @@ public class ingredientsAPI extends abstractManagerDB {
                     float amount = rs.getFloat("amount");
                     boolean in_inventory = rs.getBoolean("in_inventory");
                     boolean active = rs.getBoolean("active");
-                    connection.close();
                     return new ingredient(ID, prov_id, date, name, price, amount, in_inventory, active);
-                } else {
-                    connection.close();
-                    return null;
                 }
-            } catch (Exception e) {
-                System.out.println(e);
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM products WHERE active = true AND product_id = ?) AND ingredient_id = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, productID);
+            ppdStatement.setInt(2, ingredient_id);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getFloat("ingredientQuantity");
+                return 0;
+            } catch (Exception SQLTimeoutException) {
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public Stack<Integer> getAllActiveProductIDs() {
+        Stack<Integer> tempStack = new Stack<Integer>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT DISTINCT product_id FROM products WHERE active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next())
+                    tempStack.add(rs.getInt("product_id"));
+                return tempStack;
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -76,9 +79,10 @@ public class ingredientsAPI extends abstractManagerDB {
     public ArrayList<ingredient> getAllCurrentIngredients() {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM ingredients WHERE active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int ID = rs.getInt("ingredient_id");
                     int providerID = rs.getInt("provider_id");
@@ -91,53 +95,8 @@ public class ingredientsAPI extends abstractManagerDB {
                     tempList.add(new ingredient(ID, providerID, dateInverter.invert(date), name, price, amount,
                             in_inventory, active));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public Stack<Integer> getAllActiveProductIDs() {
-        Stack<Integer> tempStack = new Stack<Integer>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT DISTINCT product_id FROM products WHERE active = true;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-                    int ID = rs.getInt("product_id");
-                    tempStack.add(ID);
-                }
-                connection.close();
-                return tempStack;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public String getIngredientName(String ID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id = " + ID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    String name = rs.getString("name");
-                    connection.close();
-                    return name;
-                } else {
-                    connection.close();
-                    return "";
-                }
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -148,11 +107,12 @@ public class ingredientsAPI extends abstractManagerDB {
     public ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date, ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = "
-                    + theProduct.getId() + ") AS b WHERE product_id = " + theProduct.getId()
-                    + " AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date, ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = ?) AS b WHERE product_id = ? AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theProduct.getId());
+            ppdStatement.setInt(2, theProduct.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int ID = rs.getInt("ingredient_id");
                     int providerID = rs.getInt("provider_id");
@@ -165,10 +125,8 @@ public class ingredientsAPI extends abstractManagerDB {
                     tempList.add(new ingredient(ID, providerID, dateInverter.invert(date), name, price, amount,
                             in_inventory, active));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -178,13 +136,13 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public ArrayList<ingredient> getNonSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
-        // NOT WORKING FOR INGREDIENTS WITH NO INGREDIENTS
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = "
-                    + theProduct.getId() + ") AS b WHERE a.product_id = "
-                    + theProduct.getId() + " AND a.product_ingredients_date = b.temp) AND active = true";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = ?) AS b WHERE a.product_id = ? AND a.product_ingredients_date = b.temp) AND active = true";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theProduct.getId());
+            ppdStatement.setInt(2, theProduct.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int ID = rs.getInt("ingredient_id");
                     int providerID = rs.getInt("provider_id");
@@ -195,10 +153,8 @@ public class ingredientsAPI extends abstractManagerDB {
                     boolean active = rs.getBoolean("active");
                     tempList.add(new ingredient(ID, providerID, "", name, price, amount, in_inventory, active));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -206,22 +162,28 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
+    public ArrayList<Integer> getProductsIDUsingIngredient(int ingredientID) {
+        Stack<Integer> stackProductID = getAllActiveProductIDs();
+        ArrayList<Integer> productIDs = new ArrayList<Integer>();
+        while (!stackProductID.isEmpty()) {
+            int temp = stackProductID.pop();
+            if (isIngredientContainedInProduct(temp, ingredientID))
+                productIDs.add(temp);
+        }
+        return productIDs;
+    }
+
+    private int getLastIngredientID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM products WHERE active = true AND product_id = "
-                    + productID + ") AND ingredient_id = " + ingredient_id;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT ingredient_id FROM ingredients ORDER BY ingredient_id DESC LIMIT 1;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next()) {
-                    float quantity = rs.getFloat("ingredientQuantity");
-                    connection.close();
-                    return quantity;
-                } else {
-                    connection.close();
-                    return -1;
+                    return rs.getInt("employee_id");
                 }
-            } catch (Exception e) {
-                System.out.println(e);
+                return -1;
+            } catch (Exception SQLTimeoutException) {
                 return -1;
             }
         } catch (SQLException e) {
@@ -229,8 +191,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    // ADD "ingredient" to database.
-
+    // ADD to database.
     public int addIngredient(int provID, String name, float price, float amount, boolean in_inventory) {
         int ingrID = getLastIngredientID() + 1;
         return addIngredient(ingrID, provID, name, price, amount, in_inventory);
@@ -239,14 +200,18 @@ public class ingredientsAPI extends abstractManagerDB {
     private int addIngredient(int ingrID, int provID, String name, float price, float amount,
             boolean in_inventory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO ingredients VALUES (" + ingrID + ", " + provID + ", CURDATE(), '" + name
-                    + "', " + price + ", " + amount + ", " + in_inventory + ", " + true + ");";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "INSERT INTO ingredients VALUES (?, ?, CURDATE(), ?, ?, ?, ?, TRUE);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ingrID);
+            ppdStatement.setInt(2, provID);
+            ppdStatement.setString(3, name);
+            ppdStatement.setFloat(4, price);
+            ppdStatement.setFloat(5, amount);
+            ppdStatement.setBoolean(6, in_inventory);
+            try {
+                ppdStatement.executeUpdate();
                 return ingrID;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return -1;
             }
         } catch (SQLException e) {
@@ -254,38 +219,18 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private int getLastIngredientID() {
+    // UPDATE in database.
+    public boolean updateProvider(ingredient theIngredient, int newProviderID) {
+        fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredient_id FROM ingredients ORDER BY ingredient_id DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int providerID = rs.getInt("ingredient_id");
-                    connection.close();
-                    return providerID;
-                }
-                return -1;
-            } catch (Exception e) {
-                System.out.println(e);
-                return -1;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    // UPDATE something "ingredient" related in database.
-
-    public boolean updateInInventory(ingredient theIngredient, boolean in_inventory) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET in_inventory = " + in_inventory
-                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE ingredients SET provider_id = ? WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, newProviderID);
+            ppdStatement.setInt(2, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -295,32 +240,14 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean updateName(ingredient theIngredient, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET name = '" + newName
-                    + "' WHERE active = true AND ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE ingredients SET name = ? WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, newName);
+            ppdStatement.setInt(2, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public boolean updateProvider(ingredient theIngredient, int newProviderID) {
-        fixIngredientDate(theIngredient);
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET provider_id = " + newProviderID
-                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-                return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -331,14 +258,14 @@ public class ingredientsAPI extends abstractManagerDB {
     public boolean updatePrice(ingredient theIngredient, float newPrice) {
         fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET price = " + newPrice
-                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE ingredients SET price = ? WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setFloat(1, newPrice);
+            ppdStatement.setInt(2, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -349,14 +276,31 @@ public class ingredientsAPI extends abstractManagerDB {
     public boolean updateAmount(ingredient theIngredient, float newAmount) {
         fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET amount = " + newAmount
-                    + " WHERE active = true AND ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE ingredients SET amount = ? WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setFloat(1, newAmount);
+            ppdStatement.setInt(2, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public boolean updateInInventory(ingredient theIngredient, boolean in_inventory) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "UPDATE ingredients SET in_inventory = ? WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setBoolean(1, in_inventory);
+            ppdStatement.setInt(2, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
+                return true;
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -366,22 +310,19 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public boolean setToUnactive(int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET active = false WHERE active = true AND ingredient_id = "
-                    + ingredientID;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE ingredients SET active = false WHERE active = true AND ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ingredientID);
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
-
-    //
 
     private void fixIngredientDate(ingredient theIngredient) {
         if (isLastIngredientEntryToday(theIngredient)) {
@@ -393,73 +334,64 @@ public class ingredientsAPI extends abstractManagerDB {
                 temp.getInInventory());
     }
 
-    private boolean isLastIngredientEntryToday(ingredient theIngredient) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String query = "SELECT MAX(ingredients_date) FROM ingredients WHERE ingredient_id = "
-                    + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    String dateDB = rs.getString("MAX(ingredients_date)");
-                    connection.close();
-                    if (dateToday.equals(dateDB))
-                        return true;
-                    else
-                        return false;
-                } else {
-                    connection.close();
-                    return false;
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
     private void setEntriesIngredientInactive(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE ingredients SET active = false WHERE ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
+            String query = "UPDATE ingredients SET active = false WHERE ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public ArrayList<Integer> getProductsIDWithIngredient(int ingredientID) {
-        Stack<Integer> stackProductID = getAllActiveProductIDs();
-        ArrayList<Integer> productIDs = new ArrayList<Integer>();
-        while (!stackProductID.isEmpty()) {
-            int temp = stackProductID.pop();
-            if (isIngredientContainedInProduct(temp, ingredientID))
-                productIDs.add(temp);
-        }
-        return productIDs;
-    }
-
-    // REMOVE "ingredient" from database.
-
+    // DELETE from database.
     public void deleteIngredientsInProduct(int productID, int ingredientID) {
         if (!isIngredientContainedInProduct(productID, ingredientID))
-            return;
+            try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+                String query = "DELETE FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT * FROM (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?) AS x)";
+                ppdStatement = connection.prepareStatement(query);
+                ppdStatement.setInt(1, productID);
+                ppdStatement.setInt(2, ingredientID);
+                ppdStatement.setInt(3, productID);
+                try {
+                    ppdStatement.executeUpdate();
+                } catch (Exception SQLTimeoutException) {
+                }
+            } catch (SQLException e) {
+            }
+    }
+
+    public void deleteProductWithIngredient(int productID, int ingredientID) {
+        if (!isIngredientContainedInProduct(productID, ingredientID))
+            try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+                String query = "UPDATE products SET active = false WHERE product_id = ?";
+                ppdStatement = connection.prepareStatement(query);
+                ppdStatement.setInt(1, productID);
+                try {
+                    ppdStatement.executeUpdate();
+                } catch (Exception SQLTimeoutException) {
+                }
+            } catch (SQLException e) {
+            }
+    }
+
+    // CHECK in database.
+    private boolean isLastIngredientEntryToday(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM products_ingredients WHERE product_id = " + productID + " AND ingredient_id = "
-                    + ingredientID
-                    + " AND product_ingredients_date IN (SELECT * FROM (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = "
-                    + productID + ") AS x)";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
+            String query = "SELECT 1 FROM (SELECT MAX(ingredients_date) AS max_date FROM ingredients WHERE ingredient_id = ?) as sub WHERE sub.max_date = CURDATE();";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theIngredient.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -468,36 +400,18 @@ public class ingredientsAPI extends abstractManagerDB {
 
     private boolean isIngredientContainedInProduct(int productID, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT product_id FROM products_ingredients WHERE product_id = " + productID
-                    + " AND ingredient_id = " + ingredientID
-                    + " AND product_ingredients_date IN (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = "
-                    + productID + ")";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
+            String query = "SELECT product_id FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, productID);
+            ppdStatement.setInt(2, ingredientID);
+            ppdStatement.setInt(3, productID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
                     return true;
-                }
                 return false;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public void deleteProductWithIngredient(int productID, int ingredientID) {
-        if (!isIngredientContainedInProduct(productID, ingredientID))
-            return;
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE products SET active = false WHERE product_id = " + productID;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
