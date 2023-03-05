@@ -14,6 +14,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.*;
 
 import componentsFood.shift;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
@@ -24,7 +26,7 @@ import util.listenersFormatting.edit.editDateTFFListener;
 public class mainShifts {
 
     private JLabel clickShift = new JLabel("Double-Click on Shift to edit it");
-    private JButton addShiftButton = new JButton("Add Shift(s)");
+    private JButton addShiftButton = new JButton();
     private JButton applyButton = new JButton();
     private JButton undertimeButton = new JButton();
     private JTable myTable = new JTable();
@@ -66,9 +68,6 @@ public class mainShifts {
         fromLabel.setHorizontalAlignment(SwingConstants.CENTER);
         fromLabel.setText("From");
         fromLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-        addShiftButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-        addShiftButton.setText("Add Shift");
 
         clickShift.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickShift.setHorizontalAlignment(SwingConstants.CENTER);
@@ -181,32 +180,6 @@ public class mainShifts {
     }
 
     private void addActionListeners(JPanel playground) {
-        addShiftButton.setBackground(new Color(23, 35, 51));
-        addShiftButton.setForeground(new Color(255, 255, 255));
-        addShiftButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addShifts(playground, from, to, shiftDate);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                addShiftButton.setBackground(new Color(255, 255, 255));
-                addShiftButton.setForeground(new Color(23, 35, 51));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                addShiftButton.setBackground(new Color(23, 35, 51));
-                addShiftButton.setForeground(new Color(255, 255, 255));
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -320,7 +293,18 @@ public class mainShifts {
             public void mouseExited(MouseEvent e) {
             }
         });
+        addButton(playground);
         applyGenericListeners();
+    }
+
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addShifts(playground, from, to, shiftDate);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addShiftButton, new addMethodHolder(), playground, false,
+                "Add Shifts");
     }
 
     private void applyGenericListeners() {
@@ -329,8 +313,8 @@ public class mainShifts {
         dateFormatter.applyFormat(toTextField);
 
         iTextFieldListener textListener = new editDateTFFListener();
-        textListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder);
-        textListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder);
+        textListener.applyListenerTextField(fromTextField, from, fromPlaceholder, true);
+        textListener.applyListenerTextField(toTextField, to, toPlaceholder, true);
     }
 
     private void renewTable() {

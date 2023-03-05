@@ -69,10 +69,6 @@ public class addEmployee {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Ex: 'John Schdmit'");
-                nameTextField.setForeground(Color.GRAY);
-
                 addEmployeeButton.setText("Add Employee");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -91,10 +87,6 @@ public class addEmployee {
                 salaryLabel.setText("Salary");
                 salaryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                salaryTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                salaryTextField.setText("Ex: '14'");
-                salaryTextField.setForeground(Color.GRAY);
-
                 hoursWeekLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 hoursWeekLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 hoursWeekLabel.setText("Hours a Week");
@@ -106,10 +98,6 @@ public class addEmployee {
                 roleLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 setComboBox();
-
-                hoursWeekTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                hoursWeekTextField.setText("HH:MM");
-                hoursWeekTextField.setForeground(Color.GRAY);
 
                 GroupLayout fillingPanelLayout = new GroupLayout(fillingPanel);
                 fillingPanel.setLayout(fillingPanelLayout);
@@ -325,12 +313,13 @@ public class addEmployee {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainEmployees(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -369,9 +358,10 @@ public class addEmployee {
 
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new addTextFieldFListener();
-                inputListener.applyListenerTextField(nameTextField, "Ex: 'John Schdmit'", namePlaceholder);
-                inputListener.applyListenerTextField(salaryTextField, "Ex: '14'", salaryPlaceholder);
-                new editDateTFFListener().applyListenerTextField(hoursWeekTextField, "HH:MM", hoursWeekPlaceholder);
+                inputListener.applyListenerTextField(nameTextField, "Ex: 'John Schdmit'", namePlaceholder, false);
+                inputListener.applyListenerTextField(salaryTextField, "Ex: '14'", salaryPlaceholder, false);
+                new editDateTFFListener().applyListenerTextField(hoursWeekTextField, "HH:MM", hoursWeekPlaceholder,
+                                false);
 
                 new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(salaryTextField);
                 new inputFormatterFactory().createInputFormatter("TIME").applyFormat(hoursWeekTextField);

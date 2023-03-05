@@ -81,10 +81,6 @@ public class addProduct {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Ex. \"Burguer\"");
-                nameTextField.setForeground(Color.GRAY);
-
                 addProductButton.setText("Add Product");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -102,10 +98,6 @@ public class addProduct {
                 priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                priceTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                priceTextField.setText("Ex. \"9.99\"");
-                priceTextField.setForeground(Color.GRAY);
 
                 categoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -467,12 +459,13 @@ public class addProduct {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainProducts(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -575,8 +568,8 @@ public class addProduct {
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new addTextFieldFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
-                inputListener.applyListenerTextField(nameTextField, "Ex. \"Burguer\"", namePlaceholder);
-                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder);
+                inputListener.applyListenerTextField(nameTextField, "Ex. \"Burguer\"", namePlaceholder, false);
+                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder, false);
                 numericFormatter.applyFormat(priceTextField);
         }
 

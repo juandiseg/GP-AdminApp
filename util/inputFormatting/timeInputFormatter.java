@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
 import javax.swing.text.AbstractDocument;
 
 public class timeInputFormatter implements iFormatter {

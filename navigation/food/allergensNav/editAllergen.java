@@ -7,7 +7,6 @@ import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -57,10 +56,6 @@ public class editAllergen {
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText(theCurrentAllergen.getName());
-                nameTextField.setForeground(Color.gray);
 
                 editAllergenButton.setText("Edit Allergen");
 
@@ -139,10 +134,6 @@ public class editAllergen {
                 jPanel3Layout.setVerticalGroup(
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
-
-                deleteButton.setBackground(new Color(255, 102, 102));
-                deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-                deleteButton.setText("Delete");
 
                 editAllergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 editAllergenLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -280,12 +271,13 @@ public class editAllergen {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainAllergens(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -337,6 +329,7 @@ public class editAllergen {
 
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
-                textListener.applyListenerTextField(nameTextField, theCurrentAllergen.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentAllergen.getName(), namePlaceholder,
+                                false);
         }
 }

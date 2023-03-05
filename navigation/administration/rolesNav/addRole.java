@@ -34,8 +34,6 @@ public class addRole {
 
         private void initComponents(JPanel playground) {
 
-                nameTextField.setForeground(Color.GRAY);
-                nameTextField.setText("Enter NAME here");
                 playground.setBackground(new Color(255, 255, 255));
                 successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -50,8 +48,6 @@ public class addRole {
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
 
                 addRoleButton.setText("Add Role");
 
@@ -209,12 +205,13 @@ public class addRole {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainRoles(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -253,6 +250,6 @@ public class addRole {
 
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new addTextFieldFListener();
-                inputListener.applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder);
+                inputListener.applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder, false);
         }
 }

@@ -19,7 +19,6 @@ import util.databaseAPIs.providerAPI;
 import util.databaseAPIs.productAPI;
 
 import java.util.ArrayList;
-import java.awt.event.*;
 import java.util.Stack;
 import java.awt.*;
 
@@ -607,12 +606,13 @@ public class editIngredient {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainIngredients(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void selectionButtons() {
@@ -745,12 +745,13 @@ public class editIngredient {
                 iTextFieldListener textListener = new editTextFieldFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
 
-                textListener.applyListenerTextField(nameTextField, theCurrentIngredient.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentIngredient.getName(), namePlaceholder,
+                                false);
                 textListener.applyListenerTextField(priceTextField, Float.toString(theCurrentIngredient.getPrice()),
-                                pricePlaceholder);
+                                pricePlaceholder, false);
                 textListener.applyListenerTextField(quantityTextField,
                                 Float.toString(theCurrentIngredient.getAmount()),
-                                quantityPlaceholder);
+                                quantityPlaceholder, false);
 
                 numericFormatter.applyFormat(priceTextField);
                 numericFormatter.applyFormat(quantityTextField);

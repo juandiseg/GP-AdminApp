@@ -54,10 +54,6 @@ public class addCategory {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Ex. 'Peanuts'");
-                nameTextField.setForeground(Color.GRAY);
-
                 addCategoryButton.setText("Add Category");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -252,12 +248,13 @@ public class addCategory {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainCategories(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -296,7 +293,8 @@ public class addCategory {
         }
 
         private void applyGenericListeners() {
-                new addTextFieldFListener().applyListenerTextField(nameTextField, "Ex. 'Konsum'", namePlaceholder);
+                new addTextFieldFListener().applyListenerTextField(nameTextField, "Ex. \"Pastas\"", namePlaceholder,
+                                false);
                 new addJToggleAListener().applyActionListenerToggle(typeJoggle, "Menu Category", "Product Category",
                                 true);
         }

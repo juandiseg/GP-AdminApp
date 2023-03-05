@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import componentsFood.employee;
 
@@ -192,10 +190,9 @@ public class employeesAPI extends abstractManagerDB {
     }
 
     public void setEmployeeUnactive(employee theEmployee) {
-        String dateToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE employees SET active = false, inactive_since = '" + dateToday
-                    + "' WHERE employee_id = " + theEmployee.getId();
+            String query = "UPDATE employees SET active = false, inactive_since = CURDATE() WHERE employee_id = "
+                    + theEmployee.getId();
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query);
                 connection.close();
@@ -205,7 +202,6 @@ public class employeesAPI extends abstractManagerDB {
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
-        deleteFutureShifts(theEmployee);
     }
 
     public void deleteFutureShifts(employee theEmployee) {
@@ -225,7 +221,8 @@ public class employeesAPI extends abstractManagerDB {
 
     public boolean hasEmployeeFutureShifts(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = 0 AND shift_date >= CURDATE();";
+            String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = " + theEmployee.getId()
+                    + " AND shift_date >= CURDATE();";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {

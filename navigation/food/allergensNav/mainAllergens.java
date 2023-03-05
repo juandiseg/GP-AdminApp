@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.allergen;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.allergensAPI;
 
 import java.awt.event.*;
@@ -82,30 +84,6 @@ public class mainAllergens {
     }
 
     private void addActionListeners(JPanel playground) {
-        addAllergenButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addAllergen(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                addAllergenButton.setBackground(new Color(120, 168, 252));
-                addAllergenButton.setForeground(new Color(0, 0, 0));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                addAllergenButton.setBackground(new Color(23, 35, 51));
-                addAllergenButton.setForeground(new Color(255, 255, 255));
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -124,6 +102,17 @@ public class mainAllergens {
                 }
             }
         });
+        addButton(playground);
+    }
+
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addAllergen(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addAllergenButton, new addMethodHolder(), playground, false,
+                "Add Allergen");
     }
 
     private void populateTable() {

@@ -90,10 +90,6 @@ public class addShifts {
                 dateLabel.setText("Date");
                 dateLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                dateTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                dateTextField.setText("DD-MM-YYYY");
-                dateTextField.setForeground(Color.GRAY);
-
                 addShiftsButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 addShiftsButton.setText("Add Shift(s)");
                 addShiftsButton.setBackground(new Color(255, 255, 255));
@@ -116,18 +112,10 @@ public class addShifts {
 
                 startShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                startShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                startShiftTextField.setText("HH:MM");
-                startShiftTextField.setForeground(Color.GRAY);
-
                 endShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 endShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 endShiftLabel.setText("End Shift");
                 endShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                endShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                endShiftTextField.setText("HH:MM");
-                endShiftTextField.setForeground(Color.GRAY);
 
                 selectEmployeesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 selectEmployeesLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -429,12 +417,13 @@ public class addShifts {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainShifts(playground, from, to, shiftDate);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -516,9 +505,9 @@ public class addShifts {
                 timeFormatter.applyFormat(endShiftTextField);
 
                 iTextFieldListener textListener = new editDateTFFListener();
-                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder);
-                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder);
-                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder);
+                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder, false);
+                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder, false);
+                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder, false);
         }
 
         private void setTables() {

@@ -1,6 +1,5 @@
 package navigation.food.menusNav;
 
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -91,10 +90,6 @@ public class editMenu {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText(theCurrentMenu.getName());
-                nameTextField.setForeground(Color.GRAY);
-
                 editMenuButton.setText("Edit Product");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -112,10 +107,6 @@ public class editMenu {
                 priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                priceTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                priceTextField.setText(Float.toString(theCurrentMenu.getPrice()));
-                priceTextField.setForeground(Color.GRAY);
 
                 categoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -564,12 +555,13 @@ public class editMenu {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainMenus(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -710,9 +702,9 @@ public class editMenu {
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");
-                textListener.applyListenerTextField(nameTextField, theCurrentMenu.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentMenu.getName(), namePlaceholder, false);
                 textListener.applyListenerTextField(priceTextField, Float.toString(theCurrentMenu.getPrice()),
-                                pricePlaceholder);
+                                pricePlaceholder, false);
                 numericFormatter.applyFormat(priceTextField);
         }
 

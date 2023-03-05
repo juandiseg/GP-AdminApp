@@ -1,6 +1,8 @@
 package navigation.food.menusNav;
 
 import componentsFood.menu;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.menuAPI;
 
@@ -12,7 +14,7 @@ import java.awt.*;
 public class mainMenus {
 
     private JLabel clickProduct = new JLabel("Double-Click on menu to edit it");
-    private JButton addProductButton = new JButton("Add Menu");
+    private JButton addMenuButton = new JButton();
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -29,9 +31,6 @@ public class mainMenus {
         clickProduct.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         clickProduct.setHorizontalAlignment(SwingConstants.CENTER);
         clickProduct.setVerticalAlignment(SwingConstants.BOTTOM);
-        addProductButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addProductButton.setBackground(new Color(23, 35, 51));
-        addProductButton.setForeground(new Color(255, 255, 255));
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -52,7 +51,7 @@ public class mainMenus {
                                                         GroupLayout.PREFERRED_SIZE))
                                         .addGroup(playgroundLayout.createSequentialGroup()
                                                 .addGap(334, 334, 334)
-                                                .addComponent(addProductButton, GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(addMenuButton, GroupLayout.PREFERRED_SIZE,
                                                         200, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(75, Short.MAX_VALUE)));
         playgroundLayout.setVerticalGroup(
@@ -65,36 +64,12 @@ public class mainMenus {
                                 .addComponent(rolesJScrollPanel, GroupLayout.PREFERRED_SIZE, 337,
                                         GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(addProductButton, GroupLayout.PREFERRED_SIZE, 55,
+                                .addComponent(addMenuButton, GroupLayout.PREFERRED_SIZE, 55,
                                         GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
     private void addActionListeners(JPanel playground) {
-        addProductButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addMenu(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                addProductButton.setBackground(new Color(120, 168, 252));
-                addProductButton.setForeground(new Color(0, 0, 0));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                addProductButton.setBackground(new Color(23, 35, 51));
-                addProductButton.setForeground(new Color(255, 255, 255));
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -116,6 +91,17 @@ public class mainMenus {
                 }
             }
         });
+        addButton(playground);
+    }
+
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addMenu(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addMenuButton, new addMethodHolder(), playground, false,
+                "Add Menu");
     }
 
     private void populateTable() {

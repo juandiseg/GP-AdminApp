@@ -15,7 +15,12 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.poi.ss.formula.functions.Address;
+
 import componentsFood.role;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.rolesAPI;
 
 import java.awt.event.*;
@@ -23,7 +28,7 @@ import java.awt.event.*;
 public class mainRoles {
 
     private JLabel clickRole = new JLabel("Double-Click on role to edit it");
-    private JButton addRoleButton = new JButton("Add Role");
+    private JButton addRoleButton = new JButton();
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -40,9 +45,6 @@ public class mainRoles {
         clickRole.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         clickRole.setHorizontalAlignment(SwingConstants.CENTER);
         clickRole.setVerticalAlignment(SwingConstants.BOTTOM);
-        addRoleButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addRoleButton.setBackground(new Color(23, 35, 51));
-        addRoleButton.setForeground(new Color(255, 255, 255));
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -81,29 +83,6 @@ public class mainRoles {
     }
 
     private void addActionListeners(JPanel playground) {
-        addRoleButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addRole(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                setColor(addRoleButton);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                resetColor(addRoleButton);
-            }
-        });
-
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -122,16 +101,17 @@ public class mainRoles {
                 }
             }
         });
+        addButton(playground);
     }
 
-    private void setColor(JButton button) {
-        button.setBackground(new Color(120, 168, 252));
-        button.setForeground(new Color(0, 0, 0));
-    }
-
-    private void resetColor(JButton button) {
-        button.setBackground(new Color(23, 35, 51));
-        button.setForeground(new Color(255, 255, 255));
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addRole(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addRoleButton, new addMethodHolder(), playground, false,
+                "Add Role");
     }
 
     private void populateTable() {

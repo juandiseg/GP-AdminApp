@@ -1,6 +1,8 @@
 package navigation.food.providersNav;
 
 import componentsFood.provider;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.providerAPI;
 
 import javax.swing.table.*;
@@ -11,7 +13,7 @@ import java.awt.*;
 public class mainProviders {
 
     private JLabel clickProvider = new JLabel("Double-Click on provider to edit it");
-    private JButton addProviderButton = new JButton("Add Provider");
+    private JButton addProviderButton = new JButton();
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -28,9 +30,6 @@ public class mainProviders {
         clickProvider.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         clickProvider.setHorizontalAlignment(SwingConstants.CENTER);
         clickProvider.setVerticalAlignment(SwingConstants.BOTTOM);
-        addProviderButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addProviderButton.setBackground(new Color(23, 35, 51));
-        addProviderButton.setForeground(new Color(255, 255, 255));
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -70,30 +69,6 @@ public class mainProviders {
     }
 
     private void addActionListeners(JPanel playground) {
-        addProviderButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addProvider(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                addProviderButton.setBackground(new Color(120, 168, 252));
-                addProviderButton.setForeground(new Color(0, 0, 0));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                addProviderButton.setBackground(new Color(23, 35, 51));
-                addProviderButton.setForeground(new Color(255, 255, 255));
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -113,6 +88,17 @@ public class mainProviders {
                 }
             }
         });
+        addButton(playground);
+    }
+
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addProvider(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addProviderButton, new addMethodHolder(), playground, false,
+                "Add Provider");
     }
 
     private void populateTable() {

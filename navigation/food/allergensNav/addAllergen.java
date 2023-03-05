@@ -51,10 +51,6 @@ public class addAllergen {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Enter NAME here");
-                nameTextField.setForeground(Color.gray);
-
                 addAllergenButton.setText("Add Allergen");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -212,12 +208,13 @@ public class addAllergen {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainAllergens(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -256,6 +253,7 @@ public class addAllergen {
         }
 
         private void applyGenericListeners() {
-                new addTextFieldFListener().applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder);
+                new addTextFieldFListener().applyListenerTextField(nameTextField, "Enter NAME here", namePlaceholder,
+                                false);
         }
 }

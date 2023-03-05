@@ -1,6 +1,8 @@
 package navigation.administration.employeesNav;
 
 import componentsFood.employee;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.rolesAPI;
 
@@ -14,7 +16,7 @@ import java.awt.event.*;
 public class mainEmployees {
 
     private JLabel clickEmployee = new JLabel("Double-Click on employee to edit it");
-    private JButton addEmployeeButton = new JButton("Add Employee");
+    private JButton addEmployeeButton = new JButton();
     private JTable myTable = new JTable();
     private JScrollPane employeesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -31,9 +33,6 @@ public class mainEmployees {
         clickEmployee.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickEmployee.setHorizontalAlignment(SwingConstants.CENTER);
         clickEmployee.setVerticalAlignment(SwingConstants.BOTTOM);
-        addEmployeeButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
-        addEmployeeButton.setBackground(new Color(23, 35, 51));
-        addEmployeeButton.setForeground(new Color(255, 255, 255));
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -73,29 +72,6 @@ public class mainEmployees {
     }
 
     private void addActionListeners(JPanel playground) {
-        addEmployeeButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addEmployee(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                setColor(addEmployeeButton);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                resetColor(addEmployeeButton);
-            }
-        });
-
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -114,16 +90,17 @@ public class mainEmployees {
                 }
             }
         });
+        addButton(playground);
     }
 
-    private void setColor(JButton button) {
-        button.setBackground(new Color(120, 168, 252));
-        button.setForeground(new Color(0, 0, 0));
-    }
-
-    private void resetColor(JButton button) {
-        button.setBackground(new Color(23, 35, 51));
-        button.setForeground(new Color(255, 255, 255));
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addEmployee(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addEmployeeButton, new addMethodHolder(), playground, false,
+                "Add Employee");
     }
 
     private void populateTable() {

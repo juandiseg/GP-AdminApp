@@ -8,7 +8,6 @@ import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
-import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
@@ -55,10 +54,6 @@ public class editRole {
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Enter new NAME here");
-                nameTextField.setForeground(Color.GRAY);
 
                 editRoleButton.setText("Edit Role");
 
@@ -237,57 +232,58 @@ public class editRole {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                rolesAPI theManagerDB = new rolesAPI();
-                                int reply = JOptionPane.showConfirmDialog(null,
-                                                "Are you sure you want to delete " + theCurrentRole.getName()
-                                                                + " from roles?",
-                                                "Confirmation",
-                                                JOptionPane.YES_NO_OPTION);
-                                if (reply == JOptionPane.YES_OPTION) {
-                                        if (theManagerDB.isRoleAssigned(theCurrentRole.getId())) {
-                                                JOptionPane.showMessageDialog(null,
-                                                                "You cannot delete a role if there is an employee assigned to it.",
-                                                                "Action Required", JOptionPane.ERROR_MESSAGE);
-                                        } else {
-                                                theManagerDB.setRolesUnactive(theCurrentRole.getId());
-                                                playground.removeAll();
-                                                new mainRoles(playground);
-                                                playground.revalidate();
-                                                playground.repaint();
-                                        }
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
+                deleteButton(playground);
                 backButton(playground);
                 editButton(null);
                 applyGenericListeners();
         }
 
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                if (theManagerDB.isRoleAssigned(theCurrentRole.getId())) {
+                                        JOptionPane.showMessageDialog(null,
+                                                        "You cannot delete a role if there is an employee assigned to it.",
+                                                        "Action Required", JOptionPane.ERROR_MESSAGE);
+                                        return true;
+                                }
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
+                                int response = JOptionPane.showConfirmDialog(null,
+                                                "Are you sure you want to delete the role \"" + theCurrentRole.getName()
+                                                                + "\"?",
+                                                "Confirmation", JOptionPane.YES_NO_OPTION);
+                                if (response == JOptionPane.YES_OPTION) {
+                                        theManagerDB.setRolesUnactive(theCurrentRole.getId());
+                                        playground.removeAll();
+                                        new mainRoles(playground);
+                                        playground.revalidate();
+                                        playground.repaint();
+                                        return neededToChoose;
+                                }
+                                return neededToChoose;
+                        }
+
+                        public void chooseAmongOptions() {
+                        }
+
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
+        }
+
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainRoles(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -341,7 +337,7 @@ public class editRole {
 
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
-                textListener.applyListenerTextField(nameTextField, theCurrentRole.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentRole.getName(), namePlaceholder, false);
         }
 
 }

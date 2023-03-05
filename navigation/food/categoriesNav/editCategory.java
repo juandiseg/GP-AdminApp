@@ -9,7 +9,6 @@ import util.listenersFormatting.iToggleListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 import util.listenersFormatting.edit.editToggleAction;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -63,10 +62,6 @@ public class editCategory {
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText(theCurrentCategory.getName());
-                nameTextField.setForeground(Color.GRAY);
 
                 editCategoryButton.setText("Edit Category");
 
@@ -338,12 +333,13 @@ public class editCategory {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainCategories(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -410,7 +406,8 @@ public class editCategory {
 
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
-                textListener.applyListenerTextField(nameTextField, theCurrentCategory.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentCategory.getName(), namePlaceholder,
+                                false);
 
                 iToggleListener toggleListener = new editToggleAction();
                 String ifTrue = "Product Category";

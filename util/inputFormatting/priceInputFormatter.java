@@ -8,11 +8,11 @@ import javax.swing.JTextField;
 public class priceInputFormatter implements iFormatter {
 
     public void applyFormat(JTextField theTextField) {
+
         theTextField.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
                 char k = arg0.getKeyChar();
                 int dotIndex = -1;
-
                 int indexTemp = 0;
                 for (char temp : theTextField.getText().toCharArray()) {
                     if (temp == '.')

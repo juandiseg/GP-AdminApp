@@ -3,6 +3,7 @@ package util.listenersFormatting.add;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.JTextField;
 
@@ -11,7 +12,12 @@ import util.listenersFormatting.iTextFieldListener;
 
 public class addTextFieldFListener implements iTextFieldListener {
 
-    public void applyListenerTextField(JTextField theTextField, String theString, booleanWrapper placeholder) {
+    public void applyListenerTextField(JTextField theTextField, String theString, booleanWrapper placeholder,
+            boolean small) {
+
+        theTextField.setFont(new Font("Segoe UI", 0, 18));
+        theTextField.setForeground(Color.GRAY);
+        theTextField.setText(theString);
         theTextField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 if (theTextField.getText().equals(theString)) {

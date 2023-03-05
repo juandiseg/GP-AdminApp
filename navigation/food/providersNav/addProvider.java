@@ -56,10 +56,6 @@ public class addProvider {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Ex. 'Konsum'");
-                nameTextField.setForeground(Color.GRAY);
-
                 addProviderButton.setText("Add Provider");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -77,10 +73,6 @@ public class addProvider {
                 emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 emailLabel.setText("Email");
                 emailLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                emailTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                emailTextField.setText("Ex. 'provider@konsum.de'");
-                emailTextField.setForeground(Color.GRAY);
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -258,12 +250,13 @@ public class addProvider {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainProviders(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -302,7 +295,8 @@ public class addProvider {
 
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new addTextFieldFListener();
-                inputListener.applyListenerTextField(nameTextField, "Ex. 'Konsum'", namePlaceholder);
-                inputListener.applyListenerTextField(emailTextField, "Ex. 'provider@konsum.de'", emailPlaceholder);
+                inputListener.applyListenerTextField(nameTextField, "Ex. 'Konsum'", namePlaceholder, false);
+                inputListener.applyListenerTextField(emailTextField, "Ex. 'provider@konsum.de'", emailPlaceholder,
+                                false);
         }
 }

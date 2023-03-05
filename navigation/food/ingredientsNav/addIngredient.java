@@ -90,10 +90,6 @@ public class addIngredient {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText("Ex. \"Ground Beef\"");
-                nameTextField.setForeground(Color.GRAY);
-
                 jPanel2.setBackground(new Color(0, 0, 0));
 
                 GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
@@ -110,18 +106,10 @@ public class addIngredient {
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                priceTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                priceTextField.setText("Ex. \"9.99\"");
-                priceTextField.setForeground(Color.GRAY);
-
                 quantityLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 quantityLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 quantityLabel.setText("Quantity");
                 quantityLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                quantityTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                quantityTextField.setText("Ex. \"1\"");
-                quantityTextField.setForeground(Color.GRAY);
 
                 inventoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 inventoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -526,12 +514,13 @@ public class addIngredient {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainIngredients(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void addButton(JPanel playground) {
@@ -586,9 +575,9 @@ public class addIngredient {
 
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new addTextFieldFListener();
-                inputListener.applyListenerTextField(nameTextField, "Ex. \"Ground Beef\"", namePlaceholder);
-                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder);
-                inputListener.applyListenerTextField(quantityTextField, "Ex. \"1\"", quantityPlaceholder);
+                inputListener.applyListenerTextField(nameTextField, "Ex. \"Ground Beef\"", namePlaceholder, false);
+                inputListener.applyListenerTextField(priceTextField, "Ex. \"9.99\"", pricePlaceholder, false);
+                inputListener.applyListenerTextField(quantityTextField, "Ex. \"1\"", quantityPlaceholder, false);
                 new addJToggleAListener().applyActionListenerToggle(inventoryToggle, "Yes", "No", false);
 
                 iFormatter numericFormatter = new inputFormatterFactory().createInputFormatter("PRICE");

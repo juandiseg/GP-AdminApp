@@ -1,6 +1,6 @@
 package util.buttonFormatters;
 
-public abstract class iBackButton {
+public abstract class iNavigatorButton {
 
     public abstract void createNewNavigator();
 

@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import componentsFood.category;
+import util.buttonFormatters.iNavigatorButton;
+import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.categoryAPI;
 
 import java.awt.event.*;
@@ -24,7 +26,7 @@ import java.awt.event.*;
 public class mainCategories {
 
     private JLabel clickCategory = new JLabel("Double-Click on category to edit it");
-    private JButton addCategoryButton = new JButton("Add Category");
+    private JButton addCategoryButton = new JButton();
     private JTable myTable = new JTable();
     private JScrollPane rolesJScrollPanel = new JScrollPane(myTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -41,9 +43,6 @@ public class mainCategories {
         clickCategory.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         clickCategory.setHorizontalAlignment(SwingConstants.CENTER);
         clickCategory.setVerticalAlignment(SwingConstants.BOTTOM);
-        addCategoryButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        addCategoryButton.setBackground(new Color(23, 35, 51));
-        addCategoryButton.setForeground(new Color(255, 255, 255));
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -83,30 +82,6 @@ public class mainCategories {
     }
 
     private void addActionListeners(JPanel playground) {
-        addCategoryButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                playground.removeAll();
-                new addCategory(playground);
-                playground.revalidate();
-                playground.repaint();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-                addCategoryButton.setBackground(new Color(120, 168, 252));
-                addCategoryButton.setForeground(new Color(0, 0, 0));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                addCategoryButton.setBackground(new Color(23, 35, 51));
-                addCategoryButton.setForeground(new Color(255, 255, 255));
-            }
-        });
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -126,6 +101,17 @@ public class mainCategories {
                 }
             }
         });
+        addButton(playground);
+    }
+
+    private void addButton(JPanel playground) {
+        class addMethodHolder extends iNavigatorButton {
+            public void createNewNavigator() {
+                new addCategory(playground);
+            }
+        }
+        navigatorButtonFormatter.formatNavigationButton(addCategoryButton, new addMethodHolder(), playground, false,
+                "Add Category");
     }
 
     private void populateTable() {

@@ -1,7 +1,6 @@
 package navigation.administration.shiftsNav;
 
 import javax.swing.table.*;
-import java.awt.event.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -97,10 +96,6 @@ public class editShifts {
                 dateLabel.setText("Date");
                 dateLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                dateTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                dateTextField.setText(theShift.getDate());
-                dateTextField.setForeground(Color.GRAY);
-
                 editShiftsButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 editShiftsButton.setText("Edit Shift(s)");
                 editShiftsButton.setBackground(new Color(255, 255, 255));
@@ -122,18 +117,10 @@ public class editShifts {
                 startShiftLabel.setText("Start Shift");
                 startShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                startShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                startShiftTextField.setText(theShift.getStartTime().substring(0, 5));
-                startShiftTextField.setForeground(Color.GRAY);
-
                 endShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 endShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 endShiftLabel.setText("End Shift");
                 endShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                endShiftTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                endShiftTextField.setText(theShift.getEndTime().substring(0, 5));
-                endShiftTextField.setForeground(Color.GRAY);
 
                 selectShiftsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 selectShiftsLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -399,50 +386,50 @@ public class editShifts {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (modelSelected.getRowCount() == 0)
-                                        return;
-                                int reply = JOptionPane.showConfirmDialog(playground,
-                                                "Are you sure you want to delete the selected shifts?", "Confirmation",
-                                                JOptionPane.YES_NO_OPTION);
-                                if (reply != JOptionPane.YES_OPTION)
-                                        return;
-                                ArrayList<shift> listShifts = new ArrayList<shift>();
-                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                        int id = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
-                                        String date = (String) modelSelected.getValueAt(i, 3);
-                                        String startTime = (String) modelSelected.getValueAt(i, 4);
-                                        String endTime = (String) modelSelected.getValueAt(i, 5);
-                                        listShifts.add(new shift(id, date, startTime, endTime));
-                                }
-                                for (int i = modelSelected.getRowCount() - 1; i > -1; i--)
-                                        modelSelected.removeRow(i);
-                                shiftsAPI theManagerDB = new shiftsAPI();
-                                for (shift temp : listShifts)
-                                        theManagerDB.deleteShift(temp);
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
+                deleteButton(playground);
                 selectionButtons();
                 backButton(playground);
                 editButton(playground);
                 applyGenericListeners();
+        }
+
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                return modelSelected.getRowCount() == 0;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = false;
+
+                                int reply = JOptionPane.showConfirmDialog(playground,
+                                                "Are you sure you want to delete the selected shifts?", "Confirmation",
+                                                JOptionPane.YES_NO_OPTION);
+
+                                if (reply == JOptionPane.YES_OPTION) {
+                                        ArrayList<shift> listShifts = new ArrayList<shift>();
+                                        for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                                int id = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                                                String date = (String) modelSelected.getValueAt(i, 3);
+                                                String startTime = (String) modelSelected.getValueAt(i, 4);
+                                                String endTime = (String) modelSelected.getValueAt(i, 5);
+                                                listShifts.add(new shift(id, date, startTime, endTime));
+                                        }
+                                        for (int i = modelSelected.getRowCount() - 1; i > -1; i--) {
+                                                modelSelected.removeRow(i);
+                                                theManagerDB.deleteShift(listShifts.get(i));
+                                        }
+                                }
+
+                                return neededToChoose;
+                        }
+
+                        public void chooseAmongOptions() {
+                        }
+
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
         }
 
         private void selectionButtons() {
@@ -481,12 +468,13 @@ public class editShifts {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainShifts(playground, from, to, shiftDate);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -574,9 +562,9 @@ public class editShifts {
                 timeFormatter.applyFormat(endShiftTextField);
 
                 iTextFieldListener textListener = new editDateTFFListener();
-                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder);
-                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder);
-                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder);
+                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder, false);
+                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder, false);
+                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder, false);
         }
 
         private void setTables(String from, String to, boolean shiftDate) {

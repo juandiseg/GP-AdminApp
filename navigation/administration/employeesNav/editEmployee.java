@@ -11,7 +11,6 @@ import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
 import java.util.ArrayList;
-import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
@@ -72,10 +71,6 @@ public class editEmployee {
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                nameTextField.setText(theEmployee.getName());
-                nameTextField.setForeground(Color.GRAY);
-
                 editEmployeeButton.setText("Edit Employee");
 
                 jPanel2.setBackground(new Color(0, 0, 0));
@@ -94,10 +89,6 @@ public class editEmployee {
                 salaryLabel.setText("Salary");
                 salaryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                salaryTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                salaryTextField.setText(theEmployee.getSalary() + "");
-                salaryTextField.setForeground(Color.GRAY);
-
                 hoursWeekLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 hoursWeekLabel.setText("Hours per Week");
                 hoursWeekLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -109,10 +100,6 @@ public class editEmployee {
                 roleLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 setComboBox();
-
-                hoursWeekTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
-                hoursWeekTextField.setText(theEmployee.getHoursWeek().substring(0, 5));
-                hoursWeekTextField.setForeground(Color.GRAY);
 
                 GroupLayout fillingPanelLayout = new GroupLayout(fillingPanel);
                 fillingPanel.setLayout(fillingPanelLayout);
@@ -337,62 +324,72 @@ public class editEmployee {
         }
 
         private void addActionListeners(JPanel playground) {
-                deleteButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                int reply = JOptionPane.showConfirmDialog(null,
-                                                "Are you sure you want to delete " + theEmployee.getName()
-                                                                + " from employees?",
-                                                "Confirmation", JOptionPane.YES_NO_OPTION);
-                                if (reply == JOptionPane.YES_OPTION) {
-                                        if (new employeesAPI().hasEmployeeFutureShifts(theEmployee)) {
-                                                int response = JOptionPane.showOptionDialog(null,
-                                                                "An employee with future or current shifts assigned cannot be deleted.\nYou can delete all their future shifts or keep the employee.",
-                                                                "Choice",
-                                                                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                                                                null,
-                                                                new String[] { "Delete Shifts and Employee",
-                                                                                "Keep Employee" },
-                                                                null);
-                                                if (response == 0) {
-                                                        new employeesAPI().setEmployeeUnactive(theEmployee);
-                                                        playground.removeAll();
-                                                        new mainEmployees(playground);
-                                                        playground.revalidate();
-                                                        playground.repaint();
-                                                        return;
-                                                }
-                                        }
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 255, 255));
-                                deleteButton.setForeground(new Color(255, 102, 102));
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                                deleteButton.setBackground(new Color(255, 102, 102));
-                                deleteButton.setForeground(new Color(255, 255, 255));
-                        }
-                });
+                deleteButton(playground);
                 backButton(playground);
                 editButton(null);
                 applyGenericListeners();
         }
 
+        private void deleteButton(JPanel playground) {
+                class deleteMethodHolder implements iDeleteButton {
+
+                        public boolean thereIsError() {
+                                return false;
+                        }
+
+                        public boolean askConfirmation() {
+                                boolean neededToChoose = true;
+
+                                int response = JOptionPane.showConfirmDialog(null,
+                                                "Are you sure you want to delete " + theEmployee.getName()
+                                                                + " from employees?",
+                                                "Confirmation", JOptionPane.YES_NO_OPTION);
+                                if (response == JOptionPane.YES_OPTION) {
+                                        if (theManagerDB.hasEmployeeFutureShifts(theEmployee))
+                                                return neededToChoose;
+                                        theManagerDB.setEmployeeUnactive(theEmployee);
+                                        playground.removeAll();
+                                        new mainEmployees(playground);
+                                        playground.revalidate();
+                                        playground.repaint();
+                                        return !neededToChoose;
+                                }
+                                return !neededToChoose;
+                        }
+
+                        public void chooseAmongOptions() {
+                                if (new employeesAPI().hasEmployeeFutureShifts(theEmployee)) {
+                                        int response = JOptionPane.showOptionDialog(null,
+                                                        "An employee with future or current shifts assigned cannot be deleted.\nYou can delete all their future shifts or keep the employee.",
+                                                        "Choice",
+                                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                                                        null,
+                                                        new String[] { "Delete Shifts and Employee",
+                                                                        "Cancel" },
+                                                        null);
+                                        if (response == 0) {
+                                                theManagerDB.deleteFutureShifts(theEmployee);
+                                                theManagerDB.setEmployeeUnactive(theEmployee);
+                                                playground.removeAll();
+                                                new mainEmployees(playground);
+                                                playground.revalidate();
+                                                playground.repaint();
+                                        }
+                                }
+                        }
+
+                }
+                deleteButtonFormatter.formatDeleteButton(deleteButton, new deleteMethodHolder());
+        }
+
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainEmployees(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -478,13 +475,13 @@ public class editEmployee {
 
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
-                textListener.applyListenerTextField(nameTextField, theEmployee.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theEmployee.getName(), namePlaceholder, false);
 
-                textListener.applyListenerTextField(nameTextField, theEmployee.getName(), namePlaceholder);
+                textListener.applyListenerTextField(nameTextField, theEmployee.getName(), namePlaceholder, false);
                 textListener.applyListenerTextField(salaryTextField, Float.toString(theEmployee.getSalary()),
-                                salaryPlaceholder);
+                                salaryPlaceholder, false);
                 textListener.applyListenerTextField(hoursWeekTextField, theEmployee.getHoursWeek().substring(0, 5),
-                                hoursWeekPlaceholder);
+                                hoursWeekPlaceholder, false);
 
                 new inputFormatterFactory().createInputFormatter("PRICE").applyFormat(salaryTextField);
                 new inputFormatterFactory().createInputFormatter("TIME").applyFormat(hoursWeekTextField);

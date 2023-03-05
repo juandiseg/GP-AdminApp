@@ -59,10 +59,6 @@ public class mainReports {
                 fromLabel.setText("From");
                 fromLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                fromTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                fromTextField.setText("DD-MM-YYYY");
-                fromTextField.setForeground(Color.GRAY);
-
                 generateButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
                 generateButton.setText("Generate Report");
                 generateButton.setActionCommand("Add Product");
@@ -84,10 +80,6 @@ public class mainReports {
                 toLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 toLabel.setText("To");
                 toLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                toTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-                toTextField.setText("DD-MM-YYYY");
-                toTextField.setForeground(Color.GRAY);
 
                 comboLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 comboLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -348,8 +340,8 @@ public class mainReports {
 
         private void applyGenericListeners() {
                 iTextFieldListener inputListener = new editTextFieldFListener();
-                inputListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder);
-                inputListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder);
+                inputListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder, false);
+                inputListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder, false);
 
                 iFormatter dateFormatter = new inputFormatterFactory().createInputFormatter("DATE");
                 dateFormatter.applyFormat(fromTextField);

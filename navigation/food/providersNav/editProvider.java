@@ -7,7 +7,6 @@ import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -329,12 +328,13 @@ public class editProvider {
         }
 
         private void backButton(JPanel playground) {
-                class backMethodHolder extends iBackButton {
+                class backMethodHolder extends iNavigatorButton {
                         public void createNewNavigator() {
                                 new mainProviders(playground);
                         }
                 }
-                backButtonFormatter.formatBackButton(backButton, new backMethodHolder(), playground);
+                navigatorButtonFormatter.formatNavigationButton(backButton, new backMethodHolder(), playground, true,
+                                "Back");
         }
 
         private void editButton(JPanel playground) {
@@ -398,7 +398,9 @@ public class editProvider {
 
         private void applyGenericListeners() {
                 iTextFieldListener textListener = new editTextFieldFListener();
-                textListener.applyListenerTextField(nameTextField, theCurrentProvider.getName(), namePlaceholder);
-                textListener.applyListenerTextField(emailTextField, theCurrentProvider.getEmail(), emailPlaceholder);
+                textListener.applyListenerTextField(nameTextField, theCurrentProvider.getName(), namePlaceholder,
+                                false);
+                textListener.applyListenerTextField(emailTextField, theCurrentProvider.getEmail(), emailPlaceholder,
+                                false);
         }
 }
