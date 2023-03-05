@@ -696,7 +696,8 @@ public class editIngredient {
 
                                 if (!allergenPlaceholder && successfulUpdate) {
                                         Stack<Integer> stackAllergenIDs = getSelectedAllergensIDs();
-                                        successfulUpdate = new allergensAPI().editAlergensOfIngredient(stackAllergenIDs,
+                                        successfulUpdate = new allergensAPI().updateAlergensOfIngredient(
+                                                        stackAllergenIDs,
                                                         theCurrentIngredient);
                                 }
 

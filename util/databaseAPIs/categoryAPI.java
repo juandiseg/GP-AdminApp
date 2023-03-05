@@ -23,8 +23,7 @@ public class categoryAPI extends abstractManagerDB {
                     int categoryID = rs.getInt("category_id");
                     String name = rs.getString("category_name");
                     Boolean isProduct = rs.getBoolean("iscategory_product");
-                    category temp = new category(categoryID, name, isProduct);
-                    return temp;
+                    return new category(categoryID, name, isProduct);
                 }
                 return null;
             } catch (Exception SQLTimeoutException) {
@@ -156,7 +155,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    // UPDATE from database.
+    // UPDATE in database.
     public boolean updateName(category theCategory, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE categories SET category_name = ? WHERE category_id = ?;";
@@ -226,10 +225,9 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    // CHECK value in database.
+    // CHECK in database.
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-
             String query = "SELECT * FROM categories WHERE category_name = ?";
             ppdStatement = connection.prepareStatement(query);
             ppdStatement.setString(1, name);

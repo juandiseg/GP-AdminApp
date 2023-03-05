@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -13,22 +12,21 @@ import componentsFood.ingredient;
 
 public class allergensAPI extends abstractManagerDB {
 
-    // GET "allergen" objects from database.
-    public ArrayList<allergen> getAllAllergens() {
-        ArrayList<allergen> tempList = new ArrayList<allergen>();
+    // GET from database.
+    public allergen getAllergen(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM allergens";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
+            String query = "SELECT * FROM allergens WHERE allergen_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next()) {
                     int allergenID = rs.getInt("allergen_id");
                     String name = rs.getString("name");
-                    tempList.add(new allergen(allergenID, name));
+                    return new allergen(allergenID, name);
                 }
-                connection.close();
-                return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
+                return null;
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -36,22 +34,20 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public allergen getAllergen(int ID) {
+    public ArrayList<allergen> getAllAllergens() {
+        ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM allergens WHERE allergen_id = " + ID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
+            String query = "SELECT * FROM allergens;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
                     int allergenID = rs.getInt("allergen_id");
                     String name = rs.getString("name");
-                    allergen temp = new allergen(allergenID, name);
-                    connection.close();
-                    return temp;
+                    tempList.add(new allergen(allergenID, name));
                 }
-                connection.close();
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -62,19 +58,18 @@ public class allergensAPI extends abstractManagerDB {
     public ArrayList<allergen> getSelectedAllergens(ingredient theIngredient) {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT allergen_id, name FROM ingredients_allergens NATURAL JOIN allergens WHERE ingredient_id = "
-                    + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT allergen_id, name FROM ingredients_allergens NATURAL JOIN allergens WHERE ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theIngredient.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int allergenID = rs.getInt("allergen_id");
                     String name = rs.getString("name");
                     tempList.add(new allergen(allergenID, name));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -85,19 +80,18 @@ public class allergensAPI extends abstractManagerDB {
     public ArrayList<allergen> getNonSelectedAllergens(ingredient theIngredient) {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT allergen_id, name FROM allergens WHERE allergen_id NOT IN (SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = "
-                    + theIngredient.getId() + ")";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT allergen_id, name FROM allergens WHERE allergen_id NOT IN (SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = ?);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theIngredient.getId());
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int allergenID = rs.getInt("allergen_id");
                     String name = rs.getString("name");
                     tempList.add(new allergen(allergenID, name));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -105,17 +99,35 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    // ADD "allergen" to database.
+    private int getLastAllergenID() {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT allergen_id FROM allergens ORDER BY allergen_id DESC LIMIT 1;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getInt("allergen_id");
+                return -1;
+            } catch (Exception SQLTimeoutException) {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    // ADD to database.
     public boolean addAllergen(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int allergenID = getLastAllergenID() + 1;
-            String query = "INSERT INTO allergens VALUES (" + allergenID + ", '" + name + "');";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "INSERT INTO allergens VALUES (?, ?);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, allergenID);
+            ppdStatement.setString(2, name);
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -125,111 +137,95 @@ public class allergensAPI extends abstractManagerDB {
 
     public boolean addAlergensOfIngredient(Stack<Integer> stackSelected, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO ingredients_allergens VALUES (?, ?);";
+            ppdStatement = connection.prepareStatement(query);
             while (!stackSelected.isEmpty()) {
-                String query = "INSERT INTO ingredients_allergens VALUES (" + ingredientID + ", '" + stackSelected.pop()
-                        + "');";
-                try (Statement stmt = connection.createStatement()) {
-                    stmt.executeUpdate(query);
-                } catch (Exception a) {
-                    System.out.println(a);
+                ppdStatement.setInt(1, ingredientID);
+                ppdStatement.setInt(2, stackSelected.pop());
+                try {
+                    ppdStatement.executeUpdate();
+                } catch (Exception SQLTimeoutException) {
                     return false;
                 }
             }
             return true;
         } catch (SQLException e) {
-            System.out.println(e);
             return false;
         }
     }
 
-    private int getLastAllergenID() {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT allergen_id FROM allergens ORDER BY allergen_id DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int allergenID = rs.getInt("allergen_id");
-                    connection.close();
-                    return allergenID;
-                }
-                return -1;
-            } catch (Exception e) {
-                System.out.println(e);
-                return -1;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    // UPDATE something "allergen" related in database.
+    // UPDATE in database.
     public boolean updateName(allergen theAllergen, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE allergens SET name = '" + name + "' WHERE allergen_id = " + theAllergen.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "UPDATE allergens SET name = ? WHERE allergen_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, name);
+            ppdStatement.setInt(2, theAllergen.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+            return false;
         }
     }
 
-    public boolean editAlergensOfIngredient(Stack<Integer> stackSelected, ingredient theIngredient) {
+    public boolean updateAlergensOfIngredient(Stack<Integer> stackSelected, ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = " + theIngredient.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-            } catch (Exception a) {
-                System.out.println(a);
+            String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theIngredient.getId());
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
             return addAlergensOfIngredient(stackSelected, theIngredient.getId());
         } catch (SQLException e) {
-            System.out.println(e);
             return false;
         }
     }
 
-    // REMOVE "allergen" from database.
+    // REMOVE from database.
     public boolean removeAllergen(allergen theAllergen) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "DELETE FROM ingredients_allergens WHERE allergen_id = " + theAllergen.getId() + ";";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-            } catch (Exception e) {
+            String query = "DELETE FROM ingredients_allergens WHERE allergen_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theAllergen.getId());
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
-            query = "DELETE FROM allergens WHERE allergen_id = " + theAllergen.getId() + ";";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            query = "DELETE FROM allergens WHERE allergen_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theAllergen.getId());
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             return false;
         }
     }
 
+    // CHECK in database.
     public boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM allergens WHERE name = '" + name + "'";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
+            String query = "SELECT * FROM allergens WHERE category_name = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, name);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
                     return true;
-                }
-                connection.close();
                 return false;
-            } catch (Exception e) {
-                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
