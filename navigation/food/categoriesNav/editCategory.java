@@ -37,12 +37,11 @@ public class editCategory {
 
         private JTextField nameTextField = new JTextField();
         private category theCurrentCategory;
-        private categoryAPI theManagerDB = new categoryAPI();
 
         public editCategory(JPanel playground, category theCurrentCategory) {
                 this.theCurrentCategory = theCurrentCategory;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
 
         }
 
@@ -289,7 +288,7 @@ public class editCategory {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);
@@ -299,7 +298,7 @@ public class editCategory {
         private void deleteButton(JPanel playground) {
                 class deleteMethodHolder implements iDeleteButton {
                         public boolean thereIsError() {
-                                boolean error = theManagerDB.isCategoryAssigned(theCurrentCategory);
+                                boolean error = categoryAPI.isCategoryAssigned(theCurrentCategory);
                                 if (error) {
                                         JOptionPane.showMessageDialog(playground,
                                                         "A category cannot be deleted if there are products/menus still assigned to it.",
@@ -316,7 +315,7 @@ public class editCategory {
                                                 "Are you sure you want to delete this Category?", "Confirmation",
                                                 JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        new categoryAPI().deleteCategory(theCurrentCategory);
+                                        categoryAPI.deleteCategory(theCurrentCategory);
                                         playground.removeAll();
                                         new mainCategories(playground);
                                         playground.revalidate();
@@ -361,7 +360,7 @@ public class editCategory {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (!namePlaceholder.getValue() && categoryAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -373,12 +372,12 @@ public class editCategory {
                                 boolean successfulUpdate = true;
 
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentCategory,
+                                        successfulUpdate = categoryAPI.updateName(theCurrentCategory,
                                                         nameTextField.getText());
 
                                 if (!typeToggle.getText().equals(originalType) && successfulUpdate) {
                                         Boolean isProduct = typeToggle.getText().equals("Product Category");
-                                        successfulUpdate = theManagerDB.updateType(theCurrentCategory, isProduct);
+                                        successfulUpdate = categoryAPI.updateType(theCurrentCategory, isProduct);
                                 }
 
                                 if (successfulUpdate)
@@ -390,7 +389,7 @@ public class editCategory {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentCategory = theManagerDB.getCategory(theCurrentCategory.getId());
+                                theCurrentCategory = categoryAPI.getCategory(theCurrentCategory.getId());
 
                                 namePlaceholder.setValue(true);
 

@@ -57,13 +57,11 @@ public class addProduct {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private productAPI theManagerDB = new productAPI();
-
-        private ArrayList<category> categories = new categoryAPI().getProductCategories();
+        private ArrayList<category> categories = categoryAPI.getProductCategories();
 
         public addProduct(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -374,7 +372,7 @@ public class addProduct {
                                                 "active", "Quantity" },
                                 0);
 
-                for (ingredient tempIngredient : new ingredientsAPI().getAllCurrentIngredients()) {
+                for (ingredient tempIngredient : ingredientsAPI.getAllCurrentIngredients()) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
                         String date = tempIngredient.getDate();
@@ -451,7 +449,7 @@ public class addProduct {
                 return selectedIngredients;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 selectionButtons();
                 backButton(playground);
                 addButton(null);
@@ -488,7 +486,7 @@ public class addProduct {
                                         successLabel.setVisible(true);
                                         return true;
                                 }
-                                if (theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (productAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -501,7 +499,7 @@ public class addProduct {
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
-                                int productID = new productAPI().addProduct(catID, name, price);
+                                int productID = productAPI.addProduct(catID, name, price);
                                 if (productID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
                                         successLabel.setVisible(true);
@@ -510,7 +508,7 @@ public class addProduct {
 
                                 Stack<Integer> selectedIngredientIDs = getSelectedIngredientIDs();
                                 Stack<Float> selectedIngredientQtys = getSelectedIngredientQtys();
-                                if (theManagerDB.addIngredients(productID, selectedIngredientIDs,
+                                if (productAPI.addIngredients(productID, selectedIngredientIDs,
                                                 selectedIngredientQtys))
                                         successLabel.setText("The product \"" + name + "\" was added successfully.");
                                 else

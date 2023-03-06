@@ -34,7 +34,7 @@ public class mainRoles {
     public mainRoles(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -79,7 +79,7 @@ public class mainRoles {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -113,7 +113,7 @@ public class mainRoles {
 
     private void populateTable() {
         model = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
-        ArrayList<role> providerList = new rolesAPI().getAllRoles();
+        ArrayList<role> providerList = rolesAPI.getAllRoles();
         for (role temp : providerList)
             model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName() });
         myTable.setModel(model);

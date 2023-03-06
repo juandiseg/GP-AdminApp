@@ -58,13 +58,11 @@ public class addMenu {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private menuAPI theManagerDB = new menuAPI();
-
-        private ArrayList<category> categories = new categoryAPI().getMenuCategories();
+        private ArrayList<category> categories = categoryAPI.getMenuCategories();
 
         public addMenu(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -372,7 +370,7 @@ public class addMenu {
                                 new String[] { "product_id", "Name", "Price", "Quantity" },
                                 0);
 
-                for (product tempProduct : new productAPI().getAllCurrentProducts()) {
+                for (product tempProduct : productAPI.getAllCurrentProducts()) {
                         String prodID = Integer.toString(tempProduct.getId());
                         String name = tempProduct.getName();
                         String price = Float.toString(tempProduct.getPrice());
@@ -431,7 +429,7 @@ public class addMenu {
                 return selectedProducts;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 selectionButtons();
                 backButton(playground);
                 addButton(null);
@@ -500,7 +498,7 @@ public class addMenu {
                                         return true;
                                 }
                                 String name = nameTextField.getText();
-                                if (theManagerDB.isNameTaken(name)) {
+                                if (menuAPI.isNameTaken(name)) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -513,7 +511,7 @@ public class addMenu {
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
-                                int menuID = theManagerDB.addMenu(catID, name, price);
+                                int menuID = menuAPI.addMenu(catID, name, price);
                                 if (menuID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
                                         successLabel.setVisible(true);
@@ -522,7 +520,7 @@ public class addMenu {
 
                                 Stack<Integer> selectedProductIDs = getSelectedProductIDs();
                                 Stack<Float> selectedProductQtys = getSelectedProductQtys();
-                                if (theManagerDB.addProducts(menuID, selectedProductIDs, selectedProductQtys))
+                                if (menuAPI.addProducts(menuID, selectedProductIDs, selectedProductQtys))
                                         successLabel.setText("The menu \"" + name + "\" was added successfully.");
                                 else
                                         successLabel.setText("Error. Something went wrong while adding products.");

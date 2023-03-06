@@ -31,11 +31,9 @@ public class addProvider {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private providerAPI theManagerDB = new providerAPI();
-
         public addProvider(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -243,7 +241,7 @@ public class addProvider {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();
@@ -271,7 +269,7 @@ public class addProvider {
                         }
 
                         public boolean areInputsInvalid() {
-                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                boolean error = providerAPI.isNameTaken(nameTextField.getText());
                                 if (error) {
                                         successLabel.setText("Error. The given name is already in use.");
                                         successLabel.setVisible(true);
@@ -282,7 +280,7 @@ public class addProvider {
                         public boolean addFoodComponent() {
                                 String name = nameTextField.getText();
                                 String email = emailTextField.getText();
-                                if (theManagerDB.addProvider(name, email))
+                                if (providerAPI.addProvider(name, email))
                                         successLabel.setText("\"" + name + "\" was successfully added.");
                                 else
                                         successLabel.setText("Error. Impossible to connect to database.");

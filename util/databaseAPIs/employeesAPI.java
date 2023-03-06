@@ -10,7 +10,7 @@ import componentsFood.employee;
 public class employeesAPI extends abstractManagerDB {
 
     // GET from database.
-    public employee getEmployee(int ID) {
+    public static employee getEmployee(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees WHERE active = true AND employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -34,7 +34,7 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<employee> getAllCurrentEmployeesOrdered() {
+    public static ArrayList<employee> getAllCurrentEmployeesOrdered() {
         ArrayList<employee> tempList = new ArrayList<employee>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees WHERE active = true ORDER BY role_id;";
@@ -58,7 +58,43 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    private int getLastEmployeeID() {
+    public static String getNameOfEmployee(int employeeID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM employees WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, employeeID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getString("name");
+                return "";
+            } catch (Exception SQLTimeoutException) {
+                return "";
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static String getRoleOfEmployee(int employeeID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT role_name FROM roles NATURAL JOIN employees WHERE employee_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, employeeID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getString("role_name");
+                return "";
+            } catch (Exception SQLTimeoutException) {
+                return "";
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private static int getLastEmployeeID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT employee_id FROM employees ORDER BY employee_id DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -77,7 +113,7 @@ public class employeesAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public boolean addEmployee(String name, float salary, String hoursWeek, int roleID) {
+    public static boolean addEmployee(String name, float salary, String hoursWeek, int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int employeeID = getLastEmployeeID() + 1;
             String query = "INSERT INTO employees VALUES (?, ?, ?, ?, ?, true, NULL);";
@@ -99,7 +135,7 @@ public class employeesAPI extends abstractManagerDB {
     }
 
     // UPDATE in database.
-    public boolean updateEmployeeName(employee theEmployee, String name) {
+    public static boolean updateEmployeeName(employee theEmployee, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET name = ? WHERE employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -116,7 +152,7 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateEmployeeSalary(employee theEmployee, float salary) {
+    public static boolean updateEmployeeSalary(employee theEmployee, float salary) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET salary = ? WHERE employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -133,7 +169,7 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateEmployeeHoursWeek(employee theEmployee, String hoursWeek) {
+    public static boolean updateEmployeeHoursWeek(employee theEmployee, String hoursWeek) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET hours_a_week = ? WHERE employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -150,7 +186,7 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateEmployeeRole(employee theEmployee, int roleID) {
+    public static boolean updateEmployeeRole(employee theEmployee, int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET role_id = ? WHERE employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -168,7 +204,7 @@ public class employeesAPI extends abstractManagerDB {
     }
 
     // DELETE from database.
-    public boolean setEmployeeUnactive(employee theEmployee) {
+    public static boolean setEmployeeUnactive(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees SET active = false, inactive_since = CURDATE() WHERE employee_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -184,7 +220,7 @@ public class employeesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean deleteFutureShifts(employee theEmployee) {
+    public static boolean deleteFutureShifts(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM employees_schedule WHERE employee_id = ? AND shift_date >= CURDATE();";
             ppdStatement = connection.prepareStatement(query);
@@ -201,7 +237,7 @@ public class employeesAPI extends abstractManagerDB {
     }
 
     // CHECK in database.
-    public boolean hasEmployeeFutureShifts(employee theEmployee) {
+    public static boolean hasEmployeeFutureShifts(employee theEmployee) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT employee_id FROM employees_schedule WHERE employee_id = ? AND shift_date >= CURDATE();";
             ppdStatement = connection.prepareStatement(query);

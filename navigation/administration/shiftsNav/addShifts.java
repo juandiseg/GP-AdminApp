@@ -65,15 +65,13 @@ public class addShifts {
         private String to;
         private boolean shiftDate;
 
-        private shiftsAPI theManagerDB = new shiftsAPI();
-
         public addShifts(JPanel playground, String from, String to, boolean shiftDate) {
                 this.from = from;
                 this.to = to;
                 this.shiftDate = shiftDate;
                 initComponents(playground);
                 setTables();
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -377,7 +375,7 @@ public class addShifts {
                 return selectedEmployees;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton(playground);
                 addButton(playground);
                 selectionButtons();
@@ -454,18 +452,39 @@ public class addShifts {
                         }
 
                         public boolean areInputsInvalid() {
+                                // Get values.
                                 date = dateTextField.getText();
                                 startShift = startShiftTextField.getText();
                                 endShift = endShiftTextField.getText();
 
-                                LocalDate localDateNew = LocalDate.parse(date,
-                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                // Check for correct date input.
+                                LocalDate localDateNew;
+                                try {
+                                        localDateNew = LocalDate.parse(date,
+                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                } catch (Exception DateTimeParseException) {
+                                        successLabel.setText("ERROR. The given date is unvalid.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
                                 if (localDateNew.isBefore(LocalDate.now())) {
                                         successLabel.setText("ERROR. You can't add a shift that occured in the past.");
                                         successLabel.setVisible(true);
                                         return true;
                                 }
 
+                                // Check for correct time input.
+                                int startHour = Integer.parseInt(startShift.substring(0, 2));
+                                int startMins = Integer.parseInt(startShift.substring(3, 5));
+                                int endHour = Integer.parseInt(endShift.substring(0, 2));
+                                int endMins = Integer.parseInt(endShift.substring(3, 5));
+                                if (startHour >= 24 || startMins >= 60 || endHour >= 24 || endMins >= 60) {
+                                        successLabel.setText("ERROR. The given time is incorrect.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                // Checks that entry time comes before exit time.
                                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:MM");
                                 try {
                                         Date start = timeFormat.parse(startShift);
@@ -481,9 +500,9 @@ public class addShifts {
                                         return true;
                                 }
 
+                                // Checks for conflicts, employees already working on that time.
                                 selectedEmployeesIDs = getSelectedEmployeeIDs();
-
-                                ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(
+                                ArrayList<String> employeeNames = shiftsAPI.getNamesOfEmbededShifts(
                                                 selectedEmployeesIDs, date,
                                                 startShift, endShift);
                                 if (employeeNames.size() > 0) {
@@ -496,11 +515,13 @@ public class addShifts {
                                         successLabel.setVisible(true);
                                         return false;
                                 }
+
+                                // If all checks are passed, input should be valid.
                                 return false;
                         }
 
                         public boolean addFoodComponent() {
-                                if (theManagerDB.addShifts(selectedEmployeesIDs, date, startShift, endShift))
+                                if (shiftsAPI.addShifts(selectedEmployeesIDs, date, startShift, endShift))
                                         return true;
                                 successLabel.setText("Error. Something went wrong while adding shifts.");
                                 successLabel.setVisible(true);
@@ -537,13 +558,12 @@ public class addShifts {
                                 new String[] { "id", "Name", "Salary", "Hours/Week", "Role", "role_id" }, 0);
                 modelSelected = new DefaultTableModel(
                                 new String[] { "id", "Name", "Salary", "Hours/Week", "Role", "role_id" }, 0);
-                rolesAPI theManagerDB = new rolesAPI();
-                for (employee tempEmp : new employeesAPI().getAllCurrentEmployeesOrdered()) {
+                for (employee tempEmp : employeesAPI.getAllCurrentEmployeesOrdered()) {
                         String id = Integer.toString(tempEmp.getId());
                         String name = tempEmp.getName();
                         String salary = Float.toString(tempEmp.getSalary());
                         String hoursWeek = tempEmp.getHoursWeek().substring(0, 5);
-                        String role = theManagerDB.getNameOfRoleID(tempEmp.getRoleID());
+                        String role = rolesAPI.getNameOfRole(tempEmp.getRoleID());
                         String roleID = Integer.toString(tempEmp.getRoleID());
                         modelEmployees.addRow(new String[] { id, name, salary, hoursWeek, role, roleID });
                 }

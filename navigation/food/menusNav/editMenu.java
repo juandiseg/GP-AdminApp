@@ -62,15 +62,14 @@ public class editMenu {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private ArrayList<category> categories = new categoryAPI().getMenuCategories();
+        private ArrayList<category> categories = categoryAPI.getMenuCategories();
 
         private menu theCurrentMenu;
-        private menuAPI theManagerDB = new menuAPI();
 
         public editMenu(JPanel playground, menu theCurrentMenu) {
                 this.theCurrentMenu = theCurrentMenu;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -411,8 +410,7 @@ public class editMenu {
                                 new String[] { "product_id", "category_id", "date", "Name", "Price", "Quantity" },
                                 0);
 
-                productAPI managerDB = new productAPI();
-                for (product tempIngredient : managerDB.getNonSelectedProductsInMenu(theCurrentMenu)) {
+                for (product tempIngredient : productAPI.getNonSelectedProductsInMenu(theCurrentMenu)) {
                         String prodID = Integer.toString(tempIngredient.getId());
                         String catID = Integer.toString(tempIngredient.getCategoryID());
                         String date = tempIngredient.getDate();
@@ -421,14 +419,14 @@ public class editMenu {
                         modelProducts.addRow(new String[] { prodID, catID, date, name, price, "Fill" });
                 }
 
-                for (product tempIngredient : managerDB.getSelectedProductsInMenu(theCurrentMenu)) {
+                for (product tempIngredient : productAPI.getSelectedProductsInMenu(theCurrentMenu)) {
                         String prodID = Integer.toString(tempIngredient.getId());
                         String catID = Integer.toString(tempIngredient.getCategoryID());
                         String date = tempIngredient.getDate();
                         String name = tempIngredient.getName();
                         String price = Float.toString(tempIngredient.getPrice());
                         String quantity = Float
-                                        .toString(managerDB.getAmountOfProductInMenu(theCurrentMenu, tempIngredient));
+                                        .toString(productAPI.getAmountOfProductInMenu(theCurrentMenu, tempIngredient));
                         modelSelected.addRow(new String[] { prodID, catID, date, name, price, quantity });
                 }
                 tableProducts.setModel(modelProducts);
@@ -478,8 +476,7 @@ public class editMenu {
         }
 
         private boolean isProductPlaceholder() {
-                productAPI managerDB = new productAPI();
-                ArrayList<product> tempList = managerDB.getSelectedProductsInMenu(theCurrentMenu);
+                ArrayList<product> tempList = productAPI.getSelectedProductsInMenu(theCurrentMenu);
                 ArrayList<product> listSelected = new ArrayList<product>();
 
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
@@ -502,7 +499,7 @@ public class editMenu {
                         for (int i = 0; i < modelSelected.getRowCount(); i++) {
                                 if (Integer.parseInt((String) modelSelected.getValueAt(i, 0)) == temp.getId()) {
                                         try {
-                                                float tempAmount = managerDB.getAmountOfProductInMenu(theCurrentMenu,
+                                                float tempAmount = productAPI.getAmountOfProductInMenu(theCurrentMenu,
                                                                 temp);
                                                 if (Float.parseFloat(
                                                                 (String) modelSelected.getValueAt(i, 5)) != tempAmount)
@@ -517,7 +514,7 @@ public class editMenu {
                 return true;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 selectionButtons();
                 backButton(playground);
@@ -538,7 +535,7 @@ public class editMenu {
                                                 "Are you sure you want to delete this Menu?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        new menuAPI().deleteMenu(theCurrentMenu.getId());
+                                        menuAPI.deleteMenu(theCurrentMenu.getId());
                                         playground.removeAll();
                                         new mainMenus(playground);
                                         playground.revalidate();
@@ -587,7 +584,7 @@ public class editMenu {
                                 boolean productsEmpty = modelSelected.getRowCount() == 0;
 
                                 if (!namePlaceholder.getValue()
-                                                && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                                && menuAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -612,19 +609,19 @@ public class editMenu {
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
                                 if (!namePlaceholder.getValue()) {
-                                        successfulUpdate = theManagerDB.updateName(theCurrentMenu,
+                                        successfulUpdate = menuAPI.updateName(theCurrentMenu,
                                                         nameTextField.getText());
-                                        theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
+                                        theCurrentMenu = menuAPI.getMenu(theCurrentMenu.getId());
                                 }
 
                                 if (!pricePlaceholder.getValue()) {
                                         Float price = Float.parseFloat(priceTextField.getText());
-                                        successfulUpdate = theManagerDB.updatePrice(theCurrentMenu, price);
+                                        successfulUpdate = menuAPI.updatePrice(theCurrentMenu, price);
                                 }
 
                                 if (!categoryPlaceholder) {
                                         int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                        successfulUpdate = theManagerDB.updateCategory(theCurrentMenu, catID);
+                                        successfulUpdate = menuAPI.updateCategory(theCurrentMenu, catID);
                                 }
 
                                 if (!productPlaceholder) {
@@ -636,7 +633,7 @@ public class editMenu {
                                                 stackQtys.push(Float
                                                                 .parseFloat((String) modelSelected.getValueAt(i, 5)));
                                         }
-                                        successfulUpdate = theManagerDB.updateProducts(theCurrentMenu, stackIDs,
+                                        successfulUpdate = menuAPI.updateProducts(theCurrentMenu, stackIDs,
                                                         stackQtys);
                                 }
 
@@ -649,7 +646,7 @@ public class editMenu {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentMenu = theManagerDB.getMenu(theCurrentMenu.getId());
+                                theCurrentMenu = menuAPI.getMenu(theCurrentMenu.getId());
 
                                 namePlaceholder.setValue(true);
                                 pricePlaceholder.setValue(true);

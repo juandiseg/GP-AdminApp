@@ -35,7 +35,7 @@ public class mainCategories {
     public mainCategories(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -81,7 +81,7 @@ public class mainCategories {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -116,7 +116,7 @@ public class mainCategories {
 
     private void populateTable() {
         model = new DefaultTableModel(new String[] { "ID", "Name", "Type" }, 0);
-        ArrayList<category> categoriesList = new categoryAPI().getAllCategories();
+        ArrayList<category> categoriesList = categoryAPI.getAllCategories();
         for (category temp : categoriesList) {
             String ID = Integer.toString(temp.getId());
             String name = temp.getName();

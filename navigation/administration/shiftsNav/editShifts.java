@@ -15,6 +15,7 @@ import java.awt.*;
 
 import componentsFood.shift;
 import util.buttonFormatters.*;
+import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
@@ -67,8 +68,6 @@ public class editShifts {
         private String from;
         private String to;
 
-        private shiftsAPI theManagerDB = new shiftsAPI();
-
         public editShifts(JPanel playground, String from, String to, boolean shiftDate, shift theShift)
                         throws ParseException {
                 this.theShift = theShift;
@@ -77,7 +76,7 @@ public class editShifts {
                 this.to = to;
                 setTables(from, to, shiftDate);
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -387,7 +386,7 @@ public class editShifts {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 selectionButtons();
                 backButton(playground);
@@ -420,7 +419,7 @@ public class editShifts {
                                         }
                                         for (int i = modelSelected.getRowCount() - 1; i > -1; i--) {
                                                 modelSelected.removeRow(i);
-                                                theManagerDB.deleteShift(listShifts.get(i));
+                                                shiftsAPI.deleteShift(listShifts.get(i));
                                         }
                                 }
 
@@ -501,15 +500,35 @@ public class editShifts {
                                 newStart = startShiftTextField.getText();
                                 newEnd = endShiftTextField.getText();
                                 newDate = dateTextField.getText();
-                                LocalDate newShiftDate = LocalDate.parse(newDate,
-                                                DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-                                if (newShiftDate.isBefore(LocalDate.now())) {
-                                        successLabel.setText("Error. A shift can't be assigned to the past.");
+                                // Check for correct date input.
+                                LocalDate localDateNew;
+                                try {
+                                        localDateNew = LocalDate.parse(newDate,
+                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                } catch (Exception DateTimeParseException) {
+                                        successLabel.setText("ERROR. The given date is unvalid.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+                                if (localDateNew.isBefore(LocalDate.now())) {
+                                        successLabel.setText("ERROR. You can't add a shift that occured in the past.");
                                         successLabel.setVisible(true);
                                         return true;
                                 }
 
+                                // Check for correct time input.
+                                int startHour = Integer.parseInt(newStart.substring(0, 2));
+                                int startMins = Integer.parseInt(newStart.substring(3, 5));
+                                int endHour = Integer.parseInt(newEnd.substring(0, 2));
+                                int endMins = Integer.parseInt(newEnd.substring(3, 5));
+                                if (startHour >= 24 || startMins >= 60 || endHour >= 24 || endMins >= 60) {
+                                        successLabel.setText("ERROR. The given time is incorrect.");
+                                        successLabel.setVisible(true);
+                                        return true;
+                                }
+
+                                // Checks that entry time comes before exit time.
                                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:MM");
                                 try {
                                         Date start = timeFormat.parse(newStart);
@@ -525,8 +544,9 @@ public class editShifts {
                                         return true;
                                 }
 
+                                // Checks for conflicts, employees already working on that time.
                                 ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
-                                ArrayList<String> employeeNames = theManagerDB.getNamesOfEmbededShifts(
+                                ArrayList<String> employeeNames = shiftsAPI.getNamesOfEmbededShifts(
                                                 selectedEmployeesIDs, newDate,
                                                 newStart, newEnd);
                                 if (employeeNames.size() > 0) {
@@ -539,6 +559,8 @@ public class editShifts {
                                         successLabel.setVisible(true);
                                         return true;
                                 }
+
+                                // If all checks are passed, input should be valid.
                                 return false;
                         }
 
@@ -549,15 +571,15 @@ public class editShifts {
                                 if (!startPlaceholder.getValue() || !endPlaceholder.getValue()) {
                                         successfulUpdate = false;
                                         for (shift temp : listShifts)
-                                                theManagerDB.updateEntryTime(temp, newStart);
+                                                shiftsAPI.updateEntryTime(temp, newStart);
                                         for (shift temp : listShifts)
-                                                theManagerDB.updateEndTime(temp, newEnd);
+                                                shiftsAPI.updateEndTime(temp, newEnd);
                                         successfulUpdate = true;
                                 }
 
                                 if (!datePlaceholder.getValue() && successfulUpdate) {
                                         for (shift temp : listShifts)
-                                                theManagerDB.updateShiftDate(temp, newDate);
+                                                shiftsAPI.updateShiftDate(temp, newDate);
                                         successfulUpdate = true;
                                 }
 
@@ -618,12 +640,11 @@ public class editShifts {
                                 new String[] { "id", "Employee", "Role", "Shift Date", "Start", "End" }, 0);
                 modelSelected = new DefaultTableModel(
                                 new String[] { "id", "Employee", "Role", "Shift Date", "Start", "End" }, 0);
-                shiftsAPI theManagerDB = new shiftsAPI();
-                for (shift tempShift : theManagerDB.getAllFutureShiftsUntil(to)) {
+                for (shift tempShift : shiftsAPI.getAllFutureShiftsUntil(to)) {
                         if (!tempShift.equals(theShift)) {
                                 String id = Integer.toString(tempShift.getEmployeeId());
-                                String name = theManagerDB.getNameOfEmployee(tempShift.getEmployeeId());
-                                String role = theManagerDB.getRoleOfEmployee(tempShift.getEmployeeId());
+                                String name = employeesAPI.getNameOfEmployee(tempShift.getEmployeeId());
+                                String role = employeesAPI.getRoleOfEmployee(tempShift.getEmployeeId());
                                 String date = tempShift.getDate();
                                 String start = tempShift.getStartTime();
                                 String end = tempShift.getEndTime();
@@ -631,8 +652,8 @@ public class editShifts {
                         }
                 }
                 String id = Integer.toString(theShift.getEmployeeId());
-                String name = theManagerDB.getNameOfEmployee(theShift.getEmployeeId());
-                String role = theManagerDB.getRoleOfEmployee(theShift.getEmployeeId());
+                String name = employeesAPI.getNameOfEmployee(theShift.getEmployeeId());
+                String role = employeesAPI.getRoleOfEmployee(theShift.getEmployeeId());
                 String date = theShift.getDate();
                 String start = theShift.getStartTime();
                 String end = theShift.getEndTime();

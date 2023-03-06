@@ -12,8 +12,6 @@ import java.awt.*;
 
 public class addAllergen {
 
-        private allergensAPI theManagerDB = new allergensAPI();
-
         private JLabel addAllergenLabel = new JLabel();
         private JLabel nameLabel = new JLabel();
         private JLabel successLabel = new JLabel();
@@ -30,7 +28,7 @@ public class addAllergen {
 
         public addAllergen(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -201,7 +199,7 @@ public class addAllergen {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();
@@ -229,7 +227,7 @@ public class addAllergen {
                         }
 
                         public boolean areInputsInvalid() {
-                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                boolean error = allergensAPI.isNameTaken(nameTextField.getText());
                                 if (error) {
                                         successLabel.setText("Error. The given name is already in use.");
                                         successLabel.setVisible(true);
@@ -239,7 +237,7 @@ public class addAllergen {
 
                         public boolean addFoodComponent() {
                                 String name = nameTextField.getText();
-                                if (theManagerDB.addAllergen(name))
+                                if (allergensAPI.addAllergen(name))
                                         successLabel.setText("\"" + name + "\" was successfully added.");
                                 else
                                         successLabel.setText("Error. Impossible to connect to database.");

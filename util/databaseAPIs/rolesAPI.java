@@ -4,51 +4,48 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.role;
 
 public class rolesAPI extends abstractManagerDB {
 
-    // GET "product" objects from database.
+    // GET from database.
+    public static role getRole(int roleID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM roles WHERE role_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, roleID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next()) {
+                    int ID = rs.getInt("role_id");
+                    String name = rs.getString("role_name");
+                    return new role(ID, name);
+                }
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
 
-    public ArrayList<role> getAllRoles() {
+    public static ArrayList<role> getAllRoles() {
         ArrayList<role> tempList = new ArrayList<role>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM roles WHERE unactive IS NULL";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM roles WHERE unactive IS NULL;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
                 while (rs.next()) {
                     int ID = rs.getInt("role_id");
                     String name = rs.getString("role_name");
                     tempList.add(new role(ID, name));
                 }
-                connection.close();
                 return tempList;
-            } catch (Exception e) {
-                System.out.println(e);
-                return tempList;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public role getRole(int roleID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM roles WHERE role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int ID = rs.getInt("role_id");
-                    String name = rs.getString("role_name");
-                    connection.close();
-                    return new role(ID, name);
-                }
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return null;
             }
         } catch (SQLException e) {
@@ -56,36 +53,34 @@ public class rolesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addRole(String name) {
+    public static String getNameOfRole(int roleID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            int roleID = getLastRoleID() + 1;
-            String query = "INSERT INTO roles VALUES (" + roleID + ", '" + name + "', NULL);";
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-                return true;
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
+            String query = "SELECT role_name FROM roles WHERE role_id =  ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, roleID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getString("role_name");
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    private int getLastRoleID() {
+    private static int getLastRoleID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT role_id FROM roles ORDER BY role_id DESC LIMIT 1;";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    int providerID = rs.getInt("role_id");
-                    connection.close();
-                    return providerID;
-                }
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getInt("role_id");
                 return -1;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return -1;
             }
         } catch (SQLException e) {
@@ -93,15 +88,17 @@ public class rolesAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateName(role theRole, String newName) {
+    // ADD to database.
+    public static boolean addRole(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE roles SET role_name = '" + newName + "' WHERE role_id = " + theRole.getId();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
+            String query = "INSERT INTO roles VALUES (?, ?, NULL);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, getLastRoleID() + 1);
+            ppdStatement.setString(2, name);
+            try {
+                ppdStatement.executeUpdate();
                 return true;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
             }
         } catch (SQLException e) {
@@ -109,61 +106,58 @@ public class rolesAPI extends abstractManagerDB {
         }
     }
 
-    public String getNameOfRoleID(int roleID) {
+    // UPDATE in database.
+    public static boolean updateName(role theRole, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT role_name FROM roles WHERE role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    String roleName = rs.getString("role_name");
-                    connection.close();
-                    return roleName;
-                }
-                return null;
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
+            String query = "UPDATE roles SET role_name = ? WHERE role_id = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, newName);
+            ppdStatement.setInt(2, theRole.getId());
+            try {
+                ppdStatement.executeUpdate();
+                return true;
+            } catch (Exception SQLTimeoutException) {
+                return false;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public boolean isRoleAssigned(int roleID) {
+    public static void deleteRole(role theRole) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees WHERE active = true AND role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next()) {
-                    connection.close();
+            String query = "UPDATE roles SET unactive = true WHERE role_id = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, theRole.getId());
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    // CHECK in database.
+    public static boolean isRoleAssigned(int roleID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM employees WHERE active = true AND role_id = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, roleID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
                     return true;
-                }
                 return false;
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception SQLTimeoutException) {
                 return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-
-    }
-
-    public void setRolesUnactive(int roleID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "UPDATE roles SET unactive = true WHERE role_id = " + roleID;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(query);
-                connection.close();
-            } catch (Exception e) {
-                System.out.println(e);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
-    public boolean isNameTaken(String name) {
+    public static boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM roles WHERE role_name = ? AND unactive IS NULL";
             ppdStatement = connection.prepareStatement(query);
@@ -180,5 +174,4 @@ public class rolesAPI extends abstractManagerDB {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
-
 }

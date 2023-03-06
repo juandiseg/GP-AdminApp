@@ -34,7 +34,7 @@ public class mainAllergens {
     public mainAllergens(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -83,7 +83,7 @@ public class mainAllergens {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -117,7 +117,7 @@ public class mainAllergens {
 
     private void populateTable() {
         model = new DefaultTableModel(new String[] { "ID", "Name" }, 0);
-        ArrayList<allergen> tempAllergens = new allergensAPI().getAllAllergens();
+        ArrayList<allergen> tempAllergens = allergensAPI.getAllAllergens();
         if (!tempAllergens.isEmpty()) {
             for (allergen temp : tempAllergens)
                 model.addRow(new String[] { Integer.toString(temp.getId()), temp.getName() });

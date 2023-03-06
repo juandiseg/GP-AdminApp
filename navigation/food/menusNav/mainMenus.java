@@ -23,7 +23,7 @@ public class mainMenus {
     public mainMenus(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -69,7 +69,7 @@ public class mainMenus {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -108,14 +108,13 @@ public class mainMenus {
         model = new DefaultTableModel(
                 new String[] { "menu_id", "catID", "date", "Name", "Price", "Category" },
                 0);
-        categoryAPI tempAPI = new categoryAPI();
-        for (menu temp : new menuAPI().getAllCurrentMenus()) {
+        for (menu temp : menuAPI.getAllCurrentMenus()) {
             String id = Integer.toString(temp.getId());
             String catID = Integer.toString(temp.getCategoryID());
             String date = temp.getDate();
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
-            String catName = tempAPI.getNameOfCategory(temp.getCategoryID());
+            String catName = categoryAPI.getNameOfCategory(temp.getCategoryID());
             model.addRow(new String[] { id, catID, date, name, price, catName });
         }
         myTable.setDefaultEditor(Object.class, null);

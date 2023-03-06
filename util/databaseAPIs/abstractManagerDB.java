@@ -3,20 +3,21 @@ package util.databaseAPIs;
 import java.sql.PreparedStatement;
 
 public class abstractManagerDB {
-    protected PreparedStatement ppdStatement;
-    private final String url = "jdbc:mysql://localhost:3306/beatneat";
-    private final String user = "juandi"; // Change to your local user
-    private final String password = "Juandi"; // Change to your local password
+    private final static String url = "jdbc:mysql://localhost:3306/beatneat";
+    private final static String user = "juandi"; // Change to your local user
+    private final static String password = "Juandi"; // Change to your local password
 
-    protected String getURL() {
+    protected static PreparedStatement ppdStatement;
+
+    protected static String getURL() {
         return url;
     }
 
-    protected String getUser() {
+    protected static String getUser() {
         return user;
     }
 
-    protected String getPassword() {
+    protected static String getPassword() {
         return password;
     }
 }

@@ -25,7 +25,7 @@ public class mainEmployees {
     public mainEmployees(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -71,7 +71,7 @@ public class mainEmployees {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -81,7 +81,7 @@ public class mainEmployees {
 
                         int ID = Integer.parseInt((String) model.getValueAt(myTable.getSelectedRow(), 0));
                         playground.removeAll();
-                        new editEmployee(playground, new employeesAPI().getEmployee(ID));
+                        new editEmployee(playground, employeesAPI.getEmployee(ID));
                         playground.revalidate();
                         playground.repaint();
                     } catch (IndexOutOfBoundsException e) {
@@ -104,14 +104,14 @@ public class mainEmployees {
     }
 
     private void populateTable() {
-        ArrayList<employee> tempList = new employeesAPI().getAllCurrentEmployeesOrdered();
+        ArrayList<employee> tempList = employeesAPI.getAllCurrentEmployeesOrdered();
         model = new DefaultTableModel(new String[] { "employee_id", "Name", "Salary", "Hours / Week", "Role" }, 0);
         for (employee temp : tempList) {
             String id = Integer.toString(temp.getId());
             String name = temp.getName();
             String salary = Float.toString(temp.getSalary());
             String hoursWeek = temp.getHoursWeek().substring(0, 5);
-            String role = new rolesAPI().getNameOfRoleID(temp.getRoleID());
+            String role = rolesAPI.getNameOfRole(temp.getRoleID());
             model.addRow(new String[] { id, name, salary, hoursWeek, role });
         }
         myTable.setDefaultEditor(Object.class, null);

@@ -40,18 +40,16 @@ public class editEmployee {
         private booleanWrapper salaryPlaceholder = new booleanWrapper(true);
         private booleanWrapper hoursWeekPlaceholder = new booleanWrapper(true);
 
-        private ArrayList<role> roles = new rolesAPI().getAllRoles();
+        private ArrayList<role> roles = rolesAPI.getAllRoles();
         private JLabel successLabel = new JLabel();
 
         private employee theEmployee;
-
-        private employeesAPI theManagerDB = new employeesAPI();
 
         public editEmployee(
                         JPanel playground, employee theEmployee) {
                 this.theEmployee = theEmployee;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -323,7 +321,7 @@ public class editEmployee {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);
@@ -345,9 +343,9 @@ public class editEmployee {
                                                                 + " from employees?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (response == JOptionPane.YES_OPTION) {
-                                        if (theManagerDB.hasEmployeeFutureShifts(theEmployee))
+                                        if (employeesAPI.hasEmployeeFutureShifts(theEmployee))
                                                 return neededToChoose;
-                                        theManagerDB.setEmployeeUnactive(theEmployee);
+                                        employeesAPI.setEmployeeUnactive(theEmployee);
                                         playground.removeAll();
                                         new mainEmployees(playground);
                                         playground.revalidate();
@@ -358,7 +356,7 @@ public class editEmployee {
                         }
 
                         public void chooseAmongOptions() {
-                                if (new employeesAPI().hasEmployeeFutureShifts(theEmployee)) {
+                                if (employeesAPI.hasEmployeeFutureShifts(theEmployee)) {
                                         int response = JOptionPane.showOptionDialog(null,
                                                         "An employee with future or current shifts assigned cannot be deleted.\nYou can delete all their future shifts or keep the employee.",
                                                         "Choice",
@@ -368,8 +366,8 @@ public class editEmployee {
                                                                         "Cancel" },
                                                         null);
                                         if (response == 0) {
-                                                theManagerDB.deleteFutureShifts(theEmployee);
-                                                theManagerDB.setEmployeeUnactive(theEmployee);
+                                                employeesAPI.deleteFutureShifts(theEmployee);
+                                                employeesAPI.setEmployeeUnactive(theEmployee);
                                                 playground.removeAll();
                                                 new mainEmployees(playground);
                                                 playground.revalidate();
@@ -418,21 +416,21 @@ public class editEmployee {
                                 boolean successfulUpdate = true;
 
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateEmployeeName(theEmployee,
+                                        successfulUpdate = employeesAPI.updateEmployeeName(theEmployee,
                                                         nameTextField.getText());
 
                                 if (!salaryPlaceholder.getValue()) {
                                         Float salary = Float.parseFloat(salaryTextField.getText());
-                                        successfulUpdate = theManagerDB.updateEmployeeSalary(theEmployee, salary);
+                                        successfulUpdate = employeesAPI.updateEmployeeSalary(theEmployee, salary);
                                 }
 
                                 if (!hoursWeekPlaceholder.getValue()) {
                                         String hoursWeek = hoursWeekTextField.getText();
-                                        successfulUpdate = theManagerDB.updateEmployeeHoursWeek(theEmployee, hoursWeek);
+                                        successfulUpdate = employeesAPI.updateEmployeeHoursWeek(theEmployee, hoursWeek);
                                 }
 
                                 if (!rolePlaceholder)
-                                        successfulUpdate = theManagerDB.updateEmployeeRole(theEmployee,
+                                        successfulUpdate = employeesAPI.updateEmployeeRole(theEmployee,
                                                         roles.get(roleComboBox.getSelectedIndex()).getId());
 
                                 if (successfulUpdate)
@@ -444,7 +442,7 @@ public class editEmployee {
                         }
 
                         public void updatePlaceholders() {
-                                theEmployee = new employeesAPI().getEmployee(theEmployee.getId());
+                                theEmployee = employeesAPI.getEmployee(theEmployee.getId());
 
                                 namePlaceholder.setValue(true);
                                 salaryPlaceholder.setValue(true);

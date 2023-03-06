@@ -39,14 +39,12 @@ public class addEmployee {
         private booleanWrapper salaryPlaceholder = new booleanWrapper(true);
         private booleanWrapper hoursWeekPlaceholder = new booleanWrapper(true);
 
-        private ArrayList<role> roles = new rolesAPI().getAllRoles();
+        private ArrayList<role> roles = rolesAPI.getAllRoles();
         private JLabel successLabel = new JLabel();
-
-        private employeesAPI theManagerDB = new employeesAPI();
 
         public addEmployee(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -306,7 +304,7 @@ public class addEmployee {
                 roleComboBox.setBackground(Color.WHITE);
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();
@@ -343,7 +341,7 @@ public class addEmployee {
                                 Float salary = Float.parseFloat(salaryTextField.getText());
                                 String hoursWeek = hoursWeekTextField.getText();
                                 int roleID = roles.get(roleComboBox.getSelectedIndex()).getId();
-                                if (theManagerDB.addEmployee(name, salary, hoursWeek, roleID))
+                                if (employeesAPI.addEmployee(name, salary, hoursWeek, roleID))
                                         successLabel.setText(
                                                         "The employee '" + name + "' has been successfully added.");
                                 else

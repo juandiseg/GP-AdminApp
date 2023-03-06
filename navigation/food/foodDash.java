@@ -45,7 +45,7 @@ public class foodDash {
         public foodDash(JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         public void initComp2(JPanel leftAuxPanel, JPanel jPanel4, JLabel date) {
@@ -415,7 +415,7 @@ public class foodDash {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 menusPanel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 

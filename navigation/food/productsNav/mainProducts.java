@@ -23,7 +23,7 @@ public class mainProducts {
     public mainProducts(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -69,7 +69,7 @@ public class mainProducts {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -108,13 +108,12 @@ public class mainProducts {
         model = new DefaultTableModel(
                 new String[] { "product_id", "date", "Name", "Price", "catID", "Category" },
                 0);
-        categoryAPI tempAPI = new categoryAPI();
-        for (product temp : new productAPI().getAllCurrentProducts()) {
+        for (product temp : productAPI.getAllCurrentProducts()) {
             String id = Integer.toString(temp.getId());
             String date = temp.getDate();
             String name = temp.getName();
             String price = Float.toString(temp.getPrice());
-            String catName = tempAPI.getNameOfCategory(temp.getCategoryID());
+            String catName = categoryAPI.getNameOfCategory(temp.getCategoryID());
             model.addRow(new String[] { id, date, name, price, Integer.toString(temp.getCategoryID()), catName });
         }
         myTable.setDefaultEditor(Object.class, null);

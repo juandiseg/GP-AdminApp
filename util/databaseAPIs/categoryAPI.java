@@ -12,7 +12,7 @@ import componentsFood.category;
 public class categoryAPI extends abstractManagerDB {
 
     // GET from database.
-    public category getCategory(int ID) {
+    public static category getCategory(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories WHERE category_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -34,7 +34,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<category> getAllCategories() {
+    public static ArrayList<category> getAllCategories() {
         ArrayList<category> tempList = new ArrayList<category>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories;";
@@ -56,7 +56,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<category> getProductCategories() {
+    public static ArrayList<category> getProductCategories() {
         ArrayList<category> tempList = new ArrayList<category>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories WHERE iscategory_product = true;";
@@ -77,7 +77,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<category> getMenuCategories() {
+    public static ArrayList<category> getMenuCategories() {
         ArrayList<category> tempList = new ArrayList<category>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories WHERE iscategory_product = false;";
@@ -98,7 +98,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public String getNameOfCategory(int ID) {
+    public static String getNameOfCategory(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT category_name FROM categories WHERE category_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -117,7 +117,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    private int getLastCategoryID() {
+    private static int getLastCategoryID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT category_id FROM categories ORDER BY category_id DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -136,7 +136,7 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public boolean addCategory(String name, boolean isProduct) {
+    public static boolean addCategory(String name, boolean isProduct) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int categoryID = getLastCategoryID() + 1;
             String query = "INSERT INTO categories VALUES (?, ?, ?);";
@@ -156,7 +156,7 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // UPDATE in database.
-    public boolean updateName(category theCategory, String newName) {
+    public static boolean updateName(category theCategory, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE categories SET category_name = ? WHERE category_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -173,7 +173,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateType(category theCategory, boolean isProduct) {
+    public static boolean updateType(category theCategory, boolean isProduct) {
         if (isCategoryAssigned(theCategory))
             return false;
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -193,7 +193,7 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // DELETE from database.
-    public boolean deleteCategory(category theCategory) {
+    public static boolean deleteCategory(category theCategory) {
         deleteCategoryUnactiveReferences(theCategory);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM categories WHERE category_id = ?";
@@ -210,7 +210,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    private void deleteCategoryUnactiveReferences(category theCategory) {
+    private static void deleteCategoryUnactiveReferences(category theCategory) {
         String table = "menus";
         if (theCategory.getIsProduct())
             table = "products";
@@ -226,7 +226,7 @@ public class categoryAPI extends abstractManagerDB {
     }
 
     // CHECK in database.
-    public boolean isNameTaken(String name) {
+    public static boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM categories WHERE category_name = ?";
             ppdStatement = connection.prepareStatement(query);
@@ -244,7 +244,7 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
-    public boolean isCategoryAssigned(category theCategory) {
+    public static boolean isCategoryAssigned(category theCategory) {
         String table = "menus";
         if (theCategory.getIsProduct())
             table = "products";

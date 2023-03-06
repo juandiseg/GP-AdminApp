@@ -46,15 +46,14 @@ public class salesReportGenerator extends iReportable {
 
     private int productSales(Sheet sheet, String from, String to, int row) {
         int initialRow = row;
-        reportsAPI managerDB = new reportsAPI();
-        ArrayList<ArrayList<product>> productsLists = managerDB.getAllProducts();
+        ArrayList<ArrayList<product>> productsLists = reportsAPI.getAllProducts();
         for (ArrayList<product> bigTemp : productsLists) {
             for (int i = 0; i < bigTemp.size(); i++) {
                 product temp = bigTemp.get(i);
                 product tempNext = null;
                 if (i + 1 < bigTemp.size())
                     tempNext = bigTemp.get(i + 1);
-                int amountSold = managerDB.getNumberSoldProduct(temp, tempNext, from, to);
+                int amountSold = reportsAPI.getNumberSoldProducts(temp, tempNext, from, to);
                 if (amountSold > 0) {
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getDate());
@@ -94,15 +93,14 @@ public class salesReportGenerator extends iReportable {
 
     private int menuSales(Sheet sheet, String from, String to, int row) {
         int initialRow = row;
-        reportsAPI managerDB = new reportsAPI();
-        ArrayList<ArrayList<menu>> menusLists = managerDB.getAllMenus();
+        ArrayList<ArrayList<menu>> menusLists = reportsAPI.getAllMenus();
         for (ArrayList<menu> listOfMenu : menusLists) {
             for (int i = 0; i < listOfMenu.size(); i++) {
                 menu temp = listOfMenu.get(i);
                 menu tempNext = null;
                 if (i + 1 < listOfMenu.size())
                     tempNext = listOfMenu.get(i + 1);
-                int amountSold = managerDB.getNumberSoldMenu(temp, tempNext, from, to);
+                int amountSold = reportsAPI.getNumberSoldMenus(temp, tempNext, from, to);
                 if (amountSold > 0) {
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getDate());

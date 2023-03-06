@@ -29,12 +29,11 @@ public class editRole {
 
         private JTextField nameTextField = new JTextField();
         private role theCurrentRole;
-        private rolesAPI theManagerDB = new rolesAPI();
 
         public editRole(JPanel playground, role theCurrentRole) {
                 this.theCurrentRole = theCurrentRole;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -231,7 +230,7 @@ public class editRole {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);
@@ -242,7 +241,7 @@ public class editRole {
                 class deleteMethodHolder implements iDeleteButton {
 
                         public boolean thereIsError() {
-                                if (theManagerDB.isRoleAssigned(theCurrentRole.getId())) {
+                                if (rolesAPI.isRoleAssigned(theCurrentRole.getId())) {
                                         JOptionPane.showMessageDialog(null,
                                                         "You cannot delete a role if there is an employee assigned to it.",
                                                         "Action Required", JOptionPane.ERROR_MESSAGE);
@@ -259,7 +258,7 @@ public class editRole {
                                                                 + "\"?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (response == JOptionPane.YES_OPTION) {
-                                        theManagerDB.setRolesUnactive(theCurrentRole.getId());
+                                        rolesAPI.deleteRole(theCurrentRole);
                                         playground.removeAll();
                                         new mainRoles(playground);
                                         playground.revalidate();
@@ -298,7 +297,7 @@ public class editRole {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (!namePlaceholder.getValue() && rolesAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -310,7 +309,7 @@ public class editRole {
                                 boolean successfulUpdate = true;
 
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentRole,
+                                        successfulUpdate = rolesAPI.updateName(theCurrentRole,
                                                         nameTextField.getText());
 
                                 if (successfulUpdate)
@@ -322,7 +321,7 @@ public class editRole {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentRole = theManagerDB.getRole(theCurrentRole.getId());
+                                theCurrentRole = rolesAPI.getRole(theCurrentRole.getId());
 
                                 namePlaceholder.setValue(true);
 

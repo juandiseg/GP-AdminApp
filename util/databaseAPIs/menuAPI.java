@@ -12,7 +12,7 @@ import componentsFood.menu;
 public class menuAPI extends abstractManagerDB {
 
     // GET from database.
-    public menu getMenu(int ID) {
+    public static menu getMenu(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM menus WHERE menu_id = ? ORDER BY menu_date DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -36,10 +36,10 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<menu> getAllCurrentMenus() {
+    public static ArrayList<menu> getAllCurrentMenus() {
         ArrayList<menu> tempList = new ArrayList<menu>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM menus WHERE active = 1";
+            String query = "SELECT * FROM menus WHERE active = 1;";
             ppdStatement = connection.prepareStatement(query);
             try {
                 ResultSet rs = ppdStatement.executeQuery();
@@ -60,7 +60,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public Stack<Integer> getAllActiveMenuIDs() {
+    public static Stack<Integer> getAllActiveMenuIDs() {
         Stack<Integer> tempStack = new Stack<Integer>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT DISTINCT menu_id FROM menus WHERE active = true;";
@@ -78,7 +78,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    private int getLastMenuID() {
+    private static int getLastMenuID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_id FROM menus ORDER BY menu_id DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -96,12 +96,12 @@ public class menuAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public int addMenu(int catID, String name, float price) {
+    public static int addMenu(int catID, String name, float price) {
         int menuID = getLastMenuID() + 1;
         return addMenu(menuID, catID, name, price);
     }
 
-    private int addMenu(int ID, int catID, String name, float price) {
+    private static int addMenu(int ID, int catID, String name, float price) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus VALUES (?, ?, CURDATE(), ?, ?, TRUE);";
             ppdStatement = connection.prepareStatement(query);
@@ -120,7 +120,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addProducts(int menuID, Stack<Integer> productIDs, Stack<Float> quantities) {
+    public static boolean addProducts(int menuID, Stack<Integer> productIDs, Stack<Float> quantities) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus_products VALUES (?, ?, CURDATE(), ?);";
             ppdStatement = connection.prepareStatement(query);
@@ -141,7 +141,7 @@ public class menuAPI extends abstractManagerDB {
     }
 
     // UPDATE in database.
-    public boolean updateName(menu theMenu, String name) {
+    public static boolean updateName(menu theMenu, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus AS m, (SELECT MAX(menu_date) AS menu_date FROM menus WHERE menu_id = ?) AS temp SET m.name = ? WHERE m.menu_date = temp.menu_date AND m.menu_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -159,7 +159,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updatePrice(menu theMenu, float menuPrice) {
+    public static boolean updatePrice(menu theMenu, float menuPrice) {
         fixMenuDate(theMenu);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus SET price = ? WHERE menu_id = ? AND active = true";
@@ -177,7 +177,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateCategory(menu theMenu, int categoryID) {
+    public static boolean updateCategory(menu theMenu, int categoryID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus SET category_id = ? WHERE menu_id = ? AND active = true;";
             ppdStatement = connection.prepareStatement(query);
@@ -194,7 +194,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateProducts(menu theMenu, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
+    public static boolean updateProducts(menu theMenu, Stack<Integer> stackIDs, Stack<Float> stackAmounts) {
         if (areProductEntriesToday(theMenu))
             removeMenuProductsToday(theMenu);
         while (!stackIDs.empty() && !stackAmounts.empty())
@@ -202,7 +202,7 @@ public class menuAPI extends abstractManagerDB {
         return true;
     }
 
-    private void fixMenuDate(menu theMenu) {
+    private static void fixMenuDate(menu theMenu) {
         if (isLastMenuEntryToday(theMenu))
             return;
         deleteMenu(theMenu.getId());
@@ -210,7 +210,7 @@ public class menuAPI extends abstractManagerDB {
     }
 
     // REMOVE from database.
-    private void removeMenuProductsToday(menu theMenu) {
+    private static void removeMenuProductsToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM menus_products WHERE menu_id = ? AND menu_products_date = CURDATE()";
             ppdStatement = connection.prepareStatement(query);
@@ -223,7 +223,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean deleteMenu(int menuID) {
+    public static boolean deleteMenu(int menuID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus SET active = false WHERE menu_id = ?";
             ppdStatement = connection.prepareStatement(query);
@@ -240,7 +240,7 @@ public class menuAPI extends abstractManagerDB {
     }
 
     // CHECK in database.
-    private boolean isLastMenuEntryToday(menu theMenu) {
+    private static boolean isLastMenuEntryToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM menus WHERE menu_id = ? AND menu_date = CURDATE() AND active = true";
             ppdStatement = connection.prepareStatement(query);
@@ -258,7 +258,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    private boolean areProductEntriesToday(menu theMenu) {
+    private static boolean areProductEntriesToday(menu theMenu) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_products_date FROM menus_products WHERE menu_id = ? AND menu_products_date = CURDATE()";
             ppdStatement = connection.prepareStatement(query);
@@ -276,7 +276,7 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
-    public boolean isNameTaken(String name) {
+    public static boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM menus WHERE name = ? AND active = TRUE";
             ppdStatement = connection.prepareStatement(query);

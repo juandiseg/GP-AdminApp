@@ -13,7 +13,7 @@ import componentsFood.ingredient;
 public class allergensAPI extends abstractManagerDB {
 
     // GET from database.
-    public allergen getAllergen(int ID) {
+    public static allergen getAllergen(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM allergens WHERE allergen_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -34,7 +34,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<allergen> getAllAllergens() {
+    public static ArrayList<allergen> getAllAllergens() {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM allergens;";
@@ -55,7 +55,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<allergen> getSelectedAllergens(ingredient theIngredient) {
+    public static ArrayList<allergen> getSelectedAllergens(ingredient theIngredient) {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT allergen_id, name FROM ingredients_allergens NATURAL JOIN allergens WHERE ingredient_id = ?;";
@@ -77,7 +77,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<allergen> getNonSelectedAllergens(ingredient theIngredient) {
+    public static ArrayList<allergen> getNonSelectedAllergens(ingredient theIngredient) {
         ArrayList<allergen> tempList = new ArrayList<allergen>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT allergen_id, name FROM allergens WHERE allergen_id NOT IN (SELECT allergen_id FROM ingredients_allergens WHERE ingredient_id = ?);";
@@ -99,7 +99,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    private int getLastAllergenID() {
+    private static int getLastAllergenID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT allergen_id FROM allergens ORDER BY allergen_id DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -117,7 +117,7 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public boolean addAllergen(String name) {
+    public static boolean addAllergen(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             int allergenID = getLastAllergenID() + 1;
             String query = "INSERT INTO allergens VALUES (?, ?);";
@@ -135,7 +135,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean addAlergensOfIngredient(Stack<Integer> allergenIDs, int ingredientID) {
+    public static boolean addAlergensOfIngredient(Stack<Integer> allergenIDs, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients_allergens VALUES (?, ?);";
             ppdStatement = connection.prepareStatement(query);
@@ -155,7 +155,7 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // UPDATE in database.
-    public boolean updateName(allergen theAllergen, String name) {
+    public static boolean updateName(allergen theAllergen, String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE allergens SET name = ? WHERE allergen_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -172,7 +172,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateAlergensOfIngredient(Stack<Integer> allergenIDs, ingredient theIngredient) {
+    public static boolean updateAlergensOfIngredient(Stack<Integer> allergenIDs, ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM ingredients_allergens WHERE ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -189,7 +189,7 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // REMOVE from database.
-    public boolean removeAllergen(allergen theAllergen) {
+    public static boolean removeAllergen(allergen theAllergen) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM ingredients_allergens WHERE allergen_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -214,7 +214,7 @@ public class allergensAPI extends abstractManagerDB {
     }
 
     // CHECK in database.
-    public boolean isNameTaken(String name) {
+    public static boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM allergens WHERE category_name = ?";
             ppdStatement = connection.prepareStatement(query);

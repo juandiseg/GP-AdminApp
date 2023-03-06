@@ -23,7 +23,7 @@ public class mainIngredients {
     public mainIngredients(JPanel playground) {
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -70,7 +70,7 @@ public class mainIngredients {
                                 .addContainerGap(97, Short.MAX_VALUE)));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -112,10 +112,10 @@ public class mainIngredients {
         model = new DefaultTableModel(
                 new String[] { "ID", "Prov_ID", "date", "Name", "Provider", "Price", "Amount", "Inventory", "active" },
                 0);
-        for (ingredient temp : new ingredientsAPI().getAllCurrentIngredients()) {
+        for (ingredient temp : ingredientsAPI.getAllCurrentIngredients()) {
             String id = Integer.toString(temp.getId());
             String prov_id = Integer.toString(temp.getProviderID());
-            String provName = new providerAPI().getProvider(temp.getProviderID()).getName();
+            String provName = providerAPI.getProvider(temp.getProviderID()).getName();
             String price = Float.toString(temp.getPrice());
             String amount = Float.toString(temp.getAmount());
             String in_inventory;

@@ -16,6 +16,7 @@ import java.awt.*;
 import componentsFood.shift;
 import util.buttonFormatters.iNavigatorButton;
 import util.buttonFormatters.navigatorButtonFormatter;
+import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
@@ -53,7 +54,7 @@ public class mainShifts {
         this.shiftDate = shiftDate;
         initComponents(playground);
         populateTable();
-        addActionListeners(playground);
+        addListeners(playground);
     }
 
     private void initComponents(JPanel playground) {
@@ -179,7 +180,7 @@ public class mainShifts {
         shiftsJScrollPanel.setBackground(new Color(245, 245, 245));
     }
 
-    private void addActionListeners(JPanel playground) {
+    private void addListeners(JPanel playground) {
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -201,7 +202,7 @@ public class mainShifts {
                         try {
                             playground.removeAll();
                             new editShifts(playground, from, to, shiftDate,
-                                    new shiftsAPI().getShift(ID, date, startShift, endShift));
+                                    shiftsAPI.getShift(ID, date, startShift, endShift));
                             playground.revalidate();
                             playground.repaint();
                         } catch (ParseException e) {
@@ -326,12 +327,11 @@ public class mainShifts {
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
             model.removeRow(i);
         }
-        shiftsAPI theManagerDB = new shiftsAPI();
-        ArrayList<shift> tempList = theManagerDB.getShiftsWithinDateSorted(newFrom, newTo, newShiftDate);
+        ArrayList<shift> tempList = shiftsAPI.getShiftsWithinDateSorted(newFrom, newTo, newShiftDate);
         for (shift temp : tempList) {
             String id = Integer.toString(temp.getEmployeeId());
-            String name = theManagerDB.getNameOfEmployee(temp.getEmployeeId());
-            String role = theManagerDB.getRoleOfEmployee(temp.getEmployeeId());
+            String name = employeesAPI.getNameOfEmployee(temp.getEmployeeId());
+            String role = employeesAPI.getRoleOfEmployee(temp.getEmployeeId());
             String date = temp.getDate();
             String startTime = temp.getStartTime().substring(0, 5);
             String endTime = temp.getEndTime().substring(0, 5);
@@ -353,16 +353,15 @@ public class mainShifts {
     }
 
     private void populateTable() {
-        shiftsAPI theManagerDB = new shiftsAPI();
-        ArrayList<shift> tempList = theManagerDB.getShiftsWithinDateSorted(from, to, shiftDate);
+        ArrayList<shift> tempList = shiftsAPI.getShiftsWithinDateSorted(from, to, shiftDate);
         model = new DefaultTableModel(
                 new String[] { "id", "Employee", "Role", "Shift Date", "Start", "End", "Check-In", "Check-Out",
                         "undertime" },
                 0);
         for (shift temp : tempList) {
             String id = Integer.toString(temp.getEmployeeId());
-            String name = theManagerDB.getNameOfEmployee(temp.getEmployeeId());
-            String role = theManagerDB.getRoleOfEmployee(temp.getEmployeeId());
+            String name = employeesAPI.getNameOfEmployee(temp.getEmployeeId());
+            String role = employeesAPI.getRoleOfEmployee(temp.getEmployeeId());
             String date = temp.getDate();
             String startTime = temp.getStartTime().substring(0, 5);
             String endTime = temp.getEndTime().substring(0, 5);

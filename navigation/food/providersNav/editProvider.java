@@ -36,12 +36,11 @@ public class editProvider {
         private JTextField emailTextField = new JTextField();
 
         private provider theCurrentProvider;
-        private providerAPI theManagerDB = new providerAPI();
 
         public editProvider(JPanel playground, provider theCurrentProvider) {
                 this.theCurrentProvider = theCurrentProvider;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -283,7 +282,7 @@ public class editProvider {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);
@@ -294,7 +293,7 @@ public class editProvider {
                 class deleteMethodHolder implements iDeleteButton {
 
                         public boolean thereIsError() {
-                                if (theManagerDB.isProviderAssigned(theCurrentProvider.getId())) {
+                                if (providerAPI.isProviderAssigned(theCurrentProvider.getId())) {
                                         JOptionPane.showMessageDialog(playground,
                                                         "You cannot delete a provider if there is an ingredient assigned to it.",
                                                         "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -311,7 +310,7 @@ public class editProvider {
                                                                 + "\"?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        theManagerDB.deleteProvider(theCurrentProvider.getId());
+                                        providerAPI.deleteProvider(theCurrentProvider);
                                         playground.removeAll();
                                         new mainProviders(playground);
                                         playground.revalidate();
@@ -350,7 +349,7 @@ public class editProvider {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (!namePlaceholder.getValue() && providerAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -367,10 +366,10 @@ public class editProvider {
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentProvider,
+                                        successfulUpdate = providerAPI.updateName(theCurrentProvider,
                                                         nameTextField.getText());
                                 if (!emailPlaceholder.getValue() && successfulUpdate)
-                                        successfulUpdate = theManagerDB.updateEmail(theCurrentProvider,
+                                        successfulUpdate = providerAPI.updateEmail(theCurrentProvider,
                                                         emailTextField.getText());
                                 if (successfulUpdate)
                                         successLabel.setText("The provider \"" + nameTextField.getText()
@@ -381,7 +380,7 @@ public class editProvider {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentProvider = theManagerDB.getProvider(theCurrentProvider.getId());
+                                theCurrentProvider = providerAPI.getProvider(theCurrentProvider.getId());
 
                                 namePlaceholder.setValue(true);
                                 emailPlaceholder.setValue(true);

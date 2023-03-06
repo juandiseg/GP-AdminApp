@@ -2,44 +2,21 @@ TO DO:
 ------------------
 DATABASE            Change all values that reference money to support another decimal.
 
-edit*.java          Returns whem trying to add if ALL of the fields are empty.
-
 
 mainShifts.java	    -> 	Late entries highlights.	(Formatting and restricting entries)
 
-editShifts.java 	->	Check for imbedeed shifts and similar entries.
-
-editEmployees.java	->	Check for shifts referencing that employee in the future.
-
 generateReport.java ->  Check dates which make sense.
 
-CHECK FOR UPDATES WHICH REQUIRE DOUBLE CHECKING IF THE LAST ENTRY IS FROM TODAY.
-
-CHECK FOR START AFTER END SHIFT HOURS
-
-IMPLEMENT ADD SHIFTS EMBEDED CHECKING FOR EDITTING
-
-CHANGE ALL IMPORTS OF "buttonFormatters" TO BE buttonFormatters.*;
-
-PRICE FORMATTER ALSO CHECKS FOR MAXIMUM LENGTH OF STRING!
-
-CHECK REPEATED NAME CHECKERS FOR ACTIVE STATUS
 
 CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
 
-CHANGE DB TO SUPPORT MORE DECIMAL PLACES
-
-EASU BACK BUTTON IMPLEMENTATION
-
 WHEN DELETING IN CASCADE CHECK IF SOMEHING IS LEFT WITH NO INGREDIENTS/PRODUCTS AND DELETE IT.
-
-ADD LISTENERS!!
 
 ADD FORMATTER TO TABLES!
 
-CHECKER FOR INPUT HOURS AND DATES!
 
 CHECK FOR ' AND " IN STRINGS IN JTextField(s) 
+
 
 TESTING
 ----------------------------------------------------------------------------------------------------------------

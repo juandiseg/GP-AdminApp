@@ -32,12 +32,11 @@ public class editAllergen {
 
         private JTextField nameTextField = new JTextField();
         private allergen theCurrentAllergen;
-        private allergensAPI theManagerDB = new allergensAPI();
 
         public editAllergen(JPanel playground, allergen theCurrentAllergen) {
                 this.theCurrentAllergen = theCurrentAllergen;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -233,7 +232,7 @@ public class editAllergen {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);
@@ -254,7 +253,7 @@ public class editAllergen {
                                                                 + " from allergens?",
                                                 "Confirmation", JOptionPane.YES_NO_OPTION);
                                 if (reply == JOptionPane.YES_OPTION) {
-                                        theManagerDB.removeAllergen(theCurrentAllergen);
+                                        allergensAPI.removeAllergen(theCurrentAllergen);
                                         playground.removeAll();
                                         new mainAllergens(playground);
                                         playground.revalidate();
@@ -292,7 +291,7 @@ public class editAllergen {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (!namePlaceholder.getValue() && allergensAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -303,7 +302,7 @@ public class editAllergen {
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentAllergen,
+                                        successfulUpdate = allergensAPI.updateName(theCurrentAllergen,
                                                         nameTextField.getText());
                                 if (successfulUpdate)
                                         successLabel.setText("The allergen \"" + nameTextField.getText()
@@ -314,7 +313,7 @@ public class editAllergen {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentAllergen = new allergensAPI().getAllergen(theCurrentAllergen.getId());
+                                theCurrentAllergen = allergensAPI.getAllergen(theCurrentAllergen.getId());
 
                                 namePlaceholder.setValue(true);
 

@@ -69,10 +69,9 @@ public class editIngredient {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private ArrayList<provider> providers = new providerAPI().getAllActiveProviders();
+        private ArrayList<provider> providers = providerAPI.getAllCurrentProviders();
 
         private ingredient theCurrentIngredient;
-        private ingredientsAPI theManagerDB = new ingredientsAPI();
 
         public editIngredient(JPanel playground, ingredient theCurrentIngredient) {
                 this.theCurrentIngredient = theCurrentIngredient;
@@ -483,12 +482,12 @@ public class editIngredient {
                 modelSelected = new DefaultTableModel(
                                 new String[] { "id", "Name" }, 0);
 
-                for (allergen tempAller : new allergensAPI().getSelectedAllergens(theCurrentIngredient)) {
+                for (allergen tempAller : allergensAPI.getSelectedAllergens(theCurrentIngredient)) {
                         String id = Integer.toString(tempAller.getId());
                         String name = tempAller.getName();
                         modelSelected.addRow(new String[] { id, name });
                 }
-                for (allergen tempAller : new allergensAPI().getNonSelectedAllergens(theCurrentIngredient)) {
+                for (allergen tempAller : allergensAPI.getNonSelectedAllergens(theCurrentIngredient)) {
                         String id = Integer.toString(tempAller.getId());
                         String name = tempAller.getName();
                         modelAllergens.addRow(new String[] { id, name });
@@ -534,8 +533,7 @@ public class editIngredient {
         }
 
         private boolean isAllergenPlaceholder() {
-                ArrayList<allergen> tempList = new allergensAPI()
-                                .getSelectedAllergens(theCurrentIngredient);
+                ArrayList<allergen> tempList = allergensAPI.getSelectedAllergens(theCurrentIngredient);
 
                 ArrayList<allergen> listSelected = new ArrayList<allergen>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
@@ -665,7 +663,8 @@ public class editIngredient {
                         }
 
                         public boolean areInputsInvalid() {
-                                if (!namePlaceholder.getValue() && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                if (!namePlaceholder.getValue()
+                                                && ingredientsAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -677,34 +676,34 @@ public class editIngredient {
                                 boolean successfulUpdate = true;
 
                                 if (!namePlaceholder.getValue())
-                                        successfulUpdate = theManagerDB.updateName(theCurrentIngredient,
+                                        successfulUpdate = ingredientsAPI.updateName(theCurrentIngredient,
                                                         nameTextField.getText());
 
                                 if (!pricePlaceholder.getValue() && successfulUpdate) {
                                         Float price = Float.parseFloat(priceTextField.getText());
-                                        successfulUpdate = theManagerDB.updatePrice(theCurrentIngredient, price);
+                                        successfulUpdate = ingredientsAPI.updatePrice(theCurrentIngredient, price);
                                 }
 
                                 if (!quantityPlaceholder.getValue() && successfulUpdate) {
                                         Float quantity = Float.parseFloat(quantityTextField.getText());
-                                        successfulUpdate = theManagerDB.updateAmount(theCurrentIngredient, quantity);
+                                        successfulUpdate = ingredientsAPI.updateAmount(theCurrentIngredient, quantity);
                                 }
 
                                 if (!togglePlaceholder && successfulUpdate) {
-                                        successfulUpdate = theManagerDB.updateInInventory(theCurrentIngredient,
+                                        successfulUpdate = ingredientsAPI.updateInInventory(theCurrentIngredient,
                                                         !theCurrentIngredient.getInInventory());
                                 }
 
                                 if (!allergenPlaceholder && successfulUpdate) {
                                         Stack<Integer> stackAllergenIDs = getSelectedAllergensIDs();
-                                        successfulUpdate = new allergensAPI().updateAlergensOfIngredient(
+                                        successfulUpdate = allergensAPI.updateAlergensOfIngredient(
                                                         stackAllergenIDs,
                                                         theCurrentIngredient);
                                 }
 
                                 if (!providerPlaceholder && successfulUpdate) {
                                         int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
-                                        successfulUpdate = theManagerDB.updateProvider(theCurrentIngredient,
+                                        successfulUpdate = ingredientsAPI.updateProvider(theCurrentIngredient,
                                                         providerID);
                                 }
 
@@ -717,7 +716,7 @@ public class editIngredient {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentIngredient = new ingredientsAPI().getIngredient(theCurrentIngredient.getId());
+                                theCurrentIngredient = ingredientsAPI.getIngredient(theCurrentIngredient.getId());
                                 namePlaceholder.setValue(true);
                                 pricePlaceholder.setValue(true);
                                 quantityPlaceholder.setValue(true);
@@ -762,29 +761,26 @@ public class editIngredient {
         }
 
         private void deleteAllAssociatedToIngredientID(int ingredientID) {
-                productAPI tempAPI = new productAPI();
-                ingredientsAPI theManagerDB = new ingredientsAPI();
-                ArrayList<Integer> productIDs = theManagerDB.getProductsIDUsingIngredient(ingredientID);
+                ArrayList<Integer> productIDs = ingredientsAPI.getProductsIDUsingIngredient(ingredientID);
                 ArrayList<Integer> menuIDs = new ArrayList<Integer>();
-                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = menuAPI.getAllActiveMenuIDs();
                 while (!stackMenuIDs.isEmpty())
                         menuIDs.add(stackMenuIDs.pop());
                 for (Integer tempProductID : productIDs) {
                         for (Integer tempMenuID : menuIDs)
-                                tempAPI.deleteMenuWithProduct(tempMenuID, tempProductID);
-                        tempAPI.updateActive(tempProductID, false);
+                                productAPI.deleteMenuWithProduct(tempMenuID, tempProductID);
+                        productAPI.updateActive(tempProductID, false);
                 }
                 for (Integer tempProductID : productIDs)
-                        theManagerDB.deleteIngredientsInProduct(tempProductID, ingredientID);
-                theManagerDB.setToUnactive(ingredientID);
+                        ingredientsAPI.deleteIngredientsInProduct(tempProductID, ingredientID);
+                ingredientsAPI.setToUnactive(ingredientID);
         }
 
         private void deleteIngredientsFromProducts(int ingredientID) {
-                ingredientsAPI theManagerDB = new ingredientsAPI();
-                Stack<Integer> stackProductIDs = theManagerDB.getAllActiveProductIDs();
+                Stack<Integer> stackProductIDs = ingredientsAPI.getAllActiveProductIDs();
                 while (!stackProductIDs.empty())
-                        theManagerDB.deleteIngredientsInProduct(stackProductIDs.pop(), ingredientID);
-                theManagerDB.setToUnactive(ingredientID);
+                        ingredientsAPI.deleteIngredientsInProduct(stackProductIDs.pop(), ingredientID);
+                ingredientsAPI.setToUnactive(ingredientID);
         }
 
 }

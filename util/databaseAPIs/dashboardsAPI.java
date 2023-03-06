@@ -14,7 +14,7 @@ import componentsFood.product;
 public class dashboardsAPI extends abstractManagerDB {
 
     // GET data for panels.
-    public ArrayList<orderView> getLast10OrderViewers() {
+    public static ArrayList<orderView> getLast10OrderViewers() {
         ArrayList<orderView> tempList = new ArrayList<orderView>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT TIME_TO_SEC(SUBTIME(time_out, time_in))/60 AS time, subtotal, cash FROM orders_summary WHERE total IS NOT NULL ORDER BY date DESC LIMIT 10;";
@@ -38,7 +38,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<currentShiftEmployee> getCurrentlyWorkingEmployees() {
+    public static ArrayList<currentShiftEmployee> getCurrentlyWorkingEmployees() {
         ArrayList<currentShiftEmployee> tempList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT name, role_name, salary, hours_a_week, start_shift, end_shift FROM employees_schedule NATURAL JOIN employees LEFT JOIN roles ON roles.role_id = employees.role_id WHERE shift_date = CURDATE() AND start_shift < CURTIME() AND end_shift > CURTIME();";
@@ -63,7 +63,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public product getMostSoldProductToday() {
+    public static product getMostSoldProductToday() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM products WHERE product_id = (SELECT product_id FROM orders_summary NATURAL JOIN orders_items WHERE date = CURDATE() GROUP BY product_id ORDER BY SUM(quantity) DESC LIMIT 1);";
             ppdStatement = connection.prepareStatement(query);
@@ -87,7 +87,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public product getMostSoldProductWeek() {
+    public static product getMostSoldProductWeek() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM products WHERE product_id = (SELECT product_id FROM orders_summary NATURAL JOIN orders_items WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE() GROUP BY product_id ORDER BY SUM(quantity) DESC LIMIT 1);";
             ppdStatement = connection.prepareStatement(query);
@@ -111,7 +111,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public product getMostSoldProductMonth() {
+    public static product getMostSoldProductMonth() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM products WHERE product_id = (SELECT product_id FROM orders_summary NATURAL JOIN orders_items WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE() GROUP BY product_id ORDER BY SUM(quantity) DESC LIMIT 1);";
             ppdStatement = connection.prepareStatement(query);
@@ -135,7 +135,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public float getAvgSalePriceToday() {
+    public static float getAvgSalePriceToday() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT AVG(total) as total FROM orders_summary WHERE date = CURDATE();";
             ppdStatement = connection.prepareStatement(query);
@@ -152,7 +152,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public int getAvgOrderTimeToday() {
+    public static int getAvgOrderTimeToday() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT AVG(TIME_TO_SEC(SUBTIME(time_out, time_in))/60) AS time FROM orders_summary WHERE date = CURDATE();";
             ppdStatement = connection.prepareStatement(query);
@@ -170,7 +170,7 @@ public class dashboardsAPI extends abstractManagerDB {
     }
 
     // GET data for graphs.
-    public float getSalesOnDay(int minusDays) {
+    public static float getSalesOnDay(int minusDays) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(total) as total FROM orders_summary WHERE date = DATE_SUB(CURDATE(), INTERVAL ? DAY);";
             ppdStatement = connection.prepareStatement(query);
@@ -188,7 +188,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<tuple> getEmployeeCategoryPercentagesToday() {
+    public static ArrayList<tuple> getEmployeeCategoryPercentagesToday() {
         ArrayList<tuple> tempList = new ArrayList<tuple>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(SUBTIME(end_shift,start_shift)) AS totalTime, role_name FROM employees_schedule NATURAL JOIN employees NATURAL JOIN roles WHERE shift_date = CURDATE() GROUP BY role_name;";
@@ -198,7 +198,7 @@ public class dashboardsAPI extends abstractManagerDB {
                 while (rs.next()) {
                     int percentage = rs.getInt("totalTime");
                     String roleName = rs.getString("role_name");
-                    tempList.add(new tuple(percentage, roleName));
+                    tempList.add(new dashboardsAPI.tuple(percentage, roleName));
                 }
                 return tempList;
             } catch (Exception SQLTimeoutException) {
@@ -209,7 +209,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public class tuple {
+    public static class tuple {
         public int percentage;
         public String roleName;
 
@@ -219,7 +219,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public int getFrequencyOfShift(int hour, boolean weekly) {
+    public static int getFrequencyOfShift(int hour, boolean weekly) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String shift_date = "shift_date = CURDATE()";
             if (weekly)
@@ -244,7 +244,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public float expensesSalaryDaily(int daysBack) {
+    public static float expensesSalaryDaily(int daysBack) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(TIME_TO_SEC(SUBTIME(end_shift, start_shift))/3600*salary) AS expenses FROM employees_schedule NATURAL JOIN employees WHERE shift_date = SUBDATE(CURDATE(), INTERVAL ? DAY);";
             ppdStatement = connection.prepareStatement(query);

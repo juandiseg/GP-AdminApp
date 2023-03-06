@@ -33,15 +33,14 @@ public class expensesReportGenerator extends iReportable {
         row += 2;
         row = productHeaders(theSheet, row);
         ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
-        ArrayList<ArrayList<productIngredients>> lLMenus = new reportsAPI().getAllProductIngredientsFromMenus(from, to);
+        ArrayList<ArrayList<productIngredients>> lLMenus = reportsAPI.getAllProductIngredientsFromMenus(from, to);
         ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
         System.out.println(combination.size());
         return printProductSales(theSheet, combination, row);
     }
 
     public int employeeData(Sheet theSheet, int row, String from, String to) {
-        reportsAPI managerDB = new reportsAPI();
-        ArrayList<employee> temp = managerDB.getAllEmployeesAndShifts(from, to);
+        ArrayList<employee> temp = reportsAPI.getAllEmployeesAndShifts(from, to);
         Row tempRow = theSheet.createRow(row);
         tempRow.createCell(1).setCellValue("Shift Date");
         tempRow.createCell(2).setCellValue("Employee");
@@ -58,7 +57,7 @@ public class expensesReportGenerator extends iReportable {
                 tempRow = theSheet.createRow(row);
                 tempRow.createCell(1).setCellValue(tempShift.getDate());
                 tempRow.createCell(2).setCellValue(tempEmployee.getName());
-                tempRow.createCell(3).setCellValue(managerDB.getRoleName(tempEmployee.getRoleID()));
+                tempRow.createCell(3).setCellValue(reportsAPI.getRoleName(tempEmployee.getRoleID()));
                 Cell cell4 = tempRow.createCell(4);
                 cell4.setCellValue(tempShift.getStartTime().substring(0, 5));
                 cell4.setCellStyle(iReportable.timeStyle);
@@ -118,7 +117,6 @@ public class expensesReportGenerator extends iReportable {
     }
 
     private int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row) {
-        reportsAPI managerDB = new reportsAPI();
         Stack<Integer> productTotals = new Stack<Integer>();
         for (ArrayList<productIngredients> bigTemp : listList) {
             for (productIngredients temp : bigTemp) {
@@ -129,7 +127,7 @@ public class expensesReportGenerator extends iReportable {
                     tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
                     System.out.println(temp.getIngredientsDate());
                     tempRow.createCell(2)
-                            .setCellValue(managerDB.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
+                            .setCellValue(reportsAPI.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
                     tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
                     tempRow.createCell(4).setCellValue(temp.getNumberSoldMenus());
                     for (int i = 0; i < temp.getIngredients().size(); i++) {
@@ -191,13 +189,12 @@ public class expensesReportGenerator extends iReportable {
     }
 
     private ArrayList<ArrayList<productIngredients>> generateProductSales(String from, String to) {
-        reportsAPI managerDB = new reportsAPI();
-        ArrayList<ArrayList<productIngredients>> productIngredientsLists = managerDB
+        ArrayList<ArrayList<productIngredients>> productIngredientsLists = reportsAPI
                 .getAllProductIngredientsFromProducts();
         for (ArrayList<productIngredients> bigTemp : productIngredientsLists) {
             for (int i = 0; i < bigTemp.size(); i++) {
                 productIngredients temp = bigTemp.get(i);
-                managerDB.addIngredientsToProductIngredients(temp);
+                reportsAPI.addIngredientsToProductIngredients(temp);
                 productIngredients tempNext = null;
                 String nextDate = "";
                 if (i + 1 < bigTemp.size()) {
@@ -205,7 +202,7 @@ public class expensesReportGenerator extends iReportable {
                     nextDate = tempNext.getIngredientsDate();
                 }
                 System.out.println(temp.getProductID() + ", and date :" + temp.getProductDate());
-                temp.setNumberSoldProducts(managerDB.getNumberSoldProduct(temp, nextDate, from, to));
+                temp.setNumberSoldProducts(reportsAPI.getNumberSoldOfProductIngr(temp, nextDate, from, to));
             }
         }
         return productIngredientsLists;

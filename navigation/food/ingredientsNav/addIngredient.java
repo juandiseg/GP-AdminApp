@@ -63,13 +63,11 @@ public class addIngredient {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private ingredientsAPI theManagerDB = new ingredientsAPI();
-
-        private ArrayList<provider> providers = new providerAPI().getAllActiveProviders();
+        private ArrayList<provider> providers = providerAPI.getAllCurrentProviders();
 
         public addIngredient(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -428,7 +426,7 @@ public class addIngredient {
                                 new String[] { "id", "Name" }, 0);
                 modelSelected = new DefaultTableModel(
                                 new String[] { "id", "Name" }, 0);
-                for (allergen tempAller : new allergensAPI().getAllAllergens()) {
+                for (allergen tempAller : allergensAPI.getAllAllergens()) {
                         String id = Integer.toString(tempAller.getId());
                         String name = tempAller.getName();
                         modelAllergens.addRow(new String[] { id, name });
@@ -479,7 +477,7 @@ public class addIngredient {
                 return selectedAllergens;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 selectionButtons();
                 backButton(playground);
                 addButton(null);
@@ -536,7 +534,7 @@ public class addIngredient {
                         }
 
                         public boolean areInputsInvalid() {
-                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                boolean error = ingredientsAPI.isNameTaken(nameTextField.getText());
                                 if (error) {
                                         successLabel.setText("Error. The given name is already in use.");
                                         successLabel.setVisible(true);
@@ -551,7 +549,7 @@ public class addIngredient {
                                 int providerID = providers.get(providerComboBox.getSelectedIndex()).getId();
                                 boolean inventory = inventoryToggle.getText().equals("Yes");
 
-                                int ingredientID = theManagerDB.addIngredient(providerID, name, price, quantity,
+                                int ingredientID = ingredientsAPI.addIngredient(providerID, name, price, quantity,
                                                 inventory);
                                 if (ingredientID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
@@ -561,7 +559,7 @@ public class addIngredient {
 
                                 Stack<Integer> selectedAllergens = getSelectedAllergenIDs();
 
-                                if (new allergensAPI().addAlergensOfIngredient(selectedAllergens, ingredientID))
+                                if (allergensAPI.addAlergensOfIngredient(selectedAllergens, ingredientID))
                                         successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
                                 else
                                         successLabel.setText("Error. Something went wrong while adding allergens.");

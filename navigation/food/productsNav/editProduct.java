@@ -63,15 +63,14 @@ public class editProduct {
         private JPanel jPanel2 = new JPanel();
         private JPanel jPanel3 = new JPanel();
 
-        private ArrayList<category> categories = new categoryAPI().getProductCategories();
+        private ArrayList<category> categories = categoryAPI.getProductCategories();
 
         private product theCurrentProduct;
-        private productAPI theManagerDB = new productAPI();
 
         public editProduct(JPanel playground, product theCurrentProduct) {
                 this.theCurrentProduct = theCurrentProduct;
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -410,8 +409,7 @@ public class editProduct {
                                                 "active", "Quantity" },
                                 0);
 
-                ingredientsAPI theManagerDB = new ingredientsAPI();
-                for (ingredient tempIngredient : theManagerDB.getNonSelectedIngredientsInProduct(theCurrentProduct)) {
+                for (ingredient tempIngredient : ingredientsAPI.getNonSelectedIngredientsInProduct(theCurrentProduct)) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
                         String date = tempIngredient.getDate();
@@ -425,7 +423,7 @@ public class editProduct {
                                         "Yes", "Fill Here" });
                 }
 
-                for (ingredient tempIngredient : theManagerDB.getSelectedIngredientsInProduct(theCurrentProduct)) {
+                for (ingredient tempIngredient : ingredientsAPI.getSelectedIngredientsInProduct(theCurrentProduct)) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
                         String date = tempIngredient.getDate();
@@ -438,7 +436,7 @@ public class editProduct {
                         String active = "No";
                         if (tempIngredient.getActive())
                                 active = "Yes";
-                        float tempAmount = theManagerDB.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
+                        float tempAmount = ingredientsAPI.getAmountOfIngredientInProduct(theCurrentProduct.getId(),
                                         tempIngredient.getId());
                         modelSelected.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory,
                                         active, Float.toString(tempAmount) });
@@ -495,8 +493,7 @@ public class editProduct {
         }
 
         private boolean isIngredientPlaceholder() {
-                ingredientsAPI theManagerDB = new ingredientsAPI();
-                ArrayList<ingredient> tempList = theManagerDB.getSelectedIngredientsInProduct(theCurrentProduct);
+                ArrayList<ingredient> tempList = ingredientsAPI.getSelectedIngredientsInProduct(theCurrentProduct);
                 ArrayList<ingredient> listSelected = new ArrayList<ingredient>();
                 for (int i = 0; i < modelSelected.getRowCount(); i++) {
                         int tempID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
@@ -520,7 +517,7 @@ public class editProduct {
                         for (int i = 0; i < modelSelected.getRowCount(); i++) {
                                 if (Integer.parseInt((String) modelSelected.getValueAt(i, 0)) == temp.getId()) {
                                         try {
-                                                float tempAmount = theManagerDB.getAmountOfIngredientInProduct(
+                                                float tempAmount = ingredientsAPI.getAmountOfIngredientInProduct(
                                                                 theCurrentProduct.getId(), temp.getId());
                                                 if (Float.parseFloat((String) modelSelected.getValueAt(i,
                                                                 8)) != tempAmount) {
@@ -536,7 +533,7 @@ public class editProduct {
                 return true;
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 selectionButtons();
                 backButton(playground);
                 editButton(null);
@@ -663,7 +660,7 @@ public class editProduct {
                                 boolean ingredientsEmpty = modelSelected.getRowCount() == 0;
 
                                 if (!namePlaceholder.getValue()
-                                                && theManagerDB.isNameTaken(nameTextField.getText())) {
+                                                && productAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
                                         return true;
@@ -688,19 +685,19 @@ public class editProduct {
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
                                 if (!namePlaceholder.getValue()) {
-                                        successfulUpdate = theManagerDB.updateName(theCurrentProduct,
+                                        successfulUpdate = productAPI.updateName(theCurrentProduct,
                                                         nameTextField.getText());
-                                        theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
+                                        theCurrentProduct = productAPI.getProduct(theCurrentProduct.getId());
                                 }
 
                                 if (!pricePlaceholder.getValue()) {
                                         Float price = Float.parseFloat(priceTextField.getText());
-                                        successfulUpdate = theManagerDB.updatePrice(theCurrentProduct, price);
+                                        successfulUpdate = productAPI.updatePrice(theCurrentProduct, price);
                                 }
 
                                 if (!categoryPlaceholder) {
                                         int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
-                                        successfulUpdate = theManagerDB.updateCategory(theCurrentProduct, catID);
+                                        successfulUpdate = productAPI.updateCategory(theCurrentProduct, catID);
                                 }
 
                                 if (!ingredientPlaceholder) {
@@ -712,7 +709,7 @@ public class editProduct {
                                                 stackQtys.push(Float
                                                                 .parseFloat((String) modelSelected.getValueAt(i, 8)));
                                         }
-                                        successfulUpdate = theManagerDB.updateIngredients(theCurrentProduct.getId(),
+                                        successfulUpdate = productAPI.updateIngredients(theCurrentProduct.getId(),
                                                         stackIDs, stackQtys);
                                 }
 
@@ -725,7 +722,7 @@ public class editProduct {
                         }
 
                         public void updatePlaceholders() {
-                                theCurrentProduct = theManagerDB.getProduct(theCurrentProduct.getId());
+                                theCurrentProduct = productAPI.getProduct(theCurrentProduct.getId());
 
                                 namePlaceholder.setValue(true);
                                 pricePlaceholder.setValue(true);
@@ -749,19 +746,17 @@ public class editProduct {
         }
 
         private void deleteMenusAssociatedToProductID() {
-                productAPI theManagerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = menuAPI.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        theManagerDB.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
-                theManagerDB.updateActive(theCurrentProduct.getId(), false);
+                        productAPI.deleteMenuWithProduct(stackMenuIDs.pop(), theCurrentProduct.getId());
+                productAPI.updateActive(theCurrentProduct.getId(), false);
         }
 
         private void deleteProductsFromMenus() {
-                productAPI theManagerDB = new productAPI();
-                Stack<Integer> stackMenuIDs = new menuAPI().getAllActiveMenuIDs();
+                Stack<Integer> stackMenuIDs = menuAPI.getAllActiveMenuIDs();
                 while (!stackMenuIDs.empty())
-                        theManagerDB.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
-                theManagerDB.updateActive(theCurrentProduct.getId(), false);
+                        productAPI.deleteProductsInMenu(stackMenuIDs.pop(), theCurrentProduct);
+                productAPI.updateActive(theCurrentProduct.getId(), false);
         }
 
         private boolean ingredientsQuantityNotSpecified() {

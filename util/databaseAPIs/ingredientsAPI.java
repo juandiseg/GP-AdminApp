@@ -13,7 +13,7 @@ import componentsFood.product;
 public class ingredientsAPI extends abstractManagerDB {
 
     // GET from database.
-    public ingredient getIngredient(int ID) {
+    public static ingredient getIngredient(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM ingredients WHERE ingredient_id = ? AND active = true;";
             ppdStatement = connection.prepareStatement(query);
@@ -39,7 +39,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
+    public static float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM products WHERE active = true AND product_id = ?) AND ingredient_id = ?";
             ppdStatement = connection.prepareStatement(query);
@@ -58,7 +58,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public Stack<Integer> getAllActiveProductIDs() {
+    public static Stack<Integer> getAllActiveProductIDs() {
         Stack<Integer> tempStack = new Stack<Integer>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT DISTINCT product_id FROM products WHERE active = true;";
@@ -76,7 +76,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<ingredient> getAllCurrentIngredients() {
+    public static ArrayList<ingredient> getAllCurrentIngredients() {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM ingredients WHERE active = true;";
@@ -104,7 +104,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
+    public static ArrayList<ingredient> getSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM (SELECT ingredient_id, a.product_ingredients_date, ingredientQuantity FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = ?) AS b WHERE product_id = ? AND a.product_ingredients_date = b.product_ingredients_date) AS temp NATURAL JOIN ingredients WHERE active = true";
@@ -134,7 +134,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<ingredient> getNonSelectedIngredientsInProduct(product theProduct) {
+    public static ArrayList<ingredient> getNonSelectedIngredientsInProduct(product theProduct) {
         ArrayList<ingredient> tempList = new ArrayList<ingredient>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM ingredients WHERE ingredient_id NOT IN (SELECT DISTINCT ingredient_id FROM products_ingredients AS a, (SELECT MAX(product_ingredients_date) AS temp FROM products_ingredients WHERE product_id = ?) AS b WHERE a.product_id = ? AND a.product_ingredients_date = b.temp) AND active = true";
@@ -162,7 +162,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public ArrayList<Integer> getProductsIDUsingIngredient(int ingredientID) {
+    public static ArrayList<Integer> getProductsIDUsingIngredient(int ingredientID) {
         Stack<Integer> stackProductID = getAllActiveProductIDs();
         ArrayList<Integer> productIDs = new ArrayList<Integer>();
         while (!stackProductID.isEmpty()) {
@@ -173,7 +173,7 @@ public class ingredientsAPI extends abstractManagerDB {
         return productIDs;
     }
 
-    private int getLastIngredientID() {
+    private static int getLastIngredientID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredient_id FROM ingredients ORDER BY ingredient_id DESC LIMIT 1;";
             ppdStatement = connection.prepareStatement(query);
@@ -191,12 +191,12 @@ public class ingredientsAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public int addIngredient(int provID, String name, float price, float amount, boolean in_inventory) {
+    public static int addIngredient(int provID, String name, float price, float amount, boolean in_inventory) {
         int ingrID = getLastIngredientID() + 1;
         return addIngredient(ingrID, provID, name, price, amount, in_inventory);
     }
 
-    private int addIngredient(int ingrID, int provID, String name, float price, float amount,
+    private static int addIngredient(int ingrID, int provID, String name, float price, float amount,
             boolean in_inventory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients VALUES (?, ?, CURDATE(), ?, ?, ?, ?, TRUE);";
@@ -219,7 +219,7 @@ public class ingredientsAPI extends abstractManagerDB {
     }
 
     // UPDATE in database.
-    public boolean updateProvider(ingredient theIngredient, int newProviderID) {
+    public static boolean updateProvider(ingredient theIngredient, int newProviderID) {
         fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET provider_id = ? WHERE active = true AND ingredient_id = ?;";
@@ -237,7 +237,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateName(ingredient theIngredient, String newName) {
+    public static boolean updateName(ingredient theIngredient, String newName) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET name = ? WHERE active = true AND ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -254,7 +254,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updatePrice(ingredient theIngredient, float newPrice) {
+    public static boolean updatePrice(ingredient theIngredient, float newPrice) {
         fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET price = ? WHERE active = true AND ingredient_id = ?;";
@@ -272,7 +272,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateAmount(ingredient theIngredient, float newAmount) {
+    public static boolean updateAmount(ingredient theIngredient, float newAmount) {
         fixIngredientDate(theIngredient);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET amount = ? WHERE active = true AND ingredient_id = ?;";
@@ -290,7 +290,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean updateInInventory(ingredient theIngredient, boolean in_inventory) {
+    public static boolean updateInInventory(ingredient theIngredient, boolean in_inventory) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET in_inventory = ? WHERE active = true AND ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -307,7 +307,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean setToUnactive(int ingredientID) {
+    public static boolean setToUnactive(int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET active = false WHERE active = true AND ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -323,7 +323,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private void fixIngredientDate(ingredient theIngredient) {
+    private static void fixIngredientDate(ingredient theIngredient) {
         if (isLastIngredientEntryToday(theIngredient)) {
             return;
         }
@@ -333,7 +333,7 @@ public class ingredientsAPI extends abstractManagerDB {
                 temp.getInInventory());
     }
 
-    private void setEntriesIngredientInactive(ingredient theIngredient) {
+    private static void setEntriesIngredientInactive(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE ingredients SET active = false WHERE ingredient_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -348,7 +348,7 @@ public class ingredientsAPI extends abstractManagerDB {
     }
 
     // DELETE from database.
-    public void deleteIngredientsInProduct(int productID, int ingredientID) {
+    public static void deleteIngredientsInProduct(int productID, int ingredientID) {
         if (!isIngredientContainedInProduct(productID, ingredientID))
             try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
                 String query = "DELETE FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT * FROM (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?) AS x)";
@@ -364,7 +364,7 @@ public class ingredientsAPI extends abstractManagerDB {
             }
     }
 
-    public void deleteProductWithIngredient(int productID, int ingredientID) {
+    public static void deleteProductWithIngredient(int productID, int ingredientID) {
         if (!isIngredientContainedInProduct(productID, ingredientID))
             try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
                 String query = "UPDATE products SET active = false WHERE product_id = ?";
@@ -379,7 +379,7 @@ public class ingredientsAPI extends abstractManagerDB {
     }
 
     // CHECK in database.
-    private boolean isLastIngredientEntryToday(ingredient theIngredient) {
+    private static boolean isLastIngredientEntryToday(ingredient theIngredient) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT 1 FROM (SELECT MAX(ingredients_date) AS max_date FROM ingredients WHERE ingredient_id = ?) as sub WHERE sub.max_date = CURDATE();";
             ppdStatement = connection.prepareStatement(query);
@@ -397,7 +397,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private boolean isIngredientContainedInProduct(int productID, int ingredientID) {
+    private static boolean isIngredientContainedInProduct(int productID, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT product_id FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?);";
             ppdStatement = connection.prepareStatement(query);
@@ -417,7 +417,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    public boolean isNameTaken(String name) {
+    public static boolean isNameTaken(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM ingredients WHERE name = ? AND active = TRUE";
             ppdStatement = connection.prepareStatement(query);

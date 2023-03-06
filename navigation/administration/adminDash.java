@@ -961,7 +961,6 @@ public class adminDash {
         private void setGraphSales(int goal) {
                 salesContentPanel.removeAll();
                 DefaultCategoryDataset datos = new DefaultCategoryDataset();
-                dashboardsAPI dbAPI = new dashboardsAPI();
                 String date = "";
                 for (int i = goal - 1; i > -1; i--) {
                         if (goal == 7)
@@ -969,7 +968,7 @@ public class adminDash {
                                                 .format(DateTimeFormatter.ofPattern("dd-MM"));
                         else
                                 date = Integer.toString(-i);
-                        datos.setValue(dbAPI.getSalesOnDay(i), "Sales", date);
+                        datos.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
@@ -989,7 +988,6 @@ public class adminDash {
         private void setGraphExpenses(int goal) {
                 expensesContentPanel.removeAll();
                 DefaultCategoryDataset datos = new DefaultCategoryDataset();
-                dashboardsAPI dbManager = new dashboardsAPI();
                 String date = "";
                 for (int i = goal - 1; i > -1; i--) {
 
@@ -998,7 +996,7 @@ public class adminDash {
                                                 .format(DateTimeFormatter.ofPattern("dd-MM"));
                         else
                                 date = Integer.toString(-i);
-                        datos.setValue(dbManager.expensesSalaryDaily(i), "Expenses", date);
+                        datos.setValue(dashboardsAPI.expensesSalaryDaily(i), "Expenses", date);
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Employees Expenses in Last " + goal + " Days", null,
@@ -1019,8 +1017,7 @@ public class adminDash {
         private void setGraphDistribution() {
                 emploeesContentPanel.removeAll();
                 DefaultPieDataset dataset = new DefaultPieDataset();
-                dashboardsAPI dbAPI = new dashboardsAPI();
-                for (tuple temp : dbAPI.getEmployeeCategoryPercentagesToday())
+                for (tuple temp : dashboardsAPI.getEmployeeCategoryPercentagesToday())
                         dataset.setValue(temp.roleName, temp.percentage);
                 JFreeChart pieChart = ChartFactory.createPieChart("Today", dataset, false,
                                 true, false);
@@ -1037,10 +1034,9 @@ public class adminDash {
 
         private void setGraphScheduledHours(boolean weekly) {
                 employeesHourContentPanel.removeAll();
-                dashboardsAPI dbAPI = new dashboardsAPI();
                 ArrayList<Double> tempList = new ArrayList<Double>();
                 for (int i = 0; i < 23; i++) {
-                        for (int j = 0; j < dbAPI.getFrequencyOfShift(i, weekly); j++)
+                        for (int j = 0; j < dashboardsAPI.getFrequencyOfShift(i, weekly); j++)
                                 tempList.add((double) i);
                 }
                 double[] target = new double[tempList.size()];

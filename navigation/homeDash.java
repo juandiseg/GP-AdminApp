@@ -526,7 +526,7 @@ public class homeDash extends JFrame {
 
                 bsTodayProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsTodayProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                product todayProd = new dashboardsAPI().getMostSoldProductToday();
+                product todayProd = dashboardsAPI.getMostSoldProductToday();
                 if (todayProd == null)
                         bsTodayProductLabel.setText("");
                 else
@@ -649,7 +649,7 @@ public class homeDash extends JFrame {
 
                 bsWeekProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsWeekProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                product weekProd = new dashboardsAPI().getMostSoldProductWeek();
+                product weekProd = dashboardsAPI.getMostSoldProductWeek();
                 if (weekProd == null)
                         bsWeekProductLabel.setText("");
                 else
@@ -717,7 +717,7 @@ public class homeDash extends JFrame {
 
                 bsMonthProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 bsMonthProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                product monthProd = new dashboardsAPI().getMostSoldProductMonth();
+                product monthProd = dashboardsAPI.getMostSoldProductMonth();
                 if (monthProd == null)
                         bsMonthProductLabel.setText("");
                 else
@@ -785,7 +785,7 @@ public class homeDash extends JFrame {
 
                 pricePriceLabel.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
                 pricePriceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-                pricePriceLabel.setText(String.format("%.2f", new dashboardsAPI().getAvgSalePriceToday()).concat(" €"));
+                pricePriceLabel.setText(String.format("%.2f", dashboardsAPI.getAvgSalePriceToday()).concat(" €"));
 
                 priceIconLabel.setIcon(new javax.swing.ImageIcon(
                                 "C:\\Users\\Juan Diego\\Desktop\\netbeansss\\guiProjectTEST\\src\\money-bag.png")); // NOI18N
@@ -862,7 +862,7 @@ public class homeDash extends JFrame {
 
                 timeTimeLabel.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
                 timeTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-                timeTimeLabel.setText(Integer.toString(new dashboardsAPI().getAvgOrderTimeToday()).concat(" min."));
+                timeTimeLabel.setText(Integer.toString(dashboardsAPI.getAvgOrderTimeToday()).concat(" min."));
                 timeIconLabel.setIcon(new javax.swing.ImageIcon(
                                 "C:\\Users\\Juan Diego\\Desktop\\netbeansss\\guiProjectTEST\\src\\stopwatch.png")); // NOI18N
 
@@ -1058,7 +1058,6 @@ public class homeDash extends JFrame {
         private void setGraph(int goal) {
                 salesContentPanel.removeAll();
                 DefaultCategoryDataset datos = new DefaultCategoryDataset();
-                dashboardsAPI dbAPI = new dashboardsAPI();
                 String date = "";
                 for (int i = goal - 1; i > -1; i--) {
                         if (goal == 7)
@@ -1066,7 +1065,7 @@ public class homeDash extends JFrame {
                                                 .format(DateTimeFormatter.ofPattern("dd-MM"));
                         else
                                 date = Integer.toString(-i);
-                        datos.setValue(dbAPI.getSalesOnDay(i), "Sales", date);
+                        datos.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
@@ -1257,14 +1256,14 @@ public class homeDash extends JFrame {
                 DefaultTableModel modelOrders = new DefaultTableModel(
                                 new String[] { "Time", "Subtotal", "Payment Method" }, 0);
 
-                for (currentShiftEmployee temp : new dashboardsAPI().getCurrentlyWorkingEmployees()) {
+                for (currentShiftEmployee temp : dashboardsAPI.getCurrentlyWorkingEmployees()) {
                         String name = temp.getName();
                         String role = temp.getRole();
                         String timeIn = temp.getTimeIn().substring(0, 5);
                         String timeOut = temp.getTimeout().substring(0, 5);
                         modelEmployees.addRow(new String[] { name, role, timeIn.concat(" - ").concat(timeOut) });
                 }
-                for (orderView temp : new dashboardsAPI().getLast10OrderViewers()) {
+                for (orderView temp : dashboardsAPI.getLast10OrderViewers()) {
                         String time = Integer.toString(temp.getTotalTimeMinutes()).concat(" min(s).");
                         String subtotal = String.format("%.2f", temp.getSubtotal()).concat(" €");
                         String method = temp.getPaymentMethod();

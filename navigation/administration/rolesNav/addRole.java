@@ -25,11 +25,10 @@ public class addRole {
         private booleanWrapper namePlaceholder = new booleanWrapper(true);
 
         private JTextField nameTextField = new JTextField();
-        private rolesAPI theManagerDB = new rolesAPI();
 
         public addRole(JPanel playground) {
                 initComponents(playground);
-                addActionListeners(playground);
+                addListeners(playground);
         }
 
         private void initComponents(JPanel playground) {
@@ -198,7 +197,7 @@ public class addRole {
                                                                 .addContainerGap()));
         }
 
-        private void addActionListeners(JPanel playground) {
+        private void addListeners(JPanel playground) {
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();
@@ -226,7 +225,7 @@ public class addRole {
                         }
 
                         public boolean areInputsInvalid() {
-                                boolean error = theManagerDB.isNameTaken(nameTextField.getText());
+                                boolean error = rolesAPI.isNameTaken(nameTextField.getText());
                                 if (error) {
                                         successLabel.setText("Error. The given name is already in use.");
                                         successLabel.setVisible(true);
@@ -236,7 +235,7 @@ public class addRole {
 
                         public boolean addFoodComponent() {
                                 String name = nameTextField.getText();
-                                if (theManagerDB.addRole(name))
+                                if (rolesAPI.addRole(name))
                                         successLabel.setText("\"" + name + "\" was successfully added.");
                                 else
                                         successLabel.setText("Error. Impossible to connect to database.");
