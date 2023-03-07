@@ -2,8 +2,6 @@ package navigation.administration.shiftsNav;
 
 import javax.swing.table.*;
 
-import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
-
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.text.ParseException;

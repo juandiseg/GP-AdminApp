@@ -1,21 +1,16 @@
-package navigation;
+package navigation.home;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
-import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -98,54 +93,492 @@ public class homeDash extends JFrame {
         private JLabel salesLabel = new JLabel();
         private JToggleButton salesTuggleButton = new JToggleButton();
 
+        private JLabel timeOfDay = new JLabel();
+        private JLabel descriptionLabel = new JLabel();
+        private JPanel descriptionPanel = new JPanel();
+        private JPanel jPanel1 = new JPanel();
+        private JPanel descriptionAux = new JPanel();
+        private JPanel contactPanel = new JPanel();
+        private JPanel contactAux = new JPanel();
+        private JLabel contactLabel = new JLabel();
+        private JLabel restaurantName = new JLabel();
+        private JLabel mainAddress = new JLabel();
+        private JLabel auxAddress = new JLabel();
+        private JLabel contactEmail = new JLabel();
+        private JLabel phoneNmbr = new JLabel();
+        private JLabel mondayLabel = new JLabel();
+        private JLabel tuesdayLabel = new JLabel();
+        private JLabel wednesdayLabel = new JLabel();
+        private JLabel thursdayLabel = new JLabel();
+        private JLabel fridayLabel = new JLabel();
+        private JLabel saturdayLabel = new JLabel();
+        private JLabel sundayLabel = new JLabel();
+        private JLabel mondayTime = new JLabel();
+        private JLabel tuesdayTime = new JLabel();
+        private JLabel wednesdayTime = new JLabel();
+        private JLabel thursdayTime = new JLabel();
+        private JLabel fridayTime = new JLabel();
+        private JLabel saturdayTime = new JLabel();
+        private JLabel sundayTime = new JLabel();
+        private JLabel scheduleTitle = new JLabel();
+
         public homeDash() {
                 initComponents();
         }
 
         private void initComp2() {
-                leftAuxPanel.setBackground(new Color(71, 120, 197));
+                leftAuxPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                jPanel4.setBackground(new Color(120, 168, 252));
+                jPanel4.setBackground(new java.awt.Color(120, 168, 252));
 
-                GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
+                timeOfDay.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+                timeOfDay.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                timeOfDay.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                setClock(timeOfDay);
+
+                javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
                 jPanel4.setLayout(jPanel4Layout);
                 jPanel4Layout.setHorizontalGroup(
-                                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 0, Short.MAX_VALUE));
+                                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(timeOfDay,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                206, Short.MAX_VALUE)
+                                                                .addContainerGap()));
                 jPanel4Layout.setVerticalGroup(
-                                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 67, Short.MAX_VALUE));
+                                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(timeOfDay,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addContainerGap()));
 
-                date.setForeground(new Color(255, 255, 255));
+                Locale engLocale = new Locale("en", "UK");
+                String dateToday = DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", engLocale)
+                                .format(LocalDateTime.now());
+                date.setForeground(new java.awt.Color(255, 255, 255));
+                date.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                date.setText(dateToday);
+                descriptionPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                date.setText(new Date().toString());
-                Locale locale = new Locale("en", "US");
-                String showingDate = DateFormat.getDateInstance(DateFormat.FULL, locale).format(new Date());
-                date.setText(showingDate);
-                date.setHorizontalAlignment(SwingConstants.CENTER);
+                descriptionAux.setPreferredSize(new java.awt.Dimension(5, 43));
 
-                // setClock();
+                javax.swing.GroupLayout descriptionAuxLayout = new javax.swing.GroupLayout(descriptionAux);
+                descriptionAux.setLayout(descriptionAuxLayout);
+                descriptionAuxLayout.setHorizontalGroup(
+                                descriptionAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+                descriptionAuxLayout.setVerticalGroup(
+                                descriptionAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
 
-                GroupLayout leftAuxPanelLayout = new GroupLayout(leftAuxPanel);
+                descriptionLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                descriptionLabel.setText("Product Descriptions");
+
+                javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
+                descriptionPanel.setLayout(descriptionPanelLayout);
+                descriptionPanelLayout.setHorizontalGroup(
+                                descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(descriptionPanelLayout.createSequentialGroup()
+                                                                .addComponent(descriptionAux,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(descriptionLabel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                160,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+                descriptionPanelLayout.setVerticalGroup(
+                                descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(descriptionPanelLayout.createSequentialGroup()
+                                                                .addGroup(descriptionPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                false)
+                                                                                .addComponent(descriptionAux,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(descriptionLabel,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                43, Short.MAX_VALUE))
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+
+                contactPanel.setBackground(new java.awt.Color(71, 120, 197));
+
+                contactAux.setPreferredSize(new java.awt.Dimension(5, 43));
+
+                javax.swing.GroupLayout contactAuxLayout = new javax.swing.GroupLayout(contactAux);
+                contactAux.setLayout(contactAuxLayout);
+                contactAuxLayout.setHorizontalGroup(
+                                contactAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+                contactAuxLayout.setVerticalGroup(
+                                contactAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                contactLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                contactLabel.setText("Contact Providers");
+
+                javax.swing.GroupLayout contactPanelLayout = new javax.swing.GroupLayout(contactPanel);
+                contactPanel.setLayout(contactPanelLayout);
+                contactPanelLayout.setHorizontalGroup(
+                                contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(contactPanelLayout.createSequentialGroup()
+                                                                .addComponent(contactAux,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(contactLabel)
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+                contactPanelLayout.setVerticalGroup(
+                                contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(contactPanelLayout.createSequentialGroup()
+                                                                .addGroup(contactPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                false)
+                                                                                .addComponent(contactAux,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(contactLabel,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                43, Short.MAX_VALUE))
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+
+                restaurantName.setFont(new java.awt.Font("Segoe UI", 1, 21)); // NOI18N
+                restaurantName.setForeground(new java.awt.Color(255, 255, 255));
+                restaurantName.setText("Lancaster Restaurant");
+
+                mainAddress.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+                mainAddress.setForeground(new java.awt.Color(240, 240, 240));
+                mainAddress.setText("Nikolaistraße 10,");
+
+                auxAddress.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+                auxAddress.setForeground(new java.awt.Color(240, 240, 240));
+                auxAddress.setText("04109 Leipzig");
+
+                contactEmail.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+                contactEmail.setForeground(new java.awt.Color(240, 240, 240));
+                contactEmail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                contactEmail.setText("studentservices@lancaster.de");
+
+                phoneNmbr.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+                phoneNmbr.setForeground(new java.awt.Color(240, 240, 240));
+                phoneNmbr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                phoneNmbr.setText("+49 0341 33975808");
+
+                scheduleTitle.setFont(new java.awt.Font("Segoe UI", 2, 16)); // NOI18N
+                scheduleTitle.setForeground(new java.awt.Color(240, 240, 240));
+                scheduleTitle.setText("Schedule:");
+
+                mondayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                mondayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                mondayLabel.setText("Monday");
+
+                tuesdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                tuesdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                tuesdayLabel.setText("Tuesday");
+
+                thursdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                thursdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                thursdayLabel.setText("Thursday");
+
+                wednesdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                wednesdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                wednesdayLabel.setText("Wednesday");
+
+                fridayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                fridayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                fridayLabel.setText("Friday");
+
+                saturdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                saturdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                saturdayLabel.setText("Saturday");
+
+                jPanel1.setMaximumSize(new java.awt.Dimension(111, 4));
+                jPanel1.setMinimumSize(new java.awt.Dimension(111, 4));
+                jPanel1.setPreferredSize(new java.awt.Dimension(111, 4));
+
+                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                jPanel1.setLayout(jPanel1Layout);
+                jPanel1Layout.setHorizontalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+                jPanel1Layout.setVerticalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                sundayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                sundayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                sundayLabel.setText("Sunday");
+
+                mondayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                mondayTime.setForeground(new java.awt.Color(240, 240, 240));
+                mondayTime.setText("08:00 - 18:00");
+
+                tuesdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                tuesdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                tuesdayTime.setText("08:00 - 18:00");
+
+                thursdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                thursdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                thursdayTime.setText("08:00 - 18:00");
+
+                wednesdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                wednesdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                wednesdayTime.setText("08:00 - 18:00");
+
+                fridayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                fridayTime.setForeground(new java.awt.Color(240, 240, 240));
+                fridayTime.setText("08:00 - 18:00");
+
+                saturdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                saturdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                saturdayTime.setText("CLOSED");
+
+                sundayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+                sundayTime.setForeground(new java.awt.Color(240, 240, 240));
+                sundayTime.setText("CLOSED");
+
+                javax.swing.GroupLayout leftAuxPanelLayout = new javax.swing.GroupLayout(leftAuxPanel);
                 leftAuxPanel.setLayout(leftAuxPanelLayout);
                 leftAuxPanelLayout.setHorizontalGroup(
-                                leftAuxPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(jPanel4, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(leftAuxPanelLayout.createSequentialGroup()
-                                                                .addGap(80, 80, 80)
-                                                                .addComponent(date)
-                                                                .addContainerGap(86, Short.MAX_VALUE)));
-                leftAuxPanelLayout.setVerticalGroup(
-                                leftAuxPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(contactPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(leftAuxPanelLayout.createSequentialGroup()
                                                                 .addComponent(jPanel4,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                .addGroup(leftAuxPanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(contactEmail,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(date,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(phoneNmbr,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(mainAddress,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                202,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(restaurantName)
+                                                                                .addComponent(auxAddress,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                202,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                .createParallelGroup(
+                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                false)
+                                                                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                leftAuxPanelLayout
+                                                                                                                                .createSequentialGroup()
+                                                                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                                                                .createParallelGroup(
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                                                                                false)
+                                                                                                                                                .addComponent(sundayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(saturdayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(fridayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(thursdayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(wednesdayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                90,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(tuesdayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(mondayLabel,
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE))
+                                                                                                                                .addPreferredGap(
+                                                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                                                                .createParallelGroup(
+                                                                                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                                                                .addComponent(mondayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(tuesdayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                87,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(wednesdayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(thursdayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                87,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(fridayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(saturdayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                87,
+                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                .addComponent(sundayTime,
+                                                                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                87,
+                                                                                                                                                                Short.MAX_VALUE)))
+                                                                                                .addComponent(scheduleTitle,
+                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                Short.MAX_VALUE)
+                                                                                                .addComponent(jPanel1,
+                                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                184,
+                                                                                                                Short.MAX_VALUE)))
+                                                                .addContainerGap()));
+                leftAuxPanelLayout.setVerticalGroup(
+                                leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(leftAuxPanelLayout.createSequentialGroup()
+                                                                .addComponent(jPanel4,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(restaurantName,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                37,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(mainAddress)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.RELATED,
-                                                                                541, Short.MAX_VALUE)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(auxAddress)
+                                                                .addGap(13, 13, 13)
+                                                                .addComponent(scheduleTitle)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jPanel1,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(mondayLabel)
+                                                                                .addComponent(mondayTime))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(tuesdayLabel)
+                                                                                .addComponent(tuesdayTime))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(wednesdayLabel)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addComponent(thursdayLabel))
+                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(wednesdayTime)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addComponent(thursdayTime)))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(fridayLabel)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addComponent(saturdayLabel))
+                                                                                .addGroup(leftAuxPanelLayout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(fridayTime)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                .addComponent(saturdayTime)))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(leftAuxPanelLayout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(sundayLabel)
+                                                                                .addComponent(sundayTime))
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                                29, Short.MAX_VALUE)
+                                                                .addComponent(contactPanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(descriptionPanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(27, 27, 27)
+                                                                .addComponent(phoneNmbr,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                16,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(contactEmail,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                15,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
                                                                 .addComponent(date)
                                                                 .addContainerGap()));
 
@@ -153,10 +586,10 @@ public class homeDash extends JFrame {
                                 new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 230, 630));
         }
 
-        private void setClock() {
+        private void setClock(JLabel theLabel) {
                 Timer t = new Timer(100, new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                                date.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                                theLabel.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
                         }
                 });
                 t.start();
@@ -1125,13 +1558,18 @@ public class homeDash extends JFrame {
                                 resetColor(foodPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                leftAuxPanel.removeAll();
+                                Component[] temp = leftAuxPanel.getComponents();
+                                Component toKeep = jPanel4; // This is the component of the timer.
+                                for (int i = 0; i < temp.length; i++) {
+                                        if (!temp[i].equals(toKeep))
+                                                leftAuxPanel.remove(temp[i]);
+                                }
+
                                 new adminDash(tempFrame, leftAuxPanel, playground, jPanel4, date);
                                 playground.revalidate();
                                 leftAuxPanel.revalidate();
                                 playground.repaint();
                                 leftAuxPanel.repaint();
-
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -1235,6 +1673,75 @@ public class homeDash extends JFrame {
                                         clicked = false;
                         }
                 });
+                descriptionPanel.addMouseListener(new MouseListener() {
+                        boolean clicked = false;
+
+                        public void mouseClicked(MouseEvent e) {
+                                setColorAux(descriptionPanel);
+                                resetColorAux(contactPanel);
+                                clicked = true;
+                                playground.removeAll();
+                                // call new something
+                                playground.revalidate();
+                                playground.repaint();
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        public void mouseEntered(MouseEvent e) {
+                                if (descriptionPanel.getBackground().equals(new Color(41, 57, 80)))
+                                        clicked = true;
+                                else
+                                        clicked = false;
+                                setColorAux(descriptionPanel);
+                        }
+
+                        public void mouseExited(MouseEvent e) {
+                                if (!clicked)
+                                        resetColorAux(descriptionPanel);
+                                if (contactPanel.getBackground().equals(new Color(41, 57, 80)))
+                                        clicked = false;
+                        }
+                });
+                contactPanel.addMouseListener(new MouseListener() {
+                        boolean clicked = false;
+
+                        public void mouseClicked(MouseEvent e) {
+                                setColorAux(contactPanel);
+                                resetColorAux(descriptionPanel);
+                                clicked = true;
+                                playground.removeAll();
+                                // call new something
+                                playground.revalidate();
+                                playground.repaint();
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        public void mouseEntered(MouseEvent e) {
+                                if (contactPanel.getBackground().equals(new Color(41, 57, 80)))
+                                        clicked = true;
+                                else
+                                        clicked = false;
+                                setColorAux(contactPanel);
+                        }
+
+                        public void mouseExited(MouseEvent e) {
+                                if (!clicked)
+                                        resetColorAux(contactPanel);
+                                if (descriptionPanel.getBackground().equals(new Color(41, 57, 80)))
+                                        clicked = false;
+                        }
+                });
+
                 salesTuggleButton();
         }
 
@@ -1258,6 +1765,14 @@ public class homeDash extends JFrame {
 
         private void resetColor(JPanel panel) {
                 panel.setBackground(new Color(23, 35, 51));
+        }
+
+        private void setColorAux(JPanel panel) {
+                panel.setBackground(new Color(120, 168, 252));
+        }
+
+        private void resetColorAux(JPanel panel) {
+                panel.setBackground(new Color(71, 120, 197));
         }
 
         private void setTables() {

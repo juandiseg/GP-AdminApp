@@ -5,8 +5,6 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
