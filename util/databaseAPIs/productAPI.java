@@ -42,7 +42,55 @@ public class productAPI extends abstractManagerDB {
     public static ArrayList<product> getAllCurrentProducts() {
         ArrayList<product> tempList = new ArrayList<product>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM products WHERE active = true ORDER BY product_id;";
+            String query = "SELECT * FROM products WHERE active = 1 ORDER BY product_id;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("category_id");
+                    String date = rs.getString("product_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    tempList.add(new product(ID, catID, dateInverter.invert(date), name, price, true));
+                }
+                return checkRepeatedProducts(tempList);
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static ArrayList<product> getAllCurrentProductsAlphabetical() {
+        ArrayList<product> tempList = new ArrayList<product>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM products WHERE active = 1 ORDER BY name ASC;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    int ID = rs.getInt("product_id");
+                    int catID = rs.getInt("category_id");
+                    String date = rs.getString("product_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    tempList.add(new product(ID, catID, dateInverter.invert(date), name, price, true));
+                }
+                return checkRepeatedProducts(tempList);
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static ArrayList<product> getAllCurrentProductsByCategory() {
+        ArrayList<product> tempList = new ArrayList<product>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM products WHERE active = 1 ORDER BY category_id;";
             ppdStatement = connection.prepareStatement(query);
             try {
                 ResultSet rs = ppdStatement.executeQuery();

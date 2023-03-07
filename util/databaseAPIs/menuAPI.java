@@ -60,6 +60,54 @@ public class menuAPI extends abstractManagerDB {
         }
     }
 
+    public static ArrayList<menu> getAllCurrentMenusAlphabetical() {
+        ArrayList<menu> tempList = new ArrayList<menu>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM menus WHERE active = 1 ORDER BY name ASC;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    int menuID = rs.getInt("menu_id");
+                    int catID = rs.getInt("category_id");
+                    String date = rs.getString("menu_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    tempList.add(new menu(menuID, catID, dateInverter.invert(date), name, price, true));
+                }
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static ArrayList<menu> getAllCurrentMenusByCategory() {
+        ArrayList<menu> tempList = new ArrayList<menu>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM menus WHERE active = 1 ORDER BY category_id;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    int menuID = rs.getInt("menu_id");
+                    int catID = rs.getInt("category_id");
+                    String date = rs.getString("menu_date");
+                    String name = rs.getString("name");
+                    float price = rs.getFloat("price");
+                    tempList.add(new menu(menuID, catID, dateInverter.invert(date), name, price, true));
+                }
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static Stack<Integer> getAllActiveMenuIDs() {
         Stack<Integer> tempStack = new Stack<Integer>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {

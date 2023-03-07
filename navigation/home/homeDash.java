@@ -25,6 +25,7 @@ import componentsFood.orderView;
 import componentsFood.product;
 import navigation.administration.*;
 import navigation.food.*;
+import navigation.home.items.mainItems;
 import util.buttonFormatters.dashToggleFormatter;
 import util.buttonFormatters.iDashToggleFormatter;
 import util.databaseAPIs.dashboardsAPI;
@@ -1564,7 +1565,6 @@ public class homeDash extends JFrame {
                                         if (!temp[i].equals(toKeep))
                                                 leftAuxPanel.remove(temp[i]);
                                 }
-
                                 new adminDash(tempFrame, leftAuxPanel, playground, jPanel4, date);
                                 playground.revalidate();
                                 leftAuxPanel.revalidate();
@@ -1681,7 +1681,7 @@ public class homeDash extends JFrame {
                                 resetColorAux(contactPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                // call new something
+                                new mainItems(tempFrame, playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }

@@ -34,6 +34,24 @@ public class categoryAPI extends abstractManagerDB {
         }
     }
 
+    public static int getCategoryID(String name) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT * FROM beatneat.categories WHERE category_name = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setString(1, name);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getInt("category_id");
+                return -1;
+            } catch (Exception SQLTimeoutException) {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static ArrayList<category> getAllCategories() {
         ArrayList<category> tempList = new ArrayList<category>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
