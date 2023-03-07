@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.role;
@@ -91,14 +92,13 @@ public class rolesAPI extends abstractManagerDB {
     // ADD to database.
     public static boolean addRole(String name) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO roles VALUES (?, ?, NULL);";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, (getLastRoleID() + 1));
-            ppdStatement.setString(2, name);
-            try {
-                ppdStatement.executeUpdate();
+            int roleID = getLastRoleID() + 1;
+            String query = "INSERT INTO roles VALUES (" + roleID + ", '" + name + "', NULL);";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
                 return true;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
                 return false;
             }
         } catch (SQLException e) {

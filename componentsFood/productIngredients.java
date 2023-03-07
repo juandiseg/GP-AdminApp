@@ -1,4 +1,5 @@
 package componentsFood;
+
 import java.util.ArrayList;
 
 public class productIngredients {
@@ -17,19 +18,19 @@ public class productIngredients {
         this.ingredientsDate = ingredientsDate;
     }
 
-    public void setNumberSoldProducts(int sum){
+    public void setNumberSoldProducts(int sum) {
         numberSoldProducts = sum;
     }
 
-    public int getNumberSoldProducts(){
+    public int getNumberSoldProducts() {
         return numberSoldProducts;
     }
 
-    public void setNumberSoldMenus(int sum){
+    public void setNumberSoldMenus(int sum) {
         numberSoldMenus = sum;
     }
 
-    public int getNumberSoldMenus(){
+    public int getNumberSoldMenus() {
         return numberSoldMenus;
     }
 
@@ -37,7 +38,7 @@ public class productIngredients {
         return productID;
     }
 
-    public String getProductDate(){
+    public String getProductDate() {
         return productDate;
     }
 
@@ -45,7 +46,7 @@ public class productIngredients {
         return ingredientIDs;
     }
 
-    public void addIngredient(ingredient newIngredient){
+    public void addIngredient(ingredient newIngredient) {
         ingredientIDs.add(newIngredient);
     }
 
@@ -53,19 +54,12 @@ public class productIngredients {
         return quantities;
     }
 
-    public void addQuantity(Float quantity){
+    public void addQuantity(Float quantity) {
         quantities.add(quantity);
     }
-    
+
     public String getIngredientsDate() {
         return ingredientsDate;
     }
 
-    public void print(){
-        System.out.println("This product has ID " + productID + " and date: " + ingredientsDate + ".");
-        System.out.println("It also has the following products with the following amounts: ");
-        for(int i = 0; i < ingredientIDs.size(); i++){
-            System.out.println(ingredientIDs.get(i).getName() + " and it uses " + quantities.get(i));
-        }
-    }
 }

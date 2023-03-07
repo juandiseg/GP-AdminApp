@@ -236,7 +236,6 @@ public class dashboardsAPI extends abstractManagerDB {
                 connection.close();
                 return frequency;
             } catch (Exception e) {
-                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {

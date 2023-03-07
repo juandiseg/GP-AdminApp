@@ -35,7 +35,6 @@ public class expensesReportGenerator extends iReportable {
         ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
         ArrayList<ArrayList<productIngredients>> lLMenus = reportsAPI.getAllProductIngredientsFromMenus(from, to);
         ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
-        System.out.println(combination.size());
         return printProductSales(theSheet, combination, row);
     }
 
@@ -120,12 +119,10 @@ public class expensesReportGenerator extends iReportable {
         Stack<Integer> productTotals = new Stack<Integer>();
         for (ArrayList<productIngredients> bigTemp : listList) {
             for (productIngredients temp : bigTemp) {
-                System.out.println("here");
                 if (temp.getNumberSoldProducts() != 0 || temp.getNumberSoldMenus() != 0) {
                     int originalRow = row;
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
-                    System.out.println(temp.getIngredientsDate());
                     tempRow.createCell(2)
                             .setCellValue(reportsAPI.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
                     tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
@@ -201,7 +198,6 @@ public class expensesReportGenerator extends iReportable {
                     tempNext = bigTemp.get(i + 1);
                     nextDate = tempNext.getIngredientsDate();
                 }
-                System.out.println(temp.getProductID() + ", and date :" + temp.getProductDate());
                 temp.setNumberSoldProducts(reportsAPI.getNumberSoldOfProductIngr(temp, nextDate, from, to));
             }
         }
