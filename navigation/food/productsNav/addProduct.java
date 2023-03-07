@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import util.buttonFormatters.*;
 import util.databaseAPIs.categoryAPI;
@@ -17,6 +19,7 @@ import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.add.addTextFieldFListener;
 import componentsFood.ingredient;
 import componentsFood.category;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -371,7 +374,6 @@ public class addProduct {
                                                 "in_inventory",
                                                 "active", "Quantity" },
                                 0);
-
                 for (ingredient tempIngredient : ingredientsAPI.getAllCurrentIngredients()) {
                         String ingID = Integer.toString(tempIngredient.getId());
                         String provID = Integer.toString(tempIngredient.getProviderID());
@@ -386,7 +388,7 @@ public class addProduct {
                         if (tempIngredient.getActive())
                                 active = "Yes";
                         modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory,
-                                        active, "Fill Here" });
+                                        active, "0" });
                 }
 
                 tableIngredients.setModel(modelIngredients);
@@ -486,6 +488,16 @@ public class addProduct {
                                         successLabel.setVisible(true);
                                         return true;
                                 }
+
+                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                        String temp = (String) modelSelected.getValueAt(i, 8);
+                                        if (temp.length() > 7) {
+                                                successLabel.setText("Error. You must specify an smaller amount.");
+                                                successLabel.setVisible(true);
+                                                return true;
+                                        }
+                                }
+
                                 if (productAPI.isNameTaken(nameTextField.getText())) {
                                         successLabel.setText("Error. The given name is already taken.");
                                         successLabel.setVisible(true);
@@ -577,7 +589,8 @@ public class addProduct {
                         if (temp.isEmpty())
                                 return true;
                         try {
-                                Float.parseFloat(temp);
+                                if (Float.parseFloat(temp) <= 0)
+                                        return true;
                         } catch (Exception NumberFormatException) {
                                 return true;
                         }

@@ -416,7 +416,7 @@ public class editMenu {
                         String date = tempIngredient.getDate();
                         String name = tempIngredient.getName();
                         String price = Float.toString(tempIngredient.getPrice());
-                        modelProducts.addRow(new String[] { prodID, catID, date, name, price, "Fill" });
+                        modelProducts.addRow(new String[] { prodID, catID, date, name, price, "0" });
                 }
 
                 for (product tempIngredient : productAPI.getSelectedProductsInMenu(theCurrentMenu)) {
@@ -711,7 +711,8 @@ public class editMenu {
                         if (temp.isEmpty())
                                 return true;
                         try {
-                                Float.parseFloat(temp);
+                                if (Float.parseFloat(temp) <= 0)
+                                        return true;
                         } catch (Exception NumberFormatException) {
                                 return true;
                         }

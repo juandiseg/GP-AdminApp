@@ -24,6 +24,8 @@ import componentsFood.orderView;
 import componentsFood.product;
 import navigation.administration.*;
 import navigation.food.*;
+import util.buttonFormatters.dashToggleFormatter;
+import util.buttonFormatters.iDashToggleFormatter;
 import util.databaseAPIs.dashboardsAPI;
 
 public class homeDash extends JFrame {
@@ -398,8 +400,6 @@ public class homeDash extends JFrame {
                 salesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 salesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 salesLabel.setText("SALES OVERVIEW");
-
-                salesTuggleButton.setText("Last 14 days");
 
                 GroupLayout headSalesPanelLayout = new GroupLayout(headSalesPanel);
                 headSalesPanel.setLayout(headSalesPanelLayout);
@@ -1213,29 +1213,21 @@ public class homeDash extends JFrame {
                                         clicked = false;
                         }
                 });
-                salesTuggleButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (salesTuggleButton.getText().equals("Last 14 days")) {
-                                        salesTuggleButton.setText("Last 7 days");
-                                        setGraph(14);
-                                } else {
-                                        salesTuggleButton.setText("Last 14 days");
-                                        setGraph(7);
-                                }
+                salesTuggleButton();
+        }
+
+        private void salesTuggleButton() {
+                class salesTuggleHolder implements iDashToggleFormatter {
+                        public void action1() {
+                                setGraph(14);
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void action2() {
+                                setGraph(7);
                         }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-                });
+                }
+                dashToggleFormatter.applyDashActionListenerToggle(salesTuggleButton, "Last 14 days", "Last Week",
+                                new salesTuggleHolder());
         }
 
         private void setColor(JPanel panel) {

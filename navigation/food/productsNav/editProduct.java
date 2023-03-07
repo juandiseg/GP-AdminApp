@@ -420,7 +420,7 @@ public class editProduct {
                         if (tempIngredient.getInInventory())
                                 in_inventory = "Yes";
                         modelIngredients.addRow(new String[] { ingID, provID, date, name, price, amount, in_inventory,
-                                        "Yes", "Fill Here" });
+                                        "Yes", "0" });
                 }
 
                 for (ingredient tempIngredient : ingredientsAPI.getSelectedIngredientsInProduct(theCurrentProduct)) {
@@ -765,7 +765,8 @@ public class editProduct {
                         if (temp.isEmpty())
                                 return true;
                         try {
-                                Float.parseFloat(temp);
+                                if (Float.parseFloat(temp) <= 0)
+                                        return true;
                         } catch (Exception NumberFormatException) {
                                 return true;
                         }

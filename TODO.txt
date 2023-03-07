@@ -1,12 +1,8 @@
 TO DO:
 ------------------
-DATABASE            Change all values that reference money to support another decimal.
-
-
 mainShifts.java	    -> 	Late entries highlights.	(Formatting and restricting entries)
 
 generateReport.java ->  Check dates which make sense.
-
 
 CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
 
@@ -14,9 +10,7 @@ WHEN DELETING IN CASCADE CHECK IF SOMEHING IS LEFT WITH NO INGREDIENTS/PRODUCTS 
 
 ADD FORMATTER TO TABLES!
 
-
-CHECK FOR ' AND " IN STRINGS IN JTextField(s) 
-
+MAKE INPUT FORMAT FACTORY static
 
 TESTING
 ----------------------------------------------------------------------------------------------------------------

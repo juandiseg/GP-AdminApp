@@ -23,6 +23,8 @@ import navigation.administration.employeesNav.mainEmployees;
 import navigation.administration.reportsNav.mainReports;
 import navigation.administration.rolesNav.mainRoles;
 import navigation.administration.shiftsNav.mainShifts;
+import util.buttonFormatters.dashToggleFormatter;
+import util.buttonFormatters.iDashToggleFormatter;
 import util.databaseAPIs.dashboardsAPI;
 import util.databaseAPIs.dashboardsAPI.tuple;
 
@@ -352,8 +354,6 @@ public class adminDash {
                 salesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 salesLabel.setText("SALES OVERVIEW");
 
-                salesTuggleButton.setText("Last 14 days");
-
                 GroupLayout headSalesPanelLayout = new GroupLayout(headSalesPanel);
                 headSalesPanel.setLayout(headSalesPanelLayout);
                 headSalesPanelLayout.setHorizontalGroup(
@@ -490,8 +490,6 @@ public class adminDash {
                 expensesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 expensesLabel.setText("EMPLOYEE EXPENSES");
 
-                expensesTuggleButton.setText("Last 14 days");
-
                 GroupLayout headExpensesPanelLayout = new GroupLayout(headExpensesPanel);
                 headExpensesPanel.setLayout(headExpensesPanelLayout);
                 headExpensesPanelLayout.setHorizontalGroup(
@@ -562,8 +560,6 @@ public class adminDash {
                 employeesHourLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
                 employeesHourLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 employeesHourLabel.setText("EMPLOYEES HOUR");
-
-                employeesHourTuggleButton.setText("Last Week");
 
                 GroupLayout headEmployeesHourPanelLayout = new GroupLayout(
                                 headEmployeesHourPanel);
@@ -790,31 +786,8 @@ public class adminDash {
                                 clicked = true;
                                 playground.removeAll();
                                 new mainReports(theFrame, playground);
-
-                                // JnaFileChooser chooser = new JnaFileChooser();
-                                // chooser.setMode(JnaFileChooser.Mode.Directories);
-                                // boolean action = chooser.showOpenDialog(theFrame);
-                                // if (action)
-                                // System.out.println(chooser.getSelectedFile());
-
-                                // JFileChooser chooser;
-                                // chooser = new JFileChooser();
-                                // chooser.setCurrentDirectory(new java.io.File("."));
-                                // chooser.setTitle("ola");
-                                // chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                                //
-                                // disable the "All files" option.
-                                //
-                                // chooser.setAcceptAllFileFilterUsed(false);
-                                //
-                                // + chooser.getCurrentDirectory());
-                                // System.out.println("getSelectedFile() : "
-                                // + chooser.getSelectedFile());
-                                //
-                                // }
                                 playground.revalidate();
                                 playground.repaint();
-                                // initComp2();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -879,75 +852,52 @@ public class adminDash {
                                         clicked = false;
                         }
                 });
-                employeesHourTuggleButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (employeesHourTuggleButton.getText().equals("Last Week")) {
-                                        employeesHourTuggleButton.setText("Today");
-                                        setGraphScheduledHours(true);
-                                } else {
-                                        employeesHourTuggleButton.setText("Last Week");
-                                        setGraphScheduledHours(false);
-                                }
+                employeesTuggleButton();
+                salesTuggleButton();
+                expensesTuggleButton();
+        }
+
+        private void employeesTuggleButton() {
+                class employeesTuggleHolder implements iDashToggleFormatter {
+                        public void action1() {
+                                setGraphScheduledHours(true);
                         }
 
-                        public void mousePressed(MouseEvent e) {
+                        public void action2() {
+                                setGraphScheduledHours(false);
+                        }
+                }
+                dashToggleFormatter.applyDashActionListenerToggle(employeesHourTuggleButton, "Last Week",
+                                "Today",
+                                new employeesTuggleHolder());
+        }
+
+        private void salesTuggleButton() {
+                class salesTuggleHolder implements iDashToggleFormatter {
+                        public void action1() {
+                                setGraphSales(14);
                         }
 
-                        public void mouseReleased(MouseEvent e) {
+                        public void action2() {
+                                setGraphSales(7);
+                        }
+                }
+                dashToggleFormatter.applyDashActionListenerToggle(salesTuggleButton, "Last 14 days", "Last Week",
+                                new salesTuggleHolder());
+        }
+
+        private void expensesTuggleButton() {
+                class expensesTuggleHolder implements iDashToggleFormatter {
+                        public void action1() {
+                                setGraphExpenses(14);
                         }
 
-                        public void mouseEntered(MouseEvent e) {
+                        public void action2() {
+                                setGraphExpenses(7);
                         }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-                });
-                salesTuggleButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (salesTuggleButton.getText().equals("Last 14 days")) {
-                                        salesTuggleButton.setText("Last Week");
-                                        setGraphSales(14);
-                                } else {
-                                        salesTuggleButton.setText("Last 14 days");
-                                        setGraphSales(7);
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-                });
-                expensesTuggleButton.addMouseListener(new MouseListener() {
-                        public void mouseClicked(MouseEvent e) {
-                                if (expensesTuggleButton.getText().equals("Last 14 days")) {
-                                        expensesTuggleButton.setText("Last Week");
-                                        setGraphExpenses(14);
-                                } else {
-                                        expensesTuggleButton.setText("Last 14 days");
-                                        setGraphExpenses(7);
-                                }
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        public void mouseExited(MouseEvent e) {
-                        }
-                });
+                }
+                dashToggleFormatter.applyDashActionListenerToggle(expensesTuggleButton, "Last 14 days", "Last Week",
+                                new expensesTuggleHolder());
         }
 
         private void setColor(JPanel panel) {

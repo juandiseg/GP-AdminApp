@@ -374,7 +374,7 @@ public class addMenu {
                         String prodID = Integer.toString(tempProduct.getId());
                         String name = tempProduct.getName();
                         String price = Float.toString(tempProduct.getPrice());
-                        modelProducts.addRow(new String[] { prodID, name, price, "Fill" });
+                        modelProducts.addRow(new String[] { prodID, name, price, "0" });
                 }
 
                 tableProducts.setModel(modelProducts);
@@ -545,7 +545,8 @@ public class addMenu {
                         if (temp.isEmpty())
                                 return true;
                         try {
-                                Float.parseFloat(temp);
+                                if (Float.parseFloat(temp) <= 0)
+                                        return true;
                         } catch (Exception NumberFormatException) {
                                 return true;
                         }

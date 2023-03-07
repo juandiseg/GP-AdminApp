@@ -2,6 +2,8 @@ package navigation.administration.shiftsNav;
 
 import javax.swing.table.*;
 
+import com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException;
+
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.text.ParseException;
@@ -16,6 +18,8 @@ import java.awt.*;
 import componentsFood.shift;
 import util.buttonFormatters.iNavigatorButton;
 import util.buttonFormatters.navigatorButtonFormatter;
+import util.buttonFormatters.iAuxButton;
+import util.buttonFormatters.auxButtonFormatter;
 import util.databaseAPIs.employeesAPI;
 import util.databaseAPIs.shiftsAPI;
 import util.inputFormatting.iFormatter;
@@ -37,6 +41,7 @@ public class mainShifts {
     private String from = "01-06-2022";
     private String to = "01-06-2023";
     private boolean shiftDate;
+    private boolean undertimeHighlighted = false;
 
     private JLabel fromLabel = new JLabel();
     private JLabel toLabel = new JLabel();
@@ -46,7 +51,7 @@ public class mainShifts {
     private booleanWrapper toPlaceholder = new booleanWrapper(true);
 
     private JPanel jPanel1 = new JPanel();
-    private JToggleButton sortToggle = new JToggleButton();
+    private JButton sortToggle = new JButton();
 
     public mainShifts(JPanel playground, String from, String to, boolean shiftDate) {
         this.from = from;
@@ -58,13 +63,7 @@ public class mainShifts {
     }
 
     private void initComponents(JPanel playground) {
-
         playground.setBackground(new Color(255, 255, 255));
-        if (shiftDate)
-            sortToggle.setText("Sort by Shift Date");
-        else
-            sortToggle.setText("Sort by Employee");
-
         fromLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         fromLabel.setHorizontalAlignment(SwingConstants.CENTER);
         fromLabel.setText("From");
@@ -84,8 +83,6 @@ public class mainShifts {
 
         toTextField.setText(to);
 
-        applyButton.setText("Apply");
-
         jPanel1.setBackground(new Color(0, 0, 0));
         jPanel1.setPreferredSize(new Dimension(2, 0));
 
@@ -97,8 +94,6 @@ public class mainShifts {
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 0, Short.MAX_VALUE));
-
-        undertimeButton.setText("Check Undertime");
 
         GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -215,37 +210,16 @@ public class mainShifts {
                 }
             }
         });
-        applyButton.setBackground(new Color(120, 168, 252));
-        applyButton.setForeground(new Color(0, 0, 0));
-        applyButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                String newFrom = fromTextField.getText();
-                String newTo = toTextField.getText();
-                if (newFrom.equals(from) && newTo.equals(to))
-                    return;
-                else {
-                    renewTable();
-                    from = newFrom;
-                    to = newTo;
-                }
-            }
+        applyButton(playground);
+        sortButton();
+        undertimeButton();
+        addButton(playground);
+        applyGenericListeners();
+    }
 
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        sortToggle.setBackground(new Color(120, 168, 252));
-        sortToggle.setForeground(new Color(0, 0, 0));
-        sortToggle.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
+    private void sortButton() {
+        class sortMethodHolder implements iAuxButton {
+            public void action() {
                 if (sortToggle.getText().equals("Sort by Employee")) {
                     sortToggle.setText("Sort by Shift Date");
                     renewTable();
@@ -254,48 +228,94 @@ public class mainShifts {
                     renewTable();
                 }
             }
+        }
+        String title = "Sort by Shift Date";
+        if (shiftDate)
+            sortToggle.setText("Sort by Shift Date");
+        else {
+            sortToggle.setText("Sort by Employee");
+            title = "Sort by Employee";
+        }
+        auxButtonFormatter.formatAuxButton(sortToggle, new sortMethodHolder(), title);
+    }
 
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        undertimeButton.setBackground(new Color(120, 168, 252));
-        undertimeButton.setForeground(new Color(0, 0, 0));
-        undertimeButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-                for (int row = 0; row < myTable.getRowCount(); row++) {
-                    if (model.getValueAt(row, 8).equals("YES")) {
-                        for (int column = 0; column < myTable.getColumnCount(); column++) {
-                            // FIGURE CHANGE OF COLOR OF ROW
-                        }
-                    }
+    private void applyButton(JPanel playground) {
+        class applyMethodHolder implements iAuxButton {
+            public void action() {
+                String newFrom = fromTextField.getText();
+                try {
+                    LocalDate testFrom = LocalDate.parse(newFrom, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                } catch (Exception DateTimeParseException) {
+                    JOptionPane.showMessageDialog(playground,
+                            "The given from date is unvalid.", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                // myTable.revalidate();
-                // myTable.repaint();
-            }
 
-            public void mousePressed(MouseEvent e) {
-            }
+                String newTo = toTextField.getText();
+                try {
+                    LocalDate testTo = LocalDate.parse(newTo, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                } catch (Exception DateTimeParseException) {
+                    JOptionPane.showMessageDialog(playground,
+                            "The given to date is unvalid.", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            public void mouseReleased(MouseEvent e) {
+                if (newFrom.equals(from) && newTo.equals(to))
+                    return;
+                else {
+                    renewTable();
+                    from = newFrom;
+                    to = newTo;
+                }
             }
+        }
+        auxButtonFormatter.formatAuxButton(applyButton, new applyMethodHolder(), "Apply");
+    }
 
-            public void mouseEntered(MouseEvent e) {
+    private void undertimeButton() {
+        class undertimeMethodHolder implements iAuxButton {
+            public void action() {
+                if (!undertimeHighlighted) {
+                    ArrayList<Integer> rowIndexes = new ArrayList<Integer>();
+                    for (int row = 0; row < myTable.getRowCount(); row++) {
+                        if (model.getValueAt(row, 8).equals("YES"))
+                            rowIndexes.add(row);
+                    }
+                    if (rowIndexes.isEmpty())
+                        return;
+                    myTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                boolean hasFocus, int row, int column) {
+                            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                                    row,
+                                    column);
+                            if (rowIndexes.contains(row) && column == 0)
+                                cell.setBackground(Color.ORANGE);
+                            else
+                                cell.setBackground(Color.WHITE);
+                            return cell;
+                        }
+                    });
+                    undertimeHighlighted = true;
+                } else {
+                    myTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                boolean hasFocus, int row, int column) {
+                            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                                    row, column);
+                            cell.setBackground(Color.WHITE);
+                            return cell;
+                        }
+                    });
+                    undertimeHighlighted = false;
+                }
+                myTable.revalidate();
+                myTable.repaint();
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        addButton(playground);
-        applyGenericListeners();
+        }
+        auxButtonFormatter.formatAuxButton(undertimeButton, new undertimeMethodHolder(), "Check Undertime");
     }
 
     private void addButton(JPanel playground) {

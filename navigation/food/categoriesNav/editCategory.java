@@ -414,5 +414,4 @@ public class editCategory {
                 toggleListener.applyActionListenerToggle(typeToggle, ifTrue, ifFalse,
                                 theCurrentCategory.getIsProduct());
         }
-
 }
