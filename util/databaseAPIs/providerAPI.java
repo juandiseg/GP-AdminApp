@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.provider;
@@ -76,15 +77,14 @@ public class providerAPI extends abstractManagerDB {
     // ADD to database.
     public static boolean addProvider(String name, String email) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "INSERT INTO products VALUES (?, ?, ?, TRUE);";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, getLastProvID() + 1);
-            ppdStatement.setString(2, name);
-            ppdStatement.setString(3, email);
-            try {
-                ppdStatement.executeUpdate();
+            int provID = getLastProvID() + 1;
+            String query = "INSERT INTO providers VALUES (" + provID + ", '" + name + "', '" + email + "', true);";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                connection.close();
                 return true;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return false;
             }
         } catch (SQLException e) {

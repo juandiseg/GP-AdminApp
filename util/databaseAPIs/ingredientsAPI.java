@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.mysql.cj.xdevapi.Statement;
+
 import componentsFood.ingredient;
 import componentsFood.product;
 
@@ -176,7 +178,7 @@ public class ingredientsAPI extends abstractManagerDB {
     private static int getLastIngredientID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredient_id FROM ingredients ORDER BY ingredient_id DESC LIMIT 1;";
-            ppdStatement = connection.prepareStatement(query);
+            Statement stm = connection.prepareStatement(query);
             try {
                 ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next())
@@ -211,6 +213,7 @@ public class ingredientsAPI extends abstractManagerDB {
                 ppdStatement.executeUpdate();
                 return ingrID;
             } catch (Exception SQLTimeoutException) {
+                System.out.println("am i here?");
                 return -1;
             }
         } catch (SQLException e) {
