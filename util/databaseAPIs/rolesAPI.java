@@ -93,7 +93,7 @@ public class rolesAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO roles VALUES (?, ?, NULL);";
             ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, getLastRoleID() + 1);
+            ppdStatement.setInt(1, (getLastRoleID() + 1));
             ppdStatement.setString(2, name);
             try {
                 ppdStatement.executeUpdate();

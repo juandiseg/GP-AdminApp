@@ -1,15 +1,21 @@
 package navigation;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
+import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -111,7 +117,14 @@ public class homeDash extends JFrame {
                                                 .addGap(0, 67, Short.MAX_VALUE));
 
                 date.setForeground(new Color(255, 255, 255));
-                date.setText("13 Feb 2023");
+
+                date.setText(new Date().toString());
+                Locale locale = new Locale("en", "US");
+                String showingDate = DateFormat.getDateInstance(DateFormat.FULL, locale).format(new Date());
+                date.setText(showingDate);
+                date.setHorizontalAlignment(SwingConstants.CENTER);
+
+                // setClock();
 
                 GroupLayout leftAuxPanelLayout = new GroupLayout(leftAuxPanel);
                 leftAuxPanel.setLayout(leftAuxPanelLayout);
@@ -138,6 +151,15 @@ public class homeDash extends JFrame {
 
                 getContentPane().add(leftAuxPanel,
                                 new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 230, 630));
+        }
+
+        private void setClock() {
+                Timer t = new Timer(100, new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                date.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                        }
+                });
+                t.start();
         }
 
         private void initComp1() {
@@ -339,8 +361,8 @@ public class homeDash extends JFrame {
         private void initCompTop() {
                 overheadPanel.setBackground(new Color(71, 120, 197));
 
-                overheadLogoPanel.setBackground(new Color(0, 0, 0));
-                overheadLogoPanel.setOpaque(false);
+                // overheadLogoPanel.add(new JLabel(null));
+                overheadLogoPanel.setOpaque(true);
 
                 GroupLayout overheadLogoPanelLayout = new GroupLayout(overheadLogoPanel);
                 overheadLogoPanel.setLayout(overheadLogoPanelLayout);
@@ -353,7 +375,7 @@ public class homeDash extends JFrame {
 
                 welcomeLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
                 welcomeLabel.setForeground(new Color(255, 255, 255));
-                welcomeLabel.setText("Welcome, [name]");
+                welcomeLabel.setText("Welcome!");
 
                 GroupLayout overheadPanelLayout = new GroupLayout(overheadPanel);
                 overheadPanel.setLayout(overheadPanelLayout);
