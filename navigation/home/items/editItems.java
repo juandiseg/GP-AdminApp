@@ -1,5 +1,6 @@
 package navigation.home.items;
 
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,8 +21,7 @@ import javax.swing.event.MouseInputListener;
 import componentsFood.menu;
 import componentsFood.product;
 import jnafilechooser.api.JnaFileChooser;
-import util.buttonFormatters.iSelectionButton;
-import util.buttonFormatters.selectionButtonFormatter;
+import util.databaseAPIs.descriptionsAPI;
 
 public class editItems {
 
@@ -97,10 +98,11 @@ public class editItems {
     private void addListeners(JFrame theFrame, JPanel playground) {
         editImageButton.addMouseListener(new MouseListener() {
 
+            @Override
             public void mouseClicked(MouseEvent e) {
                 JnaFileChooser chooser = new JnaFileChooser();
                 chooser.setMode(JnaFileChooser.Mode.Files);
-                chooser.addFilter("jpg");
+                chooser.addFilter("images", "jpg");
                 if (chooser.showOpenDialog(theFrame)) {
                     File theImage = chooser.getSelectedFile();
                     byte[] byteImage = jpegToBytes(theImage);
@@ -108,22 +110,57 @@ public class editItems {
                         // print error somehow
                         return;
                     }
-
+                    if (currentMenu == null)
+                        descriptionsAPI.updateImageProduct(currentProduct.getId(), byteImage);
+                    else
+                        descriptionsAPI.updateImageMenu(currentMenu.getId(), byteImage);
+                    getImage();
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
             }
 
+            @Override
             public void mouseEntered(MouseEvent e) {
             }
 
+            @Override
             public void mouseExited(MouseEvent e) {
             }
         });
+    }
+
+    private void getImage() {
+        if (currentMenu != null) {
+            byte[] byteTemp = descriptionsAPI.getImageMenu(currentMenu.getId());
+            if (byteTemp == null)
+                return;
+            ImageIcon temp = getSizedImage(new ImageIcon(byteTemp));
+            imageJLabel.setIcon(temp);
+        } else if (currentProduct != null) {
+            byte[] byteTemp = descriptionsAPI.getImageProduct(currentProduct.getId());
+            if (byteTemp == null)
+                return;
+            ImageIcon temp = getSizedImage(new ImageIcon(byteTemp));
+            imageJLabel.setIcon(temp);
+        } else {
+            imageJLabel.setText("image placeholder");
+            return;
+        }
+        imageJLabel.revalidate();
+        imageJLabel.repaint();
+    }
+
+    private ImageIcon getSizedImage(ImageIcon theImage) {
+        Image image = theImage.getImage();
+        image = image.getScaledInstance(413, 231, Image.SCALE_SMOOTH);
+        return new ImageIcon(image);
     }
 
     private byte[] jpegToBytes(File imageFile) {
@@ -135,10 +172,6 @@ public class editItems {
         } catch (IOException e1) {
             return null;
         }
-    }
-
-    private void getImage() {
-        imageJLabel.setText("image");
     }
 
 }

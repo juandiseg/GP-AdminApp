@@ -60,13 +60,16 @@ public class providerAPI extends abstractManagerDB {
     private static int getLastProvID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT provider_id FROM providers ORDER BY provider_id DESC LIMIT 1;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getInt("provider_id");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int providerID = rs.getInt("provider_id");
+                    connection.close();
+                    return providerID;
+                }
                 return -1;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {

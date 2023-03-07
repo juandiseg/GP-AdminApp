@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -129,13 +130,16 @@ public class menuAPI extends abstractManagerDB {
     private static int getLastMenuID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_id FROM menus ORDER BY menu_id DESC LIMIT 1;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getInt("menu_id");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int menuID = rs.getInt("menu_id");
+                    connection.close();
+                    return menuID;
+                }
                 return -1;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {
@@ -159,9 +163,27 @@ public class menuAPI extends abstractManagerDB {
             ppdStatement.setFloat(4, price);
             try {
                 ppdStatement.executeUpdate();
+                ppdStatement.close();
+                connection.close();
+                addToMenuData(ID);
                 return ID;
             } catch (Exception SQLTimeoutException) {
                 return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private static void addToMenuData(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO menus_data VALUES (" + ID + ", NULL, NULL);";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                return;
+            } catch (Exception e) {
+                System.out.println(e);
+                return;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

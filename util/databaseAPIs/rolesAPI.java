@@ -75,13 +75,16 @@ public class rolesAPI extends abstractManagerDB {
     private static int getLastRoleID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT role_id FROM roles ORDER BY role_id DESC LIMIT 1;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getInt("role_id");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int roleID = rs.getInt("role_id");
+                    connection.close();
+                    return roleID;
+                }
                 return -1;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {

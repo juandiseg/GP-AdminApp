@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -207,13 +208,16 @@ public class productAPI extends abstractManagerDB {
     private static int getLastProductID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT product_id FROM products ORDER BY product_id DESC LIMIT 1;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getInt("product_id");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int productID = rs.getInt("product_id");
+                    connection.close();
+                    return productID;
+                }
                 return -1;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {
@@ -237,9 +241,27 @@ public class productAPI extends abstractManagerDB {
             ppdStatement.setFloat(4, price);
             try {
                 ppdStatement.executeUpdate();
+                ppdStatement.close();
+                connection.close();
+                addToProductData(ID);
                 return ID;
             } catch (Exception SQLTimeoutException) {
                 return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private static void addToProductData(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "INSERT INTO products_data VALUES (" + ID + ", NULL, NULL);";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query);
+                return;
+            } catch (Exception e) {
+                System.out.println(e);
+                return;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

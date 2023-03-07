@@ -4,10 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Stack;
-
-import com.mysql.cj.xdevapi.Statement;
 
 import componentsFood.ingredient;
 import componentsFood.product;
@@ -178,13 +177,16 @@ public class ingredientsAPI extends abstractManagerDB {
     private static int getLastIngredientID() {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredient_id FROM ingredients ORDER BY ingredient_id DESC LIMIT 1;";
-            Statement stm = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getInt("employee_id");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    int providerID = rs.getInt("ingredient_id");
+                    connection.close();
+                    return providerID;
+                }
                 return -1;
-            } catch (Exception SQLTimeoutException) {
+            } catch (Exception e) {
+                System.out.println(e);
                 return -1;
             }
         } catch (SQLException e) {

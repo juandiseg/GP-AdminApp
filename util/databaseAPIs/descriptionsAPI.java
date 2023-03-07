@@ -1,6 +1,7 @@
 package util.databaseAPIs;
 
 import java.io.File;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -188,7 +189,7 @@ public class descriptionsAPI extends abstractManagerDB {
         }
     }
 
-    public static boolean updateImageMenus(int menuID, byte[] theImage) {
+    public static boolean updateImageMenu(int menuID, byte[] theImage) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE menus_data SET image = ? WHERE menu_id = ?;";
             ppdStatement = connection.prepareStatement(query);
@@ -205,4 +206,39 @@ public class descriptionsAPI extends abstractManagerDB {
         }
     }
 
+    public static byte[] getImageMenu(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT image FROM menus_data WHERE menu_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, menuID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getBytes("image");
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public static byte[] getImageProduct(int menuID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT image FROM products_data WHERE product_id = ?;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, menuID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getBytes("image");
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 }
