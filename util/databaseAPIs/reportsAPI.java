@@ -391,21 +391,4 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
-    public static String getRoleName(int roleID) {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT role_name FROM roles WHERE role_id = ?;";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, roleID);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getString("role_name");
-                return null;
-            } catch (Exception SQLTimeoutException) {
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
 }

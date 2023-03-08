@@ -3,10 +3,12 @@ package navigation.administration.reportsNav.reportsGeneration;
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
 import componentsFood.productIngredients;
+import componentsFood.role;
 import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.shift;
 import util.databaseAPIs.reportsAPI;
+import util.databaseAPIs.rolesAPI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,7 +58,7 @@ public class expensesReportGenerator extends iReportable {
                 tempRow = theSheet.createRow(row);
                 tempRow.createCell(1).setCellValue(tempShift.getDate());
                 tempRow.createCell(2).setCellValue(tempEmployee.getName());
-                tempRow.createCell(3).setCellValue(reportsAPI.getRoleName(tempEmployee.getRoleID()));
+                tempRow.createCell(3).setCellValue(rolesAPI.getNameOfRole(tempEmployee.getRoleID()));
                 Cell cell4 = tempRow.createCell(4);
                 cell4.setCellValue(tempShift.getStartTime().substring(0, 5));
                 cell4.setCellStyle(iReportable.timeStyle);
