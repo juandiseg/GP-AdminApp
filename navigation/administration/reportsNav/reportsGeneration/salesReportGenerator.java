@@ -31,7 +31,7 @@ public class salesReportGenerator extends iReportable {
     private int productData(Sheet theSheet, int row, String from, String to) {
         theSheet.createRow(row).createCell(1).setCellValue("PRODUCT SALES");
         row += 2;
-        return productSales(theSheet, from, to, productHeaders(theSheet, row));
+        return productSales(theSheet, from, to, row);
     }
 
     private int productHeaders(Sheet theSheet, int row) {
@@ -47,6 +47,9 @@ public class salesReportGenerator extends iReportable {
     private int productSales(Sheet sheet, String from, String to, int row) {
         int initialRow = row;
         ArrayList<ArrayList<product>> productsLists = reportsAPI.getAllProducts();
+        if (!thereAreSales(productsLists, from, to))
+            return row;
+        row = productHeaders(sheet, row);
         for (ArrayList<product> bigTemp : productsLists) {
             for (int i = 0; i < bigTemp.size(); i++) {
                 product temp = bigTemp.get(i);
@@ -73,6 +76,21 @@ public class salesReportGenerator extends iReportable {
         summarySales.setCellFormula("SUM(F" + (initialRow + 1) + ":F" + row + ")");
         summarySales.setCellStyle(style);
         return row + 2;
+    }
+
+    private boolean thereAreSales(ArrayList<ArrayList<product>> productsLists, String from, String to) {
+        for (ArrayList<product> bigTemp : productsLists) {
+            for (int i = 0; i < bigTemp.size(); i++) {
+                product temp = bigTemp.get(i);
+                product tempNext = null;
+                if (i + 1 < bigTemp.size())
+                    tempNext = bigTemp.get(i + 1);
+                int amountSold = reportsAPI.getNumberSoldProducts(temp, tempNext, from, to);
+                if (amountSold != -1)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private int menuData(Sheet theSheet, int row, String from, String to) {

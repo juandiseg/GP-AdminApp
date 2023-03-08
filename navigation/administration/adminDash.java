@@ -2,9 +2,11 @@ package navigation.administration;
 
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -57,262 +59,264 @@ public class adminDash {
         }
 
         public void initComp2(JPanel leftAuxPanel, JPanel jPanel4, JLabel date) {
-                leftAuxPanel.setBackground(new Color(71, 120, 197));
+                leftAuxPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                employeesPanel.setBackground(new Color(71, 120, 197));
+                employeesPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                employeesAux.setPreferredSize(new Dimension(5, 43));
+                employeesAux.setPreferredSize(new java.awt.Dimension(5, 43));
 
-                GroupLayout employeesAuxLayout = new GroupLayout(employeesAux);
+                javax.swing.GroupLayout employeesAuxLayout = new javax.swing.GroupLayout(employeesAux);
                 employeesAux.setLayout(employeesAuxLayout);
                 employeesAuxLayout.setHorizontalGroup(
-                                employeesAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                employeesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
                 employeesAuxLayout.setVerticalGroup(
-                                employeesAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                employeesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 employeesLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 employeesLabel.setText("Employees");
 
-                GroupLayout employeesPanelLayout = new GroupLayout(employeesPanel);
+                javax.swing.GroupLayout employeesPanelLayout = new javax.swing.GroupLayout(employeesPanel);
                 employeesPanel.setLayout(employeesPanelLayout);
                 employeesPanelLayout.setHorizontalGroup(
-                                employeesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                employeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(employeesPanelLayout.createSequentialGroup()
                                                                 .addComponent(employeesAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(employeesLabel,
-                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 79,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap(134, Short.MAX_VALUE)));
                 employeesPanelLayout.setVerticalGroup(
-                                employeesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                employeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(employeesPanelLayout.createSequentialGroup()
                                                                 .addGroup(employeesPanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
                                                                                 false)
                                                                                 .addComponent(employeesAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 Short.MAX_VALUE)
                                                                                 .addComponent(employeesLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                topLeftAux.setBackground(new Color(120, 168, 252));
+                jPanel4.setBackground(new java.awt.Color(120, 168, 252));
 
-                GroupLayout topLeftAuxLayout = new GroupLayout(topLeftAux);
-                topLeftAux.setLayout(topLeftAuxLayout);
-                topLeftAuxLayout.setHorizontalGroup(
-                                topLeftAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+                jPanel4.setLayout(jPanel4Layout);
+                jPanel4Layout.setHorizontalGroup(
+                                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
-                topLeftAuxLayout.setVerticalGroup(
-                                topLeftAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                jPanel4Layout.setVerticalGroup(
+                                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 67, Short.MAX_VALUE));
 
-                date.setForeground(new Color(255, 255, 255));
-                date.setText("13 Feb 2023");
+                shiftsPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                shiftsPanel.setBackground(new Color(71, 120, 197));
+                shiftsAux.setPreferredSize(new java.awt.Dimension(5, 43));
 
-                shiftsAux.setPreferredSize(new Dimension(5, 43));
-
-                GroupLayout shiftsAuxLayout = new GroupLayout(shiftsAux);
+                javax.swing.GroupLayout shiftsAuxLayout = new javax.swing.GroupLayout(shiftsAux);
                 shiftsAux.setLayout(shiftsAuxLayout);
                 shiftsAuxLayout.setHorizontalGroup(
-                                shiftsAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                shiftsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
                 shiftsAuxLayout.setVerticalGroup(
-                                shiftsAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                shiftsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 shiftsLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 shiftsLabel.setText("Shifts");
 
-                GroupLayout shiftsPanelLayout = new GroupLayout(shiftsPanel);
+                javax.swing.GroupLayout shiftsPanelLayout = new javax.swing.GroupLayout(shiftsPanel);
                 shiftsPanel.setLayout(shiftsPanelLayout);
                 shiftsPanelLayout.setHorizontalGroup(
-                                shiftsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                shiftsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(shiftsPanelLayout.createSequentialGroup()
                                                                 .addComponent(shiftsAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(shiftsLabel,
-                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 79,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap(134, Short.MAX_VALUE)));
                 shiftsPanelLayout.setVerticalGroup(
-                                shiftsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                shiftsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(shiftsPanelLayout.createSequentialGroup()
                                                                 .addGroup(shiftsPanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
                                                                                 false)
                                                                                 .addComponent(shiftsAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 Short.MAX_VALUE)
                                                                                 .addComponent(shiftsLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                reportsPanel.setBackground(new Color(71, 120, 197));
+                reportsPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                reportsAux.setPreferredSize(new Dimension(5, 43));
+                reportsAux.setPreferredSize(new java.awt.Dimension(5, 43));
 
-                GroupLayout reportsAuxLayout = new GroupLayout(reportsAux);
+                javax.swing.GroupLayout reportsAuxLayout = new javax.swing.GroupLayout(reportsAux);
                 reportsAux.setLayout(reportsAuxLayout);
                 reportsAuxLayout.setHorizontalGroup(
-                                reportsAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                reportsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
                 reportsAuxLayout.setVerticalGroup(
-                                reportsAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                reportsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 reportsLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 reportsLabel.setText("Reports");
 
-                GroupLayout reportsPanelLayout = new GroupLayout(reportsPanel);
+                javax.swing.GroupLayout reportsPanelLayout = new javax.swing.GroupLayout(reportsPanel);
                 reportsPanel.setLayout(reportsPanelLayout);
                 reportsPanelLayout.setHorizontalGroup(
-                                reportsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                reportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(reportsPanelLayout.createSequentialGroup()
                                                                 .addComponent(reportsAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(reportsLabel,
-                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 79,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap(134, Short.MAX_VALUE)));
                 reportsPanelLayout.setVerticalGroup(
-                                reportsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                reportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(reportsPanelLayout.createSequentialGroup()
                                                                 .addGroup(reportsPanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
                                                                                 false)
                                                                                 .addComponent(reportsAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 Short.MAX_VALUE)
                                                                                 .addComponent(reportsLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                rolesPanel.setBackground(new Color(71, 120, 197));
+                rolesPanel.setBackground(new java.awt.Color(71, 120, 197));
 
-                rolesAux.setPreferredSize(new Dimension(5, 43));
+                rolesAux.setPreferredSize(new java.awt.Dimension(5, 43));
 
-                GroupLayout rolesAuxLayout = new GroupLayout(rolesAux);
+                javax.swing.GroupLayout rolesAuxLayout = new javax.swing.GroupLayout(rolesAux);
                 rolesAux.setLayout(rolesAuxLayout);
                 rolesAuxLayout.setHorizontalGroup(
-                                rolesAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                rolesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
                 rolesAuxLayout.setVerticalGroup(
-                                rolesAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                rolesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 rolesLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 rolesLabel.setText("Roles");
 
-                GroupLayout rolesPanelLayout = new GroupLayout(rolesPanel);
+                javax.swing.GroupLayout rolesPanelLayout = new javax.swing.GroupLayout(rolesPanel);
                 rolesPanel.setLayout(rolesPanelLayout);
                 rolesPanelLayout.setHorizontalGroup(
-                                rolesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                rolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(rolesPanelLayout.createSequentialGroup()
                                                                 .addComponent(rolesAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(rolesLabel,
-                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 79,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap(134, Short.MAX_VALUE)));
                 rolesPanelLayout.setVerticalGroup(
-                                rolesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                rolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(rolesPanelLayout.createSequentialGroup()
                                                                 .addGroup(rolesPanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
                                                                                 false)
                                                                                 .addComponent(rolesAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 Short.MAX_VALUE)
                                                                                 .addComponent(rolesLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                GroupLayout leftAuxPanelLayout = new GroupLayout(leftAuxPanel);
+                date.setForeground(new java.awt.Color(255, 255, 255));
+                date.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+                javax.swing.GroupLayout leftAuxPanelLayout = new javax.swing.GroupLayout(leftAuxPanel);
                 leftAuxPanel.setLayout(leftAuxPanelLayout);
                 leftAuxPanelLayout.setHorizontalGroup(
-                                leftAuxPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(topLeftAux, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(employeesPanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(shiftsPanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(reportsPanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(employeesPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(shiftsPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(reportsPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(rolesPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(leftAuxPanelLayout.createSequentialGroup()
-                                                                .addGap(80, 80, 80)
-                                                                .addComponent(date)
-                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE))
-                                                .addComponent(rolesPanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                                                                .addContainerGap()
+                                                                .addComponent(date,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addContainerGap()));
                 leftAuxPanelLayout.setVerticalGroup(
-                                leftAuxPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(leftAuxPanelLayout.createSequentialGroup()
-                                                                .addComponent(topLeftAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jPanel4,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(58, 58, 58)
-                                                                .addComponent(employeesPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.RELATED)
-                                                                .addComponent(rolesPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.RELATED)
                                                                 .addComponent(reportsPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.RELATED)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(shiftsPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
-                                                                                ComponentPlacement.RELATED,
-                                                                                293, Short.MAX_VALUE)
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(employeesPanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(rolesPanel,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                                283, Short.MAX_VALUE)
                                                                 .addComponent(date)
                                                                 .addContainerGap()));
         }
