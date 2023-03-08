@@ -165,6 +165,26 @@ public class productAPI extends abstractManagerDB {
         }
     }
 
+    public static String getName(int prodID, String date) {
+        date = dateInverter.invert(date);
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM products WHERE product_id = ? AND product_date = ?";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, prodID);
+            ppdStatement.setString(2, date);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getString("name");
+                return "";
+            } catch (Exception SQLTimeoutException) {
+                return "";
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     private static boolean isProductContainedInMenu(int menuID, Integer productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT menu_id FROM menus_products WHERE menu_id = ? AND product_id = ? AND menu_products_date IN (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = ?);";

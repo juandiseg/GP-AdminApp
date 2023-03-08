@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import componentsFood.employee;
@@ -20,10 +21,9 @@ public class reportsAPI extends abstractManagerDB {
     public static ArrayList<ArrayList<product>> getAllProducts() {
         ArrayList<ArrayList<product>> listOfLists = new ArrayList<ArrayList<product>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM products ORDER BY product_id;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT * FROM products ORDER BY product_id";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 ArrayList<product> temp = new ArrayList<>();
                 int lastID = -1;
                 while (rs.next()) {
@@ -45,29 +45,11 @@ public class reportsAPI extends abstractManagerDB {
                 }
                 if (!temp.isEmpty())
                     listOfLists.add(temp);
+                connection.close();
                 return listOfLists;
-            } catch (Exception SQLTimeoutException) {
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public static String getNameOfProduct(int prodID, String date) {
-        date = dateInverter.invert(date);
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT name FROM products WHERE product_id = ? AND product_date = ?";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, prodID);
-            ppdStatement.setString(2, date);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next())
-                    return rs.getString("name");
-                return "";
-            } catch (Exception SQLTimeoutException) {
-                return "";
+            } catch (Exception e) {
+                System.out.println(e);
+                return listOfLists;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -77,10 +59,9 @@ public class reportsAPI extends abstractManagerDB {
     public static ArrayList<ArrayList<menu>> getAllMenus() {
         ArrayList<ArrayList<menu>> listOfLists = new ArrayList<ArrayList<menu>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM menus ORDER BY menu_id;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT * FROM menus ORDER BY menu_id";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 ArrayList<menu> temp = new ArrayList<>();
                 int lastID = -1;
                 while (rs.next()) {
@@ -102,9 +83,11 @@ public class reportsAPI extends abstractManagerDB {
                 }
                 if (!temp.isEmpty())
                     listOfLists.add(temp);
+                connection.close();
                 return listOfLists;
-            } catch (Exception SQLTimeoutException) {
-                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return listOfLists;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -112,36 +95,22 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public static int getNumberSoldProducts(product current, product next, String from, String to) {
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= ?";
-            if (next != null)
-                query = query.concat(" AND date < ?");
-            query = query.concat(" AND date >= ? AND date <= ? AND product_id = ? AND product_date = ?");
-
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, dateInverter.invert(current.getDate()));
+            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary NATURAL JOIN products WHERE date >= '"
+                    + dateInverter.invert(current.getDate()) + "'";
             if (next != null) {
-                ppdStatement.setString(2, dateInverter.invert(next.getDate()));
-                ppdStatement.setString(3, from);
-                ppdStatement.setString(4, to);
-                ppdStatement.setInt(5, current.getId());
-                ppdStatement.setString(6, dateInverter.invert(current.getDate()));
-            } else {
-                ppdStatement.setString(2, from);
-                ppdStatement.setString(3, to);
-                ppdStatement.setInt(4, current.getId());
-                ppdStatement.setString(5, dateInverter.invert(current.getDate()));
+                query = query.concat(" AND date < '" + dateInverter.invert(next.getDate()) + "'");
             }
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                if (rs.next()) {
+            query = query.concat(" AND date >= '" + from + "' AND date <= '" + to + "' AND product_id = "
+                    + current.getId() + " AND product_date = '" + dateInverter.invert(current.getDate()) + "'");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next())
                     return rs.getInt("SUM(quantity)");
-                }
-                return -1;
-            } catch (Exception SQLTimeoutException) {
-                return -1;
+                return 0;
+            } catch (Exception e) {
+                System.out.println(e);
+                return 0;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -149,35 +118,23 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public static int getNumberSoldMenus(menu current, menu next, String from, String to) {
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT SUM(quantity) FROM orders_menus NATURAL JOIN orders_summary NATURAL JOIN menus WHERE date >= ?";
-            if (next != null)
-                query = query.concat(" AND date < ?");
-            query = query.concat(" AND date >= ? AND date <= ? AND menu_id = ? AND menu_date = ?;");
-
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, dateInverter.invert(current.getDate()));
+            String query = "SELECT SUM(quantity) FROM orders_menus NATURAL JOIN orders_summary NATURAL JOIN menus WHERE date >= '"
+                    + dateInverter.invert(current.getDate()) + "'";
             if (next != null) {
-                ppdStatement.setString(2, dateInverter.invert(next.getDate()));
-                ppdStatement.setString(3, from);
-                ppdStatement.setString(4, to);
-                ppdStatement.setInt(5, current.getId());
-                ppdStatement.setString(6, dateInverter.invert(current.getDate()));
-            } else {
-                ppdStatement.setString(2, from);
-                ppdStatement.setString(3, to);
-                ppdStatement.setInt(4, current.getId());
-                ppdStatement.setString(5, dateInverter.invert(current.getDate()));
+                query = query.concat(" AND date < '" + dateInverter.invert(next.getDate()) + "'");
             }
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            query = query.concat(" AND date >= '" + from + "' AND date <= '" + to + "' AND menu_id = " + current.getId()
+                    + " AND menu_date = '" + dateInverter.invert(current.getDate()) + "'");
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 if (rs.next())
                     return rs.getInt("SUM(quantity)");
-                return -1;
-            } catch (Exception SQLTimeoutException) {
-                return -1;
+                connection.close();
+                return 0;
+            } catch (Exception e) {
+                System.out.println(e);
+                return 0;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -188,9 +145,8 @@ public class reportsAPI extends abstractManagerDB {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT DISTINCT product_id, product_date, product_ingredients_date FROM products_ingredients NATURAL JOIN products ORDER BY product_id, product_ingredients_date;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 ArrayList<productIngredients> tempList = new ArrayList<>();
                 int lastID = -1;
                 while (rs.next()) {
@@ -209,9 +165,11 @@ public class reportsAPI extends abstractManagerDB {
                 }
                 if (!tempList.isEmpty())
                     listOfLists.add(tempList);
+                connection.close();
                 return listOfLists;
-            } catch (Exception SQLTimeoutException) {
-                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return listOfLists;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -221,15 +179,12 @@ public class reportsAPI extends abstractManagerDB {
     public static ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from,
             String to) {
         ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= ? AND date <= ? GROUP BY date, menu_id) AS subq WHERE mp.menu_products_date <= subq.date AND subq.menu_id = mp.menu_id GROUP BY product_id, dateProducts ORDER BY product_id) AS ssquery WHERE product_ingredients_date <= ssquery.dateProducts AND query.product_id = ssquery.product_id GROUP BY ssquery.product_id, ssquery.dateProducts, ssquery.totalOrdered;";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, from);
-            ppdStatement.setString(2, to);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= "
+                    + from + " AND date <= '" + to
+                    + "' GROUP BY date, menu_id) AS subq WHERE mp.menu_products_date <= subq.date AND subq.menu_id = mp.menu_id GROUP BY product_id, dateProducts ORDER BY product_id) AS ssquery WHERE product_ingredients_date <= ssquery.dateProducts AND query.product_id = ssquery.product_id GROUP BY ssquery.product_id, ssquery.dateProducts, ssquery.totalOrdered";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 ArrayList<productIngredients> tempList = new ArrayList<>();
                 int lastID = -1;
                 while (rs.next()) {
@@ -242,7 +197,7 @@ public class reportsAPI extends abstractManagerDB {
                         temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
                         tempList.add(temp);
                     } else {
-                        if (!tempList.isEmpty())
+                        if (!tempList.isEmpty() && lastID != -1)
                             listOfLists.add(tempList);
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
@@ -252,11 +207,13 @@ public class reportsAPI extends abstractManagerDB {
                         tempList.add(temp);
                     }
                 }
-                if (!tempList.isEmpty())
+                if (!tempList.isEmpty() && lastID != -1)
                     listOfLists.add(tempList);
+                connection.close();
                 return listOfLists;
-            } catch (Exception SQLTimeoutException) {
-                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return listOfLists;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -264,37 +221,23 @@ public class reportsAPI extends abstractManagerDB {
     }
 
     public static int getNumberSoldOfProductIngr(productIngredients product, String nextDate, String from, String to) {
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
+        String productDate = dateInverter.invert(product.getProductDate());
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
             if (!nextDate.equals(""))
-                query = query.concat(" date BETWEEN ? AND ?");
+                query = query.concat(" date BETWEEN '" + productDate + "' AND '" + nextDate + "'");
             else
-                query = query.concat(" date >= ?");
+                query = query.concat(" date >= '" + productDate + "'");
             query = query.concat(
-                    " AND date BETWEEN ? AND ? AND product_id = ?;");
-            ppdStatement = connection.prepareStatement(query);
-            if (!nextDate.equals("")) {
-                // possible dateInverter.invert( for product.getproductdate
-                ppdStatement.setString(1, product.getProductDate());
-                ppdStatement.setString(2, nextDate);
-                ppdStatement.setString(3, from);
-                ppdStatement.setString(4, to);
-                ppdStatement.setInt(5, product.getProductID());
-            } else {
-                ppdStatement.setString(1, product.getProductDate());
-                ppdStatement.setString(2, from);
-                ppdStatement.setString(3, to);
-                ppdStatement.setInt(4, product.getProductID());
-            }
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+                    " AND date BETWEEN '" + from + "' AND '" + to + "' AND product_id = " + product.getProductID());
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 if (rs.next())
                     return rs.getInt("SUM(quantity)");
-                return -1;
-            } catch (Exception SQLTimeoutException) {
-                return -1;
+                return 0;
+            } catch (Exception e) {
+                System.out.println(e);
+                return 0;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -303,13 +246,14 @@ public class reportsAPI extends abstractManagerDB {
 
     public static void addIngredientsToProductIngredients(productIngredients productIngr) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredients.*, subsubq.ingredientQuantity FROM ingredients, (SELECT subq.ingredient_id, MAX(ingredients_date) AS dates, subq.ingredientQuantity FROM (SELECT ingredient_id, ingredientQuantity FROM products_ingredients WHERE product_id = ? AND product_ingredients_date = ?) AS subq LEFT JOIN ingredients ON subq.ingredient_id = ingredients.ingredient_id WHERE ingredients_date <= ? GROUP BY ingredients.ingredient_id) AS subsubq WHERE subsubq.ingredient_id = ingredients.ingredient_id AND subsubq.dates = ingredients_date;";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, productIngr.getProductID());
-            ppdStatement.setString(2, productIngr.getIngredientsDate());
-            ppdStatement.setString(3, productIngr.getIngredientsDate());
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT ingredients.*, subsubq.ingredientQuantity FROM ingredients, (SELECT subq.ingredient_id, MAX(ingredients_date) AS dates, subq.ingredientQuantity FROM (SELECT ingredient_id, ingredientQuantity FROM products_ingredients WHERE product_id = "
+                    + productIngr.getProductID()
+                    + " AND product_ingredients_date = '" + productIngr.getIngredientsDate()
+                    + "') AS subq LEFT JOIN ingredients ON subq.ingredient_id = ingredients.ingredient_id WHERE ingredients_date <= '"
+                    + productIngr.getIngredientsDate()
+                    + "' GROUP BY ingredients.ingredient_id) AS subsubq WHERE subsubq.ingredient_id = ingredients.ingredient_id AND subsubq.dates = ingredients_date;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int ID = rs.getInt("ingredient_id");
                     int provID = rs.getInt("provider_id");
@@ -323,7 +267,9 @@ public class reportsAPI extends abstractManagerDB {
                     productIngr.addIngredient(temp);
                     productIngr.addQuantity(rs.getFloat("ingredientQuantity"));
                 }
-            } catch (Exception SQLTimeoutException) {
+                connection.close();
+            } catch (Exception e) {
+                System.out.println(e);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -333,18 +279,19 @@ public class reportsAPI extends abstractManagerDB {
     public static ArrayList<ingredientsProviders> getAllProviders() {
         ArrayList<ingredientsProviders> tempList = new ArrayList<ingredientsProviders>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT provider_id, name FROM providers;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT provider_id, name FROM providers";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int providerID = rs.getInt("provider_id");
                     String name = rs.getString("name");
                     tempList.add(new ingredientsProviders(providerID, name));
                 }
+                connection.close();
                 return tempList;
-            } catch (Exception SQLTimeoutException) {
-                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -353,15 +300,11 @@ public class reportsAPI extends abstractManagerDB {
 
     public static ArrayList<employee> getAllEmployeesAndShifts(String from, String to) {
         ArrayList<employee> tempList = new ArrayList<employee>();
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= ? AND shift_date <= ? ORDER BY employee_id, shift_date, start_shift, role_id;";
-            ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, from);
-            ppdStatement.setString(2, to);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
+            String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= '" + from
+                    + "' AND shift_date <= '" + to + "' ORDER BY employee_id, shift_date, start_shift, role_id;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
                 employee temp = new employee(-1, "", -99, "", -99);
                 while (rs.next()) {
                     if (rs.getInt("employee_id") != temp.getId()) {
@@ -382,9 +325,11 @@ public class reportsAPI extends abstractManagerDB {
                 }
                 if (temp.getId() != -1)
                     tempList.add(temp);
+                connection.close();
                 return tempList;
-            } catch (Exception SQLTimeoutException) {
-                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return tempList;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);

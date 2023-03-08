@@ -10,7 +10,7 @@ import util.inputFormatting.iFormatter;
 import util.inputFormatting.inputFormatterFactory;
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
-import util.listenersFormatting.edit.editTextFieldFListener;
+import util.listenersFormatting.edit.editDateTFFListener;
 
 import java.awt.*;
 
@@ -339,7 +339,7 @@ public class mainReports {
         }
 
         private void applyGenericListeners() {
-                iTextFieldListener inputListener = new editTextFieldFListener();
+                iTextFieldListener inputListener = new editDateTFFListener();
                 inputListener.applyListenerTextField(fromTextField, "DD-MM-YYYY", fromPlaceholder, false);
                 inputListener.applyListenerTextField(toTextField, "DD-MM-YYYY", toPlaceholder, false);
 

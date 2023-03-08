@@ -3,10 +3,11 @@ package navigation.administration.reportsNav.reportsGeneration;
 import org.apache.poi.ss.usermodel.*;
 import java.io.FileOutputStream;
 import componentsFood.productIngredients;
-import componentsFood.role;
 import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.shift;
+import util.databaseAPIs.dateInverter;
+import util.databaseAPIs.productAPI;
 import util.databaseAPIs.reportsAPI;
 import util.databaseAPIs.rolesAPI;
 
@@ -19,6 +20,9 @@ public class expensesReportGenerator extends iReportable {
     public void generateReport(String from, String to, String folderPath) throws Exception {
         Sheet sheet = getWorkbook().createSheet("Expenses Report");
         int row = 1;
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
+
         row = productData(sheet, row, from, to);
         row = employeeData(sheet, row, from, to);
 
@@ -31,9 +35,6 @@ public class expensesReportGenerator extends iReportable {
     }
 
     private int productData(Sheet theSheet, int row, String from, String to) {
-        theSheet.createRow(row).createCell(1).setCellValue("PRODUCT EXPENSES");
-        row += 2;
-        row = productHeaders(theSheet, row);
         ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
         ArrayList<ArrayList<productIngredients>> lLMenus = reportsAPI.getAllProductIngredientsFromMenus(from, to);
         ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
@@ -42,6 +43,8 @@ public class expensesReportGenerator extends iReportable {
 
     public int employeeData(Sheet theSheet, int row, String from, String to) {
         ArrayList<employee> temp = reportsAPI.getAllEmployeesAndShifts(from, to);
+        if (temp.isEmpty())
+            return row;
         Row tempRow = theSheet.createRow(row);
         tempRow.createCell(1).setCellValue("Shift Date");
         tempRow.createCell(2).setCellValue("Employee");
@@ -118,6 +121,11 @@ public class expensesReportGenerator extends iReportable {
     }
 
     private int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row) {
+        if (!areThereSales(listList))
+            return row;
+        sheet.createRow(row).createCell(1).setCellValue("PRODUCT EXPENSES");
+        row += 2;
+        row = productHeaders(sheet, row);
         Stack<Integer> productTotals = new Stack<Integer>();
         for (ArrayList<productIngredients> bigTemp : listList) {
             for (productIngredients temp : bigTemp) {
@@ -126,7 +134,7 @@ public class expensesReportGenerator extends iReportable {
                     Row tempRow = sheet.createRow(row);
                     tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
                     tempRow.createCell(2)
-                            .setCellValue(reportsAPI.getNameOfProduct(temp.getProductID(), temp.getProductDate()));
+                            .setCellValue(productAPI.getName(temp.getProductID(), temp.getProductDate()));
                     tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
                     tempRow.createCell(4).setCellValue(temp.getNumberSoldMenus());
                     for (int i = 0; i < temp.getIngredients().size(); i++) {
@@ -171,6 +179,16 @@ public class expensesReportGenerator extends iReportable {
         totalRow.createCell(9).setCellFormula(formula);
         totalRow.getCell(9).setCellStyle(iReportable.boldStyle);
         return row += 2;
+    }
+
+    private boolean areThereSales(ArrayList<ArrayList<productIngredients>> listList) {
+        for (ArrayList<productIngredients> bigTemp : listList) {
+            for (productIngredients temp : bigTemp) {
+                if (temp.getNumberSoldProducts() != 0 || temp.getNumberSoldMenus() != 0)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private int productHeaders(Sheet theSheet, int row) {

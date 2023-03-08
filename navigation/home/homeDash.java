@@ -1178,7 +1178,7 @@ public class homeDash extends JFrame {
                 if (monthProd == null)
                         bsMonthProductLabel.setText("");
                 else
-                        bsMonthProductLabel.setText(weekProd.getName());
+                        bsMonthProductLabel.setText(monthProd.getName());
                 bsMonthTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
                 bsMonthTitlePanel.setHorizontalAlignment(SwingConstants.CENTER);
                 bsMonthTitlePanel.setText("BEST SELLER MONTH");

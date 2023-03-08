@@ -440,15 +440,6 @@ public class editShifts {
                                 if (row == -1)
                                         return;
                                 String ID = (String) modelEmployees.getValueAt(row, 0);
-                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
-                                        if (ID.equals((String) modelSelected.getValueAt(i, 0))) {
-                                                successLabel.setText(
-                                                                "Error. Cannot select multiple times the same employee.");
-                                                successLabel.setVisible(true);
-                                                return;
-                                        }
-                                }
-                                successLabel.setVisible(false);
                                 String name = (String) modelEmployees.getValueAt(row, 1);
                                 String salary = (String) modelEmployees.getValueAt(row, 2);
                                 String hoursWeek = (String) modelEmployees.getValueAt(row, 3);
@@ -495,16 +486,23 @@ public class editShifts {
                         private String newDate;
 
                         public boolean valuesArePlaceholders() {
-                                if (datePlaceholder.getValue() && startPlaceholder.getValue()
-                                                && endPlaceholder.getValue()) {
-                                        successLabel.setText("Error. You must modify at least one field.");
-                                        successLabel.setVisible(true);
-                                        return true;
-                                }
                                 return false;
                         }
 
                         public boolean areInputsInvalid() {
+                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                        for (int innerI = 0; innerI < modelSelected.getRowCount(); innerI++) {
+                                                String i_ID = (String) modelSelected.getValueAt(i, 0);
+                                                String inner_ID = (String) modelSelected.getValueAt(innerI, 0);
+                                                if (i_ID.equals(inner_ID) && i != innerI) {
+                                                        successLabel.setText(
+                                                                        "Error. Cannot edit multiple times the same employee.");
+                                                        successLabel.setVisible(true);
+                                                        return true;
+                                                }
+                                        }
+                                }
+                                successLabel.setVisible(false);
 
                                 newStart = startShiftTextField.getText();
                                 newEnd = endShiftTextField.getText();
@@ -574,16 +572,12 @@ public class editShifts {
 
                         public void editFoodComponent() {
                                 boolean successfulUpdate = true;
-
                                 ArrayList<shift> listShifts = getListOfShifts();
-                                if (!startPlaceholder.getValue() || !endPlaceholder.getValue()) {
-                                        successfulUpdate = false;
-                                        for (shift temp : listShifts)
-                                                shiftsAPI.updateEntryTime(temp, newStart);
-                                        for (shift temp : listShifts)
-                                                shiftsAPI.updateEndTime(temp, newEnd);
-                                        successfulUpdate = true;
-                                }
+                                for (shift temp : listShifts)
+                                        shiftsAPI.updateEntryTime(temp, newStart);
+                                for (shift temp : listShifts)
+                                        shiftsAPI.updateEndTime(temp, newEnd);
+                                successfulUpdate = true;
 
                                 if (!datePlaceholder.getValue() && successfulUpdate) {
                                         for (shift temp : listShifts)
