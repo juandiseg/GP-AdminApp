@@ -17,7 +17,6 @@ import componentsFood.shift;
 
 public class reportsAPI extends abstractManagerDB {
 
-    // GET from database.
     public static ArrayList<ArrayList<product>> getAllProducts() {
         ArrayList<ArrayList<product>> listOfLists = new ArrayList<ArrayList<product>>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -117,6 +116,55 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
+    public static String getNameOfProduct(int prodID, String date) {
+        String name = "";
+        date = dateInverter.invert(date);
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM products WHERE product_id = " + prodID + " AND product_date = '" + date
+                    + "'";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next()) {
+                    name = rs.getString("name");
+                    connection.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return "";
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+        return name;
+    }
+
+    public static int getNumberSoldProduct(productIngredients product, String nextDate, String from, String to) {
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
+            if (!nextDate.equals(""))
+                query = query.concat(" date BETWEEN '" + product.getProductDate() + "' AND '" + nextDate + "'");
+            else
+                query = query.concat(" date >= '" + product.getProductDate() + "'");
+            query = query.concat(
+                    " AND date BETWEEN '" + from + "' AND '" + to + "' AND product_id = " + product.getProductID());
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                int amount = 0;
+                if (rs.next())
+                    amount = rs.getInt("SUM(quantity)");
+                connection.close();
+                return amount;
+            } catch (Exception e) {
+                System.out.println(e);
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static int getNumberSoldMenus(menu current, menu next, String from, String to) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_menus NATURAL JOIN orders_summary NATURAL JOIN menus WHERE date >= '"
@@ -128,13 +176,15 @@ public class reportsAPI extends abstractManagerDB {
                     + " AND menu_date = '" + dateInverter.invert(current.getDate()) + "'");
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
-                if (rs.next())
-                    return rs.getInt("SUM(quantity)");
+                int amount = 0;
+                if (rs.next()) {
+                    amount = rs.getInt("SUM(quantity)");
+                }
                 connection.close();
-                return 0;
+                return amount;
             } catch (Exception e) {
                 System.out.println(e);
-                return 0;
+                return -1;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -220,30 +270,6 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
-    public static int getNumberSoldOfProductIngr(productIngredients product, String nextDate, String from, String to) {
-        String productDate = dateInverter.invert(product.getProductDate());
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
-            if (!nextDate.equals(""))
-                query = query.concat(" date BETWEEN '" + productDate + "' AND '" + nextDate + "'");
-            else
-                query = query.concat(" date >= '" + productDate + "'");
-            query = query.concat(
-                    " AND date BETWEEN '" + from + "' AND '" + to + "' AND product_id = " + product.getProductID());
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                if (rs.next())
-                    return rs.getInt("SUM(quantity)");
-                return 0;
-            } catch (Exception e) {
-                System.out.println(e);
-                return 0;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
     public static void addIngredientsToProductIngredients(productIngredients productIngr) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredients.*, subsubq.ingredientQuantity FROM ingredients, (SELECT subq.ingredient_id, MAX(ingredients_date) AS dates, subq.ingredientQuantity FROM (SELECT ingredient_id, ingredientQuantity FROM products_ingredients WHERE product_id = "
@@ -300,6 +326,8 @@ public class reportsAPI extends abstractManagerDB {
 
     public static ArrayList<employee> getAllEmployeesAndShifts(String from, String to) {
         ArrayList<employee> tempList = new ArrayList<employee>();
+        from = dateInverter.invert(from);
+        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= '" + from
                     + "' AND shift_date <= '" + to + "' ORDER BY employee_id, shift_date, start_shift, role_id;";
