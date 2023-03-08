@@ -1,6 +1,8 @@
 package navigation.home.items;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayOutputStream;
@@ -26,7 +28,7 @@ import util.databaseAPIs.descriptionsAPI;
 public class editItems {
 
     private JLabel imageJLabel = new JLabel();
-    private JTextArea descriptionJTextArea = new JTextArea();
+    private JTextArea descriptionJTextArea = new JTextArea(5, 20);
     private JScrollPane jScrollPane1 = new JScrollPane(descriptionJTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private JButton editImageButton = new JButton();
@@ -51,9 +53,8 @@ public class editItems {
         getImage();
         editImageButton.setText("Edit Image");
 
-        descriptionJTextArea.setColumns(20);
-        descriptionJTextArea.setRows(5);
         jScrollPane1.setViewportView(descriptionJTextArea);
+        getText();
 
         editDescriptionButton.setText("Edit Description");
 
@@ -134,6 +135,29 @@ public class editItems {
             public void mouseExited(MouseEvent e) {
             }
         });
+
+        editDescriptionButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(descriptionJTextArea.getText());
+            }
+
+        });
+    }
+
+    private void getText() {
+        descriptionJTextArea.setText("Placeholder");
+        if (currentMenu != null) {
+            String originalDescription = descriptionsAPI.getDescriptionMenu(currentMenu.getId());
+            if (originalDescription == null)
+                return;
+            descriptionJTextArea.setText(originalDescription);
+        } else {
+            String originalDescription = descriptionsAPI.getDescriptionProduct(currentProduct.getId());
+            if (originalDescription == null)
+                return;
+            descriptionJTextArea.setText(originalDescription);
+        }
     }
 
     private void getImage() {
@@ -172,6 +196,10 @@ public class editItems {
         } catch (IOException e1) {
             return null;
         }
+    }
+
+    private void editDescription() {
+
     }
 
 }
