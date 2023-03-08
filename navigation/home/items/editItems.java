@@ -44,6 +44,7 @@ public class editItems {
     private menu currentMenu = null;
     private product currentProduct = null;
     private String theDescription;
+    private JLabel successLabel = new JLabel();
     private booleanWrapper descriptionPlaceholder = new booleanWrapper(true);
 
     public editItems(JFrame theFrame, JPanel playground, Object item) {
@@ -66,7 +67,15 @@ public class editItems {
         jScrollPane1.setViewportView(descriptionJTextArea);
         getDescription();
 
+        jScrollPane1.setViewportView(descriptionJTextArea);
+
         editDescriptionButton.setText("Edit Description");
+
+        successLabel.setBackground(new java.awt.Color(23, 35, 51));
+        successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        successLabel.setForeground(new java.awt.Color(23, 35, 51));
+        successLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        successLabel.setText("");
 
         javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
         playground.setLayout(playgroundLayout);
@@ -87,7 +96,12 @@ public class editItems {
                                                 .addComponent(jScrollPane1)
                                                 .addComponent(imageJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 413,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(229, Short.MAX_VALUE)));
+                                .addContainerGap(229, Short.MAX_VALUE))
+                        .addGroup(playgroundLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(successLabel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap()));
         playgroundLayout.setVerticalGroup(
                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(playgroundLayout.createSequentialGroup()
@@ -103,7 +117,10 @@ public class editItems {
                                         .addComponent(editDescriptionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(editImageButton))
-                                .addContainerGap(99, Short.MAX_VALUE)));
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39,
+                                        Short.MAX_VALUE)
+                                .addComponent(successLabel)
+                                .addGap(35, 35, 35)));
     }
 
     private void addListeners(JFrame theFrame, JPanel playground) {
@@ -130,13 +147,14 @@ public class editItems {
                     File theImage = chooser.getSelectedFile();
                     byte[] byteImage = jpegToBytes(theImage);
                     if (byteImage == null) {
-                        // print error somehow
+                        successLabel.setText("Error. The given image is not compatible.");
                         return;
                     }
                     if (currentMenu == null)
                         descriptionsAPI.updateImageProduct(currentProduct.getId(), byteImage);
                     else
                         descriptionsAPI.updateImageMenu(currentMenu.getId(), byteImage);
+                    successLabel.setText("Image successfully updated.");
                     getImage();
                 }
             }
@@ -152,10 +170,8 @@ public class editItems {
     private void editDescriptionButton() {
         class editMethodsHolder implements iEditButton {
             public boolean valuesArePlaceholders() {
-
                 if (descriptionPlaceholder.getValue()) {
-                    // successLabel.setText("Error. You must modify at least one field.");
-                    // successLabel.setVisible(true);
+                    successLabel.setText("Error. You must modify the item's description.");
                     return true;
                 }
                 return false;
@@ -173,14 +189,12 @@ public class editItems {
                 if (currentProduct != null)
                     successfulUpdate = descriptionsAPI.updateDescriptionProduct(currentProduct.getId(), newDescription);
                 theDescription = newDescription;
-                /*
-                 * if (successfulUpdate)
-                 * successLabel.setText("The provider \"" + nameTextField.getText()
-                 * + "\" was successfully updated.");
-                 * else
-                 * successLabel.setText("Something went wrong while updating the provider.");
-                 * successLabel.setVisible(true);
-                 */
+
+                if (successfulUpdate)
+                    successLabel.setText("The item's description was successfully updated.");
+                else
+                    successLabel.setText("Error. Something went wrong while updating the descripition.");
+
             }
 
             public void updatePlaceholders() {
