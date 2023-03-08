@@ -711,7 +711,6 @@ public class adminDash {
                                 new mainEmployees(playground);
                                 playground.revalidate();
                                 playground.repaint();
-                                // initComp2();
                         }
 
                         public void mousePressed(MouseEvent e) {

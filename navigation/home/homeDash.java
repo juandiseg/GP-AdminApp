@@ -25,6 +25,7 @@ import componentsFood.orderView;
 import componentsFood.product;
 import navigation.administration.*;
 import navigation.food.*;
+import navigation.home.items.mainContact;
 import navigation.home.items.mainItems;
 import util.buttonFormatters.dashToggleFormatter;
 import util.buttonFormatters.iDashToggleFormatter;
@@ -1693,7 +1694,7 @@ public class homeDash extends JFrame {
                         }
 
                         public void mouseEntered(MouseEvent e) {
-                                if (descriptionPanel.getBackground().equals(new Color(41, 57, 80)))
+                                if (descriptionPanel.getBackground().equals(new Color(120, 168, 252)))
                                         clicked = true;
                                 else
                                         clicked = false;
@@ -1703,7 +1704,7 @@ public class homeDash extends JFrame {
                         public void mouseExited(MouseEvent e) {
                                 if (!clicked)
                                         resetColorAux(descriptionPanel);
-                                if (contactPanel.getBackground().equals(new Color(41, 57, 80)))
+                                if (contactPanel.getBackground().equals(new Color(120, 168, 252)))
                                         clicked = false;
                         }
                 });
@@ -1715,7 +1716,7 @@ public class homeDash extends JFrame {
                                 resetColorAux(descriptionPanel);
                                 clicked = true;
                                 playground.removeAll();
-                                // call new something
+                                new mainContact(playground);
                                 playground.revalidate();
                                 playground.repaint();
                         }
@@ -1727,7 +1728,7 @@ public class homeDash extends JFrame {
                         }
 
                         public void mouseEntered(MouseEvent e) {
-                                if (contactPanel.getBackground().equals(new Color(41, 57, 80)))
+                                if (contactPanel.getBackground().equals(new Color(120, 168, 252)))
                                         clicked = true;
                                 else
                                         clicked = false;
@@ -1737,7 +1738,7 @@ public class homeDash extends JFrame {
                         public void mouseExited(MouseEvent e) {
                                 if (!clicked)
                                         resetColorAux(contactPanel);
-                                if (descriptionPanel.getBackground().equals(new Color(41, 57, 80)))
+                                if (descriptionPanel.getBackground().equals(new Color(120, 168, 252)))
                                         clicked = false;
                         }
                 });

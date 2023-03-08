@@ -141,6 +141,37 @@ public class shiftsAPI extends abstractManagerDB {
         }
     }
 
+    public static ArrayList<String> getNameOfEmbededShiftsEdit(ArrayList<shift> theShifts, String newShiftDate,
+            String newStartShift, String newEndShift) {
+        ArrayList<String> employeeNames = new ArrayList<String>();
+        newShiftDate = dateInverter.invert(newShiftDate);
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            for (shift tempShift : theShifts) {
+                String query = "SELECT name FROM employees_schedule NATURAL JOIN employees WHERE (employee_id, shift_date, start_shift, end_shift) NOT IN (SELECT employee_id, shift_date, start_shift, end_shift from employees_schedule WHERE employee_id = ? AND shift_date = ? AND start_shift = ? AND end_shift = ?) AND shift_date = ? AND ((? BETWEEN start_shift AND end_shift OR ? BETWEEN start_shift AND end_shift) OR (? < start_shift AND ? > end_shift)) AND employee_id = ?;";
+                ppdStatement = connection.prepareStatement(query);
+                ppdStatement.setInt(1, tempShift.getEmployeeId());
+                ppdStatement.setString(2, dateInverter.invert(tempShift.getDate()));
+                ppdStatement.setString(3, tempShift.getStartTime());
+                ppdStatement.setString(4, tempShift.getEndTime());
+                ppdStatement.setString(5, newShiftDate);
+                ppdStatement.setString(6, newStartShift);
+                ppdStatement.setString(7, newEndShift);
+                ppdStatement.setString(8, newStartShift);
+                ppdStatement.setString(9, newEndShift);
+                ppdStatement.setInt(10, tempShift.getEmployeeId());
+                try {
+                    ResultSet rs = ppdStatement.executeQuery();
+                    if (rs.next())
+                        employeeNames.add(rs.getString("name"));
+                } catch (Exception SQLTimeoutException) {
+                }
+            }
+            return employeeNames;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static ArrayList<shift> getLateEntries() {
         ArrayList<shift> tempList = new ArrayList<shift>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -220,7 +251,7 @@ public class shiftsAPI extends abstractManagerDB {
             ppdStatement.setInt(2, theShift.getEmployeeId());
             ppdStatement.setString(3, dateInverter.invert(theShift.getDate()));
             ppdStatement.setString(4, theShift.getStartTime());
-            ppdStatement.setString(4, theShift.getEndTime());
+            ppdStatement.setString(5, theShift.getEndTime());
             try {
                 ppdStatement.executeUpdate();
                 return true;
@@ -236,11 +267,11 @@ public class shiftsAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees_schedule SET start_shift = ? WHERE employee_id = ? AND shift_date = ? AND start_shift = ? AND end_shift = ?;";
             ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, dateInverter.invert(newEntryTime));
+            ppdStatement.setString(1, newEntryTime);
             ppdStatement.setInt(2, theShift.getEmployeeId());
             ppdStatement.setString(3, dateInverter.invert(theShift.getDate()));
             ppdStatement.setString(4, theShift.getStartTime());
-            ppdStatement.setString(4, theShift.getEndTime());
+            ppdStatement.setString(5, theShift.getEndTime());
             try {
                 ppdStatement.executeUpdate();
                 theShift.setStartTime(dateInverter.invert(newEntryTime));
@@ -257,11 +288,11 @@ public class shiftsAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE employees_schedule SET end_shift = ? WHERE employee_id = ? AND shift_date = ? AND start_shift = ? AND end_shift = ?;";
             ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setString(1, dateInverter.invert(newEndTime));
+            ppdStatement.setString(1, newEndTime);
             ppdStatement.setInt(2, theShift.getEmployeeId());
             ppdStatement.setString(3, dateInverter.invert(theShift.getDate()));
             ppdStatement.setString(4, theShift.getStartTime());
-            ppdStatement.setString(4, theShift.getEndTime());
+            ppdStatement.setString(5, theShift.getEndTime());
             try {
                 ppdStatement.executeUpdate();
                 theShift.setEndTime(dateInverter.invert(newEndTime));

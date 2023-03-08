@@ -440,6 +440,15 @@ public class editShifts {
                                 if (row == -1)
                                         return;
                                 String ID = (String) modelEmployees.getValueAt(row, 0);
+                                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                                        if (ID.equals((String) modelSelected.getValueAt(i, 0))) {
+                                                successLabel.setText(
+                                                                "Error. Cannot select multiple times the same employee.");
+                                                successLabel.setVisible(true);
+                                                return;
+                                        }
+                                }
+                                successLabel.setVisible(false);
                                 String name = (String) modelEmployees.getValueAt(row, 1);
                                 String salary = (String) modelEmployees.getValueAt(row, 2);
                                 String hoursWeek = (String) modelEmployees.getValueAt(row, 3);
@@ -545,10 +554,9 @@ public class editShifts {
                                 }
 
                                 // Checks for conflicts, employees already working on that time.
-                                ArrayList<Integer> selectedEmployeesIDs = getSelectedEmployeeIDs();
-                                ArrayList<String> employeeNames = shiftsAPI.getNamesOfEmbededShifts(
-                                                selectedEmployeesIDs, newDate,
-                                                newStart, newEnd);
+                                ArrayList<shift> selectedShifts = getSelectedShifts();
+                                ArrayList<String> employeeNames = shiftsAPI.getNameOfEmbededShiftsEdit(
+                                                selectedShifts, newDate, newStart, newEnd);
                                 if (employeeNames.size() > 0) {
                                         successLabel.setText(
                                                         "Error. The following employees already have shifts within the given time: ");
@@ -601,11 +609,16 @@ public class editShifts {
                 editButtonFormatter.formatEditButton(editShiftsButton, new editMethodsHolder());
         }
 
-        private ArrayList<Integer> getSelectedEmployeeIDs() {
-                ArrayList<Integer> selectedEmployees = new ArrayList<Integer>();
-                for (int i = 0; i < modelSelected.getRowCount(); i++)
-                        selectedEmployees.add(Integer.parseInt((String) modelSelected.getValueAt(i, 0)));
-                return selectedEmployees;
+        private ArrayList<shift> getSelectedShifts() {
+                ArrayList<shift> selectedShifts = new ArrayList<shift>();
+                for (int i = 0; i < modelSelected.getRowCount(); i++) {
+                        int ID = Integer.parseInt((String) modelSelected.getValueAt(i, 0));
+                        String date = (String) modelSelected.getValueAt(i, 3);
+                        String start = (String) modelSelected.getValueAt(i, 4);
+                        String end = (String) modelSelected.getValueAt(i, 5);
+                        selectedShifts.add(new shift(ID, date, start, end));
+                }
+                return selectedShifts;
         }
 
         private ArrayList<shift> getListOfShifts() {
@@ -627,9 +640,12 @@ public class editShifts {
                 timeFormatter.applyFormat(endShiftTextField);
 
                 iTextFieldListener textListener = new editDateTFFListener();
-                textListener.applyListenerTextField(dateTextField, "DD-MM-YYYY", datePlaceholder, false);
-                textListener.applyListenerTextField(startShiftTextField, "HH:MM", startPlaceholder, false);
-                textListener.applyListenerTextField(endShiftTextField, "HH:MM", endPlaceholder, false);
+                textListener.applyListenerTextField(dateTextField, theShift.getDate(), datePlaceholder, false);
+                textListener.applyListenerTextField(startShiftTextField, theShift.getStartTime().substring(0, 5),
+                                startPlaceholder,
+                                false);
+                textListener.applyListenerTextField(endShiftTextField, theShift.getEndTime().substring(0, 5),
+                                endPlaceholder, false);
         }
 
         private void setTables(String from, String to, boolean shiftDate) {
