@@ -5,7 +5,7 @@ import java.awt.event.FocusListener;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import util.inputFormatting.dateInputFormatter;
 import util.listenersFormatting.booleanWrapper;
@@ -13,7 +13,7 @@ import util.listenersFormatting.iTextFieldListener;
 
 public class editDateTFFListener implements iTextFieldListener {
 
-    public void applyListenerTextField(JTextField theTextField, String theString,
+    public void applyListenerTextField(JTextComponent theTextField, String theString,
             booleanWrapper placeholder, boolean small) {
         for (FocusListener temp : theTextField.getFocusListeners()) {
             if (temp.toString().startsWith("util.listeners"))
@@ -41,7 +41,7 @@ public class editDateTFFListener implements iTextFieldListener {
         });
     }
 
-    private boolean formatIncomplete(JTextField theTextField) {
+    private boolean formatIncomplete(JTextComponent theTextField) {
         return !new dateInputFormatter().isFilled(theTextField);
     }
 }

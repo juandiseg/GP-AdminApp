@@ -1,6 +1,7 @@
 package navigation.home.items;
 
 import java.awt.Image;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -23,7 +24,14 @@ import javax.swing.event.MouseInputListener;
 import componentsFood.menu;
 import componentsFood.product;
 import jnafilechooser.api.JnaFileChooser;
+import util.buttonFormatters.editButtonFormatter;
+import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.descriptionsAPI;
+import util.databaseAPIs.menuAPI;
+import util.databaseAPIs.productAPI;
+import util.listenersFormatting.booleanWrapper;
+import util.listenersFormatting.iTextFieldListener;
+import util.listenersFormatting.edit.editTextFieldFListener;
 
 public class editItems {
 
@@ -35,6 +43,8 @@ public class editItems {
     private JButton editDescriptionButton = new JButton();
     private menu currentMenu = null;
     private product currentProduct = null;
+    private String theDescription;
+    private booleanWrapper descriptionPlaceholder = new booleanWrapper(true);
 
     public editItems(JFrame theFrame, JPanel playground, Object item) {
         if (item instanceof product)
@@ -54,7 +64,7 @@ public class editItems {
         editImageButton.setText("Edit Image");
 
         jScrollPane1.setViewportView(descriptionJTextArea);
-        getText();
+        getDescription();
 
         editDescriptionButton.setText("Edit Description");
 
@@ -97,10 +107,22 @@ public class editItems {
     }
 
     private void addListeners(JFrame theFrame, JPanel playground) {
-        editImageButton.addMouseListener(new MouseListener() {
+        editImageButton(theFrame);
+        editDescriptionButton();
+        applyGenericListeners();
+    }
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
+    private void editImageButton(JFrame theFrame) {
+        class editImageMethodsHolder implements iEditButton {
+            public boolean valuesArePlaceholders() {
+                return false;
+            }
+
+            public boolean areInputsInvalid() {
+                return false;
+            }
+
+            public void editFoodComponent() {
                 JnaFileChooser chooser = new JnaFileChooser();
                 chooser.setMode(JnaFileChooser.Mode.Files);
                 chooser.addFilter("images", "jpg");
@@ -119,44 +141,78 @@ public class editItems {
                 }
             }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
+            public void updatePlaceholders() {
+                applyGenericListeners();
+                descriptionJTextArea.setForeground(Color.GRAY);
             }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
-        editDescriptionButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(descriptionJTextArea.getText());
-            }
-
-        });
+        }
+        editButtonFormatter.formatEditButton(editImageButton, new editImageMethodsHolder());
     }
 
-    private void getText() {
+    private void editDescriptionButton() {
+        class editMethodsHolder implements iEditButton {
+            public boolean valuesArePlaceholders() {
+
+                if (descriptionPlaceholder.getValue()) {
+                    // successLabel.setText("Error. You must modify at least one field.");
+                    // successLabel.setVisible(true);
+                    return true;
+                }
+                return false;
+            }
+
+            public boolean areInputsInvalid() {
+                return false;
+            }
+
+            public void editFoodComponent() {
+                boolean successfulUpdate = true;
+                String newDescription = descriptionJTextArea.getText();
+                if (currentMenu != null)
+                    successfulUpdate = descriptionsAPI.updateDescriptionMenu(currentMenu.getId(), newDescription);
+                if (currentProduct != null)
+                    successfulUpdate = descriptionsAPI.updateDescriptionProduct(currentProduct.getId(), newDescription);
+                theDescription = newDescription;
+                /*
+                 * if (successfulUpdate)
+                 * successLabel.setText("The provider \"" + nameTextField.getText()
+                 * + "\" was successfully updated.");
+                 * else
+                 * successLabel.setText("Something went wrong while updating the provider.");
+                 * successLabel.setVisible(true);
+                 */
+            }
+
+            public void updatePlaceholders() {
+                applyGenericListeners();
+                descriptionJTextArea.setForeground(Color.GRAY);
+            }
+        }
+        editButtonFormatter.formatEditButton(editDescriptionButton, new editMethodsHolder());
+    }
+
+    private void applyGenericListeners() {
+        new editTextFieldFListener().applyListenerTextField(descriptionJTextArea, theDescription,
+                descriptionPlaceholder,
+                false);
+    }
+
+    private void getDescription() {
         descriptionJTextArea.setText("Placeholder");
         if (currentMenu != null) {
-            String originalDescription = descriptionsAPI.getDescriptionMenu(currentMenu.getId());
-            if (originalDescription == null)
+            theDescription = descriptionsAPI.getDescriptionMenu(currentMenu.getId());
+            if (theDescription == null) {
+                theDescription = "Placeholder";
                 return;
-            descriptionJTextArea.setText(originalDescription);
+            }
+            descriptionJTextArea.setText(theDescription);
         } else {
-            String originalDescription = descriptionsAPI.getDescriptionProduct(currentProduct.getId());
-            if (originalDescription == null)
+            theDescription = descriptionsAPI.getDescriptionProduct(currentProduct.getId());
+            if (theDescription == null) {
+                theDescription = "Placeholder";
                 return;
-            descriptionJTextArea.setText(originalDescription);
+            }
+            descriptionJTextArea.setText(theDescription);
         }
     }
 
@@ -196,10 +252,6 @@ public class editItems {
         } catch (IOException e1) {
             return null;
         }
-    }
-
-    private void editDescription() {
-
     }
 
 }

@@ -1,10 +1,10 @@
 package util.listenersFormatting;
 
-import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 public interface iTextFieldListener {
 
-    public void applyListenerTextField(JTextField theTextField, String theString, booleanWrapper placeholder,
+    public void applyListenerTextField(JTextComponent theTextField, String theString, booleanWrapper placeholder,
             boolean small);
 
 }

@@ -5,14 +5,14 @@ import java.awt.event.FocusListener;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import util.listenersFormatting.booleanWrapper;
 import util.listenersFormatting.iTextFieldListener;
 
 public class addTextFieldFListener implements iTextFieldListener {
 
-    public void applyListenerTextField(JTextField theTextField, String theString, booleanWrapper placeholder,
+    public void applyListenerTextField(JTextComponent theTextField, String theString, booleanWrapper placeholder,
             boolean small) {
 
         theTextField.setFont(new Font("Segoe UI", 0, 18));

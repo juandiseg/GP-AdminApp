@@ -1,10 +1,10 @@
 package util.inputFormatting;
 
-import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 public interface iFormatter {
 
-    public void applyFormat(JTextField theTextField);
+    public void applyFormat(JTextComponent theTextField);
 
-    public boolean isFilled(JTextField theTextField);
+    public boolean isFilled(JTextComponent theTextField);
 }

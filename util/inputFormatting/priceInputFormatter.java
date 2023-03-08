@@ -3,12 +3,11 @@ package util.inputFormatting;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 public class priceInputFormatter implements iFormatter {
 
-    public void applyFormat(JTextField theTextField) {
-
+    public void applyFormat(JTextComponent theTextField) {
         theTextField.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
                 char k = arg0.getKeyChar();
@@ -71,7 +70,7 @@ public class priceInputFormatter implements iFormatter {
         });
     }
 
-    public boolean isFilled(JTextField theTextField) {
+    public boolean isFilled(JTextComponent theTextField) {
         return !theTextField.getText().isEmpty();
     }
 

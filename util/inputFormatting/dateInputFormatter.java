@@ -3,14 +3,14 @@ package util.inputFormatting;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.AbstractDocument;
 
 public class dateInputFormatter implements iFormatter {
 
-    public void applyFormat(JTextField theTextField) {
+    public void applyFormat(JTextComponent theTextField) {
         ((AbstractDocument) theTextField.getDocument()).setDocumentFilter(
                 new DocumentFilter() {
                     public void remove(DocumentFilter.FilterBypass fb, int i, int i1)
@@ -117,7 +117,7 @@ public class dateInputFormatter implements iFormatter {
         return new String(tempInput);
     }
 
-    public boolean isFilled(JTextField theTextField) {
+    public boolean isFilled(JTextComponent theTextField) {
         char[] tempDate = theTextField.getText().toCharArray();
         for (char temp : tempDate) {
             if (temp == 'D' || temp == 'M' || temp == 'Y')
