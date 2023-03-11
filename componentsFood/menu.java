@@ -18,6 +18,11 @@ public class menu {
         this.active = active;
     }
 
+    public menu(int id, String date) {
+        this.id = id;
+        this.date = date;
+    }
+
     public int getId() {
         return id;
     }

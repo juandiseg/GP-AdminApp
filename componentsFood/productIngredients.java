@@ -18,6 +18,13 @@ public class productIngredients {
         this.ingredientsDate = ingredientsDate;
     }
 
+    public productIngredients(int productID, String productDate, String ingredientsDate, int numberSoldMenus) {
+        this.productID = productID;
+        this.productDate = productDate;
+        this.ingredientsDate = ingredientsDate;
+        this.numberSoldMenus = numberSoldMenus;
+    }
+
     public void setNumberSoldProducts(int sum) {
         numberSoldProducts = sum;
     }

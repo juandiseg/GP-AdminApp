@@ -12,7 +12,6 @@ import util.databaseAPIs.reportsAPI;
 import util.databaseAPIs.rolesAPI;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 
 public class expensesReportGenerator extends iReportable {
@@ -35,10 +34,8 @@ public class expensesReportGenerator extends iReportable {
     }
 
     private int productData(Sheet theSheet, int row, String from, String to) {
-        ArrayList<ArrayList<productIngredients>> lLProducts = generateProductSales(from, to);
-        ArrayList<ArrayList<productIngredients>> lLMenus = reportsAPI.getAllProductIngredientsFromMenus(from, to);
-        ArrayList<ArrayList<productIngredients>> combination = combineListOfLists(lLProducts, lLMenus);
-        return printProductSales(theSheet, combination, row);
+        ArrayList<ArrayList<productIngredients>> lLProducts = reportsAPI.generateProductExpenses(from, to);
+        return printProductSales(theSheet, lLProducts, row);
     }
 
     public int employeeData(Sheet theSheet, int row, String from, String to) {
@@ -86,40 +83,6 @@ public class expensesReportGenerator extends iReportable {
         return row + 2;
     }
 
-    private ArrayList<ArrayList<productIngredients>> combineListOfLists(ArrayList<ArrayList<productIngredients>> a,
-            ArrayList<ArrayList<productIngredients>> b) {
-        for (ArrayList<productIngredients> tempA : a) {
-            Iterator<ArrayList<productIngredients>> bIter = b.iterator();
-            while (bIter.hasNext()) {
-                ArrayList<productIngredients> tempB = bIter.next();
-                if (tempA.get(0).getProductID() == tempB.get(0).getProductID()) {
-                    Iterator<productIngredients> smallTempBIter = tempB.iterator();
-                    while (smallTempBIter.hasNext()) {
-                        productIngredients smallTempB = smallTempBIter.next();
-                        boolean isFound = false;
-                        for (productIngredients smallTempA : tempA) {
-                            if (smallTempA.getProductDate().equals(smallTempB.getProductDate())) {
-                                smallTempA.setNumberSoldMenus(smallTempB.getNumberSoldMenus());
-                                smallTempBIter.remove();
-                                isFound = true;
-                                break;
-                            }
-                        }
-                        if (!isFound) {
-                            tempA.add(smallTempB);
-                            smallTempBIter.remove();
-                        }
-                    }
-                    if (tempB.isEmpty()) {
-                        bIter.remove();
-                    }
-                }
-            }
-        }
-        a.addAll(b);
-        return a;
-    }
-
     private int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row) {
         if (!areThereSales(listList))
             return row;
@@ -132,9 +95,10 @@ public class expensesReportGenerator extends iReportable {
                 if (temp.getNumberSoldProducts() != 0 || temp.getNumberSoldMenus() != 0) {
                     int originalRow = row;
                     Row tempRow = sheet.createRow(row);
-                    tempRow.createCell(1).setCellValue(temp.getIngredientsDate());
+                    tempRow.createCell(1).setCellValue(dateInverter.invert(temp.getIngredientsDate()));
                     tempRow.createCell(2)
-                            .setCellValue(productAPI.getName(temp.getProductID(), temp.getProductDate()));
+                            .setCellValue(productAPI.getName(temp.getProductID(),
+                                    dateInverter.invert(temp.getProductDate())));
                     tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
                     tempRow.createCell(4).setCellValue(temp.getNumberSoldMenus());
                     for (int i = 0; i < temp.getIngredients().size(); i++) {
@@ -203,25 +167,6 @@ public class expensesReportGenerator extends iReportable {
         tempRow.createCell(8).setCellValue("Quantity Used");
         tempRow.createCell(9).setCellValue("Total Cost");
         return ++row;
-    }
-
-    private ArrayList<ArrayList<productIngredients>> generateProductSales(String from, String to) {
-        ArrayList<ArrayList<productIngredients>> productIngredientsLists = reportsAPI
-                .getAllProductIngredientsFromProducts();
-        for (ArrayList<productIngredients> bigTemp : productIngredientsLists) {
-            for (int i = 0; i < bigTemp.size(); i++) {
-                productIngredients temp = bigTemp.get(i);
-                reportsAPI.addIngredientsToProductIngredients(temp);
-                productIngredients tempNext = null;
-                String nextDate = "";
-                if (i + 1 < bigTemp.size()) {
-                    tempNext = bigTemp.get(i + 1);
-                    nextDate = tempNext.getIngredientsDate();
-                }
-                temp.setNumberSoldProducts(reportsAPI.getNumberSoldOfProductIngr(temp, nextDate, from, to));
-            }
-        }
-        return productIngredientsLists;
     }
 
 }

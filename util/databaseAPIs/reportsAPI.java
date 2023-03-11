@@ -11,11 +11,45 @@ import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.ingredientsProviders;
 import componentsFood.menu;
+import componentsFood.menuProducts;
 import componentsFood.product;
 import componentsFood.productIngredients;
 import componentsFood.shift;
 
 public class reportsAPI extends abstractManagerDB {
+
+    public static ArrayList<provSales> getSoldPerProvider(String from, String to) {
+        ArrayList<ArrayList<productIngredients>> generateProductExpenses;
+
+        return null;
+
+    }
+
+    public class provSales {
+
+        private String providerName;
+        private int sales;
+
+        provSales(String name, int sales) {
+
+        }
+    }
+
+    public static ArrayList<ArrayList<productIngredients>> generateProductExpenses(String from, String to) {
+        ArrayList<ArrayList<productIngredients>> productIngredientsLists = getAllProductIngredientsFromProducts();
+        for (ArrayList<productIngredients> bigTemp : productIngredientsLists) {
+            for (int i = 0; i < bigTemp.size(); i++) {
+                productIngredients temp = bigTemp.get(i);
+                addIngredientsToProductIngredients(temp);
+                String nextDate = "";
+                if (i + 1 < bigTemp.size())
+                    nextDate = bigTemp.get(i + 1).getProductDate();
+                temp.setNumberSoldProducts(getNumberSoldOfProductIngr(temp, nextDate, from, to));
+            }
+        }
+        reportsAPI.getAllProductIngredientsFromMenus(productIngredientsLists, from, to);
+        return productIngredientsLists;
+    }
 
     public static ArrayList<ArrayList<product>> getAllProducts() {
         ArrayList<ArrayList<product>> listOfLists = new ArrayList<ArrayList<product>>();
@@ -138,9 +172,7 @@ public class reportsAPI extends abstractManagerDB {
         return name;
     }
 
-    public static int getNumberSoldProduct(productIngredients product, String nextDate, String from, String to) {
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
+    public static int getNumberSoldOfProductIngr(productIngredients product, String nextDate, String from, String to) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(quantity) FROM orders_items NATURAL JOIN orders_summary WHERE";
             if (!nextDate.equals(""))
@@ -204,13 +236,13 @@ public class reportsAPI extends abstractManagerDB {
                     String ingredientsDate = rs.getString("product_ingredients_date");
                     String productDate = rs.getString("product_date");
                     if (lastID == ID) {
-                        tempList.add(new productIngredients(ID, dateInverter.invert(productDate), ingredientsDate));
+                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
                     } else {
                         if (!tempList.isEmpty())
                             listOfLists.add(tempList);
                         tempList = new ArrayList<productIngredients>();
                         lastID = ID;
-                        tempList.add(new productIngredients(ID, dateInverter.invert(productDate), ingredientsDate));
+                        tempList.add(new productIngredients(ID, productDate, ingredientsDate));
                     }
                 }
                 if (!tempList.isEmpty())
@@ -226,44 +258,106 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
-    public static ArrayList<ArrayList<productIngredients>> getAllProductIngredientsFromMenus(String from,
+    public static void getAllProductIngredientsFromMenus(ArrayList<ArrayList<productIngredients>> prodIngr, String from,
             String to) {
-        ArrayList<ArrayList<productIngredients>> listOfLists = new ArrayList<ArrayList<productIngredients>>();
+        ArrayList<menuProducts> menuProd = getMenusSold(from, to);
+        addSoldsToMenus(menuProd, from, to);
+        try {
+            turnMenuProductsIntoProductIngr(prodIngr, menuProd);
+        } catch (SQLException e) {
+        }
+    }
+
+    private static void turnMenuProductsIntoProductIngr(ArrayList<ArrayList<productIngredients>> prodIngr,
+            ArrayList<menuProducts> menus) throws SQLException {
+        for (menuProducts temp : menus) {
+            try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+                String query = "SELECT product_id, MAX(product_date) FROM products WHERE (product_id, product_date) IN (SELECT product_id, MAX(product_date) as product_date FROM products WHERE product_date <= '"
+                        + temp.getDate() + "' AND product_id IN (SELECT product_id FROM menus_products WHERE menu_id = "
+                        + temp.getId()
+                        + " AND menu_products_date IN (SELECT MAX(menus_products.menu_products_date) FROM menus_products WHERE menu_products_date <= '"
+                        + temp.getDate() + "')) GROUP BY product_id) GROUP BY product_id;";
+                try (Statement stmt = connection.createStatement()) {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        int ID = rs.getInt("product_id");
+                        String date = rs.getString("MAX(product_date)");
+                        for (ArrayList<productIngredients> tempBigProd : prodIngr) {
+                            if (tempBigProd.get(0).getProductID() == ID) {
+                                for (productIngredients tempSmall : tempBigProd) {
+                                    if (tempSmall.getProductDate().equals(date)) {
+                                        tempSmall.setNumberSoldMenus(
+                                                getNumberSoldProductOfMenu(temp, ID));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
+
+    private static int getNumberSoldProductOfMenu(menuProducts theMenu, int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT MAX(product_ingredients_date) AS dateIngredients, ssquery.* FROM products_ingredients AS query, (SELECT product_id, menu_products_date AS dateProducts, SUM(productQuantity*quantity) AS totalOrdered FROM menus_products AS mp, (SELECT date, menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus WHERE date >= "
-                    + from + " AND date <= '" + to
-                    + "' GROUP BY date, menu_id) AS subq WHERE mp.menu_products_date <= subq.date AND subq.menu_id = mp.menu_id GROUP BY product_id, dateProducts ORDER BY product_id) AS ssquery WHERE product_ingredients_date <= ssquery.dateProducts AND query.product_id = ssquery.product_id GROUP BY ssquery.product_id, ssquery.dateProducts, ssquery.totalOrdered";
+            String query = "SELECT productQuantity FROM menus_products WHERE menu_products_date = (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = 0 AND menu_products_date <= '"
+                    + theMenu.getDate() + "') AND product_id = " + productID + ";";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
-                ArrayList<productIngredients> tempList = new ArrayList<>();
-                int lastID = -1;
-                while (rs.next()) {
-                    int ID = rs.getInt("product_id");
-                    String ingredientsDate = rs.getString("dateIngredients");
-                    String productDate = rs.getString("dateProducts");
-                    if (lastID == ID) {
-                        productIngredients temp = new productIngredients(ID, dateInverter.invert(productDate),
-                                dateInverter.invert(ingredientsDate));
-                        temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
-                        tempList.add(temp);
-                    } else {
-                        if (!tempList.isEmpty() && lastID != -1)
-                            listOfLists.add(tempList);
-                        tempList = new ArrayList<productIngredients>();
-                        lastID = ID;
-                        productIngredients temp = new productIngredients(ID, dateInverter.invert(productDate),
-                                dateInverter.invert(ingredientsDate));
-                        temp.setNumberSoldMenus(rs.getInt("totalOrdered"));
-                        tempList.add(temp);
-                    }
-                }
-                if (!tempList.isEmpty() && lastID != -1)
-                    listOfLists.add(tempList);
+                if (rs.next())
+                    return rs.getInt("productQuantity") * theMenu.getSold();
                 connection.close();
-                return listOfLists;
+                return 0;
             } catch (Exception e) {
                 System.out.println(e);
-                return listOfLists;
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private static ArrayList<menuProducts> getMenusSold(String from, String to) {
+        ArrayList<menuProducts> tempList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT orders_menus.menu_id, MAX(subq.menu_date) FROM orders_menus, (SELECT menu_id, menu_date FROM menus) AS subq  NATURAL JOIN orders_summary WHERE orders_summary.date BETWEEN '"
+                    + from + "' AND '" + to
+                    + "' AND orders_menus.menu_id = subq.menu_id AND date > subq.menu_date GROUP BY orders_menus.menu_id, subq.menu_date;";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+                    int ID = rs.getInt("menu_id");
+                    String date = rs.getString("MAX(subq.menu_date)");
+                    tempList.add(new menuProducts(ID, date));
+                }
+                connection.close();
+                return tempList;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    private static void addSoldsToMenus(ArrayList<menuProducts> listMenus, String from, String to) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            for (int i = 0; i < listMenus.size(); i++) {
+                menuProducts temp = listMenus.get(i);
+                String query = "SELECT SUM(quantity) FROM orders_summary NATURAL JOIN orders_menus WHERE menu_id = 0 AND date > '"
+                        + temp.getDate() + "'";
+                if (i + 1 < listMenus.size())
+                    query = query.concat("AND date < '" + listMenus.get(i + 1).getDate() + "'");
+                query = query.concat("AND date BETWEEN '" + from + "' AND '" + to + "';");
+                try (Statement stmt = connection.createStatement()) {
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next())
+                        temp.setSold(rs.getInt("SUM(quantity)"));
+                } catch (Exception e) {
+
+                }
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -326,8 +420,6 @@ public class reportsAPI extends abstractManagerDB {
 
     public static ArrayList<employee> getAllEmployeesAndShifts(String from, String to) {
         ArrayList<employee> tempList = new ArrayList<employee>();
-        from = dateInverter.invert(from);
-        to = dateInverter.invert(to);
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT * FROM employees_schedule NATURAL JOIN employees WHERE shift_date >= '" + from
                     + "' AND shift_date <= '" + to + "' ORDER BY employee_id, shift_date, start_shift, role_id;";
