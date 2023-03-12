@@ -40,6 +40,24 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
+    public static String getIngredientName(int ID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT name FROM ingredients WHERE ingredient_id = ? AND active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, ID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return rs.getString("name");
+                return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM products WHERE active = true AND product_id = ?) AND ingredient_id = ?";
@@ -355,18 +373,46 @@ public class ingredientsAPI extends abstractManagerDB {
     // DELETE from database.
     public static void deleteIngredientsInProduct(int productID, int ingredientID) {
         if (!isIngredientContainedInProduct(productID, ingredientID))
-            try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-                String query = "DELETE FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT * FROM (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?) AS x)";
-                ppdStatement = connection.prepareStatement(query);
-                ppdStatement.setInt(1, productID);
-                ppdStatement.setInt(2, ingredientID);
-                ppdStatement.setInt(3, productID);
-                try {
-                    ppdStatement.executeUpdate();
-                } catch (Exception SQLTimeoutException) {
-                }
-            } catch (SQLException e) {
+            return;
+        if (!productHasMoreIngredients(productID, ingredientID)) {
+            product productTemp = productAPI.getProduct(productID);
+            Stack<Integer> stackMenuIDs = menuAPI.getAllActiveMenuIDs();
+            while (!stackMenuIDs.empty())
+                productAPI.deleteProductsInMenu(stackMenuIDs.pop(), productTemp);
+            productAPI.deleteProduct(productTemp);
+            return;
+        }
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "DELETE FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT * FROM (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?) AS x)";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, productID);
+            ppdStatement.setInt(2, ingredientID);
+            ppdStatement.setInt(3, productID);
+            try {
+                ppdStatement.executeUpdate();
+            } catch (Exception SQLTimeoutException) {
             }
+        } catch (SQLException e) {
+        }
+    }
+
+    private static boolean productHasMoreIngredients(int productID, int ingredientID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT 1 FROM products_ingredients WHERE product_id = ? AND ingredient_id != ? HAVING MAX(product_ingredients_date);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, productID);
+            ppdStatement.setInt(2, ingredientID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
     }
 
     public static void deleteProductWithIngredient(int productID, int ingredientID) {

@@ -1,6 +1,9 @@
 package navigation.administration.reportsNav;
 
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -87,9 +90,6 @@ public class mainReports {
                 comboLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 reportsComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-                reportsComboBox.setModel(
-                                new javax.swing.DefaultComboBoxModel<>(
-                                                new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -263,58 +263,46 @@ public class mainReports {
                                         successLabel.setVisible(true);
                                         return;
                                 }
+
+                                String fromTemp = fromTextField.getText();
+                                String toTemp = toTextField.getText();
+
+                                try {
+                                        LocalDate from = LocalDate.parse(fromTemp,
+                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                        LocalDate to = LocalDate.parse(toTemp,
+                                                        DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                                        if (to.isBefore(from)) {
+                                                successLabel.setText(
+                                                                "ERROR. The date \"From\" must come before \"To\".");
+                                                successLabel.setVisible(true);
+                                                return;
+                                        }
+                                } catch (Exception DateTimeParseException) {
+                                        successLabel.setText("ERROR. One of the given dates is unvalid.");
+                                        successLabel.setVisible(true);
+                                        return;
+                                }
+
                                 // Check date input
                                 JnaFileChooser chooser = new JnaFileChooser();
                                 chooser.setMode(JnaFileChooser.Mode.Directories);
                                 boolean action = chooser.showOpenDialog(theFrame);
                                 if (action) {
-                                        if (((String) (reportsComboBox.getSelectedItem())).equals("Sales Report")) {
-                                                try {
-                                                        new reportGeneratorFactory().createReportGenerator("SALES")
-                                                                        .generateReport(
-                                                                                        fromTextField.getText(),
-                                                                                        toTextField.getText(),
-                                                                                        chooser.getSelectedFile()
-                                                                                                        .getAbsolutePath());
-                                                        successLabel.setText("Report successfully generated");
-                                                        successLabel.setVisible(true);
-                                                } catch (Exception e1) {
-                                                        successLabel.setText(
-                                                                        "Something went wrong while generating the report");
-                                                        successLabel.setVisible(true);
-                                                }
-                                        } else if (((String) (reportsComboBox.getSelectedItem()))
-                                                        .equals("Expenses Report")) {
-                                                try {
-                                                        new reportGeneratorFactory().createReportGenerator("EXPENSES")
-                                                                        .generateReport(
-                                                                                        fromTextField.getText(),
-                                                                                        toTextField.getText(),
-                                                                                        chooser.getSelectedFile()
-                                                                                                        .getAbsolutePath());
-                                                        successLabel.setText("Report successfully generated");
-                                                        successLabel.setVisible(true);
-                                                } catch (Exception e1) {
-                                                        successLabel.setText(
-                                                                        "Something went wrong while generating the report");
-                                                        successLabel.setVisible(true);
-                                                }
-                                        } else if (((String) (reportsComboBox.getSelectedItem()))
-                                                        .equals("General Report")) {
-                                                try {
-                                                        new reportGeneratorFactory().createReportGenerator("GENERAL")
-                                                                        .generateReport(
-                                                                                        fromTextField.getText(),
-                                                                                        toTextField.getText(),
-                                                                                        chooser.getSelectedFile()
-                                                                                                        .getAbsolutePath());
-                                                        successLabel.setText("Report successfully generated");
-                                                        successLabel.setVisible(true);
-                                                } catch (Exception e1) {
-                                                        successLabel.setText(
-                                                                        "Something went wrong while generating the report");
-                                                        successLabel.setVisible(true);
-                                                }
+                                        String reportType = ((String) (reportsComboBox.getSelectedItem()));
+                                        try {
+                                                reportGeneratorFactory.createReportGenerator(reportType)
+                                                                .generateReport(
+                                                                                fromTextField.getText(),
+                                                                                toTextField.getText(),
+                                                                                chooser.getSelectedFile()
+                                                                                                .getAbsolutePath());
+                                                successLabel.setText("Report successfully generated");
+                                                successLabel.setVisible(true);
+                                        } catch (Exception e1) {
+                                                successLabel.setText(
+                                                                "Something went wrong while generating the report");
+                                                successLabel.setVisible(true);
                                         }
                                 }
                         }
@@ -350,9 +338,9 @@ public class mainReports {
         }
 
         private void setComboBox() {
+
                 reportsComboBox.setModel(
-                                new DefaultComboBoxModel<String>(
-                                                new String[] { "Sales Report", "Expenses Report", "General Report" }));
+                                new DefaultComboBoxModel<String>(reportGeneratorFactory.getReportTypes()));
                 reportsComboBox.setFont(new Font("Segoe UI", 0, 18));
                 reportsComboBox.setForeground(Color.BLACK);
                 reportsComboBox.setBackground(Color.WHITE);

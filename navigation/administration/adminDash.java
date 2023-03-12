@@ -2,11 +2,9 @@ package navigation.administration;
 
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -48,8 +46,6 @@ public class adminDash {
         private JPanel reportsPanel = new JPanel();
         private JPanel reportsAux = new JPanel();
         private JLabel reportsLabel = new JLabel();
-
-        private JPanel topLeftAux = new JPanel();
 
         public adminDash(JFrame theFrame, JPanel leftAuxPanel, JPanel playground, JPanel jPanel4,
                         JLabel date) {
@@ -1008,7 +1004,7 @@ public class adminDash {
                 }
                 JFreeChart histogram = ChartFactory.createHistogram(title, "Hour of Day",
                                 yAxis, dataset, PlotOrientation.VERTICAL, false, false, false);
-
+                histogram.getXYPlot().getDomainAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
                 histogram.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
                 ChartPanel panel = new ChartPanel(histogram);
                 panel.setMouseWheelEnabled(false);

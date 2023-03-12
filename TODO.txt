@@ -6,12 +6,6 @@ generateReport.java ->  Check dates which make sense.
 
 CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
 
-WHEN DELETING IN CASCADE CHECK IF SOMEHING IS LEFT WITH NO INGREDIENTS/PRODUCTS AND DELETE IT.
-
-ADD FORMATTER TO TABLES!
-
-MAKE INPUT FORMAT FACTORY static
-
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

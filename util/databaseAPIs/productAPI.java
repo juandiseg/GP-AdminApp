@@ -417,6 +417,10 @@ public class productAPI extends abstractManagerDB {
     public static void deleteProductsInMenu(int menuID, product theProduct) {
         if (!isProductContainedInMenu(menuID, theProduct.getId()))
             return;
+        if (!menuHasMoreProducts(menuID, theProduct.getId())) {
+            menuAPI.deleteMenu(menuID);
+            return;
+        }
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "DELETE FROM menus_products WHERE menu_id = ? AND product_id = ? AND menu_products_date IN (SELECT * FROM (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = ?) AS x)";
             ppdStatement = connection.prepareStatement(query);
@@ -428,6 +432,25 @@ public class productAPI extends abstractManagerDB {
             } catch (Exception SQLTimeoutException) {
             }
         } catch (SQLException e) {
+        }
+    }
+
+    private static boolean menuHasMoreProducts(int menuID, int productID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT 1 FROM menus_products WHERE menu_id = ? AND product_id != ? HAVING MAX(menu_products_date);";
+            ppdStatement = connection.prepareStatement(query);
+            ppdStatement.setInt(1, menuID);
+            ppdStatement.setInt(2, productID);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
         }
     }
 
@@ -513,6 +536,23 @@ public class productAPI extends abstractManagerDB {
                     return true;
                 return false;
             } catch (Exception SQLTimeoutException) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static boolean isIngredientProviderThis(int providerID, int ingredientID) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT 1 FROM ingredients WHERE provider_id = " + providerID + " AND ingredient_id = "
+                    + ingredientID;
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next())
+                    return true;
+                return false;
+            } catch (Exception e) {
                 return false;
             }
         } catch (SQLException e) {

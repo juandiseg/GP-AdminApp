@@ -1,15 +1,19 @@
 package navigation.administration.reportsNav.reportsGeneration;
 
 public class reportGeneratorFactory {
-    public iReportable createReportGenerator(String request) {
+    public static iReportable createReportGenerator(String request) {
         iReportable reportGenerator = null;
-        if ("SALES".equals(request)) {
+        if ("Sales Report".equals(request)) {
             return new salesReportGenerator();
-        } else if ("EXPENSES".equals(request)) {
+        } else if ("Expenses Report".equals(request)) {
             return new expensesReportGenerator();
-        } else if ("GENERAL".equals(request)) {
+        } else if ("General Report".equals(request)) {
             return new generalReportGenerator();
         }
         return reportGenerator;
+    }
+
+    public static String[] getReportTypes() {
+        return new String[] { "Sales Report", "Expenses Report", "General Report" };
     }
 }

@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import componentsFood.ingredient;
+import componentsFood.productIngredients;
 import componentsFood.provider;
 import util.buttonFormatters.addButtonFormatter;
 import util.buttonFormatters.auxButtonFormatter;
@@ -22,6 +25,9 @@ import util.buttonFormatters.iAddButton;
 import util.buttonFormatters.iAuxButton;
 import util.buttonFormatters.iNavigatorButton;
 import util.buttonFormatters.navigatorButtonFormatter;
+import util.databaseAPIs.dateInverter;
+import util.databaseAPIs.ingredientsAPI;
+import util.databaseAPIs.productAPI;
 import util.databaseAPIs.providerAPI;
 import util.databaseAPIs.reportsAPI;
 import util.inputFormatting.iFormatter;
@@ -407,6 +413,21 @@ public class mainContact {
                         public boolean addFoodComponent() {
                                 boolean successfulUpdate = true;
                                 addressTextField.setText(((provider) providerComboBox.getSelectedItem()).getEmail());
+
+                                ArrayList<ingrQtys> ingredientQtys = getSoldOfAllIngredients();
+
+                                filterIngredientProvider(ingredientQtys, (provider) providerComboBox.getSelectedItem());
+                                String emailText = "Dear [name],\n\nI am contacting from the Restaurant [name], based in [address].\n\nWe would like to request the following products to be provided to us:\n\n";
+                                for (ingrQtys temp : ingredientQtys) {
+                                        emailText = emailText
+                                                        .concat("\t- " + ingredientsAPI.getIngredientName(temp.ingrID)
+                                                                        + " : " + String.format("%.02f", temp.qty)
+                                                                        + ".\n");
+                                }
+                                emailText = emailText.concat("\n");
+                                emailText = emailText.concat("Thanks,\n\n");
+                                emailText = emailText.concat("[name].");
+                                emailJTextArea.setText(emailText);
                                 // GENERATE EMAIL
                                 if (!successfulUpdate)
                                         successLabel.setText("Something went wrong while generating the email.");
@@ -418,6 +439,57 @@ public class mainContact {
 
                 }
                 addButtonFormatter.formatAddButton(generateButton, new addMethodsHolder());
+        }
+
+        private void filterIngredientProvider(ArrayList<ingrQtys> list, provider theProvider) {
+                int goal = list.size();
+                int provID = theProvider.getId();
+                for (int i = 0; i < goal; i++) {
+                        if (!productAPI.isIngredientProviderThis(provID, list.get(i).ingrID)) {
+                                list.remove(i);
+                                goal--;
+                                i--;
+                        }
+                }
+        }
+
+        private ArrayList<ingrQtys> getSoldOfAllIngredients() {
+                String from = dateInverter.invert(fromTextField.getText());
+                String until = dateInverter.invert(untilTextField.getText());
+                ArrayList<ingrQtys> ingredientQtys = new ArrayList<>();
+                for (ArrayList<productIngredients> temp1 : reportsAPI.generateProductExpenses(from,
+                                until)) {
+                        for (productIngredients temp2 : temp1) {
+                                for (int i = 0; i < temp2.getIngredients().size(); i++) {
+                                        ingredient tempIng = temp2.getIngredients().get(i);
+                                        int sold = temp2.getNumberSoldMenus()
+                                                        + temp2.getNumberSoldProducts();
+                                        float quantity = sold * temp2.getQuantity().get(i);
+                                        boolean found = false;
+                                        for (ingrQtys prods : ingredientQtys) {
+                                                if (prods.ingrID == tempIng.getId()) {
+                                                        found = true;
+                                                        prods.qty += quantity;
+                                                        break;
+                                                }
+                                        }
+                                        if (!found)
+                                                ingredientQtys.add(new ingrQtys(tempIng.getId(),
+                                                                quantity));
+                                }
+                        }
+                }
+                return ingredientQtys;
+        }
+
+        private class ingrQtys {
+                int ingrID;
+                float qty;
+
+                ingrQtys(int ingrID, float qty) {
+                        this.ingrID = ingrID;
+                        this.qty = qty;
+                }
         }
 
         private void applyGenericListeners() {
