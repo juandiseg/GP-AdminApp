@@ -276,7 +276,8 @@ public class reportsAPI extends abstractManagerDB {
                         + temp.getDate() + "' AND product_id IN (SELECT product_id FROM menus_products WHERE menu_id = "
                         + temp.getId()
                         + " AND menu_products_date IN (SELECT MAX(menus_products.menu_products_date) FROM menus_products WHERE menu_products_date <= '"
-                        + temp.getDate() + "')) GROUP BY product_id) GROUP BY product_id;";
+                        + temp.getDate() + "' AND menu_id = " + temp.getId()
+                        + ")) GROUP BY product_id) GROUP BY product_id;";
                 try (Statement stmt = connection.createStatement()) {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
@@ -286,8 +287,7 @@ public class reportsAPI extends abstractManagerDB {
                             if (tempBigProd.get(0).getProductID() == ID) {
                                 for (productIngredients tempSmall : tempBigProd) {
                                     if (tempSmall.getProductDate().equals(date)) {
-                                        tempSmall.setNumberSoldMenus(
-                                                getNumberSoldProductOfMenu(temp, ID));
+                                        tempSmall.setNumberSoldMenus(getNumberSoldProductOfMenu(temp, ID));
                                     }
                                 }
                             }
@@ -299,9 +299,28 @@ public class reportsAPI extends abstractManagerDB {
         }
     }
 
+    public static String getIngrDates(int ID, String date) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_ingredients_date < '"
+                    + date + "' AND product_id = " + ID + ";";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                if (rs.next())
+                    return rs.getString("MAX(product_ingredients_date)");
+                return null;
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     private static int getNumberSoldProductOfMenu(menuProducts theMenu, int productID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT productQuantity FROM menus_products WHERE menu_products_date = (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = 0 AND menu_products_date <= '"
+            String query = "SELECT productQuantity FROM menus_products WHERE menu_products_date = (SELECT MAX(menu_products_date) FROM menus_products WHERE menu_id = "
+                    + theMenu.getId() + " AND menu_products_date <= '"
                     + theMenu.getDate() + "') AND product_id = " + productID + ";";
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
@@ -346,11 +365,14 @@ public class reportsAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             for (int i = 0; i < listMenus.size(); i++) {
                 menuProducts temp = listMenus.get(i);
-                String query = "SELECT SUM(quantity) FROM orders_summary NATURAL JOIN orders_menus WHERE menu_id = 0 AND date > '"
+                String query = "SELECT SUM(quantity) FROM orders_summary NATURAL JOIN orders_menus WHERE menu_id = "
+                        + temp.getId() + " AND date > '"
                         + temp.getDate() + "'";
-                if (i + 1 < listMenus.size())
-                    query = query.concat("AND date < '" + listMenus.get(i + 1).getDate() + "'");
-                query = query.concat("AND date BETWEEN '" + from + "' AND '" + to + "';");
+                if (i + 1 < listMenus.size()) {
+                    if (listMenus.get(i + 1).getId() == temp.getId())
+                        query = query.concat("AND date < '" + listMenus.get(i + 1).getDate() + "'");
+                }
+                query = query.concat(" AND date BETWEEN '" + from + "' AND '" + to + "';");
                 try (Statement stmt = connection.createStatement()) {
                     ResultSet rs = stmt.executeQuery(query);
                     if (rs.next())
