@@ -688,6 +688,7 @@ public class editProduct {
                                         successfulUpdate = productAPI.updateName(theCurrentProduct,
                                                         nameTextField.getText());
                                         theCurrentProduct = productAPI.getProduct(theCurrentProduct.getId());
+                                        theProductLabel.setText(theCurrentProduct.getName());
                                 }
 
                                 if (!pricePlaceholder.getValue()) {

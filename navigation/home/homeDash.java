@@ -796,7 +796,8 @@ public class homeDash extends JFrame {
                 overheadPanel.setBackground(new Color(71, 120, 197));
 
                 // overheadLogoPanel.add(new JLabel(null));
-                overheadLogoPanel.setOpaque(true);
+                // overheadLogoPanel.setOpaque(true);
+                overheadLogoPanel.setBackground(new Color(71, 120, 197));
 
                 GroupLayout overheadLogoPanelLayout = new GroupLayout(overheadLogoPanel);
                 overheadLogoPanel.setLayout(overheadLogoPanelLayout);

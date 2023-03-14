@@ -148,12 +148,12 @@ public class menuAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public static int addMenu(int catID, String name, float price) {
+    public static int addMenu(int catID, String name, float price, boolean isFirst) {
         int menuID = getLastMenuID() + 1;
-        return addMenu(menuID, catID, name, price);
+        return addMenu(menuID, catID, name, price, isFirst);
     }
 
-    private static int addMenu(int ID, int catID, String name, float price) {
+    private static int addMenu(int ID, int catID, String name, float price, boolean isFirst) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO menus VALUES (?, ?, CURDATE(), ?, ?, TRUE);";
             ppdStatement = connection.prepareStatement(query);
@@ -165,7 +165,8 @@ public class menuAPI extends abstractManagerDB {
                 ppdStatement.executeUpdate();
                 ppdStatement.close();
                 connection.close();
-                addToMenuData(ID);
+                if (isFirst)
+                    addToMenuData(ID);
                 return ID;
             } catch (Exception SQLTimeoutException) {
                 return -1;
@@ -276,7 +277,7 @@ public class menuAPI extends abstractManagerDB {
         if (isLastMenuEntryToday(theMenu))
             return;
         deleteMenu(theMenu.getId());
-        addMenu(theMenu.getId(), theMenu.getCategoryID(), theMenu.getName(), theMenu.getPrice());
+        addMenu(theMenu.getId(), theMenu.getCategoryID(), theMenu.getName(), theMenu.getPrice(), false);
     }
 
     // REMOVE from database.

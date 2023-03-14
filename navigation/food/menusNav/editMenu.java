@@ -26,7 +26,7 @@ import java.awt.*;
 public class editMenu {
 
         private JLabel auxProductLabel = new JLabel();
-        private JLabel theProductLabel = new JLabel();
+        private JLabel theMenuLabel = new JLabel();
 
         private JLabel nameLabel = new JLabel();
         private JLabel priceLabel = new JLabel();
@@ -297,10 +297,10 @@ public class editMenu {
                 auxProductLabel.setToolTipText("");
                 auxProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                theProductLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
-                theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                theProductLabel.setText(theCurrentMenu.getName());
-                theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+                theMenuLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+                theMenuLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                theMenuLabel.setText(theCurrentMenu.getName());
+                theMenuLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 deleteButton.setBackground(new Color(255, 102, 102));
                 deleteButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
@@ -342,7 +342,7 @@ public class editMenu {
                                                                                 200,
                                                                                 GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap())
-                                                .addComponent(theProductLabel, GroupLayout.DEFAULT_SIZE,
+                                                .addComponent(theMenuLabel, GroupLayout.DEFAULT_SIZE,
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(auxProductLabel, GroupLayout.DEFAULT_SIZE,
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
@@ -354,7 +354,7 @@ public class editMenu {
                                                                 .addComponent(auxProductLabel)
                                                                 .addPreferredGap(
                                                                                 ComponentPlacement.RELATED)
-                                                                .addComponent(theProductLabel)
+                                                                .addComponent(theMenuLabel)
                                                                 .addPreferredGap(
                                                                                 ComponentPlacement.RELATED)
                                                                 .addComponent(jPanel3,
@@ -612,6 +612,7 @@ public class editMenu {
                                         successfulUpdate = menuAPI.updateName(theCurrentMenu,
                                                         nameTextField.getText());
                                         theCurrentMenu = menuAPI.getMenu(theCurrentMenu.getId());
+                                        theMenuLabel.setText(theCurrentMenu.getName());
                                 }
 
                                 if (!pricePlaceholder.getValue()) {

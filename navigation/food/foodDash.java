@@ -32,7 +32,6 @@ import util.buttonFormatters.dashToggleFormatter;
 import util.buttonFormatters.iDashToggleFormatter;
 import util.databaseAPIs.dashboardsAPI;
 import util.databaseAPIs.dashboardsAPI.catSalesTuple;
-import util.databaseAPIs.dashboardsAPI.tuple;
 
 public class foodDash {
 
@@ -329,7 +328,7 @@ public class foodDash {
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
                 allergensLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
-                allergensLabel.setText("Allerges");
+                allergensLabel.setText("Allergens");
 
                 javax.swing.GroupLayout allergensPanelLayout = new GroupLayout(allergensPanel);
                 allergensPanel.setLayout(allergensPanelLayout);

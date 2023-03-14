@@ -246,12 +246,12 @@ public class productAPI extends abstractManagerDB {
     }
 
     // ADD to database.
-    public static int addProduct(int catID, String name, float price) {
+    public static int addProduct(int catID, String name, float price, boolean firstTime) {
         int productID = getLastProductID() + 1;
-        return addProduct(productID, catID, name, price);
+        return addProduct(productID, catID, name, price, firstTime);
     }
 
-    private static int addProduct(int ID, int catID, String name, float price) {
+    private static int addProduct(int ID, int catID, String name, float price, boolean firstTime) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO products VALUES (?, ?, CURDATE(), ?, ?, TRUE);";
             ppdStatement = connection.prepareStatement(query);
@@ -263,7 +263,8 @@ public class productAPI extends abstractManagerDB {
                 ppdStatement.executeUpdate();
                 ppdStatement.close();
                 connection.close();
-                addToProductData(ID);
+                if (firstTime)
+                    addToProductData(ID);
                 return ID;
             } catch (Exception SQLTimeoutException) {
                 return -1;
@@ -388,7 +389,7 @@ public class productAPI extends abstractManagerDB {
             return;
         deleteProduct(theProduct);
         addProduct(theProduct.getId(), theProduct.getCategoryID(), theProduct.getName(),
-                theProduct.getPrice());
+                theProduct.getPrice(), false);
     }
 
     // REMOVE from database.

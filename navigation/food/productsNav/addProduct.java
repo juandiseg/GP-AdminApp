@@ -509,7 +509,7 @@ public class addProduct {
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
-                                int productID = productAPI.addProduct(catID, name, price);
+                                int productID = productAPI.addProduct(catID, name, price, true);
                                 if (productID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
                                         successLabel.setVisible(true);

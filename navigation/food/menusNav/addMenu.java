@@ -23,7 +23,7 @@ import java.util.Stack;
 
 public class addMenu {
 
-        private JLabel theProductLabel = new JLabel();
+        private JLabel theMenuLabel = new JLabel();
 
         private JLabel nameLabel = new JLabel();
         private JLabel priceLabel = new JLabel();
@@ -283,10 +283,10 @@ public class addMenu {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                theProductLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
-                theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                theProductLabel.setText("Add Product");
-                theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+                theMenuLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+                theMenuLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                theMenuLabel.setText("Add Product");
+                theMenuLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
@@ -301,7 +301,7 @@ public class addMenu {
                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                 GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(0, 185, Short.MAX_VALUE))
-                                                .addComponent(theProductLabel, GroupLayout.DEFAULT_SIZE,
+                                                .addComponent(theMenuLabel, GroupLayout.DEFAULT_SIZE,
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(playgroundLayout.createSequentialGroup()
                                                                 .addContainerGap()
@@ -321,7 +321,7 @@ public class addMenu {
                                                 .addGroup(GroupLayout.Alignment.TRAILING, playgroundLayout
                                                                 .createSequentialGroup()
                                                                 .addGap(39, 39, 39)
-                                                                .addComponent(theProductLabel)
+                                                                .addComponent(theMenuLabel)
                                                                 .addPreferredGap(
                                                                                 ComponentPlacement.RELATED)
                                                                 .addComponent(jPanel3,
@@ -511,7 +511,7 @@ public class addMenu {
                                 int catID = categories.get(categoriesComboBox.getSelectedIndex()).getId();
                                 Float price = Float.parseFloat(priceTextField.getText());
 
-                                int menuID = menuAPI.addMenu(catID, name, price);
+                                int menuID = menuAPI.addMenu(catID, name, price, true);
                                 if (menuID == -1) {
                                         successLabel.setText("Error. Impossible to connect to database.");
                                         successLabel.setVisible(true);
