@@ -18,23 +18,6 @@ import componentsFood.shift;
 
 public class reportsAPI extends abstractManagerDB {
 
-    public static ArrayList<provSales> getSoldPerProvider(String from, String to) {
-        ArrayList<ArrayList<productIngredients>> generateProductExpenses;
-
-        return null;
-
-    }
-
-    public class provSales {
-
-        private String providerName;
-        private int sales;
-
-        provSales(String name, int sales) {
-
-        }
-    }
-
     public static ArrayList<ArrayList<productIngredients>> generateProductExpenses(String from, String to) {
         ArrayList<ArrayList<productIngredients>> productIngredientsLists = getAllProductIngredientsFromProducts();
         for (ArrayList<productIngredients> bigTemp : productIngredientsLists) {

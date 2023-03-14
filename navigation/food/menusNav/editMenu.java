@@ -75,16 +75,16 @@ public class editMenu {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -102,17 +102,17 @@ public class editMenu {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                priceLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                priceLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                categoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                categoryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 categoryLabel.setText("Choose Category");
                 categoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                ingredientsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                ingredientsLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 ingredientsLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 ingredientsLabel.setText("Select Products");
                 ingredientsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -291,19 +291,19 @@ public class editMenu {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                auxProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                auxProductLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 auxProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 auxProductLabel.setText("Product to edit:");
                 auxProductLabel.setToolTipText("");
                 auxProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                theProductLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                theProductLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProductLabel.setText(theCurrentMenu.getName());
                 theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 deleteButton.setBackground(new Color(255, 102, 102));
-                deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+                deleteButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setForeground(new Color(255, 255, 255));
                 deleteButton.setText("Delete");
 
@@ -447,10 +447,10 @@ public class editMenu {
 
         private void tableLookPretty(JTable theTable) {
                 theTable.setFocusable(true);
-                theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
+                theTable.getTableHeader().setFont(new Font("Segoe UI", 1, 9));
                 theTable.getTableHeader().setBackground(new Color(120, 168, 252));
                 theTable.setFillsViewportHeight(true);
-                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                theTable.setFont(new Font("Segoe UI", 0, 9));
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment(JLabel.CENTER);
                 theTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -469,7 +469,7 @@ public class editMenu {
                         tempNames.add(temp.getName());
                 String[] namesArr = tempNames.toArray(new String[0]);
                 categoriesComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
-                categoriesComboBox.setFont(new java.awt.Font("Segoe UI", 0, 18));
+                categoriesComboBox.setFont(new Font("Segoe UI", 0, 18));
                 categoriesComboBox.setFont(new Font("Segoe UI", 0, 18));
                 categoriesComboBox.setForeground(Color.BLACK);
                 categoriesComboBox.setBackground(Color.WHITE);

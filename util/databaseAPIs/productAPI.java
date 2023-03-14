@@ -313,8 +313,8 @@ public class productAPI extends abstractManagerDB {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "UPDATE products SET name = ? WHERE product_id = ? AND active = true;";
             ppdStatement = connection.prepareStatement(query);
-            ppdStatement.setInt(1, theProduct.getId());
-            ppdStatement.setString(2, name);
+            ppdStatement.setString(1, name);
+            ppdStatement.setInt(2, theProduct.getId());
             try {
                 ppdStatement.executeUpdate();
                 return true;

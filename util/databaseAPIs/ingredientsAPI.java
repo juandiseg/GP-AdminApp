@@ -42,7 +42,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public static String getIngredientName(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT name FROM ingredients WHERE ingredient_id = ? AND active = true;";
+            String query = "SELECT name FROM ingredients WHERE ingredient_id = ? GROUP BY name HAVING MAX(ingredients_date);";
             ppdStatement = connection.prepareStatement(query);
             ppdStatement.setInt(1, ID);
             try {

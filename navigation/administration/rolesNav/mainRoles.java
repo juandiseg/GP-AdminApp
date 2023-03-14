@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class mainRoles {
 
     private void initComponents(JPanel playground) {
         playground.setBackground(new Color(255, 255, 255));
-        clickRole.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        clickRole.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickRole.setHorizontalAlignment(SwingConstants.CENTER);
         clickRole.setVerticalAlignment(SwingConstants.BOTTOM);
 
@@ -119,12 +120,12 @@ public class mainRoles {
         myTable.setModel(model);
         myTable.removeColumn(myTable.getColumn("ID"));
         myTable.setDefaultEditor(Object.class, null);
-        myTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 14));
+        myTable.getTableHeader().setFont(new Font("Segoe UI", 1, 14));
         myTable.getTableHeader().setBackground(new Color(120, 168, 252));
         myTable.setFillsViewportHeight(true);
         rolesJScrollPanel.getViewport().setBackground(new Color(245, 245, 245));
         rolesJScrollPanel.setBackground(new Color(245, 245, 245));
-        myTable.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        myTable.setFont(new Font("Segoe UI", 0, 14));
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         myTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);

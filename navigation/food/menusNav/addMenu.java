@@ -68,14 +68,14 @@ public class addMenu {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -93,17 +93,17 @@ public class addMenu {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                priceLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                priceLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                categoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                categoryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 categoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 categoryLabel.setText("Choose Category");
                 categoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                productsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                productsLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 productsLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 productsLabel.setText("Select Products");
                 productsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -283,7 +283,7 @@ public class addMenu {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                theProductLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                theProductLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 theProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProductLabel.setText("Add Product");
                 theProductLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -391,10 +391,10 @@ public class addMenu {
 
         private void tableLookPretty(JTable theTable) {
                 theTable.setFocusable(true);
-                theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
+                theTable.getTableHeader().setFont(new Font("Segoe UI", 1, 9));
                 theTable.getTableHeader().setBackground(new Color(120, 168, 252));
                 theTable.setFillsViewportHeight(true);
-                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                theTable.setFont(new Font("Segoe UI", 0, 9));
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment(JLabel.CENTER);
                 theTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -409,7 +409,7 @@ public class addMenu {
                         tempNames.add(temp.getName());
                 String[] namesArr = tempNames.toArray(new String[0]);
                 categoriesComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
-                categoriesComboBox.setFont(new java.awt.Font("Segoe UI", 0, 18));
+                categoriesComboBox.setFont(new Font("Segoe UI", 0, 18));
                 categoriesComboBox.setFont(new Font("Segoe UI", 0, 18));
                 categoriesComboBox.setForeground(Color.BLACK);
                 categoriesComboBox.setBackground(Color.WHITE);

@@ -188,6 +188,84 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
+    public static ArrayList<catSalesTuple> getProductCategoryDistribution(boolean today) {
+        ArrayList<catSalesTuple> tempList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String interval = "WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()";
+            if (today)
+                interval = "WHERE date = CURDATE()";
+            String query = "SELECT categories.category_name, SUM(quantity) as quantitySold FROM orders_summary NATURAL JOIN orders_items JOIN products ON orders_items.product_id = products.product_id JOIN categories ON categories.category_id = products.category_id "
+                    + interval + " GROUP BY categories.category_name;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    float sales = rs.getFloat("quantitySold");
+                    String categoryName = rs.getString("category_name");
+                    tempList.add(new dashboardsAPI.catSalesTuple(sales, categoryName));
+                }
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static ArrayList<catSalesTuple> getMenuCategoryDistribution(boolean today) {
+        ArrayList<catSalesTuple> tempList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String interval = "WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()";
+            if (today)
+                interval = "WHERE date = CURDATE()";
+            String query = "SELECT categories.category_name, SUM(quantity) as quantitySold FROM orders_summary NATURAL JOIN orders_menus JOIN menus ON orders_menus.menu_id = menus.menu_id JOIN categories ON categories.category_id = menus.category_id "
+                    + interval + " GROUP BY categories.category_name;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    float sales = rs.getFloat("quantitySold");
+                    String categoryName = rs.getString("category_name");
+                    tempList.add(new dashboardsAPI.catSalesTuple(sales, categoryName));
+                }
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static ArrayList<catSalesTuple> getCategorySalesDistribution(boolean today) {
+        ArrayList<catSalesTuple> tempList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String interval = "WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()";
+            if (today)
+                interval = "WHERE date = CURDATE()";
+            String query = "SELECT result.category_name, SUM(result.sold) as sold FROM ((SELECT category_name, SUM(qty*price) AS sold FROM products NATURAL JOIN categories, (SELECT product_id, SUM(quantity) AS qty FROM orders_summary NATURAL JOIN orders_items "
+                    + interval
+                    + " GROUP BY product_id) AS subq WHERE products.product_id = subq.product_id AND active = 1 GROUP BY category_name) UNION (SELECT category_name, SUM(sold*price) AS sold FROM products NATURAL JOIN categories, (SELECT product_id, SUM(productQuantity * quantity) AS sold FROM menus_products, (SELECT menus.menu_id, SUM(quantity) AS quantity FROM orders_summary NATURAL JOIN orders_menus JOIN menus ON orders_menus.menu_id = menus.menu_id "
+                    + interval
+                    + " GROUP BY menus.menu_id) AS subq WHERE subq.menu_id = menus_products.menu_id AND (menus_products.menu_id, menu_products_date) IN (SELECT menu_id, MAX(menu_products_date) AS menu_products_date FROM menus_products GROUP BY menu_id) GROUP BY product_id ) AS subsubq WHERE subsubq.product_id = products.product_id AND active = 1 GROUP BY category_name)) AS result GROUP BY result.category_name;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next()) {
+                    float sales = rs.getFloat("sold");
+                    String categoryName = rs.getString("category_name");
+                    tempList.add(new dashboardsAPI.catSalesTuple(sales, categoryName));
+                }
+                return tempList;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
     public static ArrayList<tuple> getEmployeeCategoryPercentagesToday() {
         ArrayList<tuple> tempList = new ArrayList<tuple>();
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
@@ -210,12 +288,22 @@ public class dashboardsAPI extends abstractManagerDB {
     }
 
     public static class tuple {
-        public int percentage;
+        public int frequency;
         public String roleName;
 
-        public tuple(int percentage, String roleName) {
-            this.percentage = percentage;
+        public tuple(int frequency, String roleName) {
+            this.frequency = frequency;
             this.roleName = roleName;
+        }
+    }
+
+    public static class catSalesTuple {
+        public float sold;
+        public String categoryName;
+
+        public catSalesTuple(float sold, String categoryName) {
+            this.sold = sold;
+            this.categoryName = categoryName;
         }
     }
 

@@ -2,16 +2,14 @@ package navigation.home.items;
 
 import java.awt.Image;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Font;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.event.MouseInputListener;
+import javax.swing.border.LineBorder;
 
 import componentsFood.menu;
 import componentsFood.product;
@@ -27,10 +25,7 @@ import jnafilechooser.api.JnaFileChooser;
 import util.buttonFormatters.editButtonFormatter;
 import util.buttonFormatters.iEditButton;
 import util.databaseAPIs.descriptionsAPI;
-import util.databaseAPIs.menuAPI;
-import util.databaseAPIs.productAPI;
 import util.listenersFormatting.booleanWrapper;
-import util.listenersFormatting.iTextFieldListener;
 import util.listenersFormatting.edit.editTextFieldFListener;
 
 public class editItems {
@@ -57,9 +52,9 @@ public class editItems {
     }
 
     private void initComponents(JPanel playground) {
-        playground.setBackground(new java.awt.Color(255, 255, 255));
+        playground.setBackground(new Color(255, 255, 255));
 
-        imageJLabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(109, 150, 213), 3, true));
+        imageJLabel.setBorder(new LineBorder(new Color(109, 150, 213), 3, true));
 
         getImage();
         editImageButton.setText("Edit Image");
@@ -71,13 +66,13 @@ public class editItems {
 
         editDescriptionButton.setText("Edit Description");
 
-        successLabel.setBackground(new java.awt.Color(23, 35, 51));
-        successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        successLabel.setForeground(new java.awt.Color(23, 35, 51));
+        successLabel.setBackground(new Color(23, 35, 51));
+        successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
+        successLabel.setForeground(new Color(23, 35, 51));
         successLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         successLabel.setText("");
 
-        javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+        javax.swing.GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
         playgroundLayout.setHorizontalGroup(
                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

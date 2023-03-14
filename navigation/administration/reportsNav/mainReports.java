@@ -47,22 +47,22 @@ public class mainReports {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setText("Product successfully added !");
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                fromLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                fromLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 fromLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 fromLabel.setText("From");
                 fromLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                generateButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+                generateButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 generateButton.setText("Generate Report");
                 generateButton.setActionCommand("Add Product");
                 generateButton.setBackground(new Color(255, 255, 255));
@@ -79,17 +79,17 @@ public class mainReports {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                toLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                toLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 toLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 toLabel.setText("To");
                 toLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                comboLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                comboLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 comboLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 comboLabel.setText("Choose Report");
                 comboLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                reportsComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                reportsComboBox.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
 
                 GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
@@ -206,7 +206,7 @@ public class mainReports {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                sectionTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                sectionTitle.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 sectionTitle.setHorizontalAlignment(SwingConstants.CENTER);
                 sectionTitle.setText("Generate Report");
                 sectionTitle.setToolTipText("");

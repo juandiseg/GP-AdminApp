@@ -55,13 +55,13 @@ public class adminDash {
         }
 
         public void initComp2(JPanel leftAuxPanel, JPanel jPanel4, JLabel date) {
-                leftAuxPanel.setBackground(new java.awt.Color(71, 120, 197));
+                leftAuxPanel.setBackground(new Color(71, 120, 197));
 
-                employeesPanel.setBackground(new java.awt.Color(71, 120, 197));
+                employeesPanel.setBackground(new Color(71, 120, 197));
 
-                employeesAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                employeesAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout employeesAuxLayout = new javax.swing.GroupLayout(employeesAux);
+                javax.swing.GroupLayout employeesAuxLayout = new GroupLayout(employeesAux);
                 employeesAux.setLayout(employeesAuxLayout);
                 employeesAuxLayout.setHorizontalGroup(
                                 employeesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,10 +70,10 @@ public class adminDash {
                                 employeesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                employeesLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                employeesLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 employeesLabel.setText("Employees");
 
-                javax.swing.GroupLayout employeesPanelLayout = new javax.swing.GroupLayout(employeesPanel);
+                javax.swing.GroupLayout employeesPanelLayout = new GroupLayout(employeesPanel);
                 employeesPanel.setLayout(employeesPanelLayout);
                 employeesPanelLayout.setHorizontalGroup(
                                 employeesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,9 +104,9 @@ public class adminDash {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                jPanel4.setBackground(new java.awt.Color(120, 168, 252));
+                jPanel4.setBackground(new Color(120, 168, 252));
 
-                javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+                javax.swing.GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
                 jPanel4.setLayout(jPanel4Layout);
                 jPanel4Layout.setHorizontalGroup(
                                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,11 +115,11 @@ public class adminDash {
                                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 67, Short.MAX_VALUE));
 
-                shiftsPanel.setBackground(new java.awt.Color(71, 120, 197));
+                shiftsPanel.setBackground(new Color(71, 120, 197));
 
-                shiftsAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                shiftsAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout shiftsAuxLayout = new javax.swing.GroupLayout(shiftsAux);
+                javax.swing.GroupLayout shiftsAuxLayout = new GroupLayout(shiftsAux);
                 shiftsAux.setLayout(shiftsAuxLayout);
                 shiftsAuxLayout.setHorizontalGroup(
                                 shiftsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,10 +128,10 @@ public class adminDash {
                                 shiftsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                shiftsLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                shiftsLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 shiftsLabel.setText("Shifts");
 
-                javax.swing.GroupLayout shiftsPanelLayout = new javax.swing.GroupLayout(shiftsPanel);
+                javax.swing.GroupLayout shiftsPanelLayout = new GroupLayout(shiftsPanel);
                 shiftsPanel.setLayout(shiftsPanelLayout);
                 shiftsPanelLayout.setHorizontalGroup(
                                 shiftsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,11 +162,11 @@ public class adminDash {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                reportsPanel.setBackground(new java.awt.Color(71, 120, 197));
+                reportsPanel.setBackground(new Color(71, 120, 197));
 
-                reportsAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                reportsAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout reportsAuxLayout = new javax.swing.GroupLayout(reportsAux);
+                javax.swing.GroupLayout reportsAuxLayout = new GroupLayout(reportsAux);
                 reportsAux.setLayout(reportsAuxLayout);
                 reportsAuxLayout.setHorizontalGroup(
                                 reportsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,10 +175,10 @@ public class adminDash {
                                 reportsAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                reportsLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                reportsLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 reportsLabel.setText("Reports");
 
-                javax.swing.GroupLayout reportsPanelLayout = new javax.swing.GroupLayout(reportsPanel);
+                javax.swing.GroupLayout reportsPanelLayout = new GroupLayout(reportsPanel);
                 reportsPanel.setLayout(reportsPanelLayout);
                 reportsPanelLayout.setHorizontalGroup(
                                 reportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,11 +209,11 @@ public class adminDash {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                rolesPanel.setBackground(new java.awt.Color(71, 120, 197));
+                rolesPanel.setBackground(new Color(71, 120, 197));
 
-                rolesAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                rolesAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout rolesAuxLayout = new javax.swing.GroupLayout(rolesAux);
+                javax.swing.GroupLayout rolesAuxLayout = new GroupLayout(rolesAux);
                 rolesAux.setLayout(rolesAuxLayout);
                 rolesAuxLayout.setHorizontalGroup(
                                 rolesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,10 +222,10 @@ public class adminDash {
                                 rolesAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                rolesLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                rolesLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 rolesLabel.setText("Roles");
 
-                javax.swing.GroupLayout rolesPanelLayout = new javax.swing.GroupLayout(rolesPanel);
+                javax.swing.GroupLayout rolesPanelLayout = new GroupLayout(rolesPanel);
                 rolesPanel.setLayout(rolesPanelLayout);
                 rolesPanelLayout.setHorizontalGroup(
                                 rolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,10 +256,10 @@ public class adminDash {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                date.setForeground(new java.awt.Color(255, 255, 255));
+                date.setForeground(new Color(255, 255, 255));
                 date.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-                javax.swing.GroupLayout leftAuxPanelLayout = new javax.swing.GroupLayout(leftAuxPanel);
+                javax.swing.GroupLayout leftAuxPanelLayout = new GroupLayout(leftAuxPanel);
                 leftAuxPanel.setLayout(leftAuxPanelLayout);
                 leftAuxPanelLayout.setHorizontalGroup(
                                 leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,11 +346,11 @@ public class adminDash {
                 playground.setBackground(new Color(255, 255, 255));
 
                 salesPanel.setBackground(new Color(255, 255, 255));
-                salesPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                salesPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
 
-                headSalesPanel.setBackground(new Color(204, 204, 204));
+                headSalesPanel.setBackground(new Color(185, 208, 248));
 
-                salesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                salesLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 salesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 salesLabel.setText("SALES OVERVIEW");
 
@@ -415,14 +415,14 @@ public class adminDash {
 
                 employeesPanelDash.setBackground(new Color(255, 255, 255));
                 employeesPanelDash.setBorder(
-                                new LineBorder(new Color(204, 204, 204), 3, true));
+                                new LineBorder(new Color(185, 208, 248), 3, true));
                 employeesPanelDash.setMaximumSize(new Dimension(270, 270));
                 employeesPanelDash.setMinimumSize(new Dimension(270, 270));
 
-                headEmployeesPanel.setBackground(new Color(204, 204, 204));
+                headEmployeesPanel.setBackground(new Color(185, 208, 248));
                 headEmployeesPanel.setPreferredSize(new Dimension(295, 37));
 
-                employeesLabelDash.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                employeesLabelDash.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 employeesLabelDash.setHorizontalAlignment(SwingConstants.CENTER);
                 employeesLabelDash.setText("EMPLOYEE ROLE DISTRIBUTION");
 
@@ -482,11 +482,11 @@ public class adminDash {
                                                                 .addContainerGap()));
 
                 expensesPanel.setBackground(new Color(255, 255, 255));
-                expensesPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                expensesPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
 
-                headExpensesPanel.setBackground(new Color(204, 204, 204));
+                headExpensesPanel.setBackground(new Color(185, 208, 248));
 
-                expensesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                expensesLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 expensesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 expensesLabel.setText("EMPLOYEE EXPENSES");
 
@@ -553,11 +553,11 @@ public class adminDash {
 
                 employeesHourPanel.setBackground(new Color(255, 255, 255));
                 employeesHourPanel.setBorder(
-                                new LineBorder(new Color(204, 204, 204), 3, true));
+                                new LineBorder(new Color(185, 208, 248), 3, true));
 
-                headEmployeesHourPanel.setBackground(new Color(204, 204, 204));
+                headEmployeesHourPanel.setBackground(new Color(185, 208, 248));
 
-                employeesHourLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                employeesHourLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 employeesHourLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 employeesHourLabel.setText("EMPLOYEES HOUR");
 
@@ -922,6 +922,7 @@ public class adminDash {
 
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
                                 datos, PlotOrientation.VERTICAL, false, true, false);
+                barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setMinimumSize(new Dimension(387, 234));
@@ -951,6 +952,8 @@ public class adminDash {
                 JFreeChart barChart = ChartFactory.createBarChart("Employees Expenses in Last " + goal + " Days", null,
                                 "Expenses (€)",
                                 datos, PlotOrientation.VERTICAL, false, true, false);
+                barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
+
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setMinimumSize(new Dimension(387, 234));
@@ -967,9 +970,10 @@ public class adminDash {
                 emploeesContentPanel.removeAll();
                 DefaultPieDataset dataset = new DefaultPieDataset();
                 for (tuple temp : dashboardsAPI.getEmployeeCategoryPercentagesToday())
-                        dataset.setValue(temp.roleName, temp.percentage);
+                        dataset.setValue(temp.roleName, temp.frequency);
                 JFreeChart pieChart = ChartFactory.createPieChart("Today", dataset, false,
                                 true, false);
+                pieChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
                 ChartPanel panel = new ChartPanel(pieChart);
                 panel.setMouseWheelEnabled(false);
                 panel.setMinimumSize(new Dimension(258, 240));
@@ -1004,6 +1008,7 @@ public class adminDash {
                 }
                 JFreeChart histogram = ChartFactory.createHistogram(title, "Hour of Day",
                                 yAxis, dataset, PlotOrientation.VERTICAL, false, false, false);
+                histogram.getPlot().setBackgroundPaint(new Color(232, 237, 246));
                 histogram.getXYPlot().getDomainAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
                 histogram.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
                 ChartPanel panel = new ChartPanel(histogram);

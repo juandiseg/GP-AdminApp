@@ -1,4 +1,4 @@
-package navigation.home.items;
+package navigation.home;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -70,25 +71,25 @@ public class mainContact {
         }
 
         private void initComponents(JPanel playground) {
-                playground.setBackground(new java.awt.Color(255, 255, 255));
+                playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
                 successLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-                jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+                jPanel1.setBackground(new Color(255, 255, 255));
 
-                providerLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                providerLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 providerLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
                 providerLabel.setText("Provider");
                 providerLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-                fromLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                fromLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 fromLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
                 fromLabel.setText("From");
                 fromLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-                untilLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                untilLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 untilLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
                 untilLabel.setText("Until");
                 untilLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
@@ -99,9 +100,9 @@ public class mainContact {
 
                 generateButton.setText("Generate Email");
 
-                jPanel5.setBackground(new java.awt.Color(71, 120, 197));
+                jPanel5.setBackground(new Color(71, 120, 197));
 
-                javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+                javax.swing.GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
                 jPanel5.setLayout(jPanel5Layout);
                 jPanel5Layout.setHorizontalGroup(
                                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +111,7 @@ public class mainContact {
                                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 2, Short.MAX_VALUE));
 
-                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                javax.swing.GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
                 jPanel1Layout.setHorizontalGroup(
                                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,9 +267,9 @@ public class mainContact {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addContainerGap()));
 
-                jPanel3.setBackground(new java.awt.Color(71, 120, 197));
+                jPanel3.setBackground(new Color(71, 120, 197));
 
-                javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+                javax.swing.GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
                 jPanel3.setLayout(jPanel3Layout);
                 jPanel3Layout.setHorizontalGroup(
                                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,12 +278,12 @@ public class mainContact {
                                 jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                titleLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                titleLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 titleLabel.setText("Generate Provider Emails");
                 titleLabel.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-                javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+                javax.swing.GroupLayout playgroundLayout = new GroupLayout(playground);
                 playground.setLayout(playgroundLayout);
                 playgroundLayout.setHorizontalGroup(
                                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,7 +365,7 @@ public class mainContact {
                 provider[] providerArr = tempList.toArray(new provider[0]);
 
                 providerComboBox.setModel(new DefaultComboBoxModel<provider>(providerArr));
-                providerComboBox.setFont(new java.awt.Font("Segoe UI", 0, 18));
+                providerComboBox.setFont(new Font("Segoe UI", 0, 18));
                 providerComboBox.setFont(new Font("Segoe UI", 0, 18));
                 providerComboBox.setForeground(Color.BLACK);
                 providerComboBox.setBackground(Color.WHITE);

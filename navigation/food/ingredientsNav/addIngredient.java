@@ -73,17 +73,17 @@ public class addIngredient {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setText("                                             ");
 
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -99,22 +99,22 @@ public class addIngredient {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                priceLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                priceLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 priceLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 priceLabel.setText("Price");
                 priceLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                quantityLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                quantityLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 quantityLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 quantityLabel.setText("Quantity");
                 quantityLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                inventoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                inventoryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 inventoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 inventoryLabel.setText("Inventory");
                 inventoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                providerLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                providerLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 providerLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 providerLabel.setText("Provider");
                 providerLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -130,7 +130,7 @@ public class addIngredient {
                 inventoryToggle.setBackground(new Color(255, 255, 255));
                 inventoryToggle.setForeground(new Color(23, 35, 51));
 
-                allergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                allergenLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 allergenLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 allergenLabel.setText("Select Allergens");
                 allergenLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -350,7 +350,7 @@ public class addIngredient {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                theIngredientLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                theIngredientLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 theIngredientLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theIngredientLabel.setText("Add Ingredient");
                 theIngredientLabel.setToolTipText("");
@@ -446,10 +446,10 @@ public class addIngredient {
         private void tableLookPretty(JTable theTable) {
                 theTable.setDefaultEditor(Object.class, null);
                 theTable.setFocusable(true);
-                theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
+                theTable.getTableHeader().setFont(new Font("Segoe UI", 1, 9));
                 theTable.getTableHeader().setBackground(new Color(120, 168, 252));
                 theTable.setFillsViewportHeight(true);
-                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                theTable.setFont(new Font("Segoe UI", 0, 9));
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment(JLabel.CENTER);
                 theTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -464,7 +464,7 @@ public class addIngredient {
                         tempNames.add(temp.getName());
                 String[] namesArr = tempNames.toArray(new String[0]);
                 providerComboBox.setModel(new DefaultComboBoxModel<String>(namesArr));
-                providerComboBox.setFont(new java.awt.Font("Segoe UI", 0, 18));
+                providerComboBox.setFont(new Font("Segoe UI", 0, 18));
                 providerComboBox.setFont(new Font("Segoe UI", 0, 18));
                 providerComboBox.setForeground(Color.BLACK);
                 providerComboBox.setBackground(Color.WHITE);

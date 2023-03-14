@@ -40,16 +40,16 @@ public class addProvider {
 
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -67,7 +67,7 @@ public class addProvider {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                emailLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                emailLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 emailLabel.setText("Email");
                 emailLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -170,7 +170,7 @@ public class addProvider {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                providerLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                providerLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 providerLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 providerLabel.setText("Add Provider");
                 providerLabel.setVerticalAlignment(SwingConstants.BOTTOM);

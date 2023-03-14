@@ -46,21 +46,21 @@ public class editProvider {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                nameTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 nameTextField.setText(theCurrentProvider.getName());
                 nameTextField.setForeground(Color.GRAY);
 
@@ -77,12 +77,12 @@ public class editProvider {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                emailLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                emailLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 emailLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 emailLabel.setText("Email");
                 emailLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                emailTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                emailTextField.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 emailTextField.setText(theCurrentProvider.getEmail());
                 emailTextField.setForeground(Color.GRAY);
 
@@ -184,12 +184,12 @@ public class editProvider {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                theProviderLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                theProviderLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 theProviderLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theProviderLabel.setText(theCurrentProvider.getName());
                 theProviderLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                auxProviderLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                auxProviderLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 auxProviderLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 auxProviderLabel.setText("Provider to edit:");
                 auxProviderLabel.setVerticalAlignment(SwingConstants.BOTTOM);

@@ -6,27 +6,20 @@ import java.awt.Dimension;
 
 import java.util.ArrayList;
 
-import javax.lang.model.util.ElementScanner14;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import componentsFood.category;
 import componentsFood.menu;
 import componentsFood.product;
-import util.buttonFormatters.auxButtonFormatter;
 import util.buttonFormatters.dashToggleFormatter;
-import util.buttonFormatters.iAuxButton;
 import util.buttonFormatters.iDashToggleFormatter;
-import util.buttonFormatters.navigatorButtonFormatter;
 import util.databaseAPIs.categoryAPI;
 import util.databaseAPIs.menuAPI;
 import util.databaseAPIs.productAPI;
@@ -49,18 +42,18 @@ public class mainItems {
     }
 
     private void initComponents(JPanel playground) {
-        playground.setBackground(new java.awt.Color(255, 255, 255));
+        playground.setBackground(new Color(255, 255, 255));
 
         setTableMenus(true);
         itemsTable.setRowHeight(itemsTable.getRowHeight() + 10);
         itemJScrollPane.revalidate();
         itemJScrollPane.repaint();
 
-        infoLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        infoLabel.setForeground(new java.awt.Color(23, 35, 51));
+        infoLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
+        infoLabel.setForeground(new Color(23, 35, 51));
         infoLabel.setText("Double-Click on an Item to edit its preview");
 
-        javax.swing.GroupLayout playgroundLayout = new javax.swing.GroupLayout(playground);
+        javax.swing.GroupLayout playgroundLayout = new GroupLayout(playground);
         playground.setLayout(playgroundLayout);
         playgroundLayout.setHorizontalGroup(
                 playgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -40,7 +40,7 @@ public class mainCategories {
 
     private void initComponents(JPanel playground) {
         playground.setBackground(new Color(255, 255, 255));
-        clickCategory.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        clickCategory.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickCategory.setHorizontalAlignment(SwingConstants.CENTER);
         clickCategory.setVerticalAlignment(SwingConstants.BOTTOM);
 

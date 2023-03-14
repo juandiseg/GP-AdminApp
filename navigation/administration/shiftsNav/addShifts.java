@@ -77,21 +77,21 @@ public class addShifts {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                dateLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                dateLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 dateLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 dateLabel.setText("Date");
                 dateLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                addShiftsButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+                addShiftsButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 addShiftsButton.setText("Add Shift(s)");
                 addShiftsButton.setBackground(new Color(255, 255, 255));
                 addShiftsButton.setForeground(new Color(23, 35, 51));
@@ -107,18 +107,18 @@ public class addShifts {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                startShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                startShiftLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 startShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 startShiftLabel.setText("Start Shift");
 
                 startShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                endShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                endShiftLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 endShiftLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 endShiftLabel.setText("End Shift");
                 endShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                selectEmployeesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                selectEmployeesLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 selectEmployeesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 selectEmployeesLabel.setText("Select Employees");
                 selectEmployeesLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -295,7 +295,7 @@ public class addShifts {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                addShiftLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                addShiftLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 addShiftLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 addShiftLabel.setText("Add Shift(s)");
                 addShiftLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -584,10 +584,10 @@ public class addShifts {
         private void tableLookPretty(JTable theTable) {
                 theTable.setDefaultEditor(Object.class, null);
                 theTable.setFocusable(true);
-                theTable.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 9));
+                theTable.getTableHeader().setFont(new Font("Segoe UI", 1, 9));
                 theTable.getTableHeader().setBackground(new Color(120, 168, 252));
                 theTable.setFillsViewportHeight(true);
-                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                theTable.setFont(new Font("Segoe UI", 0, 9));
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment(JLabel.CENTER);
                 theTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);

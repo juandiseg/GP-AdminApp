@@ -42,16 +42,16 @@ public class editAllergen {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -134,12 +134,12 @@ public class editAllergen {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                editAllergenLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                editAllergenLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 editAllergenLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 editAllergenLabel.setText(theCurrentAllergen.getName());
                 editAllergenLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                auxEditAllergenLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                auxEditAllergenLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 auxEditAllergenLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 auxEditAllergenLabel.setText("Allergen to edit:");
                 auxEditAllergenLabel.setVerticalAlignment(SwingConstants.BOTTOM);

@@ -48,16 +48,16 @@ public class editCategory {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -75,12 +75,12 @@ public class editCategory {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                typeLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                typeLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 typeLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 typeLabel.setText("Type");
                 typeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                typeToggle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                typeToggle.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 String category = "Menu Category";
                 if (theCurrentCategory.getIsProduct())
                         category = "Product Category";
@@ -187,15 +187,15 @@ public class editCategory {
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
                 deleteButton.setBackground(new Color(255, 102, 102));
-                deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+                deleteButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
                 deleteButton.setText("Delete");
 
-                theCategoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                theCategoryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 theCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 theCategoryLabel.setText(theCurrentCategory.getName());
                 theCategoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                auxEditCategoryLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                auxEditCategoryLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 auxEditCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 auxEditCategoryLabel.setText("Category to edit:");
                 auxEditCategoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);

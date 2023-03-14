@@ -28,7 +28,7 @@ public class mainIngredients {
 
     private void initComponents(JPanel playground) {
         playground.setBackground(new Color(255, 255, 255));
-        clickIngredient.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        clickIngredient.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickIngredient.setHorizontalAlignment(SwingConstants.CENTER);
         clickIngredient.setVerticalAlignment(SwingConstants.BOTTOM);
 

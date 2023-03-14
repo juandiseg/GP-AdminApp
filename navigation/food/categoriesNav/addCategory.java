@@ -38,16 +38,16 @@ public class addCategory {
         private void initComponents(JPanel playground) {
                 playground.setBackground(new Color(255, 255, 255));
 
-                successLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                successLabel.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 successLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 successLabel.setVisible(false);
                 successLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 jPanel1.setBackground(new Color(120, 168, 252));
-                jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jPanel1.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 jPanel1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
-                nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                nameLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 nameLabel.setText("Name");
                 nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -65,12 +65,12 @@ public class addCategory {
                                 jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                typeLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                typeLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 typeLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 typeLabel.setText("Type");
                 typeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
-                typeJoggle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                typeJoggle.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 typeJoggle.setText("Menu Category");
                 typeJoggle.setBackground(new Color(255, 255, 255));
                 typeJoggle.setForeground(new Color(23, 35, 51));
@@ -170,7 +170,7 @@ public class addCategory {
                                 jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 5, Short.MAX_VALUE));
 
-                addCategoryLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                addCategoryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 addCategoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 addCategoryLabel.setText("Add Category");
                 addCategoryLabel.setVerticalAlignment(SwingConstants.BOTTOM);

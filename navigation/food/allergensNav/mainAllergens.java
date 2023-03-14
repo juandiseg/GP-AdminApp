@@ -39,10 +39,10 @@ public class mainAllergens {
 
     private void initComponents(JPanel playground) {
         playground.setBackground(new Color(255, 255, 255));
-        clickAllergen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        clickAllergen.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
         clickAllergen.setHorizontalAlignment(SwingConstants.CENTER);
         clickAllergen.setVerticalAlignment(SwingConstants.BOTTOM);
-        addAllergenButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addAllergenButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
         addAllergenButton.setBackground(new Color(23, 35, 51));
         addAllergenButton.setForeground(new Color(255, 255, 255));
 

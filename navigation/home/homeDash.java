@@ -25,7 +25,6 @@ import componentsFood.orderView;
 import componentsFood.product;
 import navigation.administration.*;
 import navigation.food.*;
-import navigation.home.items.mainContact;
 import navigation.home.items.mainItems;
 import util.buttonFormatters.dashToggleFormatter;
 import util.buttonFormatters.iDashToggleFormatter;
@@ -129,16 +128,16 @@ public class homeDash extends JFrame {
         }
 
         private void initComp2() {
-                leftAuxPanel.setBackground(new java.awt.Color(71, 120, 197));
+                leftAuxPanel.setBackground(new Color(71, 120, 197));
 
-                jPanel4.setBackground(new java.awt.Color(120, 168, 252));
+                jPanel4.setBackground(new Color(120, 168, 252));
 
-                timeOfDay.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
+                timeOfDay.setFont(new Font("Segoe UI", 1, 30)); // NOI18N
                 timeOfDay.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 timeOfDay.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
                 setClock(timeOfDay);
 
-                javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+                javax.swing.GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
                 jPanel4.setLayout(jPanel4Layout);
                 jPanel4Layout.setHorizontalGroup(
                                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,14 +160,14 @@ public class homeDash extends JFrame {
                 Locale engLocale = new Locale("en", "UK");
                 String dateToday = DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", engLocale)
                                 .format(LocalDateTime.now());
-                date.setForeground(new java.awt.Color(255, 255, 255));
+                date.setForeground(new Color(255, 255, 255));
                 date.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 date.setText(dateToday);
-                descriptionPanel.setBackground(new java.awt.Color(71, 120, 197));
+                descriptionPanel.setBackground(new Color(71, 120, 197));
 
-                descriptionAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                descriptionAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout descriptionAuxLayout = new javax.swing.GroupLayout(descriptionAux);
+                javax.swing.GroupLayout descriptionAuxLayout = new GroupLayout(descriptionAux);
                 descriptionAux.setLayout(descriptionAuxLayout);
                 descriptionAuxLayout.setHorizontalGroup(
                                 descriptionAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,10 +176,10 @@ public class homeDash extends JFrame {
                                 descriptionAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                descriptionLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                descriptionLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 descriptionLabel.setText("Product Descriptions");
 
-                javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
+                javax.swing.GroupLayout descriptionPanelLayout = new GroupLayout(descriptionPanel);
                 descriptionPanel.setLayout(descriptionPanelLayout);
                 descriptionPanelLayout.setHorizontalGroup(
                                 descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,11 +211,11 @@ public class homeDash extends JFrame {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                contactPanel.setBackground(new java.awt.Color(71, 120, 197));
+                contactPanel.setBackground(new Color(71, 120, 197));
 
-                contactAux.setPreferredSize(new java.awt.Dimension(5, 43));
+                contactAux.setPreferredSize(new Dimension(5, 43));
 
-                javax.swing.GroupLayout contactAuxLayout = new javax.swing.GroupLayout(contactAux);
+                javax.swing.GroupLayout contactAuxLayout = new GroupLayout(contactAux);
                 contactAux.setLayout(contactAuxLayout);
                 contactAuxLayout.setHorizontalGroup(
                                 contactAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,10 +224,10 @@ public class homeDash extends JFrame {
                                 contactAuxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                contactLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                contactLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 contactLabel.setText("Contact Providers");
 
-                javax.swing.GroupLayout contactPanelLayout = new javax.swing.GroupLayout(contactPanel);
+                javax.swing.GroupLayout contactPanelLayout = new GroupLayout(contactPanel);
                 contactPanel.setLayout(contactPanelLayout);
                 contactPanelLayout.setHorizontalGroup(
                                 contactPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,61 +256,61 @@ public class homeDash extends JFrame {
                                                                                                 43, Short.MAX_VALUE))
                                                                 .addGap(0, 0, Short.MAX_VALUE)));
 
-                restaurantName.setFont(new java.awt.Font("Segoe UI", 1, 21)); // NOI18N
-                restaurantName.setForeground(new java.awt.Color(255, 255, 255));
+                restaurantName.setFont(new Font("Segoe UI", 1, 21)); // NOI18N
+                restaurantName.setForeground(new Color(255, 255, 255));
                 restaurantName.setText("Lancaster Restaurant");
 
-                mainAddress.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-                mainAddress.setForeground(new java.awt.Color(240, 240, 240));
+                mainAddress.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
+                mainAddress.setForeground(new Color(240, 240, 240));
                 mainAddress.setText("Nikolaistraße 10,");
 
-                auxAddress.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-                auxAddress.setForeground(new java.awt.Color(240, 240, 240));
+                auxAddress.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
+                auxAddress.setForeground(new Color(240, 240, 240));
                 auxAddress.setText("04109 Leipzig");
 
-                contactEmail.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-                contactEmail.setForeground(new java.awt.Color(240, 240, 240));
+                contactEmail.setFont(new Font("Segoe UI", 0, 15)); // NOI18N
+                contactEmail.setForeground(new Color(240, 240, 240));
                 contactEmail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 contactEmail.setText("studentservices@lancaster.de");
 
-                phoneNmbr.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-                phoneNmbr.setForeground(new java.awt.Color(240, 240, 240));
+                phoneNmbr.setFont(new Font("Segoe UI", 0, 16)); // NOI18N
+                phoneNmbr.setForeground(new Color(240, 240, 240));
                 phoneNmbr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                 phoneNmbr.setText("+49 0341 33975808");
 
-                scheduleTitle.setFont(new java.awt.Font("Segoe UI", 2, 16)); // NOI18N
-                scheduleTitle.setForeground(new java.awt.Color(240, 240, 240));
+                scheduleTitle.setFont(new Font("Segoe UI", 2, 16)); // NOI18N
+                scheduleTitle.setForeground(new Color(240, 240, 240));
                 scheduleTitle.setText("Schedule:");
 
-                mondayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                mondayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                mondayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                mondayLabel.setForeground(new Color(240, 240, 240));
                 mondayLabel.setText("Monday");
 
-                tuesdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                tuesdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                tuesdayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                tuesdayLabel.setForeground(new Color(240, 240, 240));
                 tuesdayLabel.setText("Tuesday");
 
-                thursdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                thursdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                thursdayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                thursdayLabel.setForeground(new Color(240, 240, 240));
                 thursdayLabel.setText("Thursday");
 
-                wednesdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                wednesdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                wednesdayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                wednesdayLabel.setForeground(new Color(240, 240, 240));
                 wednesdayLabel.setText("Wednesday");
 
-                fridayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                fridayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                fridayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                fridayLabel.setForeground(new Color(240, 240, 240));
                 fridayLabel.setText("Friday");
 
-                saturdayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                saturdayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                saturdayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                saturdayLabel.setForeground(new Color(240, 240, 240));
                 saturdayLabel.setText("Saturday");
 
-                jPanel1.setMaximumSize(new java.awt.Dimension(111, 4));
-                jPanel1.setMinimumSize(new java.awt.Dimension(111, 4));
-                jPanel1.setPreferredSize(new java.awt.Dimension(111, 4));
+                jPanel1.setMaximumSize(new Dimension(111, 4));
+                jPanel1.setMinimumSize(new Dimension(111, 4));
+                jPanel1.setPreferredSize(new Dimension(111, 4));
 
-                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                javax.swing.GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
                 jPanel1.setLayout(jPanel1Layout);
                 jPanel1Layout.setHorizontalGroup(
                                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,39 +319,39 @@ public class homeDash extends JFrame {
                                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                sundayLabel.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                sundayLabel.setForeground(new java.awt.Color(240, 240, 240));
+                sundayLabel.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                sundayLabel.setForeground(new Color(240, 240, 240));
                 sundayLabel.setText("Sunday");
 
-                mondayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                mondayTime.setForeground(new java.awt.Color(240, 240, 240));
+                mondayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                mondayTime.setForeground(new Color(240, 240, 240));
                 mondayTime.setText("08:00 - 18:00");
 
-                tuesdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                tuesdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                tuesdayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                tuesdayTime.setForeground(new Color(240, 240, 240));
                 tuesdayTime.setText("08:00 - 18:00");
 
-                thursdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                thursdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                thursdayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                thursdayTime.setForeground(new Color(240, 240, 240));
                 thursdayTime.setText("08:00 - 18:00");
 
-                wednesdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                wednesdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                wednesdayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                wednesdayTime.setForeground(new Color(240, 240, 240));
                 wednesdayTime.setText("08:00 - 18:00");
 
-                fridayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                fridayTime.setForeground(new java.awt.Color(240, 240, 240));
+                fridayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                fridayTime.setForeground(new Color(240, 240, 240));
                 fridayTime.setText("08:00 - 18:00");
 
-                saturdayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                saturdayTime.setForeground(new java.awt.Color(240, 240, 240));
+                saturdayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                saturdayTime.setForeground(new Color(240, 240, 240));
                 saturdayTime.setText("CLOSED");
 
-                sundayTime.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-                sundayTime.setForeground(new java.awt.Color(240, 240, 240));
+                sundayTime.setFont(new Font("Segoe UI", 2, 12)); // NOI18N
+                sundayTime.setForeground(new Color(240, 240, 240));
                 sundayTime.setText("CLOSED");
 
-                javax.swing.GroupLayout leftAuxPanelLayout = new javax.swing.GroupLayout(leftAuxPanel);
+                javax.swing.GroupLayout leftAuxPanelLayout = new GroupLayout(leftAuxPanel);
                 leftAuxPanel.setLayout(leftAuxPanelLayout);
                 leftAuxPanelLayout.setHorizontalGroup(
                                 leftAuxPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -598,7 +597,7 @@ public class homeDash extends JFrame {
         }
 
         private void initComp1() {
-                clickRole1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+                clickRole1.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
                 clickRole1.setHorizontalAlignment(SwingConstants.CENTER);
                 clickRole1.setText("New name :");
                 clickRole1.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -625,7 +624,7 @@ public class homeDash extends JFrame {
                                 homeAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                homeLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                homeLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 homeLabel.setForeground(new Color(255, 255, 255));
                 homeLabel.setText("Home");
 
@@ -674,7 +673,7 @@ public class homeDash extends JFrame {
                                 administrationAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                administrationLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                administrationLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 administrationLabel.setForeground(new Color(255, 255, 255));
                 administrationLabel.setText("Administration");
 
@@ -719,7 +718,7 @@ public class homeDash extends JFrame {
                                 foodAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                foodLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                foodLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 foodLabel.setForeground(new Color(255, 255, 255));
                 foodLabel.setText("Food");
 
@@ -808,7 +807,7 @@ public class homeDash extends JFrame {
                                 overheadLogoPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addGap(0, 0, Short.MAX_VALUE));
 
-                welcomeLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+                welcomeLabel.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
                 welcomeLabel.setForeground(new Color(255, 255, 255));
                 welcomeLabel.setText("Welcome!");
 
@@ -850,11 +849,11 @@ public class homeDash extends JFrame {
                 playground.setBackground(new Color(255, 255, 255));
 
                 salesPanel.setBackground(new Color(255, 255, 255));
-                salesPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                salesPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
 
-                headSalesPanel.setBackground(new Color(204, 204, 204));
+                headSalesPanel.setBackground(new Color(185, 208, 248));
 
-                salesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                salesLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 salesLabel.setHorizontalAlignment(SwingConstants.LEFT);
                 salesLabel.setText("SALES OVERVIEW");
 
@@ -918,15 +917,15 @@ public class homeDash extends JFrame {
                                                                 .addContainerGap()));
 
                 ordersPanel.setBackground(new Color(255, 255, 255));
-                ordersPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                ordersPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 ordersPanel.setMaximumSize(new Dimension(270, 270));
                 ordersPanel.setMinimumSize(new Dimension(270, 270));
                 ordersPanel.setPreferredSize(new Dimension(270, 270));
 
-                headOrdersPanel.setBackground(new Color(204, 204, 204));
+                headOrdersPanel.setBackground(new Color(185, 208, 248));
                 headOrdersPanel.setPreferredSize(new Dimension(295, 37));
 
-                ordersLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                ordersLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 ordersLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 ordersLabel.setText("LAST 10 ORDERS");
 
@@ -976,12 +975,12 @@ public class homeDash extends JFrame {
                                                                                 Short.MAX_VALUE)));
 
                 bsTodayPanel.setBackground(new Color(255, 255, 255));
-                bsTodayPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                bsTodayPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 bsTodayPanel.setPreferredSize(new Dimension(295, 282));
 
-                bsTodayPanelBackground.setBackground(new Color(204, 204, 204));
+                bsTodayPanelBackground.setBackground(new Color(185, 208, 248));
 
-                bsTodayProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                bsTodayProductLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 bsTodayProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 product todayProd = dashboardsAPI.getMostSoldProductToday();
                 if (todayProd == null)
@@ -989,7 +988,7 @@ public class homeDash extends JFrame {
                 else
                         bsTodayProductLabel.setText(todayProd.getName());
 
-                bsTodayTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+                bsTodayTitlePanel.setFont(new Font("Segoe UI", 1, 17)); // NOI18N
                 bsTodayTitlePanel.setHorizontalAlignment(SwingConstants.CENTER);
                 bsTodayTitlePanel.setText("BEST SELLER TODAY");
 
@@ -1045,14 +1044,14 @@ public class homeDash extends JFrame {
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 employeesPanel.setBackground(new Color(255, 255, 255));
-                employeesPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                employeesPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 employeesPanel.setMaximumSize(new Dimension(270, 270));
                 employeesPanel.setMinimumSize(new Dimension(270, 270));
 
-                headEmployeesPanel.setBackground(new Color(204, 204, 204));
+                headEmployeesPanel.setBackground(new Color(185, 208, 248));
                 headEmployeesPanel.setPreferredSize(new Dimension(295, 37));
 
-                employeesLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+                employeesLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 employeesLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 employeesLabel.setText("WORKING EMPLOYEES");
 
@@ -1099,19 +1098,19 @@ public class homeDash extends JFrame {
                                                                 .addGap(0, 0, 0)));
 
                 bsWeekPanel.setBackground(new Color(255, 255, 255));
-                bsWeekPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                bsWeekPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 bsWeekPanel.setPreferredSize(new Dimension(295, 282));
 
-                bsWeekPanelBackground.setBackground(new Color(204, 204, 204));
+                bsWeekPanelBackground.setBackground(new Color(185, 208, 248));
 
-                bsWeekProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                bsWeekProductLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 bsWeekProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 product weekProd = dashboardsAPI.getMostSoldProductWeek();
                 if (weekProd == null)
                         bsWeekProductLabel.setText("");
                 else
                         bsWeekProductLabel.setText(weekProd.getName());
-                bsWeekTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+                bsWeekTitlePanel.setFont(new Font("Segoe UI", 1, 17)); // NOI18N
                 bsWeekTitlePanel.setHorizontalAlignment(SwingConstants.CENTER);
                 bsWeekTitlePanel.setText("BEST SELLER WEEK");
 
@@ -1167,19 +1166,19 @@ public class homeDash extends JFrame {
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 bsMonthPanel.setBackground(new Color(255, 255, 255));
-                bsMonthPanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                bsMonthPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 bsMonthPanel.setPreferredSize(new Dimension(295, 282));
 
-                bsMonthPanelBackground.setBackground(new Color(204, 204, 204));
+                bsMonthPanelBackground.setBackground(new Color(185, 208, 248));
 
-                bsMonthProductLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                bsMonthProductLabel.setFont(new Font("Segoe UI", 0, 14)); // NOI18N
                 bsMonthProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 product monthProd = dashboardsAPI.getMostSoldProductMonth();
                 if (monthProd == null)
                         bsMonthProductLabel.setText("");
                 else
                         bsMonthProductLabel.setText(monthProd.getName());
-                bsMonthTitlePanel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+                bsMonthTitlePanel.setFont(new Font("Segoe UI", 1, 17)); // NOI18N
                 bsMonthTitlePanel.setHorizontalAlignment(SwingConstants.CENTER);
                 bsMonthTitlePanel.setText("BEST SELLER MONTH");
 
@@ -1235,19 +1234,19 @@ public class homeDash extends JFrame {
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 pricePanel.setBackground(new Color(255, 255, 255));
-                pricePanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                pricePanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 pricePanel.setPreferredSize(new Dimension(295, 282));
 
-                pricePanelBackground.setBackground(new Color(204, 204, 204));
+                pricePanelBackground.setBackground(new Color(185, 208, 248));
 
-                pricePriceLabel.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
+                pricePriceLabel.setFont(new Font("Segoe UI", 0, 30)); // NOI18N
                 pricePriceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 pricePriceLabel.setText(String.format("%.2f", dashboardsAPI.getAvgSalePriceToday()).concat(" €"));
 
-                priceIconLabel.setIcon(new javax.swing.ImageIcon(
+                priceIconLabel.setIcon(new ImageIcon(
                                 "C:\\Users\\Juan Diego\\Desktop\\netbeansss\\guiProjectTEST\\src\\money-bag.png")); // NOI18N
 
-                priceTitleLabel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+                priceTitleLabel.setFont(new Font("Segoe UI", 1, 17)); // NOI18N
                 priceTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 priceTitleLabel.setText("AVG. ORDER TODAY");
 
@@ -1312,18 +1311,18 @@ public class homeDash extends JFrame {
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 timePanel.setBackground(new Color(255, 255, 255));
-                timePanel.setBorder(new LineBorder(new Color(204, 204, 204), 3, true));
+                timePanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
                 timePanel.setPreferredSize(new Dimension(295, 282));
 
-                timePanelBackground.setBackground(new Color(204, 204, 204));
+                timePanelBackground.setBackground(new Color(185, 208, 248));
 
-                timeTimeLabel.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
+                timeTimeLabel.setFont(new Font("Segoe UI", 0, 30)); // NOI18N
                 timeTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 timeTimeLabel.setText(Integer.toString(dashboardsAPI.getAvgOrderTimeToday()).concat(" min."));
-                timeIconLabel.setIcon(new javax.swing.ImageIcon(
+                timeIconLabel.setIcon(new ImageIcon(
                                 "C:\\Users\\Juan Diego\\Desktop\\netbeansss\\guiProjectTEST\\src\\stopwatch.png")); // NOI18N
 
-                timeTitleLabel.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+                timeTitleLabel.setFont(new Font("Segoe UI", 1, 17)); // NOI18N
                 timeTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 timeTitleLabel.setText("AVG. ORDER TIME");
 
@@ -1528,6 +1527,7 @@ public class homeDash extends JFrame {
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
                                 datos,
                                 PlotOrientation.VERTICAL, true, true, false);
+                barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setPreferredSize(new Dimension(400, 200));
@@ -1813,7 +1813,7 @@ public class homeDash extends JFrame {
         private void tableLookPretty(JTable theTable) {
                 theTable.setFocusable(true);
                 theTable.setFillsViewportHeight(true);
-                theTable.setFont(new java.awt.Font("Segoe UI", 0, 9));
+                theTable.setFont(new Font("Segoe UI", 0, 9));
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment(JLabel.CENTER);
                 for (int i = 0; i < theTable.getColumnModel().getColumnCount(); i++)

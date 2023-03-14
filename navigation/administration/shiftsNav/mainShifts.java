@@ -242,7 +242,7 @@ public class mainShifts {
             public void action() {
                 String newFrom = fromTextField.getText();
                 try {
-                    LocalDate testFrom = LocalDate.parse(newFrom, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    LocalDate.parse(newFrom, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 } catch (Exception DateTimeParseException) {
                     JOptionPane.showMessageDialog(playground,
                             "The given from date is unvalid.", "ERROR",
@@ -252,7 +252,7 @@ public class mainShifts {
 
                 String newTo = toTextField.getText();
                 try {
-                    LocalDate testTo = LocalDate.parse(newTo, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    LocalDate.parse(newTo, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                 } catch (Exception DateTimeParseException) {
                     JOptionPane.showMessageDialog(playground,
                             "The given to date is unvalid.", "ERROR",
