@@ -6,8 +6,6 @@ generateReport.java ->  Check dates which make sense.
 
 CHECK LENGTH OF SUCCESSLABEL BEFORE IT PUSHES DELETE BUTTON
 
-WHEN PRODUCT IS EDITTED THE TOP LABEL DOESNT CHANGE
-
 TESTING
 ----------------------------------------------------------------------------------------------------------------
     15% --> Interface. Technical Part (input restrictions) & Usability Testing.

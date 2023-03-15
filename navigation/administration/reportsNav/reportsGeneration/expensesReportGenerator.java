@@ -1,6 +1,8 @@
 package navigation.administration.reportsNav.reportsGeneration;
 
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.FileOutputStream;
 import componentsFood.productIngredients;
 import componentsFood.employee;
@@ -14,135 +16,176 @@ import util.databaseAPIs.rolesAPI;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class expensesReportGenerator extends iReportable {
+public class expensesReportGenerator implements iReportable {
+
+    private CellStyle currencyStyle;
+    private CellStyle roundingStyle;
+    private CellStyle boldStyle;
+    private CellStyle timeStyle;
 
     public void generateReport(String from, String to, String folderPath) throws Exception {
-        Sheet sheet = getWorkbook().createSheet("Expenses Report");
+        Workbook workbook = new XSSFWorkbook();
+        DataFormat format = workbook.createDataFormat();
+        currencyStyle = workbook.createCellStyle();
+        roundingStyle = workbook.createCellStyle();
+        boldStyle = workbook.createCellStyle();
+        Font boldFont = workbook.createFont();
+        boldStyle.setFont(boldFont);
+        boldStyle.setDataFormat(format.getFormat("_(€* ###,##0.00_);_(€* (###,##0.00);_(€* \"-\"??_);_(@_)"));
+        currencyStyle.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
+        boldFont.setBold(true);
+        roundingStyle.setDataFormat((format.getFormat("#####0.00")));
+        timeStyle = workbook.createCellStyle();
+        timeStyle.setDataFormat(format.getFormat("HH:MM"));
+        Sheet sheet = workbook.createSheet("Expenses Report");
         int row = 1;
         from = dateInverter.invert(from);
         to = dateInverter.invert(to);
-
-        row = productData(sheet, row, from, to);
-        row = employeeData(sheet, row, from, to);
-
+        int[] coordinates = productData(sheet, row, 1, from, to);
+        int tempRow = coordinates[0];
+        if (coordinates[1] != -1)
+            tempRow += 2;
+        employeeData(sheet, tempRow, 1, from, to);
         String excelName = "/Expenses " + from.substring(8, 10) + "-" + from.substring(5, 7)
                 + "~" + to.substring(8, 10) + "-" + to.substring(5, 7) + ".xlsx";
         FileOutputStream fileout = new FileOutputStream(folderPath.concat(excelName));
-        getWorkbook().write(fileout);
+        workbook.write(fileout);
         fileout.close();
-        getWorkbook().close();
+        workbook.close();
     }
 
-    private int productData(Sheet theSheet, int row, String from, String to) {
+    public int[] productData(Sheet theSheet, int row, int column, String from, String to) {
         ArrayList<ArrayList<productIngredients>> lLProducts = reportsAPI.generateProductExpenses(from, to);
-        return printProductSales(theSheet, lLProducts, row);
+        return printProductSales(theSheet, lLProducts, row, column);
     }
 
-    public int employeeData(Sheet theSheet, int row, String from, String to) {
+    public int[] employeeData(Sheet theSheet, int row, int column, String from, String to) {
         ArrayList<employee> temp = reportsAPI.getAllEmployeesAndShifts(from, to);
+        int c = column - 1;
+        int[] columns = { 'F', 'E', 'G', 'H', 'I' };
+        char[] columnChar = { (char) (columns[0] + c), (char) (columns[1] + c), (char) (columns[2] + c),
+                (char) (columns[3] + c), (char) (columns[4] + c) };
         if (temp.isEmpty())
-            return row;
+            return new int[] { row, -1 };
         Row tempRow = theSheet.createRow(row);
-        tempRow.createCell(1).setCellValue("Shift Date");
-        tempRow.createCell(2).setCellValue("Employee");
-        tempRow.createCell(3).setCellValue("Role");
-        tempRow.createCell(4).setCellValue("Start Shift");
-        tempRow.createCell(5).setCellValue("End Shift");
-        tempRow.createCell(6).setCellValue("Total Hours");
-        tempRow.createCell(7).setCellValue("Salary/Hour");
-        tempRow.createCell(8).setCellValue("Total Cost");
+        tempRow.createCell(column).setCellValue("Shift Date");
+        tempRow.createCell(column + 1).setCellValue("Employee");
+        tempRow.createCell(column + 2).setCellValue("Role");
+        tempRow.createCell(column + 3).setCellValue("Start Shift");
+        tempRow.createCell(column + 4).setCellValue("End Shift");
+        tempRow.createCell(column + 5).setCellValue("Total Hours");
+        tempRow.createCell(column + 6).setCellValue("Salary/Hour");
+        tempRow.createCell(column + 7).setCellValue("Total Cost");
         row += 2;
         int originalRow = row;
         for (employee tempEmployee : temp) {
             for (shift tempShift : tempEmployee.getShifts()) {
                 tempRow = theSheet.createRow(row);
-                tempRow.createCell(1).setCellValue(tempShift.getDate());
-                tempRow.createCell(2).setCellValue(tempEmployee.getName());
-                tempRow.createCell(3).setCellValue(rolesAPI.getNameOfRole(tempEmployee.getRoleID()));
-                Cell cell4 = tempRow.createCell(4);
+                tempRow.createCell(column).setCellValue(tempShift.getDate());
+                tempRow.createCell(column + 1).setCellValue(tempEmployee.getName());
+                tempRow.createCell(column + 2).setCellValue(rolesAPI.getNameOfRole(tempEmployee.getRoleID()));
+                Cell cell4 = tempRow.createCell(column + 3);
                 cell4.setCellValue(tempShift.getStartTime().substring(0, 5));
-                cell4.setCellStyle(iReportable.timeStyle);
-                Cell cell5 = tempRow.createCell(5);
+                cell4.setCellStyle(timeStyle);
+                Cell cell5 = tempRow.createCell(column + 4);
                 cell5.setCellValue(tempShift.getEndTime().substring(0, 5));
-                cell5.setCellStyle(iReportable.timeStyle);
-                Cell cell6 = tempRow.createCell(6);
-                cell6.setCellFormula("F" + (row + 1) + "-E" + (row + 1));
-                cell6.setCellStyle(iReportable.timeStyle);
-                Cell cell7 = tempRow.createCell(7);
+                cell5.setCellStyle(timeStyle);
+                Cell cell6 = tempRow.createCell(column + 5);
+                cell6.setCellFormula(columnChar[0] + "" + (row + 1) + "-" + columnChar[1] + (row + 1));
+                cell6.setCellStyle(timeStyle);
+                Cell cell7 = tempRow.createCell(column + 6);
                 cell7.setCellValue(tempEmployee.getSalary());
-                cell7.setCellStyle(iReportable.currencyStyle);
-                Cell cell8 = tempRow.createCell(8);
-                cell8.setCellFormula("G" + (row + 1) + "*24*H" + (row + 1));
-                cell8.setCellStyle(iReportable.currencyStyle);
+                cell7.setCellStyle(currencyStyle);
+                Cell cell8 = tempRow.createCell(column + 7);
+                cell8.setCellFormula(columnChar[2] + "" + (row + 1) + "*24*" + columnChar[3] + "" + (row + 1));
+                cell8.setCellStyle(currencyStyle);
                 ++row;
             }
         }
-        Cell totalCell = theSheet.createRow(row).createCell(8);
-        totalCell.setCellFormula("SUM(I" + (originalRow + 1) + ":I" + (row) + ")");
-        totalCell.setCellStyle(iReportable.boldStyle);
-        return row + 2;
+        Cell totalCell = theSheet.createRow(row).createCell(column + 7);
+        totalCell.setCellFormula("SUM(" + columnChar[4] + (originalRow + 1) + ":" + columnChar[4] + (row) + ")");
+        totalCell.setCellStyle(boldStyle);
+        return new int[] { row, column + 7 };
     }
 
-    private int printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row) {
+    private int[] printProductSales(Sheet sheet, ArrayList<ArrayList<productIngredients>> listList, int row,
+            int column) {
         if (!areThereSales(listList))
-            return row;
-        sheet.createRow(row).createCell(1).setCellValue("PRODUCT EXPENSES");
+            return new int[] { row, -1 };
+        Row titleRow = sheet.getRow(row);
+        if (titleRow == null)
+            titleRow = sheet.createRow(row);
+        titleRow.createCell(column).setCellValue("PRODUCT EXPENSES");
         row += 2;
-        row = productHeaders(sheet, row);
+        row = productHeaders(sheet, row, column);
+        int c = column - 1;
+        int[] columns = { 'D', 'E', 'G', 'H', 'I', 'J' };
+        char[] columnChar = { (char) (columns[0] + c), (char) (columns[1] + c), (char) (columns[2] + c),
+                (char) (columns[3] + c), (char) (columns[4] + c), (char) (columns[5] + c) };
         Stack<Integer> productTotals = new Stack<Integer>();
         for (ArrayList<productIngredients> bigTemp : listList) {
             for (productIngredients temp : bigTemp) {
                 if (temp.getNumberSoldProducts() != 0 || temp.getNumberSoldMenus() != 0) {
                     int originalRow = row;
-                    Row tempRow = sheet.createRow(row);
-                    tempRow.createCell(1).setCellValue(dateInverter.invert(temp.getIngredientsDate()));
-                    tempRow.createCell(2)
+                    Row tempRow = sheet.getRow(row);
+                    if (tempRow == null)
+                        tempRow = sheet.createRow(row);
+                    tempRow.createCell(column).setCellValue(dateInverter.invert(temp.getIngredientsDate()));
+                    tempRow.createCell(column + 1)
                             .setCellValue(productAPI.getName(temp.getProductID(),
                                     dateInverter.invert(temp.getProductDate())));
-                    tempRow.createCell(3).setCellValue(temp.getNumberSoldProducts());
-                    tempRow.createCell(4).setCellValue(temp.getNumberSoldMenus());
+                    tempRow.createCell(column + 2).setCellValue(temp.getNumberSoldProducts());
+                    tempRow.createCell(column + 3).setCellValue(temp.getNumberSoldMenus());
                     for (int i = 0; i < temp.getIngredients().size(); i++) {
                         ingredient tempIngr = temp.getIngredients().get(i);
                         tempIngr.getProviderID();
-                        tempRow.createCell(5).setCellValue(tempIngr.getName());
-                        tempRow.createCell(6).setCellValue(tempIngr.getAmount());
-                        Cell cell7 = tempRow.createCell(7);
+                        tempRow.createCell(column + 4).setCellValue(tempIngr.getName());
+                        tempRow.createCell(column + 5).setCellValue(tempIngr.getAmount());
+                        Cell cell7 = tempRow.createCell(column + 6);
                         cell7.setCellValue(tempIngr.getPrice());
-                        cell7.setCellStyle(iReportable.currencyStyle);
-                        Cell cell8 = tempRow.createCell(8);
+                        cell7.setCellStyle(currencyStyle);
+                        Cell cell8 = tempRow.createCell(column + 7);
                         cell8.setCellValue(temp.getQuantity().get(i));
-                        cell8.setCellStyle(iReportable.roundingStyle);
-                        Cell cell9 = tempRow.createCell(9);
-                        cell9.setCellFormula("(D" + (originalRow + 1) + "+E" + (originalRow + 1) +
-                                ")/G" + (row + 1)
-                                + "*H" + (row + 1) + "*I" + (row + 1));
-                        cell9.setCellStyle(iReportable.currencyStyle);
+                        cell8.setCellStyle(roundingStyle);
+                        Cell cell9 = tempRow.createCell(column + 8);
+                        String formula = "(" + columnChar[0] + (originalRow + 1) + "+" + columnChar[1]
+                                + (originalRow + 1) +
+                                ")/" + columnChar[2] + (row + 1)
+                                + "*" + columnChar[3] + (row + 1) + "*" + columnChar[4] + (row + 1);
+                        cell9.setCellFormula(formula);
+                        cell9.setCellStyle(currencyStyle);
                         row++;
-                        tempRow = sheet.createRow(row);
+                        tempRow = sheet.getRow(row);
+                        if (tempRow == null)
+                            tempRow = sheet.createRow(row);
                     }
-                    tempRow = sheet.createRow(row);
-                    tempRow.createCell(9).setCellFormula("SUM(J" + (originalRow + 1) + ":J" +
-                            (row) + ")");
-                    tempRow.getCell(9).setCellStyle(iReportable.boldStyle);
+                    tempRow = sheet.getRow(row);
+                    if (tempRow == null)
+                        tempRow = sheet.createRow(row);
+                    tempRow.createCell(column + 8)
+                            .setCellFormula("SUM(" + columnChar[5] + "" + (originalRow + 1) + ":" + columnChar[5] + "" +
+                                    (row) + ")");
+                    tempRow.getCell(column + 8).setCellStyle(boldStyle);
                     productTotals.add(row + 1);
-
                     row += 2;
                 }
             }
         }
         String formula = "SUM(";
         if (productTotals.isEmpty())
-            return row;
+            return new int[] { row, -1 };
         while (!productTotals.isEmpty()) {
-            String temp = "J" + productTotals.pop() + ",";
+            String temp = columnChar[5] + "" + productTotals.pop() + ",";
             formula = formula.concat(temp);
         }
         formula = formula.substring(0, formula.length() - 1);
         formula = formula.concat(")");
-        Row totalRow = sheet.createRow(row);
-        totalRow.createCell(9).setCellFormula(formula);
-        totalRow.getCell(9).setCellStyle(iReportable.boldStyle);
-        return row += 2;
+        Row totalRow = sheet.getRow(row);
+        if (totalRow == null)
+            totalRow = sheet.createRow(row);
+        totalRow.createCell(column + 8).setCellFormula(formula);
+        totalRow.getCell(column + 8).setCellStyle(boldStyle);
+        return new int[] { row, column + 8 };
     }
 
     private boolean areThereSales(ArrayList<ArrayList<productIngredients>> listList) {
@@ -155,17 +198,19 @@ public class expensesReportGenerator extends iReportable {
         return false;
     }
 
-    private int productHeaders(Sheet theSheet, int row) {
-        Row tempRow = theSheet.createRow(row);
-        tempRow.createCell(1).setCellValue("Cost From");
-        tempRow.createCell(2).setCellValue("Product");
-        tempRow.createCell(3).setCellValue("Sold Alone");
-        tempRow.createCell(4).setCellValue("Sold in Menu");
-        tempRow.createCell(5).setCellValue("Ingredients");
-        tempRow.createCell(6).setCellValue("Provided/price");
-        tempRow.createCell(7).setCellValue("Price");
-        tempRow.createCell(8).setCellValue("Quantity Used");
-        tempRow.createCell(9).setCellValue("Total Cost");
+    private int productHeaders(Sheet theSheet, int row, int column) {
+        Row tempRow = theSheet.getRow(row);
+        if (tempRow == null)
+            tempRow = theSheet.createRow(row);
+        tempRow.createCell(column).setCellValue("Cost From");
+        tempRow.createCell(column + 1).setCellValue("Product");
+        tempRow.createCell(column + 2).setCellValue("Sold Alone");
+        tempRow.createCell(column + 3).setCellValue("Sold in Menu");
+        tempRow.createCell(column + 4).setCellValue("Ingredients");
+        tempRow.createCell(column + 5).setCellValue("Provided/price");
+        tempRow.createCell(column + 6).setCellValue("Price");
+        tempRow.createCell(column + 7).setCellValue("Quantity Used");
+        tempRow.createCell(column + 8).setCellValue("Total Cost");
         return ++row;
     }
 

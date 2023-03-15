@@ -7,13 +7,11 @@ public class reportGeneratorFactory {
             return new salesReportGenerator();
         } else if ("Expenses Report".equals(request)) {
             return new expensesReportGenerator();
-        } else if ("General Report".equals(request)) {
-            return new generalReportGenerator();
         }
         return reportGenerator;
     }
 
     public static String[] getReportTypes() {
-        return new String[] { "Sales Report", "Expenses Report", "General Report" };
+        return new String[] { "Sales Report", "Expenses Report" };
     }
 }
