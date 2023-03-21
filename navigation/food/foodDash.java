@@ -940,6 +940,7 @@ public class foodDash {
                                         resetColor(allergensPanel);
                         }
                 });
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 productTuggleButton();
                 menuTuggleButton();
                 salesTuggleButton();

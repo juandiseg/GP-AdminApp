@@ -450,6 +450,7 @@ public class addProduct {
         }
 
         private void addListeners(JPanel playground) {
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 selectionButtons();
                 backButton(playground);
                 addButton(null);

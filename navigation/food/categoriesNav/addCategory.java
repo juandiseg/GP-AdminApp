@@ -240,6 +240,7 @@ public class addCategory {
         }
 
         private void addListeners(JPanel playground) {
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();

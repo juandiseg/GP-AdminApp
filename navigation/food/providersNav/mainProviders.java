@@ -91,6 +91,7 @@ public class mainProviders {
                 }
             }
         });
+        // Call to the method(s) which format each JButton / JTextField accordingly.
         addButton(playground);
     }
 

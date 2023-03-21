@@ -104,6 +104,7 @@ public class mainCategories {
                 }
             }
         });
+        // Call to the method(s) which format each JButton / JTextField accordingly.
         addButton(playground);
     }
 
