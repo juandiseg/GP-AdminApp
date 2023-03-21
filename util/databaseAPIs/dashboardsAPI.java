@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import componentsFood.currentShiftEmployee;
 import componentsFood.orderView;
 import componentsFood.product;
+import util.inputFormatting.dateInverter;
 
 public class dashboardsAPI extends abstractManagerDB {
 
@@ -331,7 +332,7 @@ public class dashboardsAPI extends abstractManagerDB {
         }
     }
 
-    public static float expensesSalaryDaily(int daysBack) {
+    public static float getExpensesSalaryDaily(int daysBack) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT SUM(TIME_TO_SEC(SUBTIME(end_shift, start_shift))/3600*salary) AS expenses FROM employees_schedule NATURAL JOIN employees WHERE shift_date = SUBDATE(CURDATE(), INTERVAL ? DAY);";
             ppdStatement = connection.prepareStatement(query);

@@ -305,6 +305,7 @@ public class addEmployee {
         }
 
         private void addListeners(JPanel playground) {
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 backButton(playground);
                 addButton(null);
                 applyGenericListeners();
@@ -334,14 +335,18 @@ public class addEmployee {
 
                         public boolean areInputsInvalid() {
                                 String hoursWeek = hoursWeekTextField.getText();
-                                int hours = Integer.parseInt(hoursWeek.substring(0, 2));
-                                int mins = Integer.parseInt(hoursWeek.substring(3, 5));
-                                if (hours >= 84 || mins >= 60) {
-                                        successLabel.setText("ERROR. The given time is incorrect.");
-                                        successLabel.setVisible(true);
+                                try {
+                                        int hours = Integer.parseInt(hoursWeek.substring(0, 2));
+                                        int mins = Integer.parseInt(hoursWeek.substring(3, 5));
+                                        if (hours >= 84 || mins >= 60) {
+                                                successLabel.setText("ERROR. The given time is incorrect.");
+                                                successLabel.setVisible(true);
+                                                return true;
+                                        }
+                                        return false;
+                                } catch (Exception e) {
                                         return true;
                                 }
-                                return false;
                         }
 
                         public boolean addFoodComponent() {

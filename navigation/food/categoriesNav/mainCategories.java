@@ -82,6 +82,9 @@ public class mainCategories {
     }
 
     private void addListeners(JPanel playground) {
+
+        // Detects which entry of the JTable has been clicked, and redirects to
+        // "editCategory" to edit it.
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {

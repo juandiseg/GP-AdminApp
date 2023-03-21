@@ -12,6 +12,7 @@ import java.util.Stack;
 
 import componentsFood.menu;
 import componentsFood.product;
+import util.inputFormatting.dateInverter;
 
 public class productAPI extends abstractManagerDB {
 
@@ -32,6 +33,24 @@ public class productAPI extends abstractManagerDB {
                     return new product(ID, catID, date, name, price, active);
                 }
                 return null;
+            } catch (Exception SQLTimeoutException) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
+    }
+
+    public static Stack<Integer> getAllActiveProductIDs() {
+        Stack<Integer> tempStack = new Stack<Integer>();
+        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
+            String query = "SELECT DISTINCT product_id FROM products WHERE active = true;";
+            ppdStatement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = ppdStatement.executeQuery();
+                while (rs.next())
+                    tempStack.add(rs.getInt("product_id"));
+                return tempStack;
             } catch (Exception SQLTimeoutException) {
                 return null;
             }
@@ -163,6 +182,17 @@ public class productAPI extends abstractManagerDB {
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
+    }
+
+    public static ArrayList<Integer> getProductsIDUsingIngredient(int ingredientID) {
+        Stack<Integer> stackProductID = productAPI.getAllActiveProductIDs();
+        ArrayList<Integer> productIDs = new ArrayList<Integer>();
+        while (!stackProductID.isEmpty()) {
+            int temp = stackProductID.pop();
+            if (ingredientsAPI.isIngredientContainedInProduct(temp, ingredientID))
+                productIDs.add(temp);
+        }
+        return productIDs;
     }
 
     public static String getName(int prodID, String date) {

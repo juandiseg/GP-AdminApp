@@ -137,8 +137,11 @@ public class editItems {
             public void editFoodComponent() {
                 JnaFileChooser chooser = new JnaFileChooser();
                 chooser.setMode(JnaFileChooser.Mode.Files);
+                // Only allow to choose images.
                 chooser.addFilter("images", "jpg");
                 if (chooser.showOpenDialog(theFrame)) {
+                    // Get the file, convert it to bits and pass it to its respectice updating
+                    // method depending on whether a product or menu is being modified.
                     File theImage = chooser.getSelectedFile();
                     byte[] byteImage = jpegToBytes(theImage);
                     if (byteImage == null) {

@@ -21,10 +21,9 @@ public class dateInputFormatter implements iFormatter {
             boolean delete = false;
 
             public void keyTyped(KeyEvent arg0) {
-                if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
-                    arg0.consume();
-                    return;
-                } else if (delete) {
+
+                // If the pressed key is "delete" set a placeholder at the last added value.
+                if (delete) {
                     String newInput = moveValuesBackwards(theTextField.getText());
                     theTextField.setText(newInput);
                     arg0.consume();
@@ -32,11 +31,14 @@ public class dateInputFormatter implements iFormatter {
                     return;
                 }
 
+                // If the pressed character is not a number consume it.
                 char k = arg0.getKeyChar();
                 if (!(k >= '0' && k <= '9')) {
                     arg0.consume();
                     return;
                 }
+
+                // Set the most left free placeholder to the pressed number by the user.
                 String newInput = moveValuesForward(theTextField.getText(), k);
                 arg0.consume();
                 theTextField.setText(newInput);

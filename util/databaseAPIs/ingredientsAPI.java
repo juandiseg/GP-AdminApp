@@ -10,6 +10,7 @@ import java.util.Stack;
 
 import componentsFood.ingredient;
 import componentsFood.product;
+import util.inputFormatting.dateInverter;
 
 public class ingredientsAPI extends abstractManagerDB {
 
@@ -71,24 +72,6 @@ public class ingredientsAPI extends abstractManagerDB {
                 return 0;
             } catch (Exception SQLTimeoutException) {
                 return 0;
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
-    }
-
-    public static Stack<Integer> getAllActiveProductIDs() {
-        Stack<Integer> tempStack = new Stack<Integer>();
-        try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT DISTINCT product_id FROM products WHERE active = true;";
-            ppdStatement = connection.prepareStatement(query);
-            try {
-                ResultSet rs = ppdStatement.executeQuery();
-                while (rs.next())
-                    tempStack.add(rs.getInt("product_id"));
-                return tempStack;
-            } catch (Exception SQLTimeoutException) {
-                return null;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
@@ -179,17 +162,6 @@ public class ingredientsAPI extends abstractManagerDB {
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
         }
-    }
-
-    public static ArrayList<Integer> getProductsIDUsingIngredient(int ingredientID) {
-        Stack<Integer> stackProductID = getAllActiveProductIDs();
-        ArrayList<Integer> productIDs = new ArrayList<Integer>();
-        while (!stackProductID.isEmpty()) {
-            int temp = stackProductID.pop();
-            if (isIngredientContainedInProduct(temp, ingredientID))
-                productIDs.add(temp);
-        }
-        return productIDs;
     }
 
     private static int getLastIngredientID() {
@@ -448,7 +420,7 @@ public class ingredientsAPI extends abstractManagerDB {
         }
     }
 
-    private static boolean isIngredientContainedInProduct(int productID, int ingredientID) {
+    public static boolean isIngredientContainedInProduct(int productID, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "SELECT product_id FROM products_ingredients WHERE product_id = ? AND ingredient_id = ? AND product_ingredients_date IN (SELECT MAX(product_ingredients_date) FROM products_ingredients WHERE product_id = ?);";
             ppdStatement = connection.prepareStatement(query);

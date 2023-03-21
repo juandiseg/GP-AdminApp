@@ -72,6 +72,9 @@ public class mainEmployees {
     }
 
     private void addListeners(JPanel playground) {
+
+        // Detects which entry of the JTable has been clicked, and redirects to
+        // "editEmployee" to edit it.
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -90,6 +93,7 @@ public class mainEmployees {
                 }
             }
         });
+        // Call to the method(s) which format each JButton / JTextField accordingly.
         addButton(playground);
     }
 
@@ -104,7 +108,7 @@ public class mainEmployees {
     }
 
     private void populateTable() {
-        ArrayList<employee> tempList = employeesAPI.getAllCurrentEmployeesOrdered();
+        ArrayList<employee> tempList = employeesAPI.getAllCurrentEmployees();
         model = new DefaultTableModel(new String[] { "employee_id", "Name", "Salary", "Hours / Week", "Role" }, 0);
         for (employee temp : tempList) {
             String id = Integer.toString(temp.getId());

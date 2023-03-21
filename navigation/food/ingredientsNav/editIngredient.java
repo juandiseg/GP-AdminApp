@@ -761,7 +761,7 @@ public class editIngredient {
         }
 
         private void deleteAllAssociatedToIngredientID(int ingredientID) {
-                ArrayList<Integer> productIDs = ingredientsAPI.getProductsIDUsingIngredient(ingredientID);
+                ArrayList<Integer> productIDs = productAPI.getProductsIDUsingIngredient(ingredientID);
                 ArrayList<Integer> menuIDs = new ArrayList<Integer>();
                 Stack<Integer> stackMenuIDs = menuAPI.getAllActiveMenuIDs();
                 while (!stackMenuIDs.isEmpty())
@@ -777,7 +777,7 @@ public class editIngredient {
         }
 
         private void deleteIngredientsFromProducts(int ingredientID) {
-                Stack<Integer> stackProductIDs = ingredientsAPI.getAllActiveProductIDs();
+                Stack<Integer> stackProductIDs = productAPI.getAllActiveProductIDs();
                 while (!stackProductIDs.empty())
                         ingredientsAPI.deleteIngredientsInProduct(stackProductIDs.pop(), ingredientID);
                 ingredientsAPI.setToUnactive(ingredientID);

@@ -174,6 +174,8 @@ public class mainShifts {
     }
 
     private void addListeners(JPanel playground) {
+        // Detects which entry of the JTable has been clicked, does some checking, and
+        // redirects to the "editShifts" menu to edit the specified shift.
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -208,6 +210,7 @@ public class mainShifts {
                 }
             }
         });
+        // Call to the method(s) which format each JButton / JTextField accordingly.
         applyButton(playground);
         sortButton();
         undertimeButton();

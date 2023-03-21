@@ -70,6 +70,9 @@ public class mainMenus {
     }
 
     private void addListeners(JPanel playground) {
+
+        // Detects which entry of the JTable has been clicked, and redirects to
+        // "editMenus" to edit it.
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {

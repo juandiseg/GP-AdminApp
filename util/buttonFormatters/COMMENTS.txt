@@ -1,0 +1,10 @@
+The functioning of buttonFormatters consists of every type of button having its own formatter
+which takes the implementation of an interface and the button that's to be formatter as arguments.
+
+This comes very useful, as most buttons follow a similar logic but with small differences among them.
+The implementation of an interface the formatter requires holds the methods which are required for that certain button type.
+E.g.: the iEditButton interface checks for placeholders and valid inputs, meanwhile the iAuxButton only holds the action of the button.
+
+This is very useful as their appareance is also set by their formatters, making it really simple to change the look of any 
+category of buttons. This also simplifies the possible implementation settings such as dark mode of color blind options, as well
+as assuring that all necessary steps are being followed for each button "action".

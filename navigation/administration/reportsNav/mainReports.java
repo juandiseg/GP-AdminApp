@@ -41,7 +41,7 @@ public class mainReports {
 
         public mainReports(JFrame theFrame, JPanel playground) {
                 initComponents(playground);
-                addActionListeners(theFrame);
+                addListeners(theFrame);
         }
 
         private void initComponents(JPanel playground) {
@@ -255,7 +255,7 @@ public class mainReports {
                 setComboBox();
         }
 
-        private void addActionListeners(JFrame theFrame) {
+        private void addListeners(JFrame theFrame) {
                 generateButton.addMouseListener(new MouseListener() {
                         public void mouseClicked(MouseEvent e) {
                                 if (fromPlaceholder.getValue() || toPlaceholder.getValue()) {

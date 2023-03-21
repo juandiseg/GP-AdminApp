@@ -588,6 +588,8 @@ public class homeDash extends JFrame {
         }
 
         private void setClock(JLabel theLabel) {
+                // The object "t" will perform the action defined for the ActionListener every
+                // 100 milliseconds.
                 Timer t = new Timer(100, new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                                 theLabel.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -794,9 +796,6 @@ public class homeDash extends JFrame {
 
         private void initCompTop() {
                 overheadPanel.setBackground(new Color(71, 120, 197));
-
-                // overheadLogoPanel.add(new JLabel(null));
-                // overheadLogoPanel.setOpaque(true);
                 overheadLogoPanel.setBackground(new Color(71, 120, 197));
 
                 GroupLayout overheadLogoPanelLayout = new GroupLayout(overheadLogoPanel);
@@ -1514,25 +1513,25 @@ public class homeDash extends JFrame {
 
         private void setGraph(int goal) {
                 salesContentPanel.removeAll();
-                DefaultCategoryDataset datos = new DefaultCategoryDataset();
+                DefaultCategoryDataset data = new DefaultCategoryDataset();
                 String date = "";
+
+                // Add the data related to the graph a DefaultCategoryDataset (data).
                 for (int i = goal - 1; i > -1; i--) {
                         if (goal == 7)
                                 date = LocalDate.now().minus(i, ChronoUnit.DAYS)
                                                 .format(DateTimeFormatter.ofPattern("dd-MM"));
                         else
                                 date = Integer.toString(-i);
-                        datos.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
+                        data.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
-                                datos,
-                                PlotOrientation.VERTICAL, true, true, false);
+                                data, PlotOrientation.VERTICAL, true, true, false);
                 barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
                 ChartPanel pan = new ChartPanel(barChart);
                 pan.setMouseWheelEnabled(false);
                 pan.setPreferredSize(new Dimension(400, 200));
-
                 salesContentPanel.setLayout(new BorderLayout());
                 salesContentPanel.add(pan, BorderLayout.CENTER);
                 pack();
@@ -1546,12 +1545,15 @@ public class homeDash extends JFrame {
                 initComp2();
                 initComp3();
                 pack();
-                addActionListeners();
+                addListeners();
                 setVisible(true);
         }
 
-        private void addActionListeners() {
+        private void addListeners() {
                 JFrame tempFrame = this;
+                // All these mouseListeners have the goal to transition to a new menu. They do
+                // so by removing the contents of the panels needed by the respective new menu,
+                // and then updating the renders of these panels.
                 administrationLabel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 
@@ -1812,6 +1814,7 @@ public class homeDash extends JFrame {
         }
 
         private void tableLookPretty(JTable theTable) {
+                // Some further formatting of the tables.
                 theTable.setFocusable(true);
                 theTable.setFillsViewportHeight(true);
                 theTable.setFont(new Font("Segoe UI", 0, 9));

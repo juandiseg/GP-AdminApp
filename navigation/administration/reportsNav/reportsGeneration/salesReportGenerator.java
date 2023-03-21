@@ -5,8 +5,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import componentsFood.product;
-import util.databaseAPIs.dateInverter;
 import util.databaseAPIs.reportsAPI;
+import util.inputFormatting.dateInverter;
 import componentsFood.menu;
 import java.util.ArrayList;
 
@@ -21,8 +21,10 @@ public class salesReportGenerator implements iReportable {
         format = workbook.createDataFormat();
         Sheet sheet = workbook.createSheet("Sales Report");
         style.setDataFormat(format.getFormat("_(€* #,##0.00_);_(€* (#,##0.00);_(€* \"-\"??_);_(@_)"));
+
         from = dateInverter.invert(from);
         to = dateInverter.invert(to);
+
         int row = 1;
         int[] coordinates = productSales(sheet, row, 1, from, to);
         int tempRow = coordinates[0];
@@ -55,6 +57,9 @@ public class salesReportGenerator implements iReportable {
     }
 
     public int[] productSales(Sheet sheet, int row, int column, String from, String to) {
+        // Writes on the excel sheet starting from the specified row and column the
+        // summary of product sales within the given timeframe.
+
         int initialRow = row;
         ArrayList<ArrayList<product>> productsLists = reportsAPI.getAllProducts();
         if (!thereAreProductSales(productsLists, from, to))
@@ -91,6 +96,8 @@ public class salesReportGenerator implements iReportable {
         if (summaryRow == null)
             summaryRow = sheet.createRow(row);
         Cell summarySales = summaryRow.createCell(column + 4);
+
+        // Formula to sum up all sales.
         summarySales.setCellFormula(
                 "SUM(" + columnChar[2] + "" + (initialRow + 1) + ":" + columnChar[2] + "" + row + ")");
         summarySales.setCellStyle(style);
@@ -145,6 +152,9 @@ public class salesReportGenerator implements iReportable {
     }
 
     public int[] menuSales(Sheet sheet, int row, int column, String from, String to) {
+        // Writes on the excel sheet starting from the specified row and column the
+        // summary of menu sales within the given timeframe.
+
         int initialRow = row;
         ArrayList<ArrayList<menu>> menusLists = reportsAPI.getAllMenus();
         if (!thereAreMenuSales(menusLists, from, to))

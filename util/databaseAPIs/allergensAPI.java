@@ -15,7 +15,7 @@ public class allergensAPI extends abstractManagerDB {
     // GET from database.
     public static allergen getAllergen(int ID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT * FROM allergens WHERE allergen_id = ?;";
+            String query = "SELECT DISTINCT menu_id FROM menus_products NATURAL JOIN menus;";
             ppdStatement = connection.prepareStatement(query);
             ppdStatement.setInt(1, ID);
             try {
@@ -135,7 +135,7 @@ public class allergensAPI extends abstractManagerDB {
         }
     }
 
-    public static boolean addAlergensOfIngredient(Stack<Integer> allergenIDs, int ingredientID) {
+    public static boolean addAlergensToIngredient(Stack<Integer> allergenIDs, int ingredientID) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
             String query = "INSERT INTO ingredients_allergens VALUES (?, ?);";
             ppdStatement = connection.prepareStatement(query);
@@ -182,7 +182,7 @@ public class allergensAPI extends abstractManagerDB {
             } catch (Exception SQLTimeoutException) {
                 return false;
             }
-            return addAlergensOfIngredient(allergenIDs, theIngredient.getId());
+            return addAlergensToIngredient(allergenIDs, theIngredient.getId());
         } catch (SQLException e) {
             return false;
         }

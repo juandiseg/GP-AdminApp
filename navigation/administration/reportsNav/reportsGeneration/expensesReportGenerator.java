@@ -8,10 +8,10 @@ import componentsFood.productIngredients;
 import componentsFood.employee;
 import componentsFood.ingredient;
 import componentsFood.shift;
-import util.databaseAPIs.dateInverter;
 import util.databaseAPIs.productAPI;
 import util.databaseAPIs.reportsAPI;
 import util.databaseAPIs.rolesAPI;
+import util.inputFormatting.dateInverter;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -55,11 +55,17 @@ public class expensesReportGenerator implements iReportable {
     }
 
     public int[] productData(Sheet theSheet, int row, int column, String from, String to) {
+        // Writes on the excel sheet starting from the specified row and column the
+        // summary of product expenses within the given timeframe.
+
         ArrayList<ArrayList<productIngredients>> lLProducts = reportsAPI.generateProductExpenses(from, to);
         return printProductSales(theSheet, lLProducts, row, column);
     }
 
     public int[] employeeData(Sheet theSheet, int row, int column, String from, String to) {
+        // Writes on the excel sheet starting from the specified row and column the
+        // summary of employee expenses within the given timeframe.
+
         ArrayList<employee> temp = reportsAPI.getAllEmployeesAndShifts(from, to);
         int c = column - 1;
         int[] columns = { 'F', 'E', 'G', 'H', 'I' };

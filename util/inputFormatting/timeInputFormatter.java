@@ -10,6 +10,10 @@ import javax.swing.text.AbstractDocument;
 
 public class timeInputFormatter implements iFormatter {
 
+    // This formatter restricts the user to enter numeric values in the format HH:MM
+    // Every time a key is pressed it checks whether that value can be added, and if
+    // it can, it does so while keeping the format HH:MM.
+
     public void applyFormat(JTextComponent theTextField) {
         ((AbstractDocument) theTextField.getDocument()).setDocumentFilter(
                 new DocumentFilter() {
@@ -21,10 +25,9 @@ public class timeInputFormatter implements iFormatter {
             boolean delete = false;
 
             public void keyTyped(KeyEvent arg0) {
-                if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
-                    arg0.consume();
-                    return;
-                } else if (delete) {
+
+                // If the pressed key is "delete" set a placeholder at the last added value.
+                if (delete) {
                     String newInput = moveValuesBackwards(theTextField.getText());
                     theTextField.setText(newInput);
                     arg0.consume();
@@ -32,11 +35,14 @@ public class timeInputFormatter implements iFormatter {
                     return;
                 }
 
+                // If the pressed character is not a number consume the pressed character.
                 char k = arg0.getKeyChar();
                 if (!(k >= '0' && k <= '9')) {
                     arg0.consume();
                     return;
                 }
+
+                // Set the most left free placeholder to the pressed number by the user.
                 String newInput = moveValuesForward(theTextField.getText(), k);
                 arg0.consume();
                 theTextField.setText(newInput);

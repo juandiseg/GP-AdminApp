@@ -18,7 +18,7 @@ public class navigatorButtonFormatter {
             navButton.setBackground(new Color(71, 120, 197));
             navButton.setForeground(new Color(255, 255, 255));
         } else {
-            navButton.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
+            navButton.setFont(new Font("Segoe UI", 1, 14));
             navButton.setBackground(new Color(23, 35, 51));
             navButton.setForeground(new Color(255, 255, 255));
         }

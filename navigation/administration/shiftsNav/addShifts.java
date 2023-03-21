@@ -376,6 +376,7 @@ public class addShifts {
         }
 
         private void addListeners(JPanel playground) {
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 backButton(playground);
                 addButton(playground);
                 selectionButtons();
@@ -558,7 +559,7 @@ public class addShifts {
                                 new String[] { "id", "Name", "Salary", "Hours/Week", "Role", "role_id" }, 0);
                 modelSelected = new DefaultTableModel(
                                 new String[] { "id", "Name", "Salary", "Hours/Week", "Role", "role_id" }, 0);
-                for (employee tempEmp : employeesAPI.getAllCurrentEmployeesOrdered()) {
+                for (employee tempEmp : employeesAPI.getAllCurrentEmployees()) {
                         String id = Integer.toString(tempEmp.getId());
                         String name = tempEmp.getName();
                         String salary = Float.toString(tempEmp.getSalary());

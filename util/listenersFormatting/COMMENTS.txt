@@ -1,0 +1,9 @@
+The functioning of listenersFormatters consists of generalizing and allowing to reuse the logic behind focus listeners.
+
+These take a JTextField or a JToggleButton and apply te respective focus listeners and visual cues (such as changing
+the color of the text) in order to make visible to the user whether their input is filled completly/valid.
+
+E.g.As every time a field to be filled with a date the exact same logic is applied, so it makes sense for this logic
+to be implemented in its own class.
+
+It was not possible to have a factory for these formatters to be accessed through as each formatter requires different arguments.

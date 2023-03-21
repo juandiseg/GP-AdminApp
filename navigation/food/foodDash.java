@@ -720,6 +720,10 @@ public class foodDash {
         }
 
         private void addListeners(JPanel playground) {
+
+                // All these mouseListeners have the goal to transition to a new menu. They do
+                // so by removing the contents of the panels needed by the respective new menu,
+                // and then updating the renders of these panels.
                 menusPanel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 

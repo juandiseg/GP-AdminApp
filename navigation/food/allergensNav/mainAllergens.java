@@ -84,6 +84,9 @@ public class mainAllergens {
     }
 
     private void addListeners(JPanel playground) {
+
+        // Detects which entry of the JTable has been clicked, and redirects to
+        // "editAllergen" to edit it.
         myTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
@@ -102,6 +105,7 @@ public class mainAllergens {
                 }
             }
         });
+        // Call to the method(s) which format each JButton / JTextField accordingly.
         addButton(playground);
     }
 

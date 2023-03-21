@@ -559,7 +559,7 @@ public class addIngredient {
 
                                 Stack<Integer> selectedAllergens = getSelectedAllergenIDs();
 
-                                if (allergensAPI.addAlergensOfIngredient(selectedAllergens, ingredientID))
+                                if (allergensAPI.addAlergensToIngredient(selectedAllergens, ingredientID))
                                         successLabel.setText("The ingredient \"" + name + "\" was added successfully.");
                                 else
                                         successLabel.setText("Error. Something went wrong while adding allergens.");

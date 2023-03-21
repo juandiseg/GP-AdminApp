@@ -51,7 +51,7 @@ public class adminDash {
                         JLabel date) {
                 initComp2(leftAuxPanel, jPanel4, date);
                 initComp3(playground);
-                addActionListeners(playground, theFrame);
+                addListeners(playground, theFrame);
         }
 
         public void initComp2(JPanel leftAuxPanel, JPanel jPanel4, JLabel date) {
@@ -697,7 +697,11 @@ public class adminDash {
                 setGraphScheduledHours(false);
         }
 
-        private void addActionListeners(JPanel playground, JFrame theFrame) {
+        private void addListeners(JPanel playground, JFrame theFrame) {
+
+                // All these mouseListeners have the goal to transition to a new menu. They do
+                // so by removing the contents of the panels needed by the respective new menu,
+                // and then updating the renders of these panels.
                 employeesPanel.addMouseListener(new MouseListener() {
                         boolean clicked = false;
 
@@ -946,7 +950,7 @@ public class adminDash {
                                                 .format(DateTimeFormatter.ofPattern("dd-MM"));
                         else
                                 date = Integer.toString(-i);
-                        datos.setValue(dashboardsAPI.expensesSalaryDaily(i), "Expenses", date);
+                        datos.setValue(dashboardsAPI.getExpensesSalaryDaily(i), "Expenses", date);
                 }
 
                 JFreeChart barChart = ChartFactory.createBarChart("Employees Expenses in Last " + goal + " Days", null,

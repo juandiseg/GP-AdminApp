@@ -15,10 +15,14 @@ public class addTextFieldFListener implements iTextFieldListener {
     public void applyListenerTextField(JTextComponent theTextField, String theString, booleanWrapper placeholder,
             boolean small) {
 
+        // Apply format
         theTextField.setFont(new Font("Segoe UI", 0, 18));
         theTextField.setForeground(Color.GRAY);
         theTextField.setText(theString);
+
         theTextField.addFocusListener(new FocusListener() {
+
+            // If focus is gained, remove placeholders.
             public void focusGained(FocusEvent e) {
                 if (theTextField.getText().equals(theString)) {
                     theTextField.setText("");
@@ -27,6 +31,7 @@ public class addTextFieldFListener implements iTextFieldListener {
                 }
             }
 
+            // If focus is lost, set placeholders.
             public void focusLost(FocusEvent e) {
                 if (theTextField.getText().isEmpty()) {
                     theTextField.setForeground(Color.GRAY);

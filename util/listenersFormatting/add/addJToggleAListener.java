@@ -11,6 +11,8 @@ public class addJToggleAListener implements iToggleListener {
 
     public void applyActionListenerToggle(JToggleButton theToggleButton, String ifTrue, String ifFalse,
             boolean theBoolean) {
+
+        // Change the text of the JToggleButton every click.
         theToggleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (theToggleButton.getText().equals(ifTrue))

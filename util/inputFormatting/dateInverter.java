@@ -1,6 +1,10 @@
-package util.databaseAPIs;
+package util.inputFormatting;
 
 public class dateInverter {
+
+    // As the database is set to the dateformat YYYY-MM-DD and the GUI is set to
+    // DD-MM-YYYY sometimes it is needed to access the invert method of this class
+    // in order to display the date as the user expects it.
 
     public static String invert(String date) {
         if (date.charAt(2) == '-')

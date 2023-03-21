@@ -233,6 +233,7 @@ public class editAllergen {
         }
 
         private void addListeners(JPanel playground) {
+                // Call to the method(s) which format each JButton / JTextField accordingly.
                 deleteButton(playground);
                 backButton(playground);
                 editButton(null);

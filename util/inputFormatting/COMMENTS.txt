@@ -1,0 +1,10 @@
+The functioning of inputFormatters consists of generalizing and allowing to reuse the logic behind restricting input.
+
+These formatters take a JTextField and apply the respective key listeners in order to make visible to the user what
+the expected format for the input is, as well as restricting invalid input.
+
+E.g.As every time a field to be filled with a date the exact same logic is applied, so it makes sense for this logic
+to be implemented in its own class.
+
+These formatters can be accessed through a factory, as there could be some further formatters added in the system if
+new input 'types' are there to be needed in the future.
