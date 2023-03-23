@@ -47,7 +47,7 @@ public class homeDash extends JFrame {
         private JPanel leftAuxPanel = new JPanel();
         private JPanel overheadLogoPanel = new JPanel();
         private JPanel overheadPanel = new JPanel();
-        private JPanel playground = new JPanel();
+        private JPanel panel3 = new JPanel();
         private JPanel staticButtonsPanel = new JPanel();
         private JLabel welcomeLabel = new JLabel();
         private JLabel clickRole1 = new JLabel();
@@ -124,12 +124,209 @@ public class homeDash extends JFrame {
         private JLabel scheduleTitle = new JLabel();
 
         public homeDash() {
-                initComponents();
+                initPanels();
         }
 
-        private void initComp2() {
-                leftAuxPanel.setBackground(new Color(71, 120, 197));
+        private void initPanel1() {
+                clickRole1.setFont(new Font("Segoe UI", 0, 18));
+                clickRole1.setHorizontalAlignment(SwingConstants.CENTER);
+                clickRole1.setText("New name :");
+                clickRole1.setVerticalAlignment(SwingConstants.BOTTOM);
 
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                setMaximumSize(new Dimension(1284, 756));
+                setPreferredSize(new Dimension(1284, 756));
+                setResizable(false);
+                setSize(new Dimension(1284, 756));
+                getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+                staticButtonsPanel.setBackground(new Color(23, 35, 51));
+
+                homePanel.setBackground(new Color(41, 57, 80));
+
+                homeAux.setPreferredSize(new Dimension(5, 43));
+
+                GroupLayout homeAuxLayout = new GroupLayout(homeAux);
+                homeAux.setLayout(homeAuxLayout);
+                homeAuxLayout.setHorizontalGroup(
+                                homeAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+                homeAuxLayout.setVerticalGroup(
+                                homeAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                homeLabel.setFont(new Font("Segoe UI", 0, 14));
+                homeLabel.setForeground(new Color(255, 255, 255));
+                homeLabel.setText("Home");
+
+                GroupLayout homePanelLayout = new GroupLayout(homePanel);
+                homePanel.setLayout(homePanelLayout);
+                homePanelLayout.setHorizontalGroup(
+                                homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(homePanelLayout.createSequentialGroup()
+                                                                .addComponent(homeAux,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                ComponentPlacement.UNRELATED)
+                                                                .addComponent(homeLabel,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                79,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+                homePanelLayout.setVerticalGroup(
+                                homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(homePanelLayout.createSequentialGroup()
+                                                                .addGroup(homePanelLayout.createParallelGroup(
+                                                                                GroupLayout.Alignment.LEADING,
+                                                                                false)
+                                                                                .addComponent(homeAux,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(homeLabel,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                43, Short.MAX_VALUE))
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+
+                administrationPanel.setBackground(new Color(23, 35, 51));
+
+                administrationAux.setPreferredSize(new Dimension(5, 43));
+
+                GroupLayout administrationAuxLayout = new GroupLayout(administrationAux);
+                administrationAux.setLayout(administrationAuxLayout);
+                administrationAuxLayout.setHorizontalGroup(
+                                administrationAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+                administrationAuxLayout.setVerticalGroup(
+                                administrationAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                administrationLabel.setFont(new Font("Segoe UI", 0, 14));
+                administrationLabel.setForeground(new Color(255, 255, 255));
+                administrationLabel.setText("Administration");
+
+                GroupLayout administrationPanelLayout = new GroupLayout(administrationPanel);
+                administrationPanel.setLayout(administrationPanelLayout);
+                administrationPanelLayout.setHorizontalGroup(
+                                administrationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(administrationPanelLayout.createSequentialGroup()
+                                                                .addComponent(administrationAux,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                ComponentPlacement.UNRELATED)
+                                                                .addComponent(administrationLabel)
+                                                                .addContainerGap(63, Short.MAX_VALUE)));
+                administrationPanelLayout.setVerticalGroup(
+                                administrationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(administrationPanelLayout.createSequentialGroup()
+                                                                .addGroup(administrationPanelLayout.createParallelGroup(
+                                                                                GroupLayout.Alignment.LEADING,
+                                                                                false)
+                                                                                .addComponent(administrationAux,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(administrationLabel,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                43, Short.MAX_VALUE))
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+
+                foodPanel.setBackground(new Color(23, 35, 51));
+
+                foodAux.setPreferredSize(new Dimension(5, 43));
+
+                GroupLayout foodAuxLayout = new GroupLayout(foodAux);
+                foodAux.setLayout(foodAuxLayout);
+                foodAuxLayout.setHorizontalGroup(
+                                foodAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 5, Short.MAX_VALUE));
+                foodAuxLayout.setVerticalGroup(
+                                foodAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGap(0, 0, Short.MAX_VALUE));
+
+                foodLabel.setFont(new Font("Segoe UI", 0, 14));
+                foodLabel.setForeground(new Color(255, 255, 255));
+                foodLabel.setText("Food");
+
+                GroupLayout foodPanelLayout = new GroupLayout(foodPanel);
+                foodPanel.setLayout(foodPanelLayout);
+                foodPanelLayout.setHorizontalGroup(
+                                foodPanelLayout
+                                                .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(foodPanelLayout.createSequentialGroup()
+                                                                .addComponent(foodAux,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                ComponentPlacement.UNRELATED)
+                                                                .addComponent(foodLabel)
+                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+                foodPanelLayout.setVerticalGroup(
+                                foodPanelLayout
+                                                .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(foodPanelLayout.createSequentialGroup()
+                                                                .addGroup(foodPanelLayout
+                                                                                .createParallelGroup(
+                                                                                                GroupLayout.Alignment.LEADING,
+                                                                                                false)
+                                                                                .addComponent(foodAux,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(foodLabel,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                43, Short.MAX_VALUE))
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+
+                GroupLayout staticButtonsPanelLayout = new GroupLayout(staticButtonsPanel);
+                staticButtonsPanel.setLayout(staticButtonsPanelLayout);
+                staticButtonsPanelLayout.setHorizontalGroup(
+                                staticButtonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addComponent(homePanel, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(administrationPanel, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(foodPanel,
+                                                                GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                staticButtonsPanelLayout.setVerticalGroup(
+                                staticButtonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(staticButtonsPanelLayout.createSequentialGroup()
+                                                                .addGap(155, 155, 155)
+                                                                .addComponent(homePanel,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                ComponentPlacement.RELATED)
+                                                                .addComponent(administrationPanel,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                ComponentPlacement.RELATED)
+                                                                .addComponent(foodPanel,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
+
+                getContentPane().add(staticButtonsPanel,
+                                new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 720));
+        }
+
+        private void initPanel2() {
+                // This code was originally generated by Apache NetBeans.
+
+                leftAuxPanel.setBackground(new Color(71, 120, 197));
                 jPanel4.setBackground(new Color(120, 168, 252));
 
                 timeOfDay.setFont(new Font("Segoe UI", 1, 30));
@@ -587,214 +784,9 @@ public class homeDash extends JFrame {
                                 new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 230, 630));
         }
 
-        private void setClock(JLabel theLabel) {
-                // The object "t" will perform the action defined for the ActionListener every
-                // 100 milliseconds.
-                Timer t = new Timer(100, new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                theLabel.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-                        }
-                });
-                t.start();
-        }
+        private void initPanelTop() {
+                // This code was originally generated by Apache NetBeans.
 
-        private void initComp1() {
-                clickRole1.setFont(new Font("Segoe UI", 0, 18));
-                clickRole1.setHorizontalAlignment(SwingConstants.CENTER);
-                clickRole1.setText("New name :");
-                clickRole1.setVerticalAlignment(SwingConstants.BOTTOM);
-
-                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                setMaximumSize(new Dimension(1284, 756));
-                setPreferredSize(new Dimension(1284, 756));
-                setResizable(false);
-                setSize(new Dimension(1284, 756));
-                getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-                staticButtonsPanel.setBackground(new Color(23, 35, 51));
-
-                homePanel.setBackground(new Color(41, 57, 80));
-
-                homeAux.setPreferredSize(new Dimension(5, 43));
-
-                GroupLayout homeAuxLayout = new GroupLayout(homeAux);
-                homeAux.setLayout(homeAuxLayout);
-                homeAuxLayout.setHorizontalGroup(
-                                homeAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 5, Short.MAX_VALUE));
-                homeAuxLayout.setVerticalGroup(
-                                homeAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 0, Short.MAX_VALUE));
-
-                homeLabel.setFont(new Font("Segoe UI", 0, 14));
-                homeLabel.setForeground(new Color(255, 255, 255));
-                homeLabel.setText("Home");
-
-                GroupLayout homePanelLayout = new GroupLayout(homePanel);
-                homePanel.setLayout(homePanelLayout);
-                homePanelLayout.setHorizontalGroup(
-                                homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(homePanelLayout.createSequentialGroup()
-                                                                .addComponent(homeAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
-                                                                .addComponent(homeLabel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                79,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
-                homePanelLayout.setVerticalGroup(
-                                homePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(homePanelLayout.createSequentialGroup()
-                                                                .addGroup(homePanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
-                                                                                false)
-                                                                                .addComponent(homeAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                Short.MAX_VALUE)
-                                                                                .addComponent(homeLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                43, Short.MAX_VALUE))
-                                                                .addGap(0, 0, Short.MAX_VALUE)));
-
-                administrationPanel.setBackground(new Color(23, 35, 51));
-
-                administrationAux.setPreferredSize(new Dimension(5, 43));
-
-                GroupLayout administrationAuxLayout = new GroupLayout(administrationAux);
-                administrationAux.setLayout(administrationAuxLayout);
-                administrationAuxLayout.setHorizontalGroup(
-                                administrationAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 5, Short.MAX_VALUE));
-                administrationAuxLayout.setVerticalGroup(
-                                administrationAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 0, Short.MAX_VALUE));
-
-                administrationLabel.setFont(new Font("Segoe UI", 0, 14));
-                administrationLabel.setForeground(new Color(255, 255, 255));
-                administrationLabel.setText("Administration");
-
-                GroupLayout administrationPanelLayout = new GroupLayout(administrationPanel);
-                administrationPanel.setLayout(administrationPanelLayout);
-                administrationPanelLayout.setHorizontalGroup(
-                                administrationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(administrationPanelLayout.createSequentialGroup()
-                                                                .addComponent(administrationAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
-                                                                .addComponent(administrationLabel)
-                                                                .addContainerGap(63, Short.MAX_VALUE)));
-                administrationPanelLayout.setVerticalGroup(
-                                administrationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(administrationPanelLayout.createSequentialGroup()
-                                                                .addGroup(administrationPanelLayout.createParallelGroup(
-                                                                                GroupLayout.Alignment.LEADING,
-                                                                                false)
-                                                                                .addComponent(administrationAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                Short.MAX_VALUE)
-                                                                                .addComponent(administrationLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                43, Short.MAX_VALUE))
-                                                                .addGap(0, 0, Short.MAX_VALUE)));
-
-                foodPanel.setBackground(new Color(23, 35, 51));
-
-                foodAux.setPreferredSize(new Dimension(5, 43));
-
-                GroupLayout foodAuxLayout = new GroupLayout(foodAux);
-                foodAux.setLayout(foodAuxLayout);
-                foodAuxLayout.setHorizontalGroup(
-                                foodAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 5, Short.MAX_VALUE));
-                foodAuxLayout.setVerticalGroup(
-                                foodAuxLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGap(0, 0, Short.MAX_VALUE));
-
-                foodLabel.setFont(new Font("Segoe UI", 0, 14));
-                foodLabel.setForeground(new Color(255, 255, 255));
-                foodLabel.setText("Food");
-
-                GroupLayout foodPanelLayout = new GroupLayout(foodPanel);
-                foodPanel.setLayout(foodPanelLayout);
-                foodPanelLayout.setHorizontalGroup(
-                                foodPanelLayout
-                                                .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(foodPanelLayout.createSequentialGroup()
-                                                                .addComponent(foodAux,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.UNRELATED)
-                                                                .addComponent(foodLabel)
-                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
-                foodPanelLayout.setVerticalGroup(
-                                foodPanelLayout
-                                                .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(foodPanelLayout.createSequentialGroup()
-                                                                .addGroup(foodPanelLayout
-                                                                                .createParallelGroup(
-                                                                                                GroupLayout.Alignment.LEADING,
-                                                                                                false)
-                                                                                .addComponent(foodAux,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                Short.MAX_VALUE)
-                                                                                .addComponent(foodLabel,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                43, Short.MAX_VALUE))
-                                                                .addGap(0, 0, Short.MAX_VALUE)));
-
-                GroupLayout staticButtonsPanelLayout = new GroupLayout(staticButtonsPanel);
-                staticButtonsPanel.setLayout(staticButtonsPanelLayout);
-                staticButtonsPanelLayout.setHorizontalGroup(
-                                staticButtonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(homePanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(administrationPanel, GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(foodPanel,
-                                                                GroupLayout.DEFAULT_SIZE,
-                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-                staticButtonsPanelLayout.setVerticalGroup(
-                                staticButtonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(staticButtonsPanelLayout.createSequentialGroup()
-                                                                .addGap(155, 155, 155)
-                                                                .addComponent(homePanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.RELATED)
-                                                                .addComponent(administrationPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                ComponentPlacement.RELATED)
-                                                                .addComponent(foodPanel,
-                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
-
-                getContentPane().add(staticButtonsPanel,
-                                new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 720));
-        }
-
-        private void initCompTop() {
                 overheadPanel.setBackground(new Color(71, 120, 197));
                 overheadLogoPanel.setBackground(new Color(71, 120, 197));
 
@@ -844,9 +836,11 @@ public class homeDash extends JFrame {
                                 new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 0, 1100, 90));
         }
 
-        private void initComp3() {
+        private void initPanel3() {
+                // This code was originally generated by Apache NetBeans.
+
                 setTables();
-                playground.setBackground(new Color(255, 255, 255));
+                panel3.setBackground(new Color(255, 255, 255));
 
                 salesPanel.setBackground(new Color(255, 255, 255));
                 salesPanel.setBorder(new LineBorder(new Color(185, 208, 248), 3, true));
@@ -1378,16 +1372,16 @@ public class homeDash extends JFrame {
                                                 .addComponent(timePanelBackground, GroupLayout.DEFAULT_SIZE,
                                                                 GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
-                GroupLayout playgroundLayout = new GroupLayout(playground);
-                playground.setLayout(playgroundLayout);
-                playgroundLayout.setHorizontalGroup(
-                                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(playgroundLayout.createSequentialGroup()
+                GroupLayout panel3Layout = new GroupLayout(panel3);
+                panel3.setLayout(panel3Layout);
+                panel3Layout.setHorizontalGroup(
+                                panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(panel3Layout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                .addGroup(panel3Layout.createParallelGroup(
                                                                                 GroupLayout.Alignment.LEADING,
                                                                                 false)
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addComponent(employeesPanel,
                                                                                                                 GroupLayout.DEFAULT_SIZE,
@@ -1403,9 +1397,9 @@ public class homeDash extends JFrame {
                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                 GroupLayout.PREFERRED_SIZE))
                                                                 .addGap(18, 18, Short.MAX_VALUE)
-                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                .addGroup(panel3Layout.createParallelGroup(
                                                                                 GroupLayout.Alignment.LEADING)
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addPreferredGap(
                                                                                                                 ComponentPlacement.RELATED,
@@ -1416,9 +1410,9 @@ public class homeDash extends JFrame {
                                                                                                                 212,
                                                                                                                 GroupLayout.PREFERRED_SIZE)
                                                                                                 .addGap(21, 21, 21))
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
-                                                                                                .addGroup(playgroundLayout
+                                                                                                .addGroup(panel3Layout
                                                                                                                 .createParallelGroup(
                                                                                                                                 GroupLayout.Alignment.LEADING)
                                                                                                                 .addComponent(bsMonthPanel,
@@ -1432,9 +1426,9 @@ public class homeDash extends JFrame {
                                                                                                 .addContainerGap(
                                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                                 Short.MAX_VALUE))
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
-                                                                                                .addGroup(playgroundLayout
+                                                                                                .addGroup(panel3Layout
                                                                                                                 .createParallelGroup(
                                                                                                                                 GroupLayout.Alignment.LEADING)
                                                                                                                 .addComponent(pricePanel,
@@ -1446,14 +1440,14 @@ public class homeDash extends JFrame {
                                                                                                                                 212,
                                                                                                                                 GroupLayout.PREFERRED_SIZE))
                                                                                                 .addGap(0, 0, Short.MAX_VALUE)))));
-                playgroundLayout.setVerticalGroup(
-                                playgroundLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(playgroundLayout.createSequentialGroup()
+                panel3Layout.setVerticalGroup(
+                                panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(panel3Layout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addGroup(playgroundLayout.createParallelGroup(
+                                                                .addGroup(panel3Layout.createParallelGroup(
                                                                                 GroupLayout.Alignment.LEADING,
                                                                                 false)
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addComponent(bsTodayPanel,
                                                                                                                 GroupLayout.PREFERRED_SIZE,
@@ -1483,14 +1477,14 @@ public class homeDash extends JFrame {
                                                                                                                 GroupLayout.PREFERRED_SIZE,
                                                                                                                 111,
                                                                                                                 GroupLayout.PREFERRED_SIZE))
-                                                                                .addGroup(playgroundLayout
+                                                                                .addGroup(panel3Layout
                                                                                                 .createSequentialGroup()
                                                                                                 .addComponent(salesPanel,
                                                                                                                 GroupLayout.PREFERRED_SIZE,
                                                                                                                 GroupLayout.DEFAULT_SIZE,
                                                                                                                 GroupLayout.PREFERRED_SIZE)
                                                                                                 .addGap(18, 18, 18)
-                                                                                                .addGroup(playgroundLayout
+                                                                                                .addGroup(panel3Layout
                                                                                                                 .createParallelGroup(
                                                                                                                                 GroupLayout.Alignment.LEADING)
                                                                                                                 .addComponent(ordersPanel,
@@ -1504,47 +1498,9 @@ public class homeDash extends JFrame {
                                                                 .addContainerGap(GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE)));
 
-                getContentPane().add(playground, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, 870, 630));
+                getContentPane().add(panel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, 870, 630));
                 pack();
                 setGraph(7);
-        }
-
-        private void setGraph(int goal) {
-                salesContentPanel.removeAll();
-                DefaultCategoryDataset data = new DefaultCategoryDataset();
-                String date = "";
-
-                // Add the data related to the graph a DefaultCategoryDataset (data).
-                for (int i = goal - 1; i > -1; i--) {
-                        if (goal == 7)
-                                date = LocalDate.now().minus(i, ChronoUnit.DAYS)
-                                                .format(DateTimeFormatter.ofPattern("dd-MM"));
-                        else
-                                date = Integer.toString(-i);
-                        data.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
-                }
-
-                JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
-                                data, PlotOrientation.VERTICAL, true, true, false);
-                barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
-                ChartPanel pan = new ChartPanel(barChart);
-                pan.setMouseWheelEnabled(false);
-                pan.setPreferredSize(new Dimension(400, 200));
-                salesContentPanel.setLayout(new BorderLayout());
-                salesContentPanel.add(pan, BorderLayout.CENTER);
-                pack();
-                salesContentPanel.revalidate();
-                salesPanel.repaint();
-        }
-
-        private void initComponents() {
-                initComp1();
-                initCompTop();
-                initComp2();
-                initComp3();
-                pack();
-                addListeners();
-                setVisible(true);
         }
 
         private void addListeners() {
@@ -1560,17 +1516,17 @@ public class homeDash extends JFrame {
                                 resetColor(homePanel);
                                 resetColor(foodPanel);
                                 clicked = true;
-                                playground.removeAll();
+                                panel3.removeAll();
                                 Component[] temp = leftAuxPanel.getComponents();
                                 Component toKeep = jPanel4; // This is the component of the timer.
                                 for (int i = 0; i < temp.length; i++) {
                                         if (!temp[i].equals(toKeep))
                                                 leftAuxPanel.remove(temp[i]);
                                 }
-                                new adminDash(tempFrame, leftAuxPanel, playground, jPanel4, date);
-                                playground.revalidate();
+                                new adminDash(tempFrame, leftAuxPanel, panel3, jPanel4, date);
+                                panel3.revalidate();
                                 leftAuxPanel.revalidate();
-                                playground.repaint();
+                                panel3.repaint();
                                 leftAuxPanel.repaint();
                         }
 
@@ -1604,12 +1560,12 @@ public class homeDash extends JFrame {
                                 resetColor(homePanel);
                                 resetColor(administrationPanel);
                                 clicked = true;
-                                playground.removeAll();
+                                panel3.removeAll();
                                 leftAuxPanel.removeAll();
-                                new foodDash(leftAuxPanel, playground, jPanel4, date);
-                                playground.revalidate();
+                                new foodDash(leftAuxPanel, panel3, jPanel4, date);
+                                panel3.revalidate();
                                 leftAuxPanel.revalidate();
-                                playground.repaint();
+                                panel3.repaint();
                                 leftAuxPanel.repaint();
                         }
 
@@ -1646,11 +1602,11 @@ public class homeDash extends JFrame {
                                 leftAuxPanel.removeAll();
                                 leftAuxPanel.revalidate();
                                 leftAuxPanel.repaint();
-                                playground.removeAll();
-                                initComp2();
-                                initComp3();
-                                playground.revalidate();
-                                playground.repaint();
+                                panel3.removeAll();
+                                initPanel2();
+                                initPanel3();
+                                panel3.revalidate();
+                                panel3.repaint();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -1682,10 +1638,10 @@ public class homeDash extends JFrame {
                                 setColorAux(descriptionPanel);
                                 resetColorAux(contactPanel);
                                 clicked = true;
-                                playground.removeAll();
-                                new mainItems(tempFrame, playground);
-                                playground.revalidate();
-                                playground.repaint();
+                                panel3.removeAll();
+                                new mainItems(tempFrame, panel3);
+                                panel3.revalidate();
+                                panel3.repaint();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -1716,10 +1672,10 @@ public class homeDash extends JFrame {
                                 setColorAux(contactPanel);
                                 resetColorAux(descriptionPanel);
                                 clicked = true;
-                                playground.removeAll();
-                                new mainContact(playground);
-                                playground.revalidate();
-                                playground.repaint();
+                                panel3.removeAll();
+                                new mainContact(panel3);
+                                panel3.revalidate();
+                                panel3.repaint();
                         }
 
                         public void mousePressed(MouseEvent e) {
@@ -1745,6 +1701,55 @@ public class homeDash extends JFrame {
                 });
 
                 salesTuggleButton();
+        }
+
+        private void setClock(JLabel theLabel) {
+                // The object "t" will perform the action defined for the ActionListener every
+                // 100 milliseconds.
+                Timer t = new Timer(100, new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                theLabel.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                        }
+                });
+                t.start();
+        }
+
+        private void setGraph(int goal) {
+                salesContentPanel.removeAll();
+                DefaultCategoryDataset data = new DefaultCategoryDataset();
+                String date = "";
+
+                // Add the data related to the graph a DefaultCategoryDataset (data).
+                for (int i = goal - 1; i > -1; i--) {
+                        if (goal == 7)
+                                date = LocalDate.now().minus(i, ChronoUnit.DAYS)
+                                                .format(DateTimeFormatter.ofPattern("dd-MM"));
+                        else
+                                date = Integer.toString(-i);
+                        data.setValue(dashboardsAPI.getSalesOnDay(i), "Sales", date);
+                }
+
+                JFreeChart barChart = ChartFactory.createBarChart("Sales in Last " + goal + " Days", null, "Sales (€)",
+                                data, PlotOrientation.VERTICAL, true, true, false);
+                barChart.getPlot().setBackgroundPaint(new Color(232, 237, 246));
+                ChartPanel pan = new ChartPanel(barChart);
+                pan.setMouseWheelEnabled(false);
+                pan.setPreferredSize(new Dimension(400, 200));
+                salesContentPanel.setLayout(new BorderLayout());
+                salesContentPanel.add(pan, BorderLayout.CENTER);
+                pack();
+                salesContentPanel.revalidate();
+                salesPanel.repaint();
+        }
+
+        private void initPanels() {
+                initPanel1();
+                initPanelTop();
+                initPanel2();
+                initPanel3();
+                pack();
+                addListeners();
+                setVisible(true);
         }
 
         private void salesTuggleButton() {
