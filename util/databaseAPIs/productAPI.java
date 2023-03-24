@@ -237,11 +237,10 @@ public class productAPI extends abstractManagerDB {
 
     public static float getAmountOfProductInMenu(menu theMenu, product theProduct) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT productQuantity FROM menus_products AS a, (SELECT menu_products_date FROM menus_products WHERE menu_id = ? ORDER BY menu_products_date DESC LIMIT 1) AS b WHERE a.menu_products_date = b.menu_products_date AND menu_id = ? AND product_id = ?;";
+            String query = "SELECT productQuantity FROM menus_products WHERE menu_products_date IN (SELECT MAX(menu_products_date) AS menu_products_date FROM menus_products WHERE menu_id = ?) AND product_id = ?;";
             ppdStatement = connection.prepareStatement(query);
             ppdStatement.setInt(1, theMenu.getId());
-            ppdStatement.setInt(2, theMenu.getId());
-            ppdStatement.setInt(3, theProduct.getId());
+            ppdStatement.setInt(2, theProduct.getId());
             try {
                 ResultSet rs = ppdStatement.executeQuery();
                 if (rs.next())

@@ -86,7 +86,7 @@ public class editEmployee {
 
                 salaryLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
                 salaryLabel.setHorizontalAlignment(SwingConstants.LEFT);
-                salaryLabel.setText("Salary");
+                salaryLabel.setText("Pay per hour");
                 salaryLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
                 hoursWeekLabel.setFont(new Font("Segoe UI", 1, 18)); // NOI18N

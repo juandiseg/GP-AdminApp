@@ -61,7 +61,7 @@ public class ingredientsAPI extends abstractManagerDB {
 
     public static float getAmountOfIngredientInProduct(int productID, int ingredient_id) {
         try (Connection connection = DriverManager.getConnection(getURL(), getUser(), getPassword())) {
-            String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT product_date FROM products WHERE active = true AND product_id = ?) AND ingredient_id = ?";
+            String query = "SELECT ingredientQuantity FROM products_ingredients WHERE product_ingredients_date IN (SELECT MAX(product_ingredients_date) AS product_ingredients_date FROM products_ingredients WHERE product_id = ?) AND ingredient_id = ?";
             ppdStatement = connection.prepareStatement(query);
             ppdStatement.setInt(1, productID);
             ppdStatement.setInt(2, ingredient_id);
