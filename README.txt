@@ -1,0 +1,1 @@
+In order for this app to work, please change the values at util/databaseAPIs/abstractManagerDB.java in order to satisfy the instance of your local DB.
