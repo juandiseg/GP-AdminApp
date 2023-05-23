@@ -7,4 +7,5 @@ In order for this app to work, please:
   - Initiate a local instance of a database using the provided commands in "DBcommands.txt".
   - Change the values at "src/util/databaseAPIs/abstractManagerDB.java" in order to satisfy those of the instance of your local DB.
 ------------------------------------------------------------------------------
+2nd Year at LUL, March 2023.
 Developed by @juandiseg
