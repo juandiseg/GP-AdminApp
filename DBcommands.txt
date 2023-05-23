@@ -1,0 +1,184 @@
+CREATE TABLE `employees` (
+  `employee_id` int PRIMARY KEY NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `salary` DECIMAL(5,2) NOT NULL,
+  `hours_a_week` time NOT NULL,
+  `role_id` int NOT NULL,
+  `active` boolean NOT NULL,
+  `inactive_since` date
+);
+
+CREATE TABLE `roles` (
+  `role_id` int PRIMARY KEY NOT NULL,
+  `role_name` varchar(255) NOT NULL,
+  `unactive` boolean
+);
+
+
+CREATE TABLE `employees_schedule` (
+  `employee_id` int NOT NULL,
+  `shift_date` date NOT NULL,
+  `start_shift` time NOT NULL,
+  `end_shift` time NOT NULL,
+  `realtime_in` time,
+  `realtime_out` time,
+  `undertime` boolean,
+  PRIMARY KEY (`employee_id`, `shift_date`, `start_shift`, `end_shift`)
+);
+
+CREATE TABLE `products` (
+  `product_id` int NOT NULL,
+  `category_id` int NULL,
+  `product_date` date NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` DECIMAL(5,2) NOT NULL,
+  `active` boolean NOT NULL,
+  PRIMARY KEY (`product_id`, `product_date`)
+);
+
+CREATE TABLE `products_data` (
+  `product_id` int NOT NULL,
+  `description` VARCHAR(300) NULL,
+  `image` MEDIUMBLOB NULL,
+  PRIMARY KEY (`product_id`)
+);
+
+CREATE TABLE `products_ingredients` (
+  `product_id` int NOT NULL,
+  `ingredient_id` int NOT NULL,
+  `product_ingredients_date` date NOT NULL,
+  `ingredientQuantity` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`product_id`, `ingredient_id`, `product_ingredients_date`)
+);
+
+CREATE TABLE `menus_products` (
+  `menu_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `menu_products_date` date NOT NULL,
+  `productQuantity` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`menu_id`, `product_id`, `menu_products_date`)
+);
+
+CREATE TABLE `menus` (
+  `menu_id` int NOT NULL,
+  `category_id` int NULL,
+  `menu_date` date NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` DECIMAL(5,2) NOT NULL,
+  `active` boolean NOT NULL,
+  PRIMARY KEY (`menu_id`, `menu_date`)
+);
+
+CREATE TABLE `menus_data` (
+  `menu_id` int NOT NULL,
+  `description` VARCHAR(300) NULL,
+  `image` MEDIUMBLOB NULL,
+  PRIMARY KEY (`menu_id`)
+);
+
+CREATE TABLE `ingredients` (
+  `ingredient_id` int NOT NULL,
+  `provider_id` int NOT NULL,
+  `ingredients_date` date NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` DECIMAL(5,2) NOT NULL,
+  `amount` DECIMAL(5,2) NOT NULL,
+  `in_inventory` boolean NOT NULL,
+  `active` boolean NOT NULL,
+  PRIMARY KEY (`ingredient_id`, `provider_id`, `ingredients_date`)
+);
+
+CREATE TABLE `ingredients_allergens` (
+  `ingredient_id` int NOT NULL,
+  `allergen_id` int NOT NULL,
+  PRIMARY KEY (`ingredient_id`, `allergen_id`)
+);
+
+CREATE TABLE `allergens` (
+  `allergen_id` int PRIMARY KEY NOT NULL,
+  `name` varchar(255) NOT NULL
+);
+
+CREATE TABLE `providers` (
+  `provider_id` int PRIMARY KEY NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `active` boolean NOT NULL
+);
+
+CREATE TABLE `customers` (
+  `username` varchar(255) PRIMARY KEY NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `birthday` date NOT NULL,
+  `points` int NOT NULL
+);
+
+CREATE TABLE `orders_items` (
+  `order_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  PRIMARY KEY (`order_id`, `product_id`)
+);
+
+CREATE TABLE `orders_menus` (
+  `order_id` int NOT NULL,
+  `menu_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  PRIMARY KEY (`order_id`, `menu_id`)
+);
+
+CREATE TABLE `orders_summary` (
+  `order_id` int PRIMARY KEY NOT NULL,
+  `time_in` time NOT NULL,
+  `time_out` time,
+  `total` DECIMAL(5,2),
+  `tax` DECIMAL(5,2),
+  `subtotal` DECIMAL(5,2),
+  `date` date NOT NULL,
+  `cash` boolean
+);
+
+CREATE TABLE `tables` (
+  `table_id` int PRIMARY KEY NOT NULL,
+  `order_id` int,
+  `is_empty` boolean NOT NULL
+);
+
+CREATE TABLE `categories` (
+  `category_id` int PRIMARY KEY NOT NULL,
+  `iscategory_product` boolean NOT NULL,
+  `category_name` varchar(255) NOT NULL
+);
+
+ALTER TABLE `employees` ADD FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+
+ALTER TABLE `employees_schedule` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`);
+
+ALTER TABLE `products_data` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+ALTER TABLE `menus_data` ADD FOREIGN KEY (`menu_id`) REFERENCES `menus` (`menu_id`);
+
+ALTER TABLE `products_ingredients` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+ALTER TABLE `products_ingredients` ADD FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`ingredient_id`);
+
+ALTER TABLE `menus_products` ADD FOREIGN KEY (`menu_id`) REFERENCES `menus` (`menu_id`);
+
+ALTER TABLE `menus_products` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+ALTER TABLE `ingredients` ADD FOREIGN KEY (`provider_id`) REFERENCES `providers` (`provider_id`);
+
+ALTER TABLE `ingredients_allergens` ADD FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`ingredient_id`);
+
+ALTER TABLE `ingredients_allergens` ADD FOREIGN KEY (`allergen_id`) REFERENCES `allergens` (`allergen_id`);
+
+ALTER TABLE `orders_items` ADD FOREIGN KEY (`order_id`) REFERENCES `orders_summary` (`order_id`);
+
+ALTER TABLE `orders_items` ADD FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+ALTER TABLE `orders_menus` ADD FOREIGN KEY (`order_id`) REFERENCES `orders_summary` (`order_id`);
+
+ALTER TABLE `orders_menus` ADD FOREIGN KEY (`menu_id`) REFERENCES `menus` (`menu_id`);
+
+ALTER TABLE `tables` ADD FOREIGN KEY (`order_id`) REFERENCES `orders_summary` (`order_id`);
