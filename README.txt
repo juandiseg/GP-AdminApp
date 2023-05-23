@@ -3,8 +3,8 @@ Through this app the administrator/supervisor of a restaurant can set up the inf
 ------------------------------------------------------------------------------
 GET RUNNING
 In order for this app to work, please:
-  - Import all the .jar files to the classpath.
+  - Add to the classpath all the .jar files from "imports".
   - Initiate a local instance of a database using the provided commands in "DBcommands.txt".
-  - Change the values at util/databaseAPIs/abstractManagerDB.java in order to satisfy the instance of your local DB.
+  - Change the values at "src/util/databaseAPIs/abstractManagerDB.java" in order to satisfy those of the instance of your local DB.
 ------------------------------------------------------------------------------
 Developed by @juandiseg
