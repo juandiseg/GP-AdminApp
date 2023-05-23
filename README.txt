@@ -1,3 +1,5 @@
-In order for this app to work, please change the values at util/databaseAPIs/abstractManagerDB.java in order to satisfy the instance of your local DB.
+In order for this app to work, please:
 
-Also, all the .jar files in the imports directory need to be added to the classpath.
+  - Import all the .jar files to the classpath.
+  - Initiate a local instance of a database using the provided commands in "DBcommands.txt".
+  - Change the values at util/databaseAPIs/abstractManagerDB.java in order to satisfy the instance of your local DB.
